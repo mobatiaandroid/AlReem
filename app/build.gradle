@@ -8,8 +8,8 @@ android {
 
     defaultConfig {
         applicationId "com.nas.alreem"
-        minSdk 27
-        minSdkVersion 27
+        minSdk 19
+        minSdkVersion 19
         targetSdkVersion 31
         versionCode 1
         versionName "1.0"

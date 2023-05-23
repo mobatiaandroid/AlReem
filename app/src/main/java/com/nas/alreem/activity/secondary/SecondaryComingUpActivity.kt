@@ -1,7 +1,9 @@
 package com.nas.alreem.activity.secondary
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -9,19 +11,19 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nas.alreem.R
+import com.nas.alreem.activity.early_years.ComingUpDetailActivity
 import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.activity.primary.adapter.ComingUpAdapter
 import com.nas.alreem.activity.primary.adapter.PrimaryDataAdapter
 import com.nas.alreem.activity.primary.model.ComingUpDataModell
 import com.nas.alreem.activity.primary.model.ComingUpResponseModel
-import com.nas.alreem.constants.ConstantFunctions
-import com.nas.alreem.constants.ConstantWords
-import com.nas.alreem.constants.DialogFunctions
+import com.nas.alreem.constants.*
 import com.nas.alreem.fragment.primary.adapter.PrimaryAdapter
 import com.nas.alreem.fragment.primary.model.PrimaryFileModel
 import com.nas.alreem.fragment.primary.model.PrimaryResponseModel
@@ -67,6 +69,45 @@ class SecondaryComingUpActivity : AppCompatActivity(){
             val intent = Intent(mContext, HomeActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)
+        })
+
+        mListView.addOnItemClickListener(object : OnItemClickListener {
+            @SuppressLint("SimpleDateFormat", "SetTextI18n")
+            @RequiresApi(Build.VERSION_CODES.O)
+            override fun onItemClicked(position: Int, view: View)
+            {
+                var webViewComingUpDetail = """
+                  <!DOCTYPE html>
+                    <html>
+                    <head>
+                    <style>
+                    @font-face {
+                    font-family: SourceSansPro-Semibold;src: url(SourceSansPro-Semibold.ttf);font-family: SourceSansPro-Regular;src: url(SourceSansPro-Regular.ttf);}.title {font-family: SourceSansPro-Regular;font-size:16px;text-align:left;color:	#46C1D0;}.description {font-family: SourceSansPro-Light;text-align:justify;font-size:14px;color: #000000;text-align:left;}</style>
+                    </head><body><p class='title'>${
+                    comingUpArrayList.get(position).title
+                }
+                    """.trimIndent()
+                if (!comingUpArrayList.get(position).image.equals("")) {
+                    webViewComingUpDetail =
+                        webViewComingUpDetail + "<center><img src='" + comingUpArrayList.get(
+                            position
+                        ).image + "'width='100%', height='auto'>"
+                }
+                webViewComingUpDetail = """
+                    $webViewComingUpDetail<p class='description'>${
+                    comingUpArrayList.get(position).description
+                }</p></body>
+                    </html>
+                    """.trimIndent()
+
+                val intent = Intent(mContext, ComingUpDetailActivity::class.java)
+                intent.putExtra("web_ink",webViewComingUpDetail)
+                intent.putExtra("title","Coming Up")
+                startActivity(intent)
+
+            }
+
+
         })
     }
     fun callComingUpApi()

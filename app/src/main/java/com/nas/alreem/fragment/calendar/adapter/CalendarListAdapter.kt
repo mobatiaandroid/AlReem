@@ -151,7 +151,14 @@ class CalendarListAdapter(
         var deleteCalendar = dialog.findViewById(R.id.deleteCalendar) as Button
         var addToCalendar = dialog.findViewById(R.id.addToCalendar) as Button
         eventDate?.text =eventDateStr
-        eventType?.text = "( "+eventTypeStr+" )"
+        if(eventTypeStr.equals(""))
+        {
+
+        }
+        else{
+            eventType?.text = "( "+eventTypeStr+" )"
+        }
+
         dismiss.setOnClickListener()
         {
             dialog.dismiss()
