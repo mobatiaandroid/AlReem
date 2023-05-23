@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <include
+        android:id="@+id/includeRel"
+        layout="@layout/layout_activity_header" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/includeRel"
+        android:orientation="vertical"
+        android:weightSum="100">
+
+        <ImageView
+            android:id="@+id/bannerImageViewPager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="30"
+            android:scaleType="fitXY"
+            android:background="@drawable/default_banner"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/mTermCalendarRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_below="@+id/bannerImageViewPager"
+            android:layout_marginTop="10dp"
+            android:layout_weight="70"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+
+            android:background="@color/white"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            android:scrollbars="vertical" />
+
+
+    </LinearLayout>
+<!--    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_centerInParent="true">
+
+        <include
+            android:id="@+id/progressDialog"
+            layout="@layout/custom_progress_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:visibility="visible" />
+
+    </LinearLayout>-->
+</RelativeLayout>

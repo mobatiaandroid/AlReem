@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="65dp"
+    android:background="@color/transparent">
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:background="@color/term_button_bg">
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="7dp"
+            android:background="@color/list_bg">
+
+            <RelativeLayout
+                android:id="@+id/relSub"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
+                android:paddingBottom="10dp">
+
+                <ImageView
+                    android:id="@+id/arrow"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/arrow"
+                    android:layout_marginRight="5dp"
+                    android:layout_centerInParent="true"
+                    android:layout_alignParentRight="true"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_toLeftOf="@+id/arrow"
+                    android:orientation="vertical"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="6dp"
+                    android:gravity="center_vertical">
+                    <com.nas.alreem.commonviews.CustomTextViewRegular
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="set"
+                        android:id="@+id/listTxtTitle"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"/>
+
+                    <com.nas.alreem.commonviews.CustomTextViewRegular
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="set"
+                        android:id="@+id/txtUser"
+                        android:textSize="12sp"
+                        android:textColor="@color/white"
+                        android:visibility="visible"/>
+                </LinearLayout>
+            </RelativeLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+</RelativeLayout>
+
+

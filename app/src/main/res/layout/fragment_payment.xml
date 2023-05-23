@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/relMain"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center">
+
+        <ProgressBar
+            android:id="@+id/progressDialogAdd"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            android:indeterminateDrawable="@anim/customspinner"
+            android:visibility="gone"
+
+            />
+
+    </LinearLayout>
+
+    <include
+        android:id="@+id/includeRel"
+        layout="@layout/header_bar_fragment" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/includeRel"
+        android:orientation="vertical"
+        android:weightSum="100">
+
+        <ImageView
+            android:id="@+id/bannerImageViewPager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="30"
+            android:scaleType="centerCrop"/>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="70">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:overScrollMode="never"
+                android:scrollbars="none">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+
+                    <LinearLayout
+                        android:id="@+id/mainLinear"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/descriptionTV"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="5dp"
+                        android:orientation="horizontal"
+                        android:weightSum="100">
+
+                        <RelativeLayout
+                            android:id="@+id/paymentRelative"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="2dp"
+                            android:layout_weight="50"
+                            android:background="@drawable/sportsbtnblue">
+
+                            <ImageView
+                                android:id="@+id/external"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="3dp"
+                                android:src="@drawable/paymenthere" />
+
+                            <com.nas.alreem.commonviews.CustomTextViewSemiBold
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/external"
+                                android:layout_centerHorizontal="true"
+                                android:text="Pay Here"
+                                android:textColor="@color/white" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/informationRelative"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="2dp"
+                            android:layout_weight="50"
+                            android:background="@drawable/sportsbtngreen">
+
+                            <ImageView
+                                android:id="@+id/information"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="3dp"
+                                android:src="@drawable/information_cca" />
+
+                            <com.nas.alreem.commonviews.CustomTextViewSemiBold
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/information"
+                                android:layout_centerHorizontal="true"
+                                android:text="Information"
+                                android:textColor="@color/white" />
+                        </RelativeLayout>
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:id="@+id/sendEmail"
+                            android:layout_width="30dp"
+                            android:layout_height="25dp"
+                            android:layout_alignParentRight="true"
+                            android:src="@drawable/mailiconpe"
+                            android:visibility="visible" />
+
+                        <com.nas.alreem.commonviews.CustomTextViewRegular
+                            android:id="@+id/descriptionTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="10dp"
+                            android:layout_toLeftOf="@+id/sendEmail"
+                            android:text="Introduction:"
+                            android:textColor="@color/black"
+                            android:textSize="16sp"
+                            android:visibility="invisible" />
+                    </RelativeLayout>
+
+
+                    <com.nas.alreem.commonviews.CustomTextViewRegular
+                        android:id="@+id/descriptionTV"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/title"
+                        android:layout_marginTop="5dp"
+                        android:text="Introduction"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:visibility="gone" />
+
+
+                </RelativeLayout>
+            </ScrollView>
+        </RelativeLayout>
+    </LinearLayout>
+</RelativeLayout>
