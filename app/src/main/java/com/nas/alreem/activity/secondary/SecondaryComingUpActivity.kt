@@ -47,11 +47,9 @@ class SecondaryComingUpActivity : AppCompatActivity(){
         mContext=this
         initUI()
         callComingUpApi()
-
     }
     fun initUI()
     {
-
         mListView=findViewById(R.id.mListView)
         progressDialogAdd=findViewById(R.id.progressDialogAdd)
         var linearLayoutManager = LinearLayoutManager(mContext)
@@ -82,7 +80,10 @@ class SecondaryComingUpActivity : AppCompatActivity(){
                     <head>
                     <style>
                     @font-face {
-                    font-family: SourceSansPro-Semibold;src: url(SourceSansPro-Semibold.ttf);font-family: SourceSansPro-Regular;src: url(SourceSansPro-Regular.ttf);}.title {font-family: SourceSansPro-Regular;font-size:16px;text-align:left;color:	#46C1D0;}.description {font-family: SourceSansPro-Light;text-align:justify;font-size:14px;color: #000000;text-align:left;}</style>
+                    font-family: SourceSansPro-Semibold;
+                    src: url(SourceSansPro-Semibold.ttf);
+                    font-family: SourceSansPro-Regular;
+                    src: url(SourceSansPro-Regular.ttf);}.title {font-family: SourceSansPro-Regular;font-size:16px;text-align:left;color:	#46C1D0;}.description {font-family: SourceSansPro-Light;text-align:justify;font-size:14px;color: #000000;text-align:left;}</style>
                     </head><body><p class='title'>${
                     comingUpArrayList.get(position).title
                 }
