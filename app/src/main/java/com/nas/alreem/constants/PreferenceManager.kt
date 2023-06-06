@@ -42,7 +42,22 @@ class PreferenceManager {
             )
             return prefs.getString("first", "")
         }
+        fun setNoticeFirtTime(context: Context, id: String?) {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME, Context.MODE_PRIVATE
+            )
+            val editor = prefs.edit()
+            editor.putString("notice_first", id)
+            editor.apply()
+        }
 
+        fun getNoticeFirstTime(context: Context): String? {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            return prefs.getString("notice_first", "")
+        }
         fun setEmailId(context: Context, id: String?) {
             val prefs = context.getSharedPreferences(
                 PREFSNAME, Context.MODE_PRIVATE

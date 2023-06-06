@@ -34,11 +34,14 @@ class SplashActivity : AppCompatActivity() {
             else{
                 if (PreferenceManager.getaccesstoken(mContext).equals(""))
                 {
+                    PreferenceManager.setNoticeFirtTime(mContext,"")
                     startActivity(Intent(this, LoginActivity::class.java))
                     finish()
+
                 }
                 else
                 {
+                    PreferenceManager.setNoticeFirtTime(mContext,"")
                     startActivity(Intent(this, HomeActivity::class.java))
                     finish()
 

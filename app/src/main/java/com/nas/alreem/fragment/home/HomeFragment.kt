@@ -24,6 +24,8 @@ import com.google.android.material.internal.ContextUtils.getActivity
 import com.nas.alreem.BuildConfig
 import com.nas.alreem.R
 import com.nas.alreem.activity.home.HomeActivity
+import com.nas.alreem.activity.login.LoginActivity
+import com.nas.alreem.activity.settings.TutorialActivity
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.ConstantWords
 import com.nas.alreem.constants.DialogFunctions
@@ -115,6 +117,7 @@ var bannerarray = ArrayList<String>()
 lateinit var mContext: Context
 lateinit var current_date:String
 var currentPage: Int = 0
+private val NOTICE_TIME_OUT:Long = 5000
 class HomeFragment : Fragment() , View.OnClickListener{
 
     override fun onCreateView(
@@ -171,6 +174,22 @@ class HomeFragment : Fragment() , View.OnClickListener{
                             }
                             else {
                                 pager.setBackgroundResource(R.drawable.default_banner)
+                            }
+                            var notice="https://cms.nasabudhabi.ae//storage/banner_images/1685530996.PNG"
+                            if(notice.equals(""))
+                            {
+
+                            }
+                            else{
+                                if (PreferenceManager.getNoticeFirstTime(mContext).equals(""))
+                                {
+                                    PreferenceManager.setNoticeFirtTime(mContext,"djhdhhf")
+                                    showPopUpImage(notice,mContext)
+                                }
+                                else{
+
+                                }
+
                             }
 
                         }
@@ -1079,6 +1098,32 @@ class HomeFragment : Fragment() , View.OnClickListener{
 
 }
 
+private fun showPopUpImage(notice:String,context: Context)
+{
+    val dialog = Dialog(context)
+    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+    dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    dialog.setCancelable(false)
+    dialog.setContentView(R.layout.dialog_notice)
+    var bannerImg = dialog.findViewById(R.id.bannerImg) as ImageView
+    var closeImg = dialog.findViewById(R.id.closeImg) as ImageView
+    Glide.with(context).load(notice).centerCrop().into(bannerImg)
+    closeImg.setOnClickListener()
+    {
+        dialog.dismiss()
+    }
+
+
+    Handler().postDelayed({
+
+      dialog.dismiss()
+
+    }, NOTICE_TIME_OUT)
+
+
+    dialog.show()
+}
+
 fun fragmentIntent(mFragment: Fragment?) {
     if (mFragment != null) {
 
@@ -1175,5 +1220,8 @@ private fun checkpermissionCal() {
             123
         )
     }
+
+
+
 
 }
