@@ -22,6 +22,7 @@ import com.nas.alreem.R
 import com.nas.alreem.activity.primary.PrimaryComingUpActivity
 import com.nas.alreem.activity.settings.TermsOfServiceActivity
 import com.nas.alreem.activity.settings.TutorialActivity
+import com.nas.alreem.activity.survey.SurveyListActivity
 import com.nas.alreem.constants.*
 import com.nas.alreem.fragment.settings.adapter.SettingsAdapter
 
@@ -55,6 +56,7 @@ class SettingsFragment : Fragment() {
             settingsArrayList.add(mContext.resources.getString(R.string.terms_of_service))
             settingsArrayList.add(mContext.resources.getString(R.string.email_us))
             settingsArrayList.add(mContext.resources.getString(R.string.tutorial))
+            settingsArrayList.add(mContext.resources.getString(R.string.survey))
             settingsArrayList.add(mContext.resources.getString(R.string.change_password))
             settingsArrayList.add(mContext.resources.getString(R.string.delete_my_account))
             settingsArrayList.add(mContext.resources.getString(R.string.logout))
@@ -151,15 +153,21 @@ class SettingsFragment : Fragment() {
 //                        DialogFunctions.commonErrorAlertDialog("Coming Soon!","This Feature will be available shortly",
 //                            mContext)
                     }
-                    else if (position==4)
+                    else if(position==4)
                     {
-                        DialogFunctions.changePasswordDialog(mContext)
+                        //survey
+                        val intent = Intent(mContext, SurveyListActivity::class.java)
+                        startActivity(intent)
                     }
                     else if (position==5)
                     {
-                        DialogFunctions.deleteAccountDialog(mContext)
+                        DialogFunctions.changePasswordDialog(mContext)
                     }
                     else if (position==6)
+                    {
+                        DialogFunctions.deleteAccountDialog(mContext)
+                    }
+                    else if (position==7)
                     {
                         DialogFunctions.logoutDialog(mContext)
                     }

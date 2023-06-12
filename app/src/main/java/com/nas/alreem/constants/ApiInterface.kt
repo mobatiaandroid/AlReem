@@ -40,6 +40,9 @@ import com.nas.alreem.activity.payments.model.payment_token.PaymentTokenApiModel
 import com.nas.alreem.activity.payments.model.payment_token.PaymentTokenModel
 import com.nas.alreem.activity.primary.model.ComingUpResponseModel
 import com.nas.alreem.activity.settings.model.TermsOfServiceResponseModel
+import com.nas.alreem.activity.survey.model.SurveyDetailApiModel
+import com.nas.alreem.activity.survey.model.SurveyDetailResponseModel
+import com.nas.alreem.activity.survey.model.SurveyListResponseModel
 import com.nas.alreem.fragment.about_us.model.AboutUsResponseModel
 import com.nas.alreem.fragment.calendar.model.CalendarAPIModel
 import com.nas.alreem.fragment.calendar.model.CalendarResponseModel
@@ -50,6 +53,7 @@ import com.nas.alreem.fragment.gallery.model.ThumnailResponseModel
 import com.nas.alreem.fragment.home.model.BannerResponseModel
 import com.nas.alreem.fragment.notifications.model.NotificationApiModel
 import com.nas.alreem.fragment.notifications.model.NotificationResponseModel
+import com.nas.alreem.fragment.parents_essentials.model.ParentsEssentialResponseModel
 import com.nas.alreem.fragment.payments.model.PaymentResponseModel
 import com.nas.alreem.fragment.payments.model.SendEmailApiModel
 import com.nas.alreem.fragment.primary.model.PrimaryResponseModel
@@ -146,6 +150,24 @@ interface ApiInterface {
         @Header("Authorization") token:String
     ): Call<TermsOfServiceResponseModel>
 
+    /*************Survey_list****************/
+    @GET("survey_list")
+    @Headers("Content-Type: application/json")
+    fun surveyList(
+        @Header("Authorization") token:String
+    ): Call<SurveyListResponseModel>
+
+
+    /*************Survey_detail****************/
+    @POST("survey_details")
+    @Headers("Content-Type: application/json")
+    fun surveyDetail(
+        @Body  SurveyDetailApi: SurveyDetailApiModel,
+        @Header("Authorization") token:String
+    ): Call<SurveyDetailResponseModel>
+
+
+
     /*************CHANGE_PASSWORD****************/
     @POST("change-password")
     @Headers("Content-Type: application/json")
@@ -209,6 +231,13 @@ interface ApiInterface {
     fun paymentBanner(
         @Header("Authorization") token:String
     ): Call<PaymentResponseModel>
+
+    /*************PAYMENT_BANNER****************/
+    @GET("parent_essential ")
+    @Headers("Content-Type: application/json")
+    fun parentsEssential(
+        @Header("Authorization") token:String
+    ): Call<ParentsEssentialResponseModel>
 
 
     /*************STUDENT_LIST****************/

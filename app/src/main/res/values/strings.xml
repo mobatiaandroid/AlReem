@@ -7,6 +7,7 @@
         <item>Calendar</item>
         <item>Payments</item>
         <item>Lunch Box</item>
+        <item>Parent Essentials</item>
         <item>Early Years</item>
         <item>Primary</item>
         <item>Secondary</item>
@@ -22,6 +23,7 @@
         <item>@drawable/calendar</item>
         <item>@drawable/payment</item>
         <item>@drawable/lunchbox_icon</item>
+        <item>@drawable/parent</item>
         <item>@drawable/earlyyears</item>
         <item>@drawable/primary</item>
         <item>@drawable/secondary</item>
@@ -56,6 +58,7 @@
     <string name="terms_of_service">Terms of Service</string>
     <string name="email_us">Email Us</string>
     <string name="tutorial">Tutorial</string>
+    <string name="survey">Survey</string>
     <string name="change_password">Change Password</string>
     <string name="delete_my_account">Delete My Account</string>
     <string name="logout">Logout</string>

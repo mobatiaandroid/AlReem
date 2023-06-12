@@ -4,18 +4,23 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/drawable-v24/rectangular_border_payment.xml" value="0.1125" />
+        <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/drawable/button_grey_white_curve.xml" value="0.1" />
+        <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/drawable/button_grey_with_teal.xml" value="0.1" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/drawable/curved_filled_layout.xml" value="0.1" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/drawable/dialogcurvedrectangle.xml" value="0.1545" />
+        <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/drawable/dialogcurvedrectanglesplitbg.xml" value="0.1" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/drawable/dialoguebottomcurve.xml" value="0.149" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/drawable/dialoguetopcurve.xml" value="0.149" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/drawable/edit_text_login.xml" value="0.149" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/drawable/edittext_cursor.xml" value="0.1125" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/drawable/edittext_greybg.xml" value="0.1735" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/drawable/list_calendar_selector.xml" value="0.165" />
+        <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/drawable/rec_blue_border_white.xml" value="0.1" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/drawable/rectangular_border_cca_week.xml" value="0.1125" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/drawable/shape_circle_navy.xml" value="0.165" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/drawable/shape_circle_red.xml" value="0.165" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/drawable/spinner_bg.xml" value="0.1125" />
+        <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/drawable/survey_num_bg.xml" value="0.1" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/activity_audio_player_detail.xml" value="0.2632066728452271" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/activity_calendar_tutorial.xml" value="0.18931159420289856" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/activity_coming_up.xml" value="0.21784420289855072" />
@@ -25,6 +30,7 @@
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/activity_main.xml" value="0.14945652173913043" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/activity_newsletter.xml" value="0.1875" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/activity_newsletter_list.xml" value="0.1875" />
+        <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/activity_parents_essential_detail.xml" value="0.22644927536231885" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/activity_payment_category.xml" value="0.18931159420289856" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/activity_paymentdetails.xml" value="0.152" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/activity_pdf_viewer.xml" value="0.18931159420289856" />
@@ -33,6 +39,7 @@
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/activity_priamry.xml" value="0.1" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/activity_social_media.xml" value="0.1875" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/activity_splash.xml" value="0.2421875" />
+        <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/activity_survey_list.xml" value="0.22644927536231885" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/activity_term_calendar.xml" value="0.18931159420289856" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/activity_terms_of_service.xml" value="0.18931159420289856" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/activity_text_message_detail.xml" value="0.136" />
@@ -55,6 +62,9 @@
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/adapter_primary_list.xml" value="0.1" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/adapter_settings.xml" value="0.18931159420289856" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/adapter_student_list.xml" value="0.18931159420289856" />
+        <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/adapter_survey_choice.xml" value="0.1" />
+        <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/adapter_survey_list.xml" value="0.1" />
+        <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/adapter_survey_questions.xml" value="0.22644927536231885" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/adapter_thumnail_image.xml" value="0.18931159420289856" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/basket_itemlist_adapter.xml" value="0.1286231884057971" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/calendar_canteen_popup.xml" value="0.18931159420289856" />
@@ -79,9 +89,12 @@
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/dialog_logout.xml" value="0.21784420289855072" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/dialog_notice.xml" value="0.22644927536231885" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/dialog_ok_cancel.xml" value="0.1" />
+        <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/dialog_question_answer_survey.xml" value="0.22644927536231885" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/dialog_send_email.xml" value="0.2" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/dialog_sign_up.xml" value="0.1390625" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/dialog_social_media.xml" value="0.1875" />
+        <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/dialog_survey_close.xml" value="0.22644927536231885" />
+        <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/dialog_survey_wlcome.xml" value="0.22644927536231885" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/dialog_updateversion.xml" value="0.18931159420289856" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/dialogue_calendar_detail.xml" value="0.10104166666666667" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/dialogue_student_list.xml" value="0.13632246376811594" />
@@ -92,6 +105,7 @@
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/fragment_gallery.xml" value="0.1" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/fragment_home_screen.xml" value="0.2421875" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/fragment_notifications.xml" value="0.1" />
+        <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/fragment_parents_essentials.xml" value="0.22644927536231885" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/fragment_payment.xml" value="0.18931159420289856" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/fragment_primary.xml" value="0.2421875" />
         <entry key="..\:/Users/aparn/Documents/AlReem/app/src/main/res/layout/fragment_secondary.xml" value="0.24114583333333334" />
@@ -115,7 +129,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

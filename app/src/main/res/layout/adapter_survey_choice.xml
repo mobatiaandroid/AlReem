@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout
+        android:id="@+id/choiseRelative"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_margin="5dp"
+        android:background="@color/white"
+        android:visibility="gone">
+        <RelativeLayout
+            android:id="@+id/txtRel"
+            android:layout_width="match_parent"
+            android:layout_height="44dp">
+
+            <ImageView
+                android:id="@+id/indicateImg"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:src="@drawable/option_not_select" />
+
+            <com.nas.alreem.commonviews.CustomTextViewRegular
+                android:id="@+id/answerTxt"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/indicateImg"
+                android:background="@drawable/button_grey_with_teal"
+                android:gravity="center_vertical"
+                android:paddingLeft="5dp"
+                android:textColor="@color/black" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_below="@+id/txtRel"
+            android:background="@color/grey" />
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/smileyRelative"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:visibility="gone"
+        android:layout_margin="5dp"
+        android:background="@drawable/survey_num_bg">
+        <LinearLayout
+            android:id="@+id/smileyLinear"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginLeft="5dp"
+            android:gravity="center">
+            <ImageView
+                android:id="@+id/smileyImg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:src="@drawable/emoji3"/>
+            <com.nas.alreem.commonviews.CustomTextViewRegular
+                android:id="@+id/smileyTxt"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:textColor="@color/black"
+                android:paddingLeft="5dp"
+                android:text="Excited"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_margin="5dp"
+        android:layout_marginTop="10dp"
+        android:id="@+id/startRelative">
+        <ImageView
+            android:id="@+id/starImg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/star"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/numberRelative"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/numberTxt"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:gravity="center"
+            android:layout_centerInParent="true"
+            android:background="@drawable/rec_blue_border_white"
+            android:textColor="@color/black" />
+
+        <com.nas.alreem.commonviews.CustomTextViewBold
+            android:id="@+id/rateType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/numberTxt"
+            android:layout_marginTop="25dp"
+            android:gravity="center_horizontal"
+            android:textColor="@color/black"
+            android:textSize="10sp" />
+
+    </RelativeLayout>
+</RelativeLayout>

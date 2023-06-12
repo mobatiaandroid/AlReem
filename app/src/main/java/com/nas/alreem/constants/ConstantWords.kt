@@ -1,5 +1,8 @@
 package com.nas.alreem.constants
 
+import com.nas.alreem.activity.survey.model.SurveySubmitApiModel
+import com.nas.alreem.activity.survey.model.SurveySubmitDataModel
+
 class ConstantWords {
     companion object
     {
@@ -35,12 +38,13 @@ class ConstantWords {
         var TAB_CALENDAR = "2"
         var TAB_PAYMENTS = "3"
         var TAB_LUNCH_BOX = "4"
-        var TAB_EARLY_YEARS = "5"
-        var TAB_PRIMARY = "6"
-        var TAB_SECONDARY = "7"
-        var TAB_GALLERY = "8"
-        var TAB_ABOUT_US = "9"
-        var TAB_CONTACT_US = "10"
+        var TAB_PARENT_ESSENTIAL = "5"
+        var TAB_EARLY_YEARS = "6"
+        var TAB_PRIMARY = "7"
+        var TAB_SECONDARY = "8"
+        var TAB_GALLERY = "9"
+        var TAB_ABOUT_US = "10"
+        var TAB_CONTACT_US = "11"
 
 
 
@@ -60,6 +64,9 @@ class ConstantWords {
         var social_media="Social Media"
         var information="Informations"
         var newsletters="Newsletters"
+        var parentessential="Parent Essentials"
 
+
+        var surveySubmitArrayList=ArrayList<SurveySubmitDataModel>()
     }
 }

@@ -42,6 +42,7 @@ import com.nas.alreem.fragment.notifications.NotificationFragment
 import com.nas.alreem.fragment.notifications.adapter.NotificationListAdapter
 import com.nas.alreem.fragment.notifications.model.NotificationApiModel
 import com.nas.alreem.fragment.notifications.model.NotificationResponseModel
+import com.nas.alreem.fragment.parents_essentials.ParentsEssentialFragment
 import com.nas.alreem.fragment.payments.PaymentFragment
 import com.nas.alreem.fragment.payments.model.PaymentResponseModel
 import com.nas.alreem.fragment.primary.PrimaryFragment
@@ -175,7 +176,7 @@ class HomeFragment : Fragment() , View.OnClickListener{
                             else {
                                 pager.setBackgroundResource(R.drawable.default_banner)
                             }
-                            var notice="https://cms.nasabudhabi.ae//storage/banner_images/1685530996.PNG"
+                            var notice=response.body()!!.responseArray!!.notice
                             if(notice.equals(""))
                             {
 
@@ -751,6 +752,9 @@ class HomeFragment : Fragment() , View.OnClickListener{
                 textdata.equals(ConstantWords.contact_us, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_CONTACT_US
 
+                } textdata.equals(ConstantWords.parentessential, ignoreCase = true) -> {
+                    TAB_ID = ConstantWords.TAB_PARENT_ESSENTIAL
+
                 }
 
             }
@@ -968,6 +972,10 @@ class HomeFragment : Fragment() , View.OnClickListener{
                     DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert),mContext.resources.getString(R.string.feature_only_for_registered_user),mContext)
 
                 }
+                ConstantWords.TAB_PARENT_ESSENTIAL -> {
+                    DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert),mContext.resources.getString(R.string.feature_only_for_registered_user),mContext)
+
+                }
                 ConstantWords.TAB_ABOUT_US -> {
                     mFragment = AboutUsFragment()
                     fragmentIntent(mFragment)
@@ -1049,6 +1057,10 @@ class HomeFragment : Fragment() , View.OnClickListener{
                 }
                 ConstantWords.TAB_SECONDARY -> {
                     mFragment = SecondaryFragment()
+                    fragmentIntent(mFragment)
+                }
+                ConstantWords.TAB_PARENT_ESSENTIAL -> {
+                    mFragment = ParentsEssentialFragment()
                     fragmentIntent(mFragment)
                 }
                 ConstantWords.TAB_GALLERY -> {

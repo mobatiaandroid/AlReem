@@ -42,6 +42,7 @@ import com.nas.alreem.fragment.gallery.GalleryFragment
 import com.nas.alreem.fragment.home.HomeFragment
 import com.nas.alreem.fragment.home.mContext
 import com.nas.alreem.fragment.notifications.NotificationFragment
+import com.nas.alreem.fragment.parents_essentials.ParentsEssentialFragment
 import com.nas.alreem.fragment.payments.PaymentFragment
 import com.nas.alreem.fragment.primary.PrimaryFragment
 import com.nas.alreem.fragment.secondary.SecondaryFragment
@@ -184,41 +185,47 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                   }
                   4->
                   {
-                      //payment
+                      //lunchbox
                       DialogFunctions.commonErrorAlertDialog(context.resources.getString(R.string.alert),context.resources.getString(R.string.feature_only_for_registered_user),context)
 
                   }
-                  5->
+                 5->
+                  {
+                      //parents essential
+                      DialogFunctions.commonErrorAlertDialog(context.resources.getString(R.string.alert),context.resources.getString(R.string.feature_only_for_registered_user),context)
+
+                  }
+                  6->
                   {
                       //Early years
                       mFragment = EarlyYearsFragment()
                       replaceFragmentsSelected(position)
                   }
-                  6->
+                  7->
                   {
                       //Primary
                       mFragment = PrimaryFragment()
                       replaceFragmentsSelected(position)
                   }
-                  7->
+                  8->
                   {
                       //Secondary
                       mFragment = SecondaryFragment()
                       replaceFragmentsSelected(position)
                   }
-                  8->
+                  9->
                   {
                       //Gallery
                       DialogFunctions.commonErrorAlertDialog(context.resources.getString(R.string.alert),context.resources.getString(R.string.feature_only_for_registered_user),context)
 
                   }
-                  9->
+                  10->
                   {
                       //About Us
                       mFragment = AboutUsFragment()
                       replaceFragmentsSelected(position)
                   }
-                  10->
+                  11->
                   {
                       // Contact Us
                       if (ActivityCompat.checkSelfPermission(
@@ -281,35 +288,43 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                     }
                     5->
                     {
+                        mFragment = ParentsEssentialFragment()
+                        replaceFragmentsSelected(position)
+//                        DialogFunctions.commonErrorAlertDialog("Coming Soon!","This Feature will be available shortly",
+//                            mContext
+//                        )
+                    }
+                    6->
+                    {
                         //Early years
                         mFragment = EarlyYearsFragment()
                         replaceFragmentsSelected(position)
                     }
-                    6->
+                    7->
                     {
                         //Primary
                         mFragment = PrimaryFragment()
                         replaceFragmentsSelected(position)
                     }
-                    7->
+                    8->
                     {
                         //Secondary
                         mFragment = SecondaryFragment()
                         replaceFragmentsSelected(position)
                     }
-                    8->
+                    9->
                     {
                         //Gallery
                         mFragment = GalleryFragment()
                         replaceFragmentsSelected(position)
                     }
-                    9->
+                    10->
                     {
                         //About Us
                         mFragment = AboutUsFragment()
                         replaceFragmentsSelected(position)
                     }
-                    10->
+                    11->
                     {
                         // Contact Us
                         if (ActivityCompat.checkSelfPermission(
