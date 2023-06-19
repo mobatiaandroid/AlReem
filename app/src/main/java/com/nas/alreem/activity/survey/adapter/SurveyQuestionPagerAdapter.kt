@@ -6,24 +6,20 @@ import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
-import com.bumptech.glide.Glide
 import com.nas.alreem.R
-import com.nas.alreem.activity.survey.model.SurveyListDataModel
 import com.nas.alreem.activity.survey.model.SurveyQuestionsModel
+import com.nas.alreem.appcontroller.AppController
 import com.nas.alreem.constants.OnItemClickListener
 import com.nas.alreem.constants.addOnItemClickListener
 import com.nas.alreem.fragment.home.mContext
-import java.util.ArrayList
 
 class SurveyQuestionPagerAdapter: PagerAdapter {
     var context: Context
@@ -83,14 +79,14 @@ class SurveyQuestionPagerAdapter: PagerAdapter {
             llm.orientation = LinearLayoutManager.HORIZONTAL
             choiceRecycler.layoutManager = llm
         }
-        if (questionArrayList.get(position).answer.equals(""))
+       /* if (questionArrayList.get(position).answer.equals(""))
         {
             var cAdapter=SurveyChoiceAdapter(questionArrayList.get(position).offered_answers!!,
                 context,questionArrayList.get(position).answer_type)
             choiceRecycler.adapter=cAdapter
 
-        }
-        else{
+        }*/
+       /* else{
             for (i in 0..questionArrayList.get(position).offered_answers!!.size-1)
             {
                 if (questionArrayList.get(position).answer.equals(questionArrayList.get(position).offered_answers!!.get(i).id.toString()))
@@ -101,24 +97,271 @@ class SurveyQuestionPagerAdapter: PagerAdapter {
                     questionArrayList.get(position).offered_answers!!.get(i).is_clicked=true
                 }
 
-            }
+            }*/
 
             var cAdapter=SurveyChoiceAdapter(questionArrayList.get(position).offered_answers!!,
                 context,questionArrayList.get(position).answer_type)
             choiceRecycler.adapter=cAdapter
 
-           choiceRecycler.addOnItemClickListener(object : OnItemClickListener {
+            choiceRecycler.addOnItemClickListener(object : OnItemClickListener {
                 @SuppressLint("SimpleDateFormat", "SetTextI18n")
                 @RequiresApi(Build.VERSION_CODES.O)
-                override fun onItemClicked(position: Int, view: View)
+                override fun onItemClicked(pos: Int, view: View)
                 {
+                    var clickedPosition = -1
+                    for (i in questionArrayList.get(position).offered_answers!!.indices) {
+                        if (questionArrayList.get(position).offered_answers!!.get(i).is_clicked
+                        ) {
+                            clickedPosition = i
+                        }
+                    }
+                    if (clickedPosition != -1) {
+                        if (clickedPosition == pos) {
+                            AppController.answer_id = ""
+                            AppController.question_id = questionArrayList.get(position).id.toString()
+                            questionArrayList.get(position)!!.answer=""
+                            questionArrayList.get(position).offered_answers!!.get(pos).is_clicked=false
+                            if (questionArrayList.get(position).offered_answers!!.size === 5
+                            ) {
+                                questionArrayList.get(position).offered_answers!!.get(0).is_clicked0=false
+                                questionArrayList.get(position).offered_answers!!.get(1).is_clicked0=false
+                                questionArrayList.get(position).offered_answers!!.get(2).is_clicked0=false
+                                questionArrayList.get(position).offered_answers!!.get(3).is_clicked0=false
+                                questionArrayList.get(position).offered_answers!!.get(4).is_clicked0=false
+                            }
+                            if (questionArrayList.get(position).offered_answers!!.size === 4
+                            ) {
+                                questionArrayList.get(position).offered_answers!!.get(0).is_clicked0=false
+                                questionArrayList.get(position).offered_answers!!.get(1).is_clicked0=false
+                                questionArrayList.get(position).offered_answers!!.get(2).is_clicked0=false
+                                questionArrayList.get(position).offered_answers!!.get(3).is_clicked0=false
+                            }
+                            if (questionArrayList.get(position).offered_answers!!.size === 3
+                            ) {
+                                questionArrayList.get(position).offered_answers!!.get(0).is_clicked0=false
+                                questionArrayList.get(position).offered_answers!!.get(1).is_clicked0=false
+                                questionArrayList.get(position).offered_answers!!.get(2).is_clicked0=false
+                            }
+                            if (questionArrayList.get(position).offered_answers!!.size === 2
+                            ) {
+                                questionArrayList.get(position).offered_answers!!.get(0).is_clicked0=false
+                                questionArrayList.get(position).offered_answers!!.get(1).is_clicked0=false
+                            }
+                            if (questionArrayList.get(position).offered_answers!!.size === 1
+                            ) {
+                                questionArrayList.get(position).offered_answers!!.get(0).is_clicked0=false
+                            }
 
+//                                for (int j=0;j< mSurveyArrayList.get(position).getSurveyAnswersrrayList().size();j++)
+//                                {
+//                                    if (pos)
+//                                }
+                        } else {
+                            AppController.answer_id = questionArrayList.get(position).offered_answers!!.get(pos).id.toString()
+                            AppController.question_id = questionArrayList.get(position).id.toString()
+                            questionArrayList.get(position).offered_answers!!.get(clickedPosition).is_clicked=false
+                            questionArrayList.get(position).offered_answers!!.get(pos).is_clicked=true
+                            questionArrayList.get(position).answer=(questionArrayList.get(position).offered_answers!!.get(pos).id.toString())
+                            if (questionArrayList.get(position).offered_answers!!.size === 5
+                            ) {
+                                if (pos == 0) {
+                                    questionArrayList.get(position).offered_answers!!.get(0).is_clicked0=true
+                                    questionArrayList.get(position).offered_answers!!.get(1).is_clicked0=false
+                                    questionArrayList.get(position).offered_answers!!.get(2).is_clicked0=false
+                                    questionArrayList.get(position).offered_answers!!.get(3).is_clicked0=false
+                                    questionArrayList.get(position).offered_answers!!.get(4).is_clicked0=false
+                                } else if (pos == 1) {
+                                    questionArrayList.get(position).offered_answers!!.get(0).is_clicked0=true
+                                    questionArrayList.get(position).offered_answers!!.get(1).is_clicked0=true
+                                    questionArrayList.get(position).offered_answers!!.get(2).is_clicked0=false
+                                    questionArrayList.get(position).offered_answers!!.get(3).is_clicked0=false
+                                    questionArrayList.get(position).offered_answers!!.get(4).is_clicked0=false
+                                } else if (pos == 2) {
+                                    questionArrayList.get(position).offered_answers!!.get(0).is_clicked0=true
+                                    questionArrayList.get(position).offered_answers!!.get(1).is_clicked0=true
+                                    questionArrayList.get(position).offered_answers!!.get(2).is_clicked0=true
+                                    questionArrayList.get(position).offered_answers!!.get(3).is_clicked0=false
+                                    questionArrayList.get(position).offered_answers!!.get(4).is_clicked0=false
+                                } else if (pos == 3) {
+                                    questionArrayList.get(position).offered_answers!!.get(0).is_clicked0=true
+                                    questionArrayList.get(position).offered_answers!!.get(1).is_clicked0=true
+                                    questionArrayList.get(position).offered_answers!!.get(2).is_clicked0=true
+                                    questionArrayList.get(position).offered_answers!!.get(3).is_clicked0=true
+                                    questionArrayList.get(position).offered_answers!!.get(4).is_clicked0=false
+                                } else if (pos == 4) {
+                                    questionArrayList.get(position).offered_answers!!.get(0).is_clicked0=true
+                                    questionArrayList.get(position).offered_answers!!.get(1).is_clicked0=true
+                                    questionArrayList.get(position).offered_answers!!.get(2).is_clicked0=true
+                                    questionArrayList.get(position).offered_answers!!.get(3).is_clicked0=true
+                                    questionArrayList.get(position).offered_answers!!.get(4).is_clicked0=true
+                                }
+                            }
+                            if (questionArrayList.get(position).offered_answers!!.size === 4) {
+                                if (pos == 0) {
+                                    questionArrayList.get(position).offered_answers!!.get(0).is_clicked0=true
+                                    questionArrayList.get(position).offered_answers!!.get(1).is_clicked0=false
+                                    questionArrayList.get(position).offered_answers!!.get(2).is_clicked0=false
+                                    questionArrayList.get(position).offered_answers!!.get(3).is_clicked0=false
+                                } else if (pos == 1) {
+                                    questionArrayList.get(position).offered_answers!!.get(0).is_clicked0=true
+                                    questionArrayList.get(position).offered_answers!!.get(1).is_clicked0=true
+                                    questionArrayList.get(position).offered_answers!!.get(2).is_clicked0=false
+                                    questionArrayList.get(position).offered_answers!!.get(3).is_clicked0=false
+                                } else if (pos == 2) {
+                                    questionArrayList.get(position).offered_answers!!.get(0).is_clicked0=true
+                                    questionArrayList.get(position).offered_answers!!.get(1).is_clicked0=true
+                                    questionArrayList.get(position).offered_answers!!.get(2).is_clicked0=true
+                                    questionArrayList.get(position).offered_answers!!.get(3).is_clicked0=false
+                                } else if (pos == 3) {
+                                    questionArrayList.get(position).offered_answers!!.get(0).is_clicked0=true
+                                    questionArrayList.get(position).offered_answers!!.get(1).is_clicked0=true
+                                    questionArrayList.get(position).offered_answers!!.get(2).is_clicked0=true
+                                    questionArrayList.get(position).offered_answers!!.get(3).is_clicked0=true
+                                }
+                            }
+                            if (questionArrayList.get(position).offered_answers!!.size === 3) {
+                                if (pos == 0) {
+                                    questionArrayList.get(position).offered_answers!!.get(0).is_clicked0=(true)
+                                    questionArrayList.get(position).offered_answers!!.get(1).is_clicked0=(false)
+                                    questionArrayList.get(position).offered_answers!!.get(2).is_clicked0=(false)
+                                } else if (pos == 1) {
+                                    questionArrayList.get(position).offered_answers!!.get(0).is_clicked0=(true)
+                                    questionArrayList.get(position).offered_answers!!.get(1).is_clicked0=(true)
+                                    questionArrayList.get(position).offered_answers!!.get(2).is_clicked0=(false)
+                                } else if (pos == 2) {
+                                    questionArrayList.get(position).offered_answers!!.get(0).is_clicked0=(true)
+                                    questionArrayList.get(position).offered_answers!!.get(1).is_clicked0=(true)
+                                    questionArrayList.get(position).offered_answers!!.get(2).is_clicked0=(true)
+                                }
+                            }
+                            if (questionArrayList.get(position).offered_answers!!.size === 2
+                            ) {
+                                if (pos == 0) {
+                                    questionArrayList.get(position).offered_answers!!.get(0).is_clicked0=(true)
+                                    questionArrayList.get(position).offered_answers!!.get(1).is_clicked0=(false)
+                                } else if (pos == 1) {
+                                    questionArrayList.get(position).offered_answers!!.get(0).is_clicked0=(true)
+                                    questionArrayList.get(position).offered_answers!!.get(1).is_clicked0=(true)
+                                }
+                            }
+                            if (questionArrayList.get(position).offered_answers!!.size === 1
+                            ) {
+                                if (pos == 0) {
+                                    questionArrayList.get(position).offered_answers!!.get(0).is_clicked0=(true)
+                                }
+                            }
+                        }
+                    } else {
+                        AppController.answer_id = questionArrayList.get(position).offered_answers!!.get(pos).id.toString()
+                        AppController.question_id = questionArrayList.get(position).id.toString()
+                        questionArrayList.get(position).offered_answers!!.get(pos).is_clicked=(true)
+                        questionArrayList.get(position).answer=(questionArrayList.get(position).offered_answers!!.get(pos).id).toString()
+                        if (questionArrayList.get(position).offered_answers!!.size === 5
+                        ) {
+                            if (pos == 0) {
+                                questionArrayList.get(position).offered_answers!!.get(0).is_clicked0=(true)
+                                questionArrayList.get(position).offered_answers!!.get(1).is_clicked0=(false)
+                                questionArrayList.get(position).offered_answers!!.get(2).is_clicked0=(false)
+                                questionArrayList.get(position).offered_answers!!.get(3).is_clicked0=(false)
+                                questionArrayList.get(position).offered_answers!!.get(4).is_clicked0=(false)
+                            } else if (pos == 1) {
+                                questionArrayList.get(position).offered_answers!!.get(0).is_clicked0=(true)
+                                questionArrayList.get(position).offered_answers!!.get(1).is_clicked0=(true)
+                                questionArrayList.get(position).offered_answers!!.get(2).is_clicked0=(false)
+                                questionArrayList.get(position).offered_answers!!.get(3).is_clicked0=(false)
+                                questionArrayList.get(position).offered_answers!!.get(4).is_clicked0=(false)
+                            } else if (pos == 2) {
+                                questionArrayList.get(position).offered_answers!!.get(0).is_clicked0=(true)
+                                questionArrayList.get(position).offered_answers!!.get(1).is_clicked0=(true)
+                                questionArrayList.get(position).offered_answers!!.get(2).is_clicked0=(true)
+                                questionArrayList.get(position).offered_answers!!.get(3).is_clicked0=(false)
+                                questionArrayList.get(position).offered_answers!!.get(4).is_clicked0=(false)
+                            } else if (pos == 3) {
+                                questionArrayList.get(position).offered_answers!!.get(0).is_clicked0=(true)
+                                questionArrayList.get(position).offered_answers!!.get(1).is_clicked0=(true)
+                                questionArrayList.get(position).offered_answers!!.get(2).is_clicked0=(true)
+                                questionArrayList.get(position).offered_answers!!.get(3).is_clicked0=(true)
+                                questionArrayList.get(position).offered_answers!!.get(4).is_clicked0=(false)
+                            } else if (pos == 4) {
+                                questionArrayList.get(position).offered_answers!!.get(0).is_clicked0=(true)
+                                questionArrayList.get(position).offered_answers!!.get(1).is_clicked0=(true)
+                                questionArrayList.get(position).offered_answers!!.get(2).is_clicked0=(true)
+                                questionArrayList.get(position).offered_answers!!.get(3).is_clicked0=(true)
+                                questionArrayList.get(position).offered_answers!!.get(4).is_clicked0=(true)
+                            }
+                        }
+                        if (questionArrayList.get(position).offered_answers!!.size === 4
+                        ) {
+                            if (pos == 0) {
+                                questionArrayList.get(position).offered_answers!!.get(0).is_clicked0=(true)
+                                questionArrayList.get(position).offered_answers!!.get(1).is_clicked0=(false)
+                                questionArrayList.get(position).offered_answers!!.get(2).is_clicked0=(false)
+                                questionArrayList.get(position).offered_answers!!.get(3).is_clicked0=(false)
+                            } else if (pos == 1) {
+                                questionArrayList.get(position).offered_answers!!.get(0).is_clicked0=(true)
+                                questionArrayList.get(position).offered_answers!!.get(1).is_clicked0=(true)
+                                questionArrayList.get(position).offered_answers!!.get(2).is_clicked0=(false)
+                                questionArrayList.get(position).offered_answers!!.get(3).is_clicked0=(false)
+                            } else if (pos == 2) {
+                                questionArrayList.get(position).offered_answers!!.get(0).is_clicked0=(true)
+                                questionArrayList.get(position).offered_answers!!.get(1).is_clicked0=(true)
+                                questionArrayList.get(position).offered_answers!!.get(2).is_clicked0=(true)
+                                questionArrayList.get(position).offered_answers!!.get(3).is_clicked0=(false)
+                            } else if (pos == 3) {
+                                questionArrayList.get(position).offered_answers!!.get(0).is_clicked0=(true)
+                                questionArrayList.get(position).offered_answers!!.get(1).is_clicked0=(true)
+                                questionArrayList.get(position).offered_answers!!.get(2).is_clicked0=(true)
+                                questionArrayList.get(position).offered_answers!!.get(3).is_clicked0=(true)
+                            }
+                        }
+                        if (questionArrayList.get(position).offered_answers!!.size === 3
+                        ) {
+                            if (pos == 0) {
+                                questionArrayList.get(position).offered_answers!!.get(0).is_clicked0=(true)
+                                questionArrayList.get(position).offered_answers!!.get(1).is_clicked0=(false)
+                                questionArrayList.get(position).offered_answers!!.get(2).is_clicked0=(false)
+                            } else if (pos == 1) {
+                                questionArrayList.get(position).offered_answers!!.get(0).is_clicked0=(true)
+                                questionArrayList.get(position).offered_answers!!.get(1).is_clicked0=(true)
+                                questionArrayList.get(position).offered_answers!!.get(2).is_clicked0=(false)
+                            } else if (pos == 2) {
+                                questionArrayList.get(position).offered_answers!!.get(0).is_clicked0=(true)
+                                questionArrayList.get(position).offered_answers!!.get(1).is_clicked0=(true)
+                                questionArrayList.get(position).offered_answers!!.get(2).is_clicked0=(true)
+                            }
+                        }
+                        if (questionArrayList.get(position).offered_answers!!.size === 2
+                        ) {
+                            if (pos == 0) {
+                                questionArrayList.get(position).offered_answers!!.get(0).is_clicked0=(true)
+                                questionArrayList.get(position).offered_answers!!.get(1).is_clicked0=(false)
+                            } else if (pos == 1) {
+                                questionArrayList.get(position).offered_answers!!.get(0).is_clicked0=(true)
+                                questionArrayList.get(position).offered_answers!!.get(1).is_clicked0=(true)
+                            }
+                        }
+                        if (questionArrayList.get(position).offered_answers!!.size === 1
+                        ) {
+                            if (pos == 0) {
+                                questionArrayList.get(position).offered_answers!!.get(0).is_clicked0=(true)
+                            }
+                        }
+                    }
+                    if (position == questionArrayList.size - 1) {
+                        AppController.answer_id = questionArrayList.get(position).offered_answers!!.get(pos).id.toString()
+                        AppController.question_id = questionArrayList.get(position).id.toString()
+                    }
 
+                    var cAdapter   = SurveyChoiceAdapter(questionArrayList.get(position).offered_answers!!,
+                    context,questionArrayList.get(position).answer_type)
+                    choiceRecycler.adapter =   cAdapter
 
                 }
+
+
             })
 
-        }
+     //   }
 
 
 

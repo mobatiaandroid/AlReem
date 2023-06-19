@@ -40,9 +40,7 @@ import com.nas.alreem.activity.payments.model.payment_token.PaymentTokenApiModel
 import com.nas.alreem.activity.payments.model.payment_token.PaymentTokenModel
 import com.nas.alreem.activity.primary.model.ComingUpResponseModel
 import com.nas.alreem.activity.settings.model.TermsOfServiceResponseModel
-import com.nas.alreem.activity.survey.model.SurveyDetailApiModel
-import com.nas.alreem.activity.survey.model.SurveyDetailResponseModel
-import com.nas.alreem.activity.survey.model.SurveyListResponseModel
+import com.nas.alreem.activity.survey.model.*
 import com.nas.alreem.fragment.about_us.model.AboutUsResponseModel
 import com.nas.alreem.fragment.calendar.model.CalendarAPIModel
 import com.nas.alreem.fragment.calendar.model.CalendarResponseModel
@@ -166,6 +164,21 @@ interface ApiInterface {
         @Header("Authorization") token:String
     ): Call<SurveyDetailResponseModel>
 
+    /*************Surveys****************/
+    @POST("surveys")
+    @Headers("Content-Type: application/json")
+    fun survey(
+        @Body  SurveyApi: SurveyApiModel,
+        @Header("Authorization") token:String
+    ): Call<SurveyResponseModel>
+
+    /*************Survey_submit****************/
+    @POST("survey_submit")
+    @Headers("Content-Type: application/json")
+    fun surveysubmit(
+        @Body  SurveysubmitApi: SurveySubmitApiModel,
+        @Header("Authorization") token:String
+    ): Call<SurveySubmitResponseModel>
 
 
     /*************CHANGE_PASSWORD****************/

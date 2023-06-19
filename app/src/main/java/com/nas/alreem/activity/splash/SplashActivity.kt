@@ -4,8 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.provider.Settings
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.nas.alreem.R
 import com.nas.alreem.activity.home.HomeActivity
@@ -35,6 +33,7 @@ class SplashActivity : AppCompatActivity() {
                 if (PreferenceManager.getaccesstoken(mContext).equals(""))
                 {
                     PreferenceManager.setNoticeFirtTime(mContext,"")
+                    PreferenceManager.setIsSurveyHomeVisible(mContext, false)
                     startActivity(Intent(this, LoginActivity::class.java))
                     finish()
 
@@ -42,6 +41,7 @@ class SplashActivity : AppCompatActivity() {
                 else
                 {
                     PreferenceManager.setNoticeFirtTime(mContext,"")
+                    PreferenceManager.setIsSurveyHomeVisible(mContext, false)
                     startActivity(Intent(this, HomeActivity::class.java))
                     finish()
 

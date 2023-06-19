@@ -90,6 +90,7 @@ dependencies {
     implementation 'me.leolin:ShortcutBadger:1.1.21@aar'
     implementation 'com.github.network-international.payment-sdk-android:payment-sdk-core:3.0.1'
     implementation 'com.cepheuen.elegant-number-button:lib:1.0.2'
+    implementation 'com.github.siyamed:android-shape-imageview:0.9.+@aar'
 
 // For card payment
     implementation 'com.github.network-international.payment-sdk-android:payment-sdk:3.0.1'

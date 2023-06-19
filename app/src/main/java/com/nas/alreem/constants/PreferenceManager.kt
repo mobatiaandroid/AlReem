@@ -853,5 +853,28 @@ class PreferenceManager {
             val prefs = context.getSharedPreferences(PREFSNAME, Context.MODE_PRIVATE)
             return prefs.getInt("calendar_edited_badge", 0)
         }
+
+        fun setSurvey(context: Context, survey: Int) {
+            val prefs = context.getSharedPreferences(PREFSNAME, Context.MODE_PRIVATE)
+            val editor = prefs.edit()
+            editor.putInt("survey", survey)
+            editor.commit()
+        }
+
+        fun getSurvey(context: Context): Int {
+            val prefs = context.getSharedPreferences(PREFSNAME, Context.MODE_PRIVATE)
+            return prefs.getInt("survey", 0)
+        }
+        fun setIsSurveyHomeVisible(context: Context, result: Boolean) {
+            val prefs = context.getSharedPreferences(PREFSNAME, Context.MODE_PRIVATE)
+            val editor = prefs.edit()
+            editor.putBoolean("is_survey_visible", result)
+            editor.commit()
+        }
+
+        fun getIsSurveyHomeVisible(context: Context): Boolean {
+            val prefs = context.getSharedPreferences(PREFSNAME, Context.MODE_PRIVATE)
+            return prefs.getBoolean("is_survey_visible", false)
+        }
     }
 }

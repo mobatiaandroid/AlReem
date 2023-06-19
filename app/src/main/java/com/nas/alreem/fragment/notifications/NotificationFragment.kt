@@ -15,10 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nas.alreem.R
 import com.nas.alreem.activity.login.model.LoginResponseModel
-import com.nas.alreem.activity.notifications.AudioPlayerDetail
-import com.nas.alreem.activity.notifications.ImageMessageActivity
-import com.nas.alreem.activity.notifications.TextMessageActivity
-import com.nas.alreem.activity.notifications.VideoMessageActivity
+import com.nas.alreem.activity.notifications.*
 import com.nas.alreem.constants.*
 import com.nas.alreem.fragment.notifications.adapter.NotificationListAdapter
 import com.nas.alreem.fragment.notifications.model.NotificationApiModel
@@ -86,7 +83,7 @@ class NotificationFragment : Fragment() {
                 }
                 else if (notificationList.get(position).alert_type.equals("Voice"))
                 {
-                    val intent = Intent(activity, AudioPlayerDetail::class.java)
+                    val intent = Intent(activity, AudioPlayerDetailNew::class.java)
                     intent.putExtra("audio_title", notificationList[position].title)
                     intent.putExtra("audio_id", notificationList[position].id)
                     intent.putExtra("audio_updated", notificationList[position].created_at)
