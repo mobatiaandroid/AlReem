@@ -122,6 +122,7 @@ var survey_satisfation_status = 0
 private var surveyEmail = ""
 private var surveySize = 0
 var pos = -1
+var poss = 0
 lateinit var surveyArrayList: ArrayList<SurveyDetailDataModel>
 lateinit var surveyQuestionArrayList: ArrayList<SurveyQuestionsModel>
 lateinit var surveyAnswersArrayList: ArrayList<SurveyOfferedAnswersModel>
@@ -197,7 +198,15 @@ class HomeFragment : Fragment() , View.OnClickListener{
                                     else
                                     {
                                         Log.e("SURVEY VALUE", "API CALL")
-                                        callSurveyApi()
+                                        if (ConstantFunctions.internetCheck(mContext))
+                                        {
+                                            callSurveyApi()
+                                        }
+                                        else
+                                        {
+                                            DialogFunctions.showInternetAlertDialog(mContext)
+                                        }
+
                                     }
                                 } else
                                 {
@@ -1155,7 +1164,14 @@ private fun showPopUpImage(notice:String,context: Context)
             else
             {
                 Log.e("SURVEY VALUE", "API CALL")
-                callSurveyApi()
+                if (ConstantFunctions.internetCheck(mContext))
+                {
+                    callSurveyApi()
+                }
+                else
+                {
+                    DialogFunctions.showInternetAlertDialog(mContext)
+                }
             }
         }
         else
@@ -1176,7 +1192,14 @@ private fun showPopUpImage(notice:String,context: Context)
             else
             {
                 Log.e("SURVEY VALUE", "API CALL")
-                callSurveyApi()
+                if (ConstantFunctions.internetCheck(mContext))
+                {
+                    callSurveyApi()
+                }
+                else
+                {
+                    DialogFunctions.showInternetAlertDialog(mContext)
+                }
             }
         }
         else
@@ -1216,6 +1239,7 @@ fun callSurveyApi() {
                             for (i in response.body()!!.responseArray!!.data!!.indices) {
                                // val dataObject = dataArray.getJSONObject(i)
                                 surveyEmail = response.body()!!.responseArray!!.data!!.get(i).contact_email
+                                Log.e("surveyEmail",surveyEmail)
                                 val model = SurveyDetailDataModel()
                                 model.id=(response.body()!!.responseArray!!.data!!.get(i).id)
                                 model.survey_name=(response.body()!!.responseArray!!.data!!.get(i).survey_name)
@@ -1251,7 +1275,7 @@ fun callSurveyApi() {
                                         }
                                         mModel.offered_answers=(surveyAnswersArrayList)
                                         surveyQuestionArrayList.add(mModel)
-                                        Log.e("surveydata", surveyQuestionArrayList.toString())
+                                        Log.e("surveydata", surveyQuestionArrayList.size.toString())
 
 
                                     }
@@ -1260,7 +1284,7 @@ fun callSurveyApi() {
                                 surveyArrayList.add(model)
                             }
                             //showSurvey(getActivity(),surveyArrayList);
-                            Log.e("data", surveyArrayList.get(0).survey_name)
+                            Log.e("data", surveyArrayList.size.toString())
                             showSurveyWelcomeDialogue(mContext, surveyArrayList, false)
                         }
                     }
@@ -1305,6 +1329,10 @@ fun showSurveyWelcomeDialogue(
 //        else {
 //			thankyouTxt.setVisibility(View.GONE);
 //		}
+    Log.e("surveyArrayList", surveyArrayList.size.toString())
+    Log.e("surveyArrayList1", surveyArrayList[pos+1].description.toString())
+   // Log.e("surveyArrayList2", surveyArrayList[pos+2].description)
+
     headingTxt.setText(surveyArrayList[pos + 1].title)
     descriptionTxt.setText(surveyArrayList[pos + 1].description)
     val bannerImg = dialog.findViewById<View>(R.id.bannerImg) as ImageView
@@ -1328,7 +1356,7 @@ fun showSurveyWelcomeDialogue(
                         surveyArrayList[pos].questions!!,
                         surveyArrayList[pos].survey_name,
                         surveyArrayList[pos].id.toString(),
-                        surveyArrayList[pos].contact_email
+                        surveyArrayList[pos].contact_email,isThankyou
                     )
                     dialog.dismiss()
                 }
@@ -1341,12 +1369,20 @@ fun showSurveyWelcomeDialogue(
         }
     }
     imgClose.setOnClickListener {
-        showCloseSurveyDialog(dialog)
+        showCloseSurveyDialog(dialog,isThankyou)
     }
     val skipBtn = dialog.findViewById<View>(R.id.skipBtn) as Button
     skipBtn.setOnClickListener {
-        dialog.dismiss()
-       // showCloseSurveyDialog(dialog)
+       // dialog.dismiss()
+        surveySize = surveySize - 1
+
+        if (surveySize <= 0) {
+            showCloseSurveyDialog(dialog,false)
+        }
+        else
+        {
+            showCloseSurveyDialog(dialog,true)
+        }
     }
     dialog.show()
 }
@@ -1355,7 +1391,8 @@ fun showSurveyQuestionAnswerDialog(
     surveyQuestionArrayList: ArrayList<SurveyQuestionsModel>,
     surveyname: String?,
     surveyID: String?,
-    contactEmail: String?
+    contactEmail: String?,
+    isThankyou: Boolean?
 ) {
     val dialog = Dialog(activity!!)
     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -1371,13 +1408,23 @@ fun showSurveyQuestionAnswerDialog(
     val nextQuestionBtn = dialog.findViewById<View>(R.id.nextQuestionBtn) as ImageView
     val closeImg = dialog.findViewById<View>(R.id.closeImg) as ImageView
     val progressBar = dialog.findViewById<View>(R.id.progressBar) as ProgressBar
+    val emailImg = dialog.findViewById<View>(R.id.emailImg) as ImageView
+
     progressBar.max = surveyQuestionArrayList.size
     progressBar.progressDrawable.setColorFilter(
         mContext.resources.getColor(R.color.rel_one),
         PorterDuff.Mode.SRC_IN
     )
     closeImg.setOnClickListener {
-        showCloseSurveyDialog(dialog)
+        surveySize = surveySize - 1
+        if (surveySize <= 0) {
+            showCloseSurveyDialog(dialog,false)
+        }
+        else
+        {
+            showCloseSurveyDialog(dialog,true)
+        }
+       // showCloseSurveyDialog(dialog,true)
     }
     if (surveyQuestionArrayList.size > 9) {
         currentQntTxt.text = "01"
@@ -1387,6 +1434,18 @@ fun showSurveyQuestionAnswerDialog(
         questionCount.text = "/0" + surveyQuestionArrayList.size.toString()
     }
     surveyName.text = surveyname
+
+    if (surveyEmail.equals(""))
+    {
+        emailImg.visibility=View.GONE
+    }
+    else{
+        emailImg.visibility=View.VISIBLE
+    }
+
+    emailImg.setOnClickListener {
+        showSendEmailDialog()
+    }
     //        if (contactEmail.equalsIgnoreCase(""))
 //		{
 //			emailImg.setVisibility(View.GONE);
@@ -1434,7 +1493,7 @@ fun showSurveyQuestionAnswerDialog(
                 currentQntTxt.text = "0$currentPageSurvey"
                 questionCount.text = "/" + surveyQuestionArrayList.size.toString()
             } else {
-                currentQntTxt.setText(currentPageSurvey)
+                currentQntTxt.setText(currentPageSurvey.toString())
                 questionCount.text = "/" + surveyQuestionArrayList.size.toString()
             }
         } else {
@@ -1442,7 +1501,7 @@ fun showSurveyQuestionAnswerDialog(
                 currentQntTxt.text = "0$currentPageSurvey"
                 questionCount.text = "/" + "0" + surveyQuestionArrayList.size.toString()
             } else {
-                currentQntTxt.setText(currentPageSurvey)
+                currentQntTxt.setText(currentPageSurvey.toString())
                 questionCount.text = "/" + "0" + surveyQuestionArrayList.size.toString()
             }
         }
@@ -1481,7 +1540,7 @@ fun showSurveyQuestionAnswerDialog(
                 currentQntTxt.text = "0$currentPageSurvey"
                 questionCount.text = "/" + surveyQuestionArrayList.size.toString()
             } else {
-                currentQntTxt.setText(currentPageSurvey)
+                currentQntTxt.setText(currentPageSurvey.toString())
                 questionCount.text = "/" + surveyQuestionArrayList.size.toString()
             }
         } else {
@@ -1489,7 +1548,7 @@ fun showSurveyQuestionAnswerDialog(
                 currentQntTxt.text = "0$currentPageSurvey"
                 questionCount.text = "/" + "0" + surveyQuestionArrayList.size.toString()
             } else {
-                currentQntTxt.setText(currentPageSurvey)
+                currentQntTxt.setText(currentPageSurvey.toString())
                 questionCount.text = "/" + "0" + surveyQuestionArrayList.size.toString()
             }
         }
@@ -1587,11 +1646,20 @@ fun showSurveyQuestionAnswerDialog(
                 val JSON_STRING = "" + PassportArray + ""
                 Log.e("JSON", JSON_STRING)
                 dialog.dismiss()
-                callSurveySubmitApi(
-                    surveyID!!,
-                    JSON_STRING,
-                    false,
-                    1,mAnswerList,surveyArrayList)
+
+                if (ConstantFunctions.internetCheck(mContext))
+                {
+                    callSurveySubmitApi(
+                        surveyID!!,
+                        JSON_STRING,
+                        false,
+                        1,mAnswerList,surveyArrayList)
+                }
+                else
+                {
+                    DialogFunctions.showInternetAlertDialog(mContext)
+                }
+
             } else {
                 mAnswerList = ArrayList()
                 for (k in surveyQuestionArrayList.indices) {
@@ -1612,12 +1680,21 @@ fun showSurveyQuestionAnswerDialog(
                 val JSON_STRING = "" + PassportArray + ""
                 Log.e("JSON", JSON_STRING)
                 dialog.dismiss()
-                callSurveySubmitApi(
-                    surveyID!!,
-                    JSON_STRING,
-                    true,
-                    1, mAnswerList, surveyArrayList
-                )
+
+                if (ConstantFunctions.internetCheck(mContext))
+                {
+                    callSurveySubmitApi(
+                        surveyID!!,
+                        JSON_STRING,
+                        true,
+                        1, mAnswerList, surveyArrayList
+                    )
+                }
+                else
+                {
+                    DialogFunctions.showInternetAlertDialog(mContext)
+                }
+
             }
         }
         Log.e("POS", pos.toString())
@@ -1700,6 +1777,7 @@ fun showSurveyThankYouDialog(
     val btn_Ok = dialog.findViewById<View>(R.id.btn_Ok) as Button
     btn_Ok.setOnClickListener {
         if (isThankyou) {
+            poss=poss+1
             showSurveyWelcomeDialogue(mContext, surveyArrayList, false)
         } else {
         }
@@ -1794,7 +1872,7 @@ fun sendEmail(title: String, message: String,  staffEmail: String, dialog: Dialo
 
     })
 }
-fun showCloseSurveyDialog(dialogW: Dialog)
+fun showCloseSurveyDialog(dialogW: Dialog, isThankyou: Boolean?)
 {
     val dialog = Dialog(mContext)
     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -1808,6 +1886,11 @@ fun showCloseSurveyDialog(dialogW: Dialog)
 
     btn_Ok.setOnClickListener()
     {
+        if (isThankyou!!) {
+            poss = poss + 1
+            showSurveyWelcomeDialogueclose(mContext, surveyArrayList, false)
+        } else {
+        }
         dialogW.dismiss()
         dialog.dismiss()
     }
@@ -1819,6 +1902,85 @@ fun showCloseSurveyDialog(dialogW: Dialog)
     }
     dialog.show()
 }
+
+fun showSurveyWelcomeDialogueclose(mContext: Context, surveyArrayList: ArrayList<SurveyDetailDataModel>, isThankyou: Boolean) {
+  //  final Dialog dialog = new Dialog(activity,android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+//        dialog.requestWindowFeature(R.style.full_screen_dialog);
+    val dialog = Dialog(mContext!!)
+    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+    dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    dialog.setCancelable(false)
+    dialog.setContentView(R.layout.dialog_survey_wlcome)
+    val startNowBtn = dialog.findViewById<View>(R.id.startNowBtn) as Button
+    val imgClose = dialog.findViewById<View>(R.id.closeImg) as ImageView
+
+    val headingTxt = dialog.findViewById<View>(R.id.titleTxt) as TextView
+    val descriptionTxt = dialog.findViewById<View>(R.id.descriptionTxt) as TextView
+    //        if (isThankyou)
+//		{
+//			thankyouTxt.setVisibility(View.VISIBLE);
+//			thankyouTxt.setText("Thank you For Submitting your Survey");
+//		}
+//        else {
+//			thankyouTxt.setVisibility(View.GONE);
+//		}
+    Log.e("surveyArrayList", surveyArrayList.size.toString())
+  //  Log.e("surveyArrayList1", surveyArrayList[pos+1].description.toString())
+   // Log.e("surveyArrayList2", surveyArrayList[pos+2].description)
+    Log.e("poss", poss.toString())
+    headingTxt.setText(surveyArrayList[poss ].title)
+    descriptionTxt.setText(surveyArrayList[poss ].description)
+    val bannerImg = dialog.findViewById<View>(R.id.bannerImg) as ImageView
+    if (!surveyArrayList[poss].image.equals("")) {
+        Glide.with(mContext).load(surveyArrayList[poss].image).centerCrop().into(bannerImg)
+
+    } else {
+        bannerImg.setImageResource(R.drawable.survey)
+    }
+    startNowBtn.setOnClickListener {
+        dialog.dismiss()
+
+        if (surveyArrayList.size > 0) {
+           // poss = poss + 1
+            if (poss < surveyArrayList.size) {
+                Log.e("insidewelcome", surveyQuestionArrayList.size.toString())
+                if(surveyArrayList[poss].questions!!.size>0)
+                {
+                    showSurveyQuestionAnswerDialog(
+                        mContext,
+                        surveyArrayList[poss].questions!!,
+                        surveyArrayList[poss].survey_name,
+                        surveyArrayList[poss].id.toString(),
+                        surveyArrayList[poss].contact_email,isThankyou
+                    )
+                    dialog.dismiss()
+                }
+                else{
+                    DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), "No Survey Questions Available.", mContext)
+                    dialog.dismiss()
+                }
+
+            }
+        }
+    }
+    imgClose.setOnClickListener {
+        showCloseSurveyDialog(dialog,isThankyou)
+    }
+    val skipBtn = dialog.findViewById<View>(R.id.skipBtn) as Button
+    skipBtn.setOnClickListener {
+        // dialog.dismiss()
+        surveySize = surveySize - 1
+        if (surveySize <= 0) {
+            showCloseSurveyDialog(dialog,false)
+        }
+        else
+        {
+            showCloseSurveyDialog(dialog,true)
+        }
+    }
+    dialog.show()
+}
+
 fun showSurveyContinueDialog(
     activity: Context,
     surveyID: String,
@@ -1863,25 +2025,34 @@ fun showSurveyContinueDialog(
             surveySize = surveySize - 1
             if (surveySize <= 0) {
                 Log.e("SURVEY SIZE ", surveySize.toString())
-                callSurveySubmitApi(
-                    surveyID!!,
-                    JSON_STRING!!,
-                    false,
-                    1,
-                    mAnswerList,
-                    surveyArrayList
-                )
+
+                if (ConstantFunctions.internetCheck(mContext))
+                {
+                    callSurveySubmitApi(
+                        surveyID!!,
+                        JSON_STRING!!,
+                        false,
+                        1,
+                        mAnswerList,
+                        surveyArrayList
+                    )
+                }
+                else
+                {
+                    DialogFunctions.showInternetAlertDialog(mContext)
+                }
+
             } else {
-                callSurveySubmitApi(
-                    surveyID!!,
-                    JSON_STRING!!,
 
+                if (ConstantFunctions.internetCheck(mContext))
+                {
+                    callSurveySubmitApi(surveyID!!, JSON_STRING!!, true, 1, mAnswerList, surveyArrayList)
+                }
+                else
+                {
+                    DialogFunctions.showInternetAlertDialog(mContext)
+                }
 
-                    true,
-                    1,
-                    mAnswerList,
-                    surveyArrayList
-                )
             }
             dialog.dismiss()
         }
@@ -1925,7 +2096,7 @@ fun showSurveyContinueDialog(
                 currentQntTxt.text = "0$currentPageSurvey"
                 questionCount.text = "/" + surveyQuestionArrayList.size.toString()
             } else {
-                currentQntTxt.setText(currentPageSurvey)
+                currentQntTxt.setText(currentPageSurvey.toString())
                 questionCount.text = "/" + surveyQuestionArrayList.size.toString()
             }
         } else {
@@ -1933,7 +2104,7 @@ fun showSurveyContinueDialog(
                 currentQntTxt.text = "0$currentPageSurvey"
                 questionCount.text = "/" + "0" + surveyQuestionArrayList.size.toString()
             } else {
-                currentQntTxt.setText(currentPageSurvey)
+                currentQntTxt.setText(currentPageSurvey.toString())
                 questionCount.text = "/" + "0" + surveyQuestionArrayList.size.toString()
             }
         }

@@ -152,6 +152,8 @@ class ConstantFunctions {
             Log.e("Date converted",strCurrentDate)
             return strCurrentDate
         }
-
+        fun replace(str: String): String? {
+            return str.replace(" ".toRegex(), "%20")
+        }
     }
 }

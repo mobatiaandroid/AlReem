@@ -22,6 +22,7 @@ import com.nas.alreem.activity.canteen.model.wallet.WalletBalanceApiModel
 import com.nas.alreem.activity.canteen.model.wallet.WalletBalanceModel
 import com.nas.alreem.activity.canteen.model.wallethistory.WalletHistoryApiModel
 import com.nas.alreem.activity.canteen.model.wallethistory.WalletHistoryModel
+import com.nas.alreem.activity.cca.model.*
 import com.nas.alreem.activity.gallery.model.*
 import com.nas.alreem.activity.login.model.ForgetPasswordResponseModel
 import com.nas.alreem.activity.login.model.LoginResponseModel
@@ -38,6 +39,8 @@ import com.nas.alreem.activity.payments.model.payment_submit.PaymentSubmitApiMod
 import com.nas.alreem.activity.payments.model.payment_submit.PaymentSubmitModel
 import com.nas.alreem.activity.payments.model.payment_token.PaymentTokenApiModel
 import com.nas.alreem.activity.payments.model.payment_token.PaymentTokenModel
+import com.nas.alreem.activity.permission_slip.model.PermissionResApiModel
+import com.nas.alreem.activity.permission_slip.model.PermissionResponseModel
 import com.nas.alreem.activity.primary.model.ComingUpResponseModel
 import com.nas.alreem.activity.settings.model.TermsOfServiceResponseModel
 import com.nas.alreem.activity.survey.model.*
@@ -46,6 +49,7 @@ import com.nas.alreem.fragment.calendar.model.CalendarAPIModel
 import com.nas.alreem.fragment.calendar.model.CalendarResponseModel
 import com.nas.alreem.fragment.calendar.model.TermCalendarResponseModel
 import com.nas.alreem.fragment.canteen.model.CanteenBannerResponseModel
+import com.nas.alreem.fragment.cca.model.BannerResponseModelCCa
 import com.nas.alreem.fragment.contact_us.model.ContactUsResponseModel
 import com.nas.alreem.fragment.gallery.model.ThumnailResponseModel
 import com.nas.alreem.fragment.home.model.BannerResponseModel
@@ -54,6 +58,8 @@ import com.nas.alreem.fragment.notifications.model.NotificationResponseModel
 import com.nas.alreem.fragment.parents_essentials.model.ParentsEssentialResponseModel
 import com.nas.alreem.fragment.payments.model.PaymentResponseModel
 import com.nas.alreem.fragment.payments.model.SendEmailApiModel
+import com.nas.alreem.fragment.permission_slip.model.PermissionSlipListApiModel
+import com.nas.alreem.fragment.permission_slip.model.PermissionSlipModel
 import com.nas.alreem.fragment.primary.model.PrimaryResponseModel
 import com.nas.alreem.fragment.settings.model.ChangePasswordApiModel
 
@@ -456,4 +462,75 @@ interface ApiInterface {
         @Body  walletamount: WalletAmountApiModel,
         @Header("Authorization") token:String
     ): Call<WalletAmountModel>
+
+    /*************PERMISSIONSLIP LIST****************/
+    @POST("permission-slips")
+    @Headers("Content-Type: application/json")
+    fun permissnslipList(
+        @Body  permissionSlipListModel: PermissionSlipListApiModel,
+        @Header("Authorization") token:String
+    ): Call<PermissionSlipModel>
+
+    /*************PERMISSION SLIP RESPONSE****************/
+    @POST("permission-slip-status-update")
+    @Headers("Content-Type: application/json")
+    fun permsnlistResponse(
+        @Body  pickupListApiModel: PermissionResApiModel,
+        @Header("Authorization") token:String
+    ): Call<PermissionResponseModel>
+
+
+    @GET("cca-banner")
+    @Headers("Content-Type: application/json")
+    fun getBanner(
+        @Header("Authorization") token: String
+    ): Call<BannerResponseModelCCa>
+
+    /* CCA INFO*/
+    @POST("cca-informations")
+    @Headers("Content-Type: application/json")
+    fun getCCAInfo(
+        @Body body: CCAInfoRequestModel,
+        @Header("Authorization") token: String
+    )
+            : Call<CCAInfoResponseModel>
+
+    /* CCA INFO*/
+
+    @POST("cca-details")
+    @Headers("Content-Type: application/json")
+    fun getCCAList(
+        @Body body: CCAListRequestModel,
+        @Header("Authorization") token: String
+    ): Call<CCAListResponseModel>
+
+    /*CCA SUBMIT*/
+    @POST("cca-submit")
+    @Headers("Content-Type: application/json")
+    fun ccaSubmit(
+        @Body body: CCASumbitRequestModel,
+        @Header("Authorization") token: String
+    ): Call<CCASubmitResponseModel>
+
+    @POST("cca-reviews")
+    @Headers("Content-Type: application/json")
+    fun ccaReview(
+        @Body body: CCAReviewRequestModel,
+        @Header("Authorization") token: String
+    ): Call<CCAReviewResponseModel>
+
+    @POST("cca-selection-cancel")
+    @Headers("Content-Type: application/json")
+    fun ccaCancel(
+        @Body body: CCACancelRequestModel,
+        @Header("Authorization") token: String
+    ): Call<CCACancelResponseModel>
+
+
+    @POST("external_providers")
+    @Headers("Content-Type: application/json")
+    fun getExternalProviders(
+        @Body body: ExternalProvidersRequestModel,
+        @Header("Authorization") token: String
+    ): Call<ExternalProvidersResponseModel>
 }

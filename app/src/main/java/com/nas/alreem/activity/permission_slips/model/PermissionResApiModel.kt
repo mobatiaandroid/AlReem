@@ -4,10 +4,10 @@ import com.google.gson.annotations.SerializedName
 
 class PermissionResApiModel (
 
-    @SerializedName("permissionSlipId") val permissionSlipId: Int,
-    @SerializedName("studentId") val student_id: String,
+    @SerializedName("permission_slip_id") val permissionSlipId: Int,
+    @SerializedName("student_id") val student_id: String,
     @SerializedName("status") val status: String,
-    @SerializedName("deviceType") val deviceType: String,
-    @SerializedName("deviceName") val deviceName: String,
-    @SerializedName("appVersion") val appVersion: String
+    @SerializedName("device_type") val deviceType: String,
+    @SerializedName("device_name") val deviceName: String,
+    @SerializedName("app_version") val appVersion: String
 )

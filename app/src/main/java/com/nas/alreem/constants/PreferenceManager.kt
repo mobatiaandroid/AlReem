@@ -1,7 +1,11 @@
 package com.nas.alreem.constants
 
 import android.content.Context
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.nas.alreem.R
+import com.nas.alreem.activity.cca.model.CCADetailModel
+import java.lang.reflect.Type
 
 class PreferenceManager {
 
@@ -875,6 +879,150 @@ class PreferenceManager {
         fun getIsSurveyHomeVisible(context: Context): Boolean {
             val prefs = context.getSharedPreferences(PREFSNAME, Context.MODE_PRIVATE)
             return prefs.getBoolean("is_survey_visible", false)
+        }
+
+
+        fun setCCAStudentIdPosition(context: Context, result: String?) {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            val editor = prefs.edit()
+            editor.putString("CCAStudentIdPosition", result)
+            editor.commit()
+        }
+
+        fun getCCAStudentIdPosition(context: Context): String? {
+            var CCAStudentIdPosition = ""
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            CCAStudentIdPosition = prefs.getString("CCAStudentIdPosition", "").toString()
+            return CCAStudentIdPosition
+        }
+
+        fun setStudClassForCCA(context: Context, result: String?) {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            val editor = prefs.edit()
+            editor.putString("StudClassForCCA", result)
+            editor.commit()
+        }
+
+        fun getStudClassForCCA(context: Context): String? {
+            var StudClassForCCA = ""
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            StudClassForCCA = prefs.getString("StudClassForCCA", "").toString()
+            return StudClassForCCA
+        }
+
+        fun setStudNameForCCA(context: Context, result: String?) {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            val editor = prefs.edit()
+            editor.putString("StudNameForCCA", result)
+            editor.commit()
+        }
+
+        fun getStudNameForCCA(context: Context): String? {
+            var StudNameForCCA = ""
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            StudNameForCCA = prefs.getString("StudNameForCCA", "").toString()
+            return StudNameForCCA
+        }
+
+        fun setCCATitle(context: Context, result: String?) {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            val editor = prefs.edit()
+            editor.putString("CCATitle", result)
+            editor.commit()
+        }
+
+        fun getCCATitle(context: Context): String? {
+            var CCATitle = ""
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            CCATitle = prefs.getString("CCATitle", "").toString()
+            return CCATitle
+        }
+        fun setCCAItemId(context: Context, result: String?) {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            val editor = prefs.edit()
+            editor.putString("CCAItemId", result)
+            editor.commit()
+        }
+
+        fun getCCAItemId(context: Context): String? {
+            var CCAItemId = ""
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            CCAItemId = prefs.getString("CCAItemId", "").toString()
+            return CCAItemId
+        }
+
+        fun setStudIdForCCA(context: Context, result: String?) {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            val editor = prefs.edit()
+            editor.putString("StudIdForCCA", result)
+            editor.commit()
+        }
+
+        //getStudIdForCCA
+        fun getStudIdForCCA(context: Context): String? {
+            var StudIdForCCA = ""
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            StudIdForCCA = prefs.getString("StudIdForCCA", "").toString()
+            return StudIdForCCA
+        }
+
+        fun saveDetailsArrayList(context: Context, list: ArrayList<CCADetailModel>?) {
+            val prefs = context.getSharedPreferences(
+                "ALGUBRA",
+                Context.MODE_PRIVATE
+            )
+            val editor = prefs.edit()
+            val gson = Gson()
+            val json = gson.toJson(list)
+            editor.putString("list", json)
+            editor.apply()
+        }
+
+        fun getDetailsArrayList(context: Context): ArrayList<CCADetailModel>? {
+            val prefs = context.getSharedPreferences(
+                "ALGUBRA",
+                Context.MODE_PRIVATE
+            )
+            val gson = Gson()
+            val json = prefs.getString("list", null)
+            val type: Type = object : TypeToken<ArrayList<CCADetailModel>?>() {}.getType()
+            return gson.fromJson(json, type)
         }
     }
 }

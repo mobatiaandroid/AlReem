@@ -1,6 +1,8 @@
 package com.nas.alreem.appcontroller
 
 import android.app.Application
+import com.nas.alreem.activity.cca.model.CCADetailModel
+import com.nas.alreem.activity.cca.model.WeekListModel
 
 
 class AppController : Application() {
@@ -10,6 +12,11 @@ class AppController : Application() {
         var scratchID: Int = 0
         var question_id: String? = null
         var answer_id: String? = null
+        var weekList: ArrayList<WeekListModel> = ArrayList()
+        var weekListWithData: java.util.ArrayList<Int>? = ArrayList()
+        var CCADetailModelArrayList: ArrayList<CCADetailModel> = ArrayList()
+
+        var filledFlag = 0
         fun applicationContext(): AppController {
             return instance as AppController
         }

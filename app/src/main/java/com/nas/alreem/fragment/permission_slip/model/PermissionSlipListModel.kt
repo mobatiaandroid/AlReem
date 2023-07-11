@@ -6,6 +6,6 @@ class PermissionSlipListModel (
     @SerializedName("id")val id:Int,
     @SerializedName("title")val title:String,
     @SerializedName("event_date")val event_date:String,
-    @SerializedName("consent")val consent:String,
+    @SerializedName("description")val consent:String,
     @SerializedName("status")val status:String
 )

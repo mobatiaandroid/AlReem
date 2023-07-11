@@ -1,18 +1,29 @@
 package com.nas.alreem.activity.permission_slips
 
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.text.Html
 import android.text.method.LinkMovementMethod
 import android.util.Log
 import android.view.View
+import android.view.Window
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.nas.alreem.R
 import com.nas.alreem.activity.home.HomeActivity
+import com.nas.alreem.activity.permission_slip.model.PermissionResApiModel
+import com.nas.alreem.activity.permission_slip.model.PermissionResponseModel
 import com.nas.alreem.constants.PreferenceManager
+import com.nas.alreem.rest.ApiClient
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class FormDetailActivity: AppCompatActivity()  {
     lateinit var mContext: Context
@@ -95,7 +106,7 @@ class FormDetailActivity: AppCompatActivity()  {
         rejct_btn.setBackgroundResource(R.drawable.event_spinnerbg)
         rejct_btn.setOnClickListener {
             status_slip = "2"
-          //  callpermissionresponseApi()
+            callpermissionresponseApi()
         }
         if (status_txt.equals("0")) {
             Log.e("eqls0", status_txt.toString())
@@ -114,7 +125,7 @@ class FormDetailActivity: AppCompatActivity()  {
                         accpt_btn.setOnClickListener {
                             if (radioButton.isSelected) {
                                 status_slip = "1"
-                               // callpermissionresponseApi()
+                                callpermissionresponseApi()
                             }else{
                                 Log.e("else","true")
                                 //showSuccessmailAlert(mContext,"Please select the checkbox","Alert")
@@ -147,5 +158,84 @@ class FormDetailActivity: AppCompatActivity()  {
             image_status.setBackgroundResource(R.drawable.ic_baseline_close_24)
             text_status.text = "Rejected"
         }
+    }
+
+    private fun  callpermissionresponseApi() {
+        progressDialog.visibility = View.VISIBLE
+        var devicename: String = (Build.MANUFACTURER
+                + " " + Build.MODEL + " " + Build.VERSION.RELEASE
+                + " " + Build.VERSION_CODES::class.java.fields[Build.VERSION.SDK_INT]
+            .name)
+        Log.e("DEVICE NAME", devicename)
+        val token = PreferenceManager.getaccesstoken(mContext)
+        val permsnresBody = PermissionResApiModel(
+            slip_id,
+            PreferenceManager.getStudentID(mContext)!!,
+            status_slip,
+            "2",
+            devicename,
+            "1.0"
+        )
+        Log.e("sttsapi",status_slip.toString())
+        val call: Call<PermissionResponseModel> =
+            ApiClient.getClient.permsnlistResponse(permsnresBody, "Bearer " + token)
+        call.enqueue(object : Callback<PermissionResponseModel> {
+            override fun onFailure(call: Call<PermissionResponseModel>, t: Throwable) {
+                Log.e("Failed", t.localizedMessage)
+                progressDialog.visibility = View.GONE
+            }
+
+            override fun onResponse(
+                call: Call<PermissionResponseModel>,
+                response: Response<PermissionResponseModel>
+            ) {
+                val responsedata = response.body()
+                progressDialog.visibility = View.GONE
+                Log.e("Response Signup", responsedata.toString())
+
+                if (responsedata!!.status.toString().equals("100")) {
+                    showSuccessAlert(mContext, "Successfully submitted ", "Success")
+
+                } else {
+                    if (responsedata.status == 116) {
+                        //call Token Expired
+                       // AccessTokenClass.getAccessToken(com.mobatia.bisad.fragment.home.mContext)
+                        callpermissionresponseApi()
+                    } else {
+                        if (responsedata.status == 103) {
+                            //validation check error
+                        } else {
+                            //check status code checks
+                          //  InternetCheckClass.checkApiStatusError(responsedata.status, mContext)
+                        }
+                    }
+
+                }
+            }
+
+        })
+    }
+
+    private fun showSuccessAlert(context: Context,message : String,msgHead : String)
+    {
+        val dialog = Dialog(context)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.dialog_common_error_alert)
+        var iconImageView = dialog.findViewById(R.id.iconImageView) as ImageView
+        var alertHead = dialog.findViewById(R.id.alertHead) as TextView
+        var text_dialog = dialog.findViewById(R.id.messageTxt) as TextView
+        var btn_Ok = dialog.findViewById(R.id.btn_Ok) as Button
+        text_dialog.text = message
+        alertHead.text = msgHead
+        iconImageView.setImageResource(R.drawable.tick)
+
+        btn_Ok.setOnClickListener()
+        {
+            dialog.dismiss()
+            finish()
+        }
+        dialog.show()
     }
 }

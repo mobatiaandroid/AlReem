@@ -991,7 +991,7 @@ class SurveyListActivity: AppCompatActivity(){
                     currentQntTxt.text = "0$currentPageSurvey"
                     questionCount.text = "/" + surveyQuestionArrayList.size.toString()
                 } else {
-                    currentQntTxt.setText(currentPageSurvey)
+                    currentQntTxt.setText(currentPageSurvey.toString())
                     questionCount.text = "/" + surveyQuestionArrayList.size.toString()
                 }
             } else {
@@ -999,7 +999,7 @@ class SurveyListActivity: AppCompatActivity(){
                     currentQntTxt.text = "0$currentPageSurvey"
                     questionCount.text = "/" + "0" + surveyQuestionArrayList.size.toString()
                 } else {
-                    currentQntTxt.setText(currentPageSurvey)
+                    currentQntTxt.setText(currentPageSurvey.toString())
                     questionCount.text = "/" + "0" + surveyQuestionArrayList.size.toString()
                 }
             }

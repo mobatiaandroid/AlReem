@@ -35,6 +35,7 @@ import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.fragment.about_us.AboutUsFragment
 import com.nas.alreem.fragment.calendar.CalendarFragment
 import com.nas.alreem.fragment.canteen.CanteenFragment
+import com.nas.alreem.fragment.cca.CCAFragment
 import com.nas.alreem.fragment.communication.CommunicationFragment
 import com.nas.alreem.fragment.contact_us.ContactUsFragment
 import com.nas.alreem.fragment.early_years.EarlyYearsFragment
@@ -44,6 +45,7 @@ import com.nas.alreem.fragment.home.mContext
 import com.nas.alreem.fragment.notifications.NotificationFragment
 import com.nas.alreem.fragment.parents_essentials.ParentsEssentialFragment
 import com.nas.alreem.fragment.payments.PaymentFragment
+import com.nas.alreem.fragment.permission_slip.PermissionSlipFragment
 import com.nas.alreem.fragment.primary.PrimaryFragment
 import com.nas.alreem.fragment.secondary.SecondaryFragment
 import com.nas.alreem.fragment.settings.SettingsFragment
@@ -263,7 +265,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                     1->
                     {
                         //Notification
-                        mFragment = NotificationFragment()
+                        mFragment = CCAFragment()
                         replaceFragmentsSelected(position)
                     }
                     2->

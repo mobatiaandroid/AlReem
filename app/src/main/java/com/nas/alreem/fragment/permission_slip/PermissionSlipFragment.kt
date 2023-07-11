@@ -28,7 +28,10 @@ import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.OnItemClickListener
 import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.constants.addOnItemClickListener
+import com.nas.alreem.fragment.permission_slip.adapter.FormslistAdapter
+import com.nas.alreem.fragment.permission_slip.model.PermissionSlipListApiModel
 import com.nas.alreem.fragment.permission_slip.model.PermissionSlipListModel
+import com.nas.alreem.fragment.permission_slip.model.PermissionSlipModel
 import com.nas.alreem.rest.ApiClient
 import retrofit2.Call
 import retrofit2.Callback
@@ -161,7 +164,7 @@ class PermissionSlipFragment : Fragment(){
                     studImg.setImageResource(R.drawable.student)
                 }
                 progressDialog.visibility = View.VISIBLE
-               // formslistApi()
+                formslistApi()
                 Log.e("TEST","call 2")
 
                 //  Toast.makeText(activity, mStudentList.get(position).name, Toast.LENGTH_SHORT).show()
@@ -169,6 +172,65 @@ class PermissionSlipFragment : Fragment(){
             }
         })
         dialog.show()
+    }
+    private fun formslistApi(){
+        progressDialog.visibility = View.VISIBLE
+        formslist=ArrayList()
+        val token = PreferenceManager.getaccesstoken(mContext)
+        Log.e("stid", PreferenceManager.getStudentID(mContext).toString())
+        val list_permissionSlip= PermissionSlipListApiModel("0","20",PreferenceManager.getStudentID(mContext).toString())
+        val call: Call<PermissionSlipModel> = ApiClient.getClient.permissnslipList(list_permissionSlip,"Bearer "+token)
+        call.enqueue(object : Callback<PermissionSlipModel>{
+            override fun onFailure(call: Call<PermissionSlipModel>, t: Throwable) {
+                progressDialog.visibility = View.GONE
+                Log.e("Error", t.localizedMessage)
+            }
+            override fun onResponse(call: Call<PermissionSlipModel>, response: Response<PermissionSlipModel>) {
+                progressDialog.visibility = View.GONE
+                if (response.body()!!.status==100)
+                {
+                    formslist.addAll(response.body()!!.responseArray.request)
+                    if (response.body()!!.responseArray.request.size > 0){
+                        Log.e("notempty","true")
+                        forms_recycler.layoutManager=LinearLayoutManager(mContext)
+                        var forms_adapter= FormslistAdapter(mContext,formslist)
+                        forms_recycler.adapter=forms_adapter
+                    }else{
+                        Log.e("empty","true")
+                        formslist=ArrayList()
+                        forms_recycler.layoutManager=LinearLayoutManager(mContext)
+                        var forms_adapter= FormslistAdapter(mContext,formslist)
+                        forms_recycler.adapter=forms_adapter
+                        //showerror(mContext,"No Data Found","Alert")
+                        Toast.makeText(mContext, "No Permission Slips Found", Toast.LENGTH_SHORT).show()
+                    }
+
+
+                }/*else if(response.body()!!.status.equals("116"))
+                {
+                    var internetCheck = InternetCheckClass.isInternetAvailable(com.mobatia.bisad.fragment.home.mContext)
+                    if (internetCheck){
+                        AccessTokenClass.getAccessToken(com.mobatia.bisad.fragment.home.mContext)
+                        Log.e("TEST","call 3")
+
+                        formslistApi()
+                    }else{
+                        InternetCheckClass.showSuccessInternetAlert(com.mobatia.bisad.fragment.home.mContext)
+                    }
+
+                }*/
+                else {
+                    if (response.body()!!.status == 132) {
+                        formslist=ArrayList()
+                        forms_recycler.layoutManager=LinearLayoutManager(mContext)
+                        var forms_adapter= FormslistAdapter(mContext,formslist)
+                        forms_recycler.adapter=forms_adapter
+                        Toast.makeText(mContext, "No Permission Slips Found", Toast.LENGTH_SHORT).show()
+                        //validation check error
+                    }
+                }
+            }
+        })
     }
     fun callStudentListApi()
     {
@@ -235,6 +297,7 @@ class PermissionSlipFragment : Fragment(){
                         }
                     }
 
+                    formslistApi()
 //                    var internetCheck = InternetCheckClass.isInternetAvailable(nContext)
 //                    if (internetCheck)
 //                    {

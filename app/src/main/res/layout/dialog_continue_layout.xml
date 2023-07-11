@@ -8,11 +8,12 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:background="@drawable/curved_top_rec_survey">
+
         <ImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
-           android:background="@drawable/survey"
-            android:layout_centerInParent="true"/>
+            android:layout_centerInParent="true"
+            android:background="@drawable/survey" />
 
     </RelativeLayout>
     <RelativeLayout
