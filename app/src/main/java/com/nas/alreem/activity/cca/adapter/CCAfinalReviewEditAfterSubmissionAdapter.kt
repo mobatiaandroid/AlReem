@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,16 +14,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nas.alreem.R
 import com.nas.alreem.activity.cca.model.CCAReviewAfterSubmissionModel
+import com.nas.alreem.constants.ConstantFunctions
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
 class CCAfinalReviewEditAfterSubmissionAdapter(
     var mContext: Context,
-    mCCADetailModelArrayList: ArrayList<CCAReviewAfterSubmissionModel>
+    var mCCADetailModelArrayList: java.util.ArrayList<CCAReviewAfterSubmissionModel>
 ) :
     RecyclerView.Adapter<CCAfinalReviewEditAfterSubmissionAdapter.MyViewHolder>() {
-    var mCCADetailModelArrayList: ArrayList<CCAReviewAfterSubmissionModel>
     var dialog: Dialog
 
     inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -66,7 +67,6 @@ class CCAfinalReviewEditAfterSubmissionAdapter(
     }
 
     init {
-        this.mCCADetailModelArrayList = mCCADetailModelArrayList
         dialog = Dialog(mContext)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.dialog_attendance_list)
@@ -74,7 +74,7 @@ class CCAfinalReviewEditAfterSubmissionAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val itemView: View = LayoutInflater.from(parent.context)
+        val itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.adapter_cca_review_after_submit, parent, false)
         return MyViewHolder(itemView)
     }
@@ -91,24 +91,6 @@ class CCAfinalReviewEditAfterSubmissionAdapter(
                 showAttendanceList(position)
             }
         }
-        if (mCCADetailModelArrayList[position].cca_item_description_2 != null) {
-            if (mCCADetailModelArrayList[position].cca_item_description_2.equals("")) {
-                holder.readMore.visibility = View.GONE
-            } else {
-                holder.readMore.visibility = View.VISIBLE
-            }
-        } else {
-            holder.readMore.visibility = View.GONE
-        }
-        if (mCCADetailModelArrayList[position].cca_item_description != null) {
-            if (mCCADetailModelArrayList[position].cca_item_description.equals("")) {
-                holder.readMore1.visibility = View.GONE
-            } else {
-                holder.readMore1.visibility = View.VISIBLE
-            }
-        } else {
-            holder.readMore1.visibility = View.GONE
-        }
         if (mCCADetailModelArrayList[position].choice1.equals("0")) {
             holder.linearChoice1.visibility = View.GONE
             holder.textViewCCAChoice1.text = "Choice 1 : None"
@@ -118,53 +100,85 @@ class CCAfinalReviewEditAfterSubmissionAdapter(
         } else {
             holder.linearChoice1.visibility = View.VISIBLE
             holder.textViewCCAChoice1.setText(mCCADetailModelArrayList[position].choice1)
-            if (mCCADetailModelArrayList[position].cca_item_description != null) {
-                if (mCCADetailModelArrayList[position].cca_item_description
-                        .equals("0") || mCCADetailModelArrayList[position].cca_item_description
-                        .equals("")
-                ) {
-                    holder.descriptionTxt.visibility = View.GONE
-                    holder.readMore1.visibility = View.GONE
-                } else {
-                    holder.descriptionTxt.visibility = View.VISIBLE
-                    holder.readMore1.visibility = View.VISIBLE
-                    holder.descriptionTxt.text =
-                        "Description      : " + mCCADetailModelArrayList[position].cca_item_description
-                }
+            Log.e("LOCATION EDIT", mCCADetailModelArrayList[position].venue!!)
+            if (mCCADetailModelArrayList[position].venue
+                    .equals("0") || mCCADetailModelArrayList[position].venue
+                    .equals("")
+            ) {
+                holder.locationTxt.visibility = View.GONE
+            } else {
+                holder.locationTxt.visibility = View.VISIBLE
+                holder.locationTxt.text =
+                    "Location            : " + mCCADetailModelArrayList[position].venue
             }
-            if (mCCADetailModelArrayList[position].venue != null) {
-                if (mCCADetailModelArrayList[position].venue
-                        .equals("0") || mCCADetailModelArrayList[position].venue
-                        .equals("")
-                ) {
-                    holder.locationTxt.visibility = View.GONE
-                } else {
-                    holder.locationTxt.visibility = View.VISIBLE
-                    holder.locationTxt.text =
-                        "Location            : " + mCCADetailModelArrayList[position].venue
-                }
+            if (mCCADetailModelArrayList[position].cca_item_description
+                    .equals("0") || mCCADetailModelArrayList[position].cca_item_description
+                    .equals("")
+            ) {
+                holder.descriptionTxt.visibility = View.GONE
+                holder.readMore1.visibility = View.GONE
+            } else {
+                holder.descriptionTxt.visibility = View.VISIBLE
+                holder.readMore1.visibility = View.VISIBLE
+                holder.descriptionTxt.text =
+                    "Description      : " + mCCADetailModelArrayList[position].cca_item_description
             }
             if (mCCADetailModelArrayList[position].cca_item_start_time != null &&
                 mCCADetailModelArrayList[position].cca_item_end_time != null) {
                 holder.textViewCCAaDateItemChoice1.visibility = View.VISIBLE
                 holder.textViewCCAaDateItemChoice1.text = "(" + convertTimeToAMPM(
                     mCCADetailModelArrayList[position].cca_item_start_time
-                ) + " - " + convertTimeToAMPM(
+                ).toString() + " - " + convertTimeToAMPM(
                     mCCADetailModelArrayList[position].cca_item_end_time
-                ) + ")"
+                ).toString() + ")"
             } else if (mCCADetailModelArrayList[position].cca_item_start_time != null) {
                 holder.textViewCCAaDateItemChoice1.visibility = View.VISIBLE
                 holder.textViewCCAaDateItemChoice1.text = "(" + convertTimeToAMPM(
                     mCCADetailModelArrayList[position].cca_item_start_time
-                ) + ")"
+                ).toString() + ")"
             } else if (mCCADetailModelArrayList[position].cca_item_end_time != null) {
                 holder.textViewCCAaDateItemChoice1.visibility = View.VISIBLE
                 holder.textViewCCAaDateItemChoice1.text = "(" + convertTimeToAMPM(
                     mCCADetailModelArrayList[position].cca_item_end_time
-                ) + ")"
+                ).toString() + ")"
             } else {
                 holder.textViewCCAaDateItemChoice1.visibility = View.GONE
             }
+        }
+        holder.readMore.setOnClickListener {
+            Log.e("des",mCCADetailModelArrayList[position].cca_item_description_2!!)
+            if (mCCADetailModelArrayList[position].cca_item_description_2 != null) {
+                ConstantFunctions.showDialogueWithOk(
+                    mContext,
+                    mCCADetailModelArrayList[position].cca_item_description_2!!,
+                    "Description"
+                )
+            } else {
+                Toast.makeText(mContext, "No Description available", Toast.LENGTH_SHORT).show()
+            }
+
+        }
+        holder.description2Txt.setOnClickListener {
+            ConstantFunctions.showDialogueWithOk(
+                mContext,
+                mCCADetailModelArrayList[position].cca_item_description_2!!,
+                "Description"
+            )
+        }
+        holder.readMore1.setOnClickListener {
+            Log.e("des1",mCCADetailModelArrayList[position].cca_item_description!!)
+            ConstantFunctions.showDialogueWithOk(
+                mContext,
+                mCCADetailModelArrayList[position].cca_item_description!!,
+                "Description"
+            )
+        }
+        holder.descriptionTxt.setOnClickListener {
+            ConstantFunctions.showDialogueWithOk(
+                mContext,
+                mCCADetailModelArrayList[position].cca_item_description!!,
+                "Description"
+            )
         }
         if (mCCADetailModelArrayList[position].choice2.equals("0")) {
             holder.linearChoice2.visibility = View.GONE
@@ -175,86 +189,46 @@ class CCAfinalReviewEditAfterSubmissionAdapter(
         } else {
             holder.linearChoice2.visibility = View.VISIBLE
             holder.textViewCCAChoice2.setText(mCCADetailModelArrayList[position].choice2)
-            if (mCCADetailModelArrayList[position].venue2 != null) {
-                if (mCCADetailModelArrayList[position].venue2
-                        .equals("0") || mCCADetailModelArrayList[position].venue2
-                        .equals("")
-                ) {
-                    holder.location2Txt.visibility = View.GONE
-                    holder.readMore.visibility = View.GONE
-                } else {
-                    holder.location2Txt.visibility = View.VISIBLE
-                    holder.readMore.visibility = View.VISIBLE
-                    holder.location2Txt.text =
-                        "Location            : " + mCCADetailModelArrayList[position].venue2
-                }
+            if (mCCADetailModelArrayList[position].venue2
+                    .equals("0") || mCCADetailModelArrayList[position].venue2
+                    .equals("")
+            ) {
+                holder.location2Txt.visibility = View.GONE
+                holder.readMore.visibility = View.GONE
+            } else {
+                holder.location2Txt.visibility = View.VISIBLE
+                holder.readMore.visibility = View.VISIBLE
+                holder.location2Txt.text =
+                    "Location            : " + mCCADetailModelArrayList[position].venue2
             }
-            if (mCCADetailModelArrayList[position].cca_item_description_2 != null) {
-                if (mCCADetailModelArrayList[position].cca_item_description_2
-                        .equals("0") || mCCADetailModelArrayList[position].cca_item_description_2
-                        .equals("")
-                ) {
-                    holder.description2Txt.visibility = View.GONE
-                } else {
-                    holder.description2Txt.visibility = View.VISIBLE
-                    holder.description2Txt.text =
-                        "Description      : " + mCCADetailModelArrayList[position].cca_item_description_2
-                }
+            if (mCCADetailModelArrayList[position].cca_item_description_2
+                    .equals("0") || mCCADetailModelArrayList[position].cca_item_description_2
+                    .equals("")
+            ) {
+                holder.description2Txt.visibility = View.GONE
+            } else {
+                holder.description2Txt.visibility = View.VISIBLE
+                holder.description2Txt.text =
+                    "Description      : " + mCCADetailModelArrayList[position].cca_item_description_2
             }
-            holder.readMore.setOnClickListener {
-                if (mCCADetailModelArrayList[position].cca_item_description_2 != null) {
-                   /* CommonMethods.Companion.showDialogueWithOk(
-                        mContext,
-                        mCCADetailModelArrayList[position].cca_item_description_2,
-                        "Description"
-                    )*/
-                } else {
-                    Toast.makeText(
-                        mContext,
-                        "No Description available",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-            holder.description2Txt.setOnClickListener {
-               /* CommonMethods.Companion.showDialogueWithOk(
-                    mContext,
-                    mCCADetailModelArrayList[position].cca_item_description_2,
-                    "Description"
-                )*/
-            }
-            holder.readMore1.setOnClickListener {
-                /*CommonMethods.Companion.showDialogueWithOk(
-                    mContext,
-                    mCCADetailModelArrayList[position].cca_item_description,
-                    "Description"
-                )*/
-            }
-            holder.descriptionTxt.setOnClickListener {
-              /*  CommonMethods.Companion.showDialogueWithOk(
-                    mContext,
-                    mCCADetailModelArrayList[position].cca_item_description,
-                    "Description"
-                )*/
-            }
-            if (mCCADetailModelArrayList[position].cca_item_start_time != null &&
+            if (mCCADetailModelArrayList[position].cca_item_start_time!= null &&
                 mCCADetailModelArrayList[position].cca_item_end_time != null) {
                 holder.textViewCCAaDateItemChoice2.visibility = View.VISIBLE
                 holder.textViewCCAaDateItemChoice2.text = "(" + convertTimeToAMPM(
                     mCCADetailModelArrayList[position].cca_item_start_time
-                ) + " - " + convertTimeToAMPM(
+                ).toString() + " - " + convertTimeToAMPM(
                     mCCADetailModelArrayList[position].cca_item_end_time
-                ) + ")"
+                ).toString() + ")"
             } else if (mCCADetailModelArrayList[position].cca_item_start_time != null) {
                 holder.textViewCCAaDateItemChoice2.visibility = View.VISIBLE
                 holder.textViewCCAaDateItemChoice2.text = "(" + convertTimeToAMPM(
                     mCCADetailModelArrayList[position].cca_item_start_time
-                ) + ")"
+                ).toString() + ")"
             } else if (mCCADetailModelArrayList[position].cca_item_end_time != null) {
                 holder.textViewCCAaDateItemChoice2.visibility = View.VISIBLE
                 holder.textViewCCAaDateItemChoice2.text = "(" + convertTimeToAMPM(
                     mCCADetailModelArrayList[position].cca_item_end_time
-                ) + ")"
+                ).toString() + ")"
             } else {
                 holder.textViewCCAaDateItemChoice2.visibility = View.GONE
             }
@@ -273,99 +247,6 @@ class CCAfinalReviewEditAfterSubmissionAdapter(
             holder.deleteChoice1.visibility = View.INVISIBLE
             holder.deleteChoice2.visibility = View.INVISIBLE
         }
-
-//        holder.textViewCCADay.setText(mCCADetailModelArrayList.get(position).getDay());
-//        holder.attendanceListIcon.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if ((!(mCCADetailModelArrayList.get(position).getChoice1().equalsIgnoreCase("0")) || !(mCCADetailModelArrayList.get(position).getChoice1().equalsIgnoreCase("-1"))) || (!(mCCADetailModelArrayList.get(position).getChoice2().equalsIgnoreCase("0")) || !(mCCADetailModelArrayList.get(position).getChoice2().equalsIgnoreCase("-1")))) {
-//                    showAttendanceList(position);
-//                }
-//            }
-//        });
-//        if (mCCADetailModelArrayList.get(position).getChoice1().equalsIgnoreCase("0")) {
-//            holder.linearChoice1.setVisibility(View.GONE);
-//
-//            holder.textViewCCAChoice1.setText("Choice 1 : None");
-//
-//        } else if (mCCADetailModelArrayList.get(position).getChoice1().equalsIgnoreCase("-1")) {
-//            holder.linearChoice1.setVisibility(View.GONE);
-//            holder.textViewCCAChoice1.setText("Choice 1 : Nil");
-//
-//        } else {
-//            holder.linearChoice1.setVisibility(View.VISIBLE);
-//            holder.textViewCCAChoice1.setText(mCCADetailModelArrayList.get(position).getChoice1());
-//
-//            if (mCCADetailModelArrayList.get(position).getCca_item_start_time()!=null && mCCADetailModelArrayList.get(position).getCca_item_end_time()!=null)
-//            {
-//                holder.textViewCCAaDateItemChoice1.setVisibility(View.VISIBLE);
-//
-//                holder.textViewCCAaDateItemChoice1.setText("("+ convertTimeToAMPM(mCCADetailModelArrayList.get(position).getCca_item_start_time())+" - "+convertTimeToAMPM(mCCADetailModelArrayList.get(position).getCca_item_end_time())+")");
-//
-//            }else if (mCCADetailModelArrayList.get(position).getCca_item_start_time()!=null)
-//            {
-//                holder.textViewCCAaDateItemChoice1.setVisibility(View.VISIBLE);
-//
-//                holder.textViewCCAaDateItemChoice1.setText("("+convertTimeToAMPM(mCCADetailModelArrayList.get(position).getCca_item_start_time())+")");
-//            }else if (mCCADetailModelArrayList.get(position).getCca_item_end_time()!=null)
-//            {
-//                holder.textViewCCAaDateItemChoice1.setVisibility(View.VISIBLE);
-//
-//                holder.textViewCCAaDateItemChoice1.setText("("+convertTimeToAMPM(mCCADetailModelArrayList.get(position).getCca_item_end_time())+")");
-//            }
-//            else
-//            {
-//                holder.textViewCCAaDateItemChoice1.setVisibility(View.GONE);
-//
-//            }
-//
-//        }
-//        if (mCCADetailModelArrayList.get(position).getChoice2().equalsIgnoreCase("0")) {
-//            holder.linearChoice2.setVisibility(View.GONE);
-//            holder.textViewCCAChoice2.setText("Choice 2 : None");
-//
-//        } else if (mCCADetailModelArrayList.get(position).getChoice2().equalsIgnoreCase("-1")) {
-//            holder.linearChoice2.setVisibility(View.GONE);
-//            holder.textViewCCAChoice2.setText("Choice 2 : Nil");
-//
-//        } else {
-//            holder.linearChoice2.setVisibility(View.VISIBLE);
-//            holder.textViewCCAChoice2.setText( mCCADetailModelArrayList.get(position).getChoice2());
-//
-//            if (mCCADetailModelArrayList.get(position).getCca_item_start_time()!=null && mCCADetailModelArrayList.get(position).getCca_item_end_time()!=null)
-//            {
-//                holder.textViewCCAaDateItemChoice2.setVisibility(View.VISIBLE);
-//
-//                holder.textViewCCAaDateItemChoice2.setText("("+ convertTimeToAMPM(mCCADetailModelArrayList.get(position).getCca_item_start_time())+" - "+convertTimeToAMPM(mCCADetailModelArrayList.get(position).getCca_item_end_time())+")");
-//
-//            }else if (mCCADetailModelArrayList.get(position).getCca_item_start_time()!=null)
-//            {
-//                holder.textViewCCAaDateItemChoice2.setVisibility(View.VISIBLE);
-//
-//                holder.textViewCCAaDateItemChoice2.setText("("+convertTimeToAMPM(mCCADetailModelArrayList.get(position).getCca_item_start_time())+")");
-//            }else if (mCCADetailModelArrayList.get(position).getCca_item_end_time()!=null)
-//            {
-//                holder.textViewCCAaDateItemChoice2.setVisibility(View.VISIBLE);
-//
-//                holder.textViewCCAaDateItemChoice2.setText("("+convertTimeToAMPM(mCCADetailModelArrayList.get(position).getCca_item_end_time())+")");
-//            }
-//            else
-//            {
-//                holder.textViewCCAaDateItemChoice2.setVisibility(View.GONE);
-//
-//            }
-//
-//        }
-//        if (((mCCADetailModelArrayList.get(position).getChoice1().equalsIgnoreCase("0")) || (mCCADetailModelArrayList.get(position).getChoice1().equalsIgnoreCase("-1"))) && ((mCCADetailModelArrayList.get(position).getChoice2().equalsIgnoreCase("0")) || (mCCADetailModelArrayList.get(position).getChoice2().equalsIgnoreCase("-1")))) {
-//            holder.attendanceListIcon.setVisibility(View.INVISIBLE);
-//            holder.deleteChoice1.setVisibility(View.INVISIBLE);
-//            holder.deleteChoice2.setVisibility(View.INVISIBLE);
-//        } else {
-//            holder.attendanceListIcon.setVisibility(View.INVISIBLE);
-//            holder.deleteChoice1.setVisibility(View.INVISIBLE);
-//            holder.deleteChoice2.setVisibility(View.INVISIBLE);
-//
-//        }
     }
 
     override fun getItemCount(): Int {
@@ -390,10 +271,10 @@ class CCAfinalReviewEditAfterSubmissionAdapter(
         alertHead.text = "Attendance report of " + mCCADetailModelArrayList[mPosition].day
         scrollViewMain.smoothScrollTo(0, 0)
         if (!mCCADetailModelArrayList[mPosition].choice1
-                .equals("0") && !mCCADetailModelArrayList[mPosition].choice1
+                .equals("0") && !mCCADetailModelArrayList[mPosition].choice2
                 .equals("-1")
         ) {
-            textViewCCAChoiceFirst.setText(mCCADetailModelArrayList[mPosition].choice1)
+            textViewCCAChoiceFirst.setText(mCCADetailModelArrayList[mPosition].choice2)
             linearChoice3.visibility = View.VISIBLE
             socialMediaList.visibility = View.VISIBLE
             socialMediaList.setHasFixedSize(true)
@@ -433,7 +314,6 @@ class CCAfinalReviewEditAfterSubmissionAdapter(
         dialogDismiss.setOnClickListener { dialog.dismiss() }
         dialog.show()
     }
-
     companion object {
         fun convertTimeToAMPM(date: String?): String {
             var strCurrentDate = ""

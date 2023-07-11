@@ -100,25 +100,25 @@ class InformationCCAActivity : AppCompatActivity() {
                                     InformationRecyclerAdapter(mContext, mListViewArray)
 
                             } else {
-                               /* CommonMethods.showDialogueWithOk(
+                                ConstantFunctions.showDialogueWithOk(
                                     mContext,
                                     getString(R.string.common_error),
                                     "Alert"
-                                )*/
+                                )
                             }
                         } else {
-                           /* CommonMethods.showDialogueWithOk(
+                            ConstantFunctions.showDialogueWithOk(
                                 mContext,
                                 getString(R.string.common_error),
                                 "Alert"
-                            )*/
+                            )
                         }
                     } else {
-                        /*CommonMethods.showDialogueWithOk(
+                        ConstantFunctions.showDialogueWithOk(
                             mContext,
                             getString(R.string.common_error),
                             "Alert"
-                        )*/
+                        )
                     }
                 }
             }
@@ -126,11 +126,11 @@ class InformationCCAActivity : AppCompatActivity() {
             override fun onFailure(call: Call<CCAInfoResponseModel>, t: Throwable) {
                 progressBar.visibility = View.GONE
 
-               /* CommonMethods.showDialogueWithOk(
+                ConstantFunctions.showDialogueWithOk(
                     mContext,
                     getString(R.string.common_error),
                     "Alert"
-                )*/
+                )
             }
 
 
@@ -174,8 +174,8 @@ class InformationCCAActivity : AppCompatActivity() {
                     startActivity(intent)
                 } else {
                     val intent = Intent(mContext, WebLinkActivity::class.java)
-                    intent.putExtra("webview_url", mListViewArray[position].url)
-                    intent.putExtra("title", mListViewArray[position].title)
+                    intent.putExtra("url", mListViewArray[position].url)
+                    intent.putExtra("heading", mListViewArray[position].title)
                     mContext.startActivity(intent)
                 }
             }

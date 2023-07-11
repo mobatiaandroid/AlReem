@@ -13,7 +13,8 @@ data class ExternalProvidersResponseModel(
         data class Lists(
             val id: Int?,
             val title: String?,
-            val url: String?
+            val type: String?,
+            val file: String?
         )
     }
 }

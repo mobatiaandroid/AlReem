@@ -19,6 +19,7 @@ import com.nas.alreem.activity.cca.model.CCADetailModel
 import com.nas.alreem.activity.cca.model.WeekListModel
 import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.appcontroller.AppController
+import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.OnItemClickListener
 import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.constants.addOnItemClickListener
@@ -152,11 +153,11 @@ class CCASelectionActivity : AppCompatActivity() {
             )
         }
         if (ccaedit == 0) {
-            /*CommonMethods.showDialogueWithOk(
+            ConstantFunctions.showDialogueWithOk(
                 mContext,
                 "Please select a ECA or None for each choice and each day",
                 "Info"
-            )*/
+            )
 
             submitBtn!!.getBackground().setAlpha(150)
             submitBtn!!.setVisibility(View.INVISIBLE)
@@ -190,7 +191,7 @@ class CCASelectionActivity : AppCompatActivity() {
                 intent.putExtra("detail_array", CCADetailModelArrayList)
                 startActivity(mInent)
             } else {
-              //  CommonMethods.showDialogueWithOk(mContext,"Select choice for all available days","Alert")
+                ConstantFunctions.showDialogueWithOk(mContext,"Select choice for all available days","Alert")
 
             }
         })

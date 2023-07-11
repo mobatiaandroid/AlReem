@@ -134,7 +134,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/messageTxt"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@+id/bannerImg"
         android:background="@color/cal_row_4" >
         <TextView
             android:id="@+id/msgTxt"
@@ -145,6 +145,7 @@
             android:textColor="@color/white"
             android:text="Your options are submitted &amp; waiting for approval" />
     </RelativeLayout>
+
     <ProgressBar
         android:id="@+id/progress"
         android:layout_width="40dp"
@@ -157,5 +158,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
+    <ImageView
+        android:id="@+id/bannerImg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/cca_review_banner_edit"
+        android:layout_alignParentBottom="true"/>
 </RelativeLayout>

@@ -19,6 +19,7 @@ import com.nas.alreem.activity.cca.CCAsReviewAfterSubmissionActivity
 import com.nas.alreem.activity.cca.model.CCACancelRequestModel
 import com.nas.alreem.activity.cca.model.CCACancelResponseModel
 import com.nas.alreem.activity.cca.model.CCAReviewAfterSubmissionModel
+import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.rest.ApiClient
 import retrofit2.Call
@@ -109,32 +110,34 @@ class CCAfinalReviewAfterSubmissionAdapter(
             }
         }
         holder.readMore.setOnClickListener {
-           /* CommonMethods.Companion.showDialogueWithOk(
+            Log.e("click1","Click1")
+            ConstantFunctions.showDialogueWithOk(
                 mContext,
-                mCCADetailModelArrayList[position].getCca_item_description_2(),
+                mCCADetailModelArrayList[position].cca_item_description_2!!,
                 "Description"
-            )*/
+            )
         }
         holder.description2Txt.setOnClickListener {
-           /* CommonMethods.Companion.showDialogueWithOk(
+            ConstantFunctions.showDialogueWithOk(
                 mContext,
-                mCCADetailModelArrayList[position].getCca_item_description_2(),
+                mCCADetailModelArrayList[position].cca_item_description_2!!,
                 "Description"
-            )*/
+            )
         }
         holder.readMore1.setOnClickListener {
-            /*CommonMethods.Companion.showDialogueWithOk(
+            Log.e("click1","Click1")
+            ConstantFunctions.showDialogueWithOk(
                 mContext,
-                mCCADetailModelArrayList[position].getCca_item_description(),
+                mCCADetailModelArrayList[position].cca_item_description!!,
                 "Description"
-            )*/
+            )
         }
         holder.descriptionTxt.setOnClickListener {
-            /*CommonMethods.Companion.showDialogueWithOk(
+            ConstantFunctions.showDialogueWithOk(
                 mContext,
-                mCCADetailModelArrayList[position].getCca_item_description(),
+                mCCADetailModelArrayList[position].cca_item_description!!,
                 "Description"
-            )*/
+            )
         }
         if (mCCADetailModelArrayList[position].choice1.equals("0")) {
             holder.linearChoice1.visibility = View.GONE
@@ -572,28 +575,28 @@ class CCAfinalReviewAfterSubmissionAdapter(
                                     R.drawable.round
                                 )
                             } else {
-                               /* CommonMethods.Companion.showDialogueWithOk(
+                                ConstantFunctions.showDialogueWithOk(
                                     mContext,
                                     "Unable to delete the choice. Please try again later",
                                     "Alert"
-                                )*/
+                                )
                             }
                         }
                     } else {
-                       /* CommonMethods.Companion.showDialogueWithOk(
+                        ConstantFunctions.showDialogueWithOk(
                             mContext,
                             "Cannot continue. Please try again later",
                             "Alert"
-                        )*/
+                        )
                     }
                 }
 
                 override fun onFailure(call: Call<CCACancelResponseModel?>, t: Throwable) {
-                    /*CommonMethods.Companion.showDialogueWithOk(
+                    ConstantFunctions.showDialogueWithOk(
                         mContext,
                         "Cannot continue. Please try again later",
                         "Alert"
-                    )*/
+                    )
                 }
             })
         }

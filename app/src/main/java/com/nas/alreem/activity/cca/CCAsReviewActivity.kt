@@ -294,12 +294,7 @@ class CCAsReviewActivity : AppCompatActivity() {
               //  internetCheck.showSuccessInternetAlert(mContext)
             }
             dialog.dismiss()
-           /* if (CommonMethods.isInternetAvailable(mContext)) {
-                ccaSubmitAPI()
-            } else {
-                CommonMethods.showSuccessInternetAlert(mContext)
 
-            }*/
         }
         val dialogButtonCancel = dialog.findViewById<View>(R.id.btn_Cancel) as Button
         dialogButtonCancel.setOnClickListener { dialog.dismiss() }
@@ -360,17 +355,17 @@ class CCAsReviewActivity : AppCompatActivity() {
 
                     }else{
 
-                      //  CommonMethods.showDialogueWithOk(mContext,getString(R.string.common_error),"Alert")
+                        ConstantFunctions.showDialogueWithOk(mContext,getString(R.string.common_error),"Alert")
                     }
                 }else{
 
-                  //  CommonMethods.showDialogueWithOk(mContext,getString(R.string.common_error),"Alert")
+                    ConstantFunctions.showDialogueWithOk(mContext,getString(R.string.common_error),"Alert")
                 }
             }
 
             override fun onFailure(call: Call<CCASubmitResponseModel>, t: Throwable) {
                 progressBar.visibility = View.GONE
-              //  CommonMethods.showDialogueWithOk(mContext,getString(R.string.common_error),"Alert")
+                ConstantFunctions.showDialogueWithOk(mContext,getString(R.string.common_error),"Alert")
             }
 
         })

@@ -527,7 +527,7 @@ interface ApiInterface {
     ): Call<CCACancelResponseModel>
 
 
-    @POST("external_providers")
+    @POST("external-providers")
     @Headers("Content-Type: application/json")
     fun getExternalProviders(
         @Body body: ExternalProvidersRequestModel,

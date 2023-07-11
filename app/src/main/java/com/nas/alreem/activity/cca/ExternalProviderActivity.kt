@@ -3,6 +3,7 @@ package com.nas.alreem.activity.cca
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
@@ -84,7 +85,7 @@ class ExternalProviderActivity : AppCompatActivity() {
                 progressBar.visibility = View.GONE
                 if (response.isSuccessful){
                     if (response.body() != null){
-                        if (response.body()!!.status.toString() == "100"){
+                        if (response.body()!!.status == 100){
 
                             val bannerImageUrl: String = response.body()!!.data!!.banner_image.toString()
                             if (!response.body()!!.data!!.banner_image!!.equals("")){
@@ -105,19 +106,19 @@ class ExternalProviderActivity : AppCompatActivity() {
                             }
 
                         }else{
-                           // CommonMethods.showDialogueWithOk(mContext,getString(R.string.common_error),"Alert")
+                            ConstantFunctions.showDialogueWithOk(mContext,getString(R.string.common_error),"Alert")
                         }
                     }else{
-                       // CommonMethods.showDialogueWithOk(mContext,getString(R.string.common_error),"Alert")
+                        ConstantFunctions.showDialogueWithOk(mContext,getString(R.string.common_error),"Alert")
                     }
                 }else{
-                  // CommonMethods.showDialogueWithOk(mContext,getString(R.string.common_error),"Alert")
+                   ConstantFunctions.showDialogueWithOk(mContext,getString(R.string.common_error),"Alert")
                 }
             }
 
             override fun onFailure(call: Call<ExternalProvidersResponseModel>, t: Throwable) {
                 progressBar.visibility = View.GONE
-              //  CommonMethods.showDialogueWithOk(mContext,getString(R.string.common_error),"Alert")
+                ConstantFunctions.showDialogueWithOk(mContext,getString(R.string.common_error),"Alert")
             }
 
         })
@@ -158,15 +159,16 @@ class ExternalProviderActivity : AppCompatActivity() {
             override fun onItemClicked(position: Int, view: View) {
                 //uncomment
 
-                if (mListViewArray!![position].url!!.endsWith(".pdf")) {
+                if (mListViewArray!![position].file!!.endsWith(".pdf")) {
                     val intent = Intent(mContext, PDFViewerActivity::class.java)
-                    intent.putExtra("pdf_url", mListViewArray[position].url)
-                    intent.putExtra("pdf_title", mListViewArray[position].title)
+                    intent.putExtra("Url", mListViewArray[position].file)
+                    intent.putExtra("title", mListViewArray[position].title)
                     startActivity(intent)
                 } else {
                     val intent = Intent(mContext, WebLinkActivity::class.java)
-                    intent.putExtra("webview_url", mListViewArray[position].url)
-                    intent.putExtra("title", mListViewArray[position].title)
+                    intent.putExtra("url", mListViewArray[position].file)
+                    intent.putExtra("heading", mListViewArray[position].title)
+                    Log.e("webview_url", mListViewArray[position].file.toString())
                     mContext.startActivity(intent)
                 }
             }

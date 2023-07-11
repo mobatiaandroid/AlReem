@@ -318,14 +318,14 @@ class CCA_Activity : AppCompatActivity() {
 //                        })
 //                    }
                     else {
-                       // CommonMethods.showDialogueWithOk(mContext,getString(R.string.common_error),"Alert")
+                        ConstantFunctions.showDialogueWithOk(mContext,getString(R.string.common_error),"Alert")
                     }
 
             }
 
             override fun onFailure(call: Call<CCAListResponseModel>, t: Throwable) {
                 progress.visibility = View.GONE
-               // CommonMethods.showDialogueWithOk(mContext,getString(R.string.common_error),"Alert")
+                ConstantFunctions.showDialogueWithOk(mContext,getString(R.string.common_error),"Alert")
             }
 
         })
@@ -565,10 +565,10 @@ class CCA_Activity : AppCompatActivity() {
                             )
                             startActivity(intent)
                         } else {
-                           // CommonMethods.showDialogueWithOk(mContext,"No Data Available","Alert")
+                            ConstantFunctions.showDialogueWithOk(mContext,"No Data Available","Alert")
                         }
                     } else {
-                      //  CommonMethods.showDialogueWithOk(mContext,"CCA Sign-Up Closed","Alert")
+                        ConstantFunctions.showDialogueWithOk(mContext,"CCA Sign-Up Closed","Alert")
                         
                     }
                 } else if (mCCAmodelArrayList!![position].isAttendee.equals("2")) {

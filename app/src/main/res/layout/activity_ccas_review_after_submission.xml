@@ -156,7 +156,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:src="@drawable/cca_review_banner" />
+        android:src="@drawable/cca_review_banner_without_edit" />
     <ProgressBar
         android:id="@+id/progress"
         android:layout_width="40dp"

@@ -252,6 +252,7 @@
     </array>
 
     <string name="Enrichment">Enrichment</string>
+    <string name="common_error">Cannot continue. Please try again later</string>
 
 
 

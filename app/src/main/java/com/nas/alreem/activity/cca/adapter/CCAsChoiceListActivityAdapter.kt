@@ -1,6 +1,7 @@
 package com.nas.alreem.activity.cca.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import com.nas.alreem.activity.cca.model.CCADetailModel
 import com.nas.alreem.activity.cca.model.CCAchoiceModel
 import com.nas.alreem.activity.cca.model.WeekListModel
 import com.nas.alreem.appcontroller.AppController
+import com.nas.alreem.constants.ConstantFunctions
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -141,11 +143,11 @@ class CCAsChoiceListActivityAdapter :
                     holder.readMoreTxt.visibility = View.GONE
                 }
                 holder.readMoreTxt.setOnClickListener {
-                   /* CommonMethods.Companion.showDialogueWithOk(
+                    ConstantFunctions.Companion.showDialogueWithOk(
                         mContext,
-                        mCCAmodelArrayList[position].getDescription(),
+                        mCCAmodelArrayList[position].description!!,
                         "Description"
-                    )*/
+                    )
                 }
             }
         } else {
@@ -158,6 +160,10 @@ class CCAsChoiceListActivityAdapter :
 //
 //
         if (choicePosition == 0) {
+            Log.e("choicePosition", choicePosition.toString())
+            Log.e("status", mCCAmodelArrayList[position].status.toString())
+            Log.e("disableCccaiem", mCCAmodelArrayList[position].disableCccaiem.toString())
+
             if (mCCAmodelArrayList[position].disableCccaiem!!) {
                 holder.confirmationImageview.setBackgroundResource(R.drawable.disablecrossicon)
                 holder.listTxtView.setTextColor(mContext.resources.getColor(R.color.grey))

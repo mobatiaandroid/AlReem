@@ -203,29 +203,29 @@ class CCAsReviewEditAfterSubmissionActivity : AppCompatActivity() {
                                 ).show()
                             }
                         } else {
-                            /*CommonMethods.showDialogueWithOk(
+                            ConstantFunctions.showDialogueWithOk(
                                 mContext,
                                 getString(R.string.common_error),
                                 "Alert"
-                            )*/
+                            )
                         }
                     } else {
-                       /* CommonMethods.showDialogueWithOk(
+                        ConstantFunctions.showDialogueWithOk(
                             mContext,
                             getString(R.string.common_error),
                             "Alert"
-                        )*/
+                        )
                     }
                 }
             }
 
             override fun onFailure(call: Call<CCAReviewResponseModel>, t: Throwable) {
                 progressBar.visibility = View.GONE
-                /*CommonMethods.showDialogueWithOk(
+                ConstantFunctions.showDialogueWithOk(
                     mContext,
                     getString(R.string.common_error),
                     "Alert"
-                )*/
+                )
             }
 
 
