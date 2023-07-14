@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
@@ -20,8 +21,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 import com.nas.alreem.R
+import com.nas.alreem.activity.absence.AbsenceDetailActivity
 import com.nas.alreem.activity.primary.PrimaryActivity
 import com.nas.alreem.activity.primary.PrimaryComingUpActivity
+import com.nas.alreem.activity.staff_directory.StaffDirectoryActivity
 import com.nas.alreem.constants.*
 import com.nas.alreem.fragment.about_us.adapter.AboutUsAdapter
 import com.nas.alreem.fragment.about_us.model.AboutUsDataModel
@@ -39,6 +42,7 @@ class AboutUsFragment  : Fragment() {
     lateinit var progressDialogAdd: ProgressBar
     lateinit var titleTextView: TextView
     lateinit var aboutUsArrayList:ArrayList<AboutUsDataModel>
+    lateinit var staff_rel:RelativeLayout
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,6 +66,11 @@ class AboutUsFragment  : Fragment() {
         aboutUsRecycler.layoutManager = linearLayoutManager
         aboutUsRecycler.itemAnimator = DefaultItemAnimator()
         titleTextView.text=ConstantWords.about_us
+        staff_rel=requireView().findViewById(R.id.relSub)
+        staff_rel.setOnClickListener {
+            val intent =Intent(activity, StaffDirectoryActivity::class.java)
+            activity?.startActivity(intent)
+        }
         aboutUsRecycler.addOnItemClickListener(object : OnItemClickListener {
             @SuppressLint("SimpleDateFormat", "SetTextI18n")
             @RequiresApi(Build.VERSION_CODES.O)
@@ -116,6 +125,7 @@ class AboutUsFragment  : Fragment() {
                             aboutUsArrayList=response.body()!!.responseArray!!.data
                             if (aboutUsArrayList.size>0)
                             {
+                                staff_rel.visibility=View.VISIBLE
                                 var adapterAboutUs=AboutUsAdapter(aboutUsArrayList,mContext)
                                 aboutUsRecycler.adapter=adapterAboutUs
                             }

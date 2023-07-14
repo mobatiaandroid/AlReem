@@ -19,6 +19,8 @@
     <color name="rel_eight">#8f8c85</color>
     <color name="rel_nine">#ee2953</color>
 
+    <color name="parents_slot_color">#15395A</color>
+    <color name="parents_association_titleclr">#ee2953</color>
     <color name="split_bg">#4dc4cf</color>
     <color name="cleargreyColor">#D5D5D5</color>
     <color name="transparent">#00000000</color>

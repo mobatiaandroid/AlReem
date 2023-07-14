@@ -64,7 +64,7 @@ class PaymentCategoryActivity : AppCompatActivity() {
         heading=findViewById(R.id.heading)
         backRelative=findViewById(R.id.backRelative)
         logoClickImgView=findViewById(R.id.logoClickImgView)
-        heading.text="Payment"
+        heading.text="Payments"
         backRelative.setOnClickListener(View.OnClickListener {
             finish()
         })
@@ -172,6 +172,7 @@ class PaymentCategoryActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         callStudentListApi()
+        catListRec.visibility=View.GONE
     }
 
     fun showStudentList(context: Context ,mStudentList : ArrayList<StudentList>)
@@ -250,6 +251,7 @@ class PaymentCategoryActivity : AppCompatActivity() {
 
     fun callCategoryList()
     {
+        progressDialogAdd.visibility = View.VISIBLE
         val paymentCategoriesBody = PaymentCategoriesApiModel( studentId)
         val call: Call<PayCategoryModel> = ApiClient.getClient.payment_categories(paymentCategoriesBody, "Bearer " + PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<PayCategoryModel> {
@@ -260,7 +262,9 @@ class PaymentCategoryActivity : AppCompatActivity() {
 
             override fun onResponse(call: Call<PayCategoryModel>, response: Response<PayCategoryModel>) {
                 val responsedata = response.body()
-                progressDialogAdd.visibility = View.GONE
+
+                catListRec.visibility=View.VISIBLE
+
                 Log.e("Response Signup", responsedata.toString())
                 if (responsedata != null) {
                     try {
@@ -274,18 +278,20 @@ class PaymentCategoryActivity : AppCompatActivity() {
                             if(catList.size>0)
                             {
                                 catListRec.visibility=View.VISIBLE
+                                progressDialogAdd.visibility = View.GONE
+                                var categorytitle_adapter= PayCategoryListAdapter(mContext,catList)
+                                catListRec.adapter=categorytitle_adapter
                             }
                             else
                             {
                                 catListRec.visibility=View.GONE
                             }
-                            var categorytitle_adapter= PayCategoryListAdapter(mContext,catList)
-                            catListRec.adapter=categorytitle_adapter
+
 
                         }else {
                             catListRec.visibility=View.GONE
                             DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), mContext)
-
+                            progressDialogAdd.visibility = View.GONE
                         }
 
                     } catch (e: Exception) {

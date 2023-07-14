@@ -24,6 +24,39 @@ import retrofit2.Response
 class DialogFunctions {
     companion object
     {
+        fun showDialogAlertSingleBtn(context: Context,heading: String,Message: String,icon:Int,iconImageView:Int){
+            val dialog = Dialog(context)
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog.setCancelable(false)
+            dialog.setContentView(R.layout.dialog_common_error_alert)
+            val icon = dialog.findViewById<View>(R.id.iconImageView) as ImageView
+            var iconImageView = dialog.findViewById(R.id.iconImageView) as ImageView
+            var alertHead = dialog.findViewById(R.id.alertHead) as TextView
+            var messageTxt = dialog.findViewById(R.id.messageTxt) as TextView
+            var btn_Ok = dialog.findViewById(R.id.btn_Ok) as Button
+            messageTxt.text = Message
+            alertHead.text = heading
+            val dialogButton = dialog.findViewById<View>(R.id.btn_Ok) as Button
+            dialogButton.setOnClickListener { dialog.dismiss() }
+//		Button dialogButtonCancel = (Button) dialog.findViewById(R.id.btn_Cancel);
+//		dialogButtonCancel.setVisibility(View.GONE);
+//		dialogButtonCancel.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				dialog.dismiss();
+//			}
+//		});
+            //		Button dialogButtonCancel = (Button) dialog.findViewById(R.id.btn_Cancel);
+//		dialogButtonCancel.setVisibility(View.GONE);
+//		dialogButtonCancel.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				dialog.dismiss();
+//			}
+//		});
+            dialog.show()
+        }
         fun showSignUpDialog(context: Context)
         {
 
@@ -181,6 +214,26 @@ class DialogFunctions {
                 dialog.dismiss()
             }
             dialog.show()
+        }
+        fun commonSuccessAlertDialog(heading:String,Message:String,context:Context)
+        {
+            val dialog = Dialog(context)
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog.setCancelable(false)
+            dialog.setContentView(R.layout.dialog_success_alert)
+            var iconImageView = dialog.findViewById(R.id.iconImageView) as ImageView
+            var alertHead = dialog.findViewById(R.id.alertHead) as TextView
+            var messageTxt = dialog.findViewById(R.id.messageTxt) as TextView
+            var btn_Ok = dialog.findViewById(R.id.btn_Ok) as Button
+            messageTxt.text = Message
+            alertHead.text = heading
+            btn_Ok.setOnClickListener()
+            {
+                dialog.dismiss()
+            }
+            dialog.show()
+
         }
 
 

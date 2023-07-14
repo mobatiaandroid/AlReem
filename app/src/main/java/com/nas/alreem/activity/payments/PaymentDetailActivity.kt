@@ -134,7 +134,7 @@ class PaymentDetailActivity : AppCompatActivity() {
         heading=findViewById(R.id.heading)
         backRelative=findViewById(R.id.backRelative)
         logoClickImgView=findViewById(R.id.logoClickImgView)
-        heading.text="Payment"
+        heading.text="Payment Details"
         backRelative.setOnClickListener(View.OnClickListener {
             finish()
         })
@@ -492,7 +492,7 @@ class PaymentDetailActivity : AppCompatActivity() {
         val shareIntent = Intent(Intent.ACTION_SEND)
         shareIntent.putExtra(
             Intent.EXTRA_STREAM,  uriFromFile(context, File(this.getExternalFilesDir(pdfUri.toString()
-        )?.absolutePath.toString(), "$aName")
+            )?.absolutePath.toString(), "$aName")
             ))
         shareIntent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
         shareIntent.type = "application/pdf"

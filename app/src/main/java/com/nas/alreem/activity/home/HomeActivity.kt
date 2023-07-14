@@ -33,6 +33,7 @@ import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.MyDragShadowBuilder
 import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.fragment.about_us.AboutUsFragment
+import com.nas.alreem.fragment.absence.AbsenceFragment
 import com.nas.alreem.fragment.calendar.CalendarFragment
 import com.nas.alreem.fragment.canteen.CanteenFragment
 import com.nas.alreem.fragment.cca.CCAFragment
@@ -43,12 +44,14 @@ import com.nas.alreem.fragment.gallery.GalleryFragment
 import com.nas.alreem.fragment.home.HomeFragment
 import com.nas.alreem.fragment.home.mContext
 import com.nas.alreem.fragment.notifications.NotificationFragment
+import com.nas.alreem.fragment.parent_meetings.ParentMeetingsFragment
 import com.nas.alreem.fragment.parents_essentials.ParentsEssentialFragment
 import com.nas.alreem.fragment.payments.PaymentFragment
 import com.nas.alreem.fragment.permission_slip.PermissionSlipFragment
 import com.nas.alreem.fragment.primary.PrimaryFragment
 import com.nas.alreem.fragment.secondary.SecondaryFragment
 import com.nas.alreem.fragment.settings.SettingsFragment
+import com.nas.alreem.fragment.staff_directory.StaffDirectoryFragment
 
 class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
 
@@ -182,52 +185,82 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                   3->
                   {
                       //payment
+                      //absence
                       DialogFunctions.commonErrorAlertDialog(context.resources.getString(R.string.alert),context.resources.getString(R.string.feature_only_for_registered_user),context)
 
                   }
                   4->
                   {
                       //lunchbox
+                      //payment
                       DialogFunctions.commonErrorAlertDialog(context.resources.getString(R.string.alert),context.resources.getString(R.string.feature_only_for_registered_user),context)
 
                   }
                  5->
                   {
                       //parents essential
+                      //lunchbox
                       DialogFunctions.commonErrorAlertDialog(context.resources.getString(R.string.alert),context.resources.getString(R.string.feature_only_for_registered_user),context)
 
                   }
                   6->
                   {
+                      //parents essential
+                      DialogFunctions.commonErrorAlertDialog(context.resources.getString(R.string.alert),context.resources.getString(R.string.feature_only_for_registered_user),context)
+
+                  }
+                  7->
+                  {
                       //Early years
                       mFragment = EarlyYearsFragment()
                       replaceFragmentsSelected(position)
                   }
-                  7->
+                  8->
                   {
                       //Primary
                       mFragment = PrimaryFragment()
                       replaceFragmentsSelected(position)
                   }
-                  8->
+                  9->
                   {
                       //Secondary
                       mFragment = SecondaryFragment()
                       replaceFragmentsSelected(position)
                   }
-                  9->
+                  10->
+                  {
+                      //Gallery
+                      //Enrichment
+                      DialogFunctions.commonErrorAlertDialog(context.resources.getString(R.string.alert),context.resources.getString(R.string.feature_only_for_registered_user),context)
+
+                  }
+                  11->
+                  {
+                      //Gallery
+                      //parent meetings
+                      DialogFunctions.commonErrorAlertDialog(context.resources.getString(R.string.alert),context.resources.getString(R.string.feature_only_for_registered_user),context)
+
+                  }
+                  12->
+                  {
+                      //Gallery
+                      //permission forms
+                      DialogFunctions.commonErrorAlertDialog(context.resources.getString(R.string.alert),context.resources.getString(R.string.feature_only_for_registered_user),context)
+
+                  }
+                  13->
                   {
                       //Gallery
                       DialogFunctions.commonErrorAlertDialog(context.resources.getString(R.string.alert),context.resources.getString(R.string.feature_only_for_registered_user),context)
 
                   }
-                  10->
+                  14->
                   {
                       //About Us
                       mFragment = AboutUsFragment()
                       replaceFragmentsSelected(position)
                   }
-                  11->
+                  15->
                   {
                       // Contact Us
                       if (ActivityCompat.checkSelfPermission(
@@ -276,11 +309,17 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                     }
                     3->
                     {
+                        //About Us
+                        mFragment = AbsenceFragment()
+                        replaceFragmentsSelected(position)
+                    }
+                    4->
+                    {
                         //payment
                         mFragment = PaymentFragment()
                         replaceFragmentsSelected(position)
                     }
-                    4->
+                    5->
                     {
                         mFragment = CanteenFragment()
                         replaceFragmentsSelected(position)
@@ -288,7 +327,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
 //                            mContext
 //                        )
                     }
-                    5->
+                    6->
                     {
                         mFragment = ParentsEssentialFragment()
                         replaceFragmentsSelected(position)
@@ -296,37 +335,56 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
 //                            mContext
 //                        )
                     }
-                    6->
+                    7->
                     {
                         //Early years
                         mFragment = EarlyYearsFragment()
                         replaceFragmentsSelected(position)
                     }
-                    7->
+                    8->
                     {
                         //Primary
                         mFragment = PrimaryFragment()
                         replaceFragmentsSelected(position)
                     }
-                    8->
+                    9->
                     {
                         //Secondary
                         mFragment = SecondaryFragment()
                         replaceFragmentsSelected(position)
                     }
-                    9->
+                    10->
+                    {
+                        //Secondary
+                        mFragment = CCAFragment()
+                        replaceFragmentsSelected(position)
+                    }
+                    11->
+                    {
+                        //About Us
+                        mFragment = ParentMeetingsFragment()
+                        replaceFragmentsSelected(position)
+                    }
+
+                    12->
+                    {
+                        //About Us
+                        mFragment = PermissionSlipFragment()
+                        replaceFragmentsSelected(position)
+                    }
+                    13->
                     {
                         //Gallery
                         mFragment = GalleryFragment()
                         replaceFragmentsSelected(position)
                     }
-                    10->
+                    14->
                     {
                         //About Us
                         mFragment = AboutUsFragment()
                         replaceFragmentsSelected(position)
                     }
-                    11->
+                    15->
                     {
                         // Contact Us
                         if (ActivityCompat.checkSelfPermission(
@@ -348,6 +406,9 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                             replaceFragmentsSelected(position)
                         }
                     }
+
+
+
 
                 }
             }

@@ -77,4 +77,25 @@
         <item name="android:gravity">center_vertical</item>
         <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
     </style>
+    <style name="MyDatePickerStyle" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">#FF018786</item>
+        <!--selected Item color-->
+        <item name="colorControlActivated">#FF018786</item>
+        <!-- arrow bordercolor(<>)-->
+        <!-- Highlight item color-->
+        <item name="colorControlHighlight">#0A8600</item>
+        <!--Calender Background color -->
+        <item name="android:windowBackground">#FAFAFA</item>
+        <!-- Ok Cancel Color-->
+        <item name="android:textColor">#FF018786</item>
+        <!-- Week TextColor-->
+        <item name="android:textColorSecondary">#757575</item>
+        <!-- Calender Number color arrow color (< >) -->
+        <item name="android:textColorPrimary">#212121</item>
+        <!--day , month-->
+        <item name="android:textColorPrimaryInverse">#f1f1f1</item>
+        <!-- year-->
+        <item name="android:textColorSecondaryInverse">#f1f1f1</item>
+
+    </style>
 </resources>

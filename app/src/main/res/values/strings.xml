@@ -5,15 +5,21 @@
         <item>Home</item>
         <item>Notifications</item>
         <item>Calendar</item>
+        <item>Absence &amp; Early Pickup</item>
         <item>Payments</item>
         <item>Lunch Box</item>
         <item>Parent Essentials</item>
         <item>Early Years</item>
         <item>Primary</item>
         <item>Secondary</item>
+        <item>Enrichment</item>
+        <item>Parent Meetings</item>
+        <item>Permission Forms</item>
         <item>Gallery</item>
         <item>About Us</item>
         <item>Contact Us</item>
+
+
 
     </string-array>
     <string name="loading">Loading&#8230;</string>
@@ -21,15 +27,21 @@
         <item>@drawable/home</item>
         <item>@drawable/notif</item>
         <item>@drawable/calendar</item>
+        <item>@drawable/absence</item>
         <item>@drawable/payment</item>
         <item>@drawable/lunchbox_icon</item>
         <item>@drawable/parent</item>
         <item>@drawable/earlyyears</item>
         <item>@drawable/primary</item>
         <item>@drawable/secondary</item>
+        <item>@drawable/ccas</item>
+        <item>@drawable/parentevening</item>
+        <item>@drawable/permission_slip</item>
         <item>@drawable/gallery</item>
         <item>@drawable/aboutus</item>
         <item>@drawable/contacts</item>
+
+
 
     </string-array>
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
@@ -244,6 +256,31 @@
     <string name="nov_short">NOV</string>
     <string name="dec_short">DEC</string>
 
+    <string-array name="Months">
+        <item> January </item>
+        <item> February </item>
+        <item> March </item>
+        <item> April </item>
+        <item> May </item>
+        <item> June </item>
+        <item> July </item>
+        <item> August </item>
+        <item> September </item>
+        <item> October </item>
+        <item> November </item>
+        <item> December </item>
+    </string-array>
+    <string-array name="Weeks">
+        <item> Sun</item>
+        <item> Mon</item>
+        <item> Tue</item>
+        <item> Wed</item>
+        <item> Thur</item>
+        <item> Fri</item>
+        <item> Sat</item>
+    </string-array>
+    <string name="review_confirm"><![CDATA[Review & Confirm]]></string>
+
     <array name="calendar_row_colors">
         <item>@color/cal_row_1</item>
         <item>@color/cal_row_2</item>
@@ -264,4 +301,11 @@
     <string name="deltechoicealertques">"    Do you want to delete this choice?"</string>
 
     <string name="force_update">There is a newer version available for download! Please update the app by visiting the Google Play Store</string>
+    <string name="appregisteredHint">App Registered Absences</string>
+    <string name="regNewAbsence">Register New Absence</string>
+    <string name="regEarlypickup">Register Early Pickup</string>
+    <string name="requestHint">If you need to cancel a registered absence/early pickup please contact reception (phone or email).</string>
+
+
+
 </resources>

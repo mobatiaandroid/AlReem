@@ -1063,5 +1063,21 @@ class PreferenceManager {
             cca_option_edited_badge = prefs.getInt("cca_option_edited_badge", 0)
             return cca_option_edited_badge
         }
+
+        fun setIsFirstTimeInPE(context: Context, result: Boolean) {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME, Context.MODE_PRIVATE
+            )
+            val editor = prefs.edit()
+            editor.putBoolean("is_first_pe", result)
+            editor.apply()
+        }
+        fun getIsFirstTimeInPE(context: Context): Boolean {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            return prefs.getBoolean("is_first_pe", true)
+        }
     }
 }

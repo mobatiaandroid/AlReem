@@ -35,6 +35,7 @@ import com.nas.alreem.constants.ConstantWords
 import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.fragment.about_us.AboutUsFragment
+import com.nas.alreem.fragment.absence.AbsenceFragment
 import com.nas.alreem.fragment.calendar.CalendarFragment
 import com.nas.alreem.fragment.canteen.CanteenFragment
 import com.nas.alreem.fragment.contact_us.ContactUsFragment
@@ -42,6 +43,7 @@ import com.nas.alreem.fragment.early_years.EarlyYearsFragment
 import com.nas.alreem.fragment.gallery.GalleryFragment
 import com.nas.alreem.fragment.home.model.BannerResponseModel
 import com.nas.alreem.fragment.notifications.NotificationFragment
+import com.nas.alreem.fragment.parent_meetings.ParentMeetingsFragment
 import com.nas.alreem.fragment.parents_essentials.ParentsEssentialFragment
 import com.nas.alreem.fragment.payments.PaymentFragment
 import com.nas.alreem.fragment.payments.model.SendEmailApiModel
@@ -788,6 +790,18 @@ class HomeFragment : Fragment() , View.OnClickListener{
                     TAB_ID = ConstantWords.TAB_PARENT_ESSENTIAL
 
                 }
+                textdata.equals(ConstantWords.absence_earlypickup, ignoreCase = true) -> {
+                    TAB_ID = ConstantWords.TAB_ABSENCE
+                }
+                textdata.equals(ConstantWords.enrichment, ignoreCase = true) -> {
+                TAB_ID = ConstantWords.TAB_ENRICHMENT
+            }
+                textdata.equals(ConstantWords.parentmeetings, ignoreCase = true) -> {
+                    TAB_ID = ConstantWords.TAB_PARENT_MEETINGS
+                }
+                textdata.equals(ConstantWords.permission_forms, ignoreCase = true) -> {
+                    TAB_ID = ConstantWords.TAB_PERMISSION_FORMS
+                }
 
             }
 
@@ -984,6 +998,22 @@ class HomeFragment : Fragment() , View.OnClickListener{
                     DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert),mContext.resources.getString(R.string.feature_only_for_registered_user),mContext)
 
                 }
+                ConstantWords.TAB_ABSENCE -> {
+                    DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert),mContext.resources.getString(R.string.feature_only_for_registered_user),mContext)
+
+                }
+                ConstantWords.TAB_ENRICHMENT -> {
+                    DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert),mContext.resources.getString(R.string.feature_only_for_registered_user),mContext)
+
+                }
+                ConstantWords.TAB_PARENT_MEETINGS -> {
+                    DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert),mContext.resources.getString(R.string.feature_only_for_registered_user),mContext)
+
+                }
+                ConstantWords.TAB_PERMISSION_FORMS -> {
+                    DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert),mContext.resources.getString(R.string.feature_only_for_registered_user),mContext)
+
+                }
                 ConstantWords.TAB_EARLY_YEARS -> {
                     mFragment = EarlyYearsFragment()
                     fragmentIntent(mFragment)
@@ -1103,6 +1133,22 @@ class HomeFragment : Fragment() , View.OnClickListener{
                 ConstantWords.TAB_ABOUT_US -> {
                     mFragment = AboutUsFragment()
                     fragmentIntent(mFragment)
+                }
+                ConstantWords.TAB_ABSENCE -> {
+                    mFragment = AbsenceFragment()
+                    fragmentIntent(mFragment)
+                }
+                ConstantWords.TAB_ENRICHMENT -> {
+                   /* mFragment = AboutUsFragment()
+                    fragmentIntent(mFragment)*/
+                }
+                ConstantWords.TAB_PARENT_MEETINGS -> {
+                    mFragment = ParentMeetingsFragment()
+                    fragmentIntent(mFragment)
+                }
+                ConstantWords.TAB_PERMISSION_FORMS -> {
+                   /* mFragment = AboutUsFragment()
+                    fragmentIntent(mFragment)*/
                 }
                 ConstantWords.TAB_LUNCH_BOX -> {
 
