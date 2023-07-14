@@ -10,8 +10,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.Window
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -34,7 +32,6 @@ import com.nas.alreem.constants.OnItemClickListener
 import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.constants.addOnItemClickListener
 import com.nas.alreem.rest.ApiClient
-
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -176,6 +173,7 @@ class CCA_Activity : AppCompatActivity() {
                     studentListArrayList.addAll(response.body()!!.responseArray.studentList)
                     if (PreferenceManager.getStudentID(mContext).equals(""))
                     {
+                        Log.e("studentname",student_Name)
                         student_Name=studentListArrayList.get(0).name
                         studentImg=studentListArrayList.get(0).photo
                         studentId=studentListArrayList.get(0).id
@@ -205,6 +203,8 @@ class CCA_Activity : AppCompatActivity() {
                         student_Name= PreferenceManager.getStudentName(mContext)!!
                         studentImg= PreferenceManager.getStudentPhoto(mContext)!!
                         studentId= PreferenceManager.getStudentID(mContext)!!
+                        PreferenceManager.setStudIdForCCA(mContext, studentId)
+                        Log.e("Studentid1",studentId)
                         studentClass= PreferenceManager.getStudentClass(mContext)!!
                         studentName.text=student_Name
                         if(!studentImg.equals(""))
@@ -547,11 +547,12 @@ class CCA_Activity : AppCompatActivity() {
                     ) {
                         if (mCCAmodelArrayList!![position].details!!.size > 0) {
                             val intent = Intent(mContext, CCASelectionActivity::class.java)
-                            intent.putExtra(
+                            /*intent.putExtra(
                                 "CCA_Detail",
                                 mCCAmodelArrayList!![position].details
-                            )
+                            )*/
                             intent.putExtra("tab_type", tab_type)
+                            PreferenceManager.saveDetailsArrayList(mContext, mCCAmodelArrayList!![position].details)
                             PreferenceManager.setStudIdForCCA(mContext, stud_id)
                             PreferenceManager.setStudNameForCCA(mContext, stud_name)
                             PreferenceManager.setStudClassForCCA(mContext, stud_class)
@@ -602,7 +603,60 @@ class CCA_Activity : AppCompatActivity() {
         })
     }
 
-    private fun callStatusChangeApi(ccaDaysId: String?, position: Int, status: String?) {
+    private fun callStatusChangeApi(ccaDaysId: String?, eventPosition: Int, status: String?) {
 
+
+        var model= CCAReadStatusRequestModel(PreferenceManager.getStudentID(mContext).toString(),
+            ccaDaysId,"cca")
+
+        val token = PreferenceManager.getaccesstoken(mContext)
+        val call: Call<CCASubmitResponseModel> =
+            ApiClient.getClient.readstatusupdate( model,"Bearer $token")
+       // progressBar.visibility = View.VISIBLE
+        call.enqueue(object : Callback<CCASubmitResponseModel> {
+            override fun onResponse(
+                call: Call<CCASubmitResponseModel>,
+                response: Response<CCASubmitResponseModel>
+            ) {
+               // progressBar.visibility = View.GONE
+                if (response.isSuccessful){
+                    if (response.body() != null){
+                        if (response.body()!!.status!!.equals(100)){
+
+                            if (status.equals("0", ignoreCase = true) || status.equals(
+                                    "2",
+                                    ignoreCase = true
+                                )
+                            ) {
+                                mCCAmodelArrayList!![eventPosition].status=("1")
+                                mCCAsActivityAdapter!!.notifyDataSetChanged()
+                            }
+                        }
+                        else if (response.body()!!.status!!.equals(109))
+                        {
+
+
+                        }
+                        else{
+
+                            Toast.makeText(mContext, "Failure", Toast.LENGTH_SHORT).show()
+                        }
+
+                    }else{
+
+                        ConstantFunctions.showDialogueWithOk(mContext,getString(R.string.common_error),"Alert")
+                    }
+                }else{
+
+                    ConstantFunctions.showDialogueWithOk(mContext,getString(R.string.common_error),"Alert")
+                }
+            }
+
+            override fun onFailure(call: Call<CCASubmitResponseModel>, t: Throwable) {
+               // progressBar.visibility = View.GONE
+                ConstantFunctions.showDialogueWithOk(mContext,getString(R.string.common_error),"Alert")
+            }
+
+        })
     }
 }

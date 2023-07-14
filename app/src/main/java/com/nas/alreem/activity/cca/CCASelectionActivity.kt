@@ -143,7 +143,10 @@ class CCASelectionActivity : AppCompatActivity() {
         )
         messageTxt!!.startAnimation(startAnimation)
         if (PreferenceManager.getStudClassForCCA(mContext).equals("")) {
-            textViewStudName!!.setText(PreferenceManager.getStudNameForCCA(mContext))
+           // textViewStudName!!.setText(PreferenceManager.getStudNameForCCA(mContext))
+
+            textViewStudName!!.text = Html.fromHtml(PreferenceManager.getStudentName(
+                    mContext)+"<br/>Year Group : " + PreferenceManager.getStudentClass( mContext))
         } else {
             textViewStudName!!.text = Html.fromHtml(
                 PreferenceManager.getStudNameForCCA(mContext)
@@ -161,6 +164,7 @@ class CCASelectionActivity : AppCompatActivity() {
 
             submitBtn!!.getBackground().setAlpha(150)
             submitBtn!!.setVisibility(View.INVISIBLE)
+            AppController.filledFlag = 1
         } else {
             submitBtn!!.getBackground().setAlpha(255)
             submitBtn!!.setVisibility(View.VISIBLE)

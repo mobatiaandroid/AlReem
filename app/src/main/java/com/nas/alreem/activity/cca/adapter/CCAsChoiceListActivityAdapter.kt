@@ -124,6 +124,7 @@ class CCAsChoiceListActivityAdapter :
 //
 //        System.out.println("DESC TEST"+mCCAmodelArrayList.get(position).getDescription());
 //
+        Log.e("descptn",mCCAmodelArrayList[position].description.toString())
         if (mCCAmodelArrayList[position].description != null) {
             if (mCCAmodelArrayList[position].description
                     .equals("0") || mCCAmodelArrayList[position].description

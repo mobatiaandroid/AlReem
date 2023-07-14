@@ -512,6 +512,15 @@ interface ApiInterface {
         @Header("Authorization") token: String
     ): Call<CCASubmitResponseModel>
 
+    /*CCA SUBMIT*/
+    @POST("cca-read-status-update")
+    @Headers("Content-Type: application/json")
+    fun readstatusupdate(
+        @Body body: CCAReadStatusRequestModel,
+        @Header("Authorization") token: String
+    ): Call<CCASubmitResponseModel>
+
+
     @POST("cca-reviews")
     @Headers("Content-Type: application/json")
     fun ccaReview(

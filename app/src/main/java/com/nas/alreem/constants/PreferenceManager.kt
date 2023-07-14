@@ -1024,5 +1024,44 @@ class PreferenceManager {
             val type: Type = object : TypeToken<ArrayList<CCADetailModel>?>() {}.getType()
             return gson.fromJson(json, type)
         }
+
+        fun setCcaOptionBadge(context: Context, cca_option_badge: Int) {
+            val prefs = context.getSharedPreferences(
+                "ALGUBRA",
+                Context.MODE_PRIVATE
+            )
+            val editor = prefs.edit()
+            editor.putInt("cca_option_badge", cca_option_badge)
+            editor.commit()
+        }
+
+        fun getCcaOptionBadge(context: Context): Int {
+            var cca_option_badge = 0
+            val prefs = context.getSharedPreferences(
+                "ALGUBRA",
+                Context.MODE_PRIVATE
+            )
+            cca_option_badge = prefs.getInt("cca_option_badge", 0)
+            return cca_option_badge
+        }
+
+        fun setCcaOptionEditedBadge(context: Context, cca_option_edited_badge: Int) {
+            val prefs = context.getSharedPreferences(
+                "ALGUBRA",
+                Context.MODE_PRIVATE
+            )
+            val editor = prefs.edit()
+            editor.putInt("cca_option_edited_badge", cca_option_edited_badge)
+            editor.commit()
+        }
+
+        fun getCcaOptionEditedBadge(context: Context): Int{
+            var cca_option_edited_badge = 0
+            val prefs = context.getSharedPreferences(
+                "ALGUBRA",
+                Context.MODE_PRIVATE)
+            cca_option_edited_badge = prefs.getInt("cca_option_edited_badge", 0)
+            return cca_option_edited_badge
+        }
     }
 }

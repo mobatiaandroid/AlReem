@@ -158,13 +158,13 @@ class CCAsReviewActivity : AppCompatActivity() {
                         mCCADetailModel.description2 = ""
                     }
 
-                    for (k in 0 until CCADetailModelArrayList!![j].ccaChoiceModel!!.size) if (CCADetailModelArrayList!![j]
-                            .choice1.equals(
+                    for (k in 0 until CCADetailModelArrayList!![j].ccaChoiceModel!!.size)
+                        if (CCADetailModelArrayList!![j].choice1.equals(
                                 CCADetailModelArrayList!![j].ccaChoiceModel!![k].cca_item_name
                             )
                     ) {
-                        if (CCADetailModelArrayList!![j].ccaChoiceModel!![k]
-                                .cca_item_start_time != null && CCADetailModelArrayList!![j].ccaChoiceModel!![k].cca_item_end_time != null
+                        if (CCADetailModelArrayList!![j].ccaChoiceModel!![k].cca_item_start_time != null
+                            && CCADetailModelArrayList!![j].ccaChoiceModel!![k].cca_item_end_time != null
                         ) {
                             mCCADetailModel.cca_item_start_timechoice1 = CCADetailModelArrayList!![j].ccaChoiceModel!![k].cca_item_start_time
                             mCCADetailModel.cca_item_end_timechoice1 = CCADetailModelArrayList!![j].ccaChoiceModel!![k].cca_item_end_time
@@ -186,7 +186,7 @@ class CCAsReviewActivity : AppCompatActivity() {
                         }
                     }
                     mCCADetailModelArrayList!!.add(mCCADetailModel)
-                    Log.e("detaiol",mCCADetailModel.toString())
+                    Log.e("detaiol",mCCADetailModel.location.toString())
                     break
                 }
             }
@@ -199,39 +199,40 @@ class CCAsReviewActivity : AppCompatActivity() {
             if (mCCADetailModelArrayList!!.get(j)
                     .choice1 != null && mCCADetailModelArrayList!![j].choice2 != null
             ) {
-                if (!mCCADetailModelArrayList!![j].choice1Id.equals("-541") && !mCCADetailModelArrayList!![j].choice2Id.equals("-541")
+                if (!mCCADetailModelArrayList!![j].choice1Id.equals("-541") &&
+                    !mCCADetailModelArrayList!![j].choice2Id.equals("-541")
                 ) {
-                    Log.e("1",
+                   /* Log.e("1",
                         mCCAItemIdArray!!.add(mCCADetailModelArrayList!![j].choice1Id!!).toString()
-                    )
+                    )*/
 
                     mCCAItemIdArray!!.add(mCCADetailModelArrayList!![j].choice1Id!!)
                     mCCAItemIdArray!!.add(mCCADetailModelArrayList!![j].choice2Id!!)
                 } else if (!mCCADetailModelArrayList!![j].choice1Id.equals("-541")
                 ) {
-                    Log.e("2",
+                   /* Log.e("2",
                         mCCAItemIdArray!!.add(mCCADetailModelArrayList!![j].choice1Id!!).toString()
-                    )
+                    )*/
                     mCCAItemIdArray!!.add(mCCADetailModelArrayList!![j].choice1Id!!)
                 } else if (!mCCADetailModelArrayList!![j].choice2Id.equals("-541")
                 ) {
-                    Log.e("13",
+                   /* Log.e("13",
                         mCCAItemIdArray!!.add(mCCADetailModelArrayList!![j].choice1Id!!).toString()
-                    )
+                    )*/
                     mCCAItemIdArray!!.add(mCCADetailModelArrayList!![j].choice2Id!!)
                 }
             } else if (mCCADetailModelArrayList!![j].choice1 != null) {
                 if (!mCCADetailModelArrayList!![j].choice1Id.equals("-541")) {
-                    Log.e("14",
+                   /* Log.e("14",
                         mCCAItemIdArray!!.add(mCCADetailModelArrayList!![j].choice1Id!!).toString()
-                    )
+                    )*/
                     mCCAItemIdArray!!.add(mCCADetailModelArrayList!![j].choice1Id!!)
                 }
             } else if (mCCADetailModelArrayList!![j].choice2 != null) {
                 if (!mCCADetailModelArrayList!![j].choice2Id.equals("-541")) {
-                    Log.e("15",
+                   /* Log.e("15",
                         mCCAItemIdArray!!.add(mCCADetailModelArrayList!![j].choice1Id!!).toString()
-                    )
+                    )*/
                     mCCAItemIdArray!!.add(mCCADetailModelArrayList!![j].choice2Id!!)
                 }
             }
@@ -253,9 +254,12 @@ class CCAsReviewActivity : AppCompatActivity() {
             }
         }
         cca_details = "{\"cca_days_id\":\"" + PreferenceManager.getCCAItemId(mContext)
-            .toString() + "\",\"student_id\":\"" + PreferenceManager.getStudIdForCCA(mContext)
+            .toString() + "\",\"student_id\":\"" + PreferenceManager.getStudentID(mContext)
             .toString() + "\",\"users_id\":\"" + PreferenceManager.getUserCode(mContext)
             .toString() + "\",\"cca_days_details_id\":" + cca_detailsId
+
+        Log.e("cca_details",cca_details)
+        Log.e("cca_detailsId",cca_detailsId)
 
         submitBtn!!.setOnClickListener(View.OnClickListener {
             showDialogReviewSubmit(
@@ -316,7 +320,7 @@ class CCAsReviewActivity : AppCompatActivity() {
         }
         Log.e("details1",ccaDetail.toString())
 
-        var model= CCASumbitRequestModel(PreferenceManager.getStudIdForCCA(mContext).toString(),
+        var model= CCASumbitRequestModel(PreferenceManager.getStudentID(mContext).toString(),
             PreferenceManager.getCCAItemId(mContext).toString(),ccaDetail.toString()
         )
         val token = PreferenceManager.getaccesstoken(mContext)

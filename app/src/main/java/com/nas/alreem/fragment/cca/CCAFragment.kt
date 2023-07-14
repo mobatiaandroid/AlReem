@@ -8,8 +8,6 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
@@ -17,14 +15,13 @@ import com.nas.alreem.R
 import com.nas.alreem.activity.cca.CCA_Activity
 import com.nas.alreem.activity.cca.ExternalProviderActivity
 import com.nas.alreem.activity.cca.InformationCCAActivity
+import com.nas.alreem.activity.login.model.SignUpResponseModel
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.fragment.cca.model.BannerResponseModelCCa
-import com.nas.alreem.fragment.home.model.BannerResponseModel
+import com.nas.alreem.fragment.payments.model.SendEmailApiModel
 import com.nas.alreem.rest.ApiClient
-import okhttp3.ResponseBody
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -33,7 +30,7 @@ import retrofit2.Response
 class CCAFragment : Fragment() {
     var mTitleTextView: TextView? = null
     var descriptionTV: TextView? = null
-    var ccaDot: TextView? = null
+   lateinit var ccaDot: TextView
     private var mRootView: View? = null
     private var mContext: Context? = null
     private val mTitle: String? = null
@@ -105,141 +102,99 @@ class CCAFragment : Fragment() {
                 intent.putExtra("tab_type", "ECA Options")
                 startActivity(intent)
             } else {
-              // CommonMethods.showDialogueWithOk(mContext!!,"This feature is available for Registered users only","Alert")
+               ConstantFunctions.showDialogueWithOk(mContext!!,"This feature is available for Registered users only","Alert")
             }
         }
         mailImageView!!.setOnClickListener {
-            val dialog = Dialog(mContext!!)
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-            dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            dialog.setCancelable(false)
-            dialog.setContentView(R.layout.alert_send_email_dialog)
-            var iconImageView = dialog.findViewById(R.id.iconImageView) as ImageView
-            var cancelButton = dialog.findViewById(R.id.cancelButton) as Button
-            var submitButton = dialog.findViewById(R.id.submitButton) as Button
-            var text_dialog = dialog.findViewById(R.id.text_dialog) as EditText
-            var text_content = dialog.findViewById(R.id.text_content) as EditText
-            iconImageView.setImageResource(R.drawable.roundemail)
-            text_dialog.onFocusChangeListener = View.OnFocusChangeListener { v, hasFocus ->
-                if (hasFocus) {
-                    text_dialog.hint = ""
-                    text_dialog.gravity = Gravity.LEFT or Gravity.CENTER_VERTICAL
-                    text_dialog.setPadding(5, 5, 0, 0)
-                } else {
-                    text_dialog.hint = "Enter your subject here..."
-                    text_dialog.gravity = Gravity.CENTER
-                }
-            }
-            text_content.onFocusChangeListener = View.OnFocusChangeListener { v, hasFocus ->
-                if (hasFocus) {
-                    text_content.gravity = Gravity.LEFT
-                } else {
-                    text_content.gravity = Gravity.CENTER
-                }
-            }
-
-            cancelButton.setOnClickListener()
-            {
-                dialog.dismiss()
-            }
-            submitButton.setOnClickListener()
-            {
-                if (text_dialog.text.toString().trim().equals("")) {
-                    /*CommonMethods.showDialogueWithOk(
-                        mContext!!,
-                        "Please enter your subject",
-                        "Alert"
-                    )*/
-
-                } else {
-                    if (text_content.text.toString().trim().equals("")) {
-                       /* CommonMethods.showDialogueWithOk(
-                            mContext!!,
-                            "Please enter your content",
-                            "Alert"
-                        )*/
-
-                    } else {
-                       // progressDialog.visibility = View.VISIBLE
-                        val aniRotate: Animation =
-                            AnimationUtils.loadAnimation(mContext, R.anim.linear_interpolator)
-                       // progressDialog.startAnimation(aniRotate)
-                       // var internetCheck = CommonMethods.isInternetAvailable(mContext!!)
-                      //  if (internetCheck) {
-                            /*callSendEmailToStaffApi(
-                                text_dialog.text.toString().trim(),
-                                text_content.text.toString().trim(),contactEmail, dialog, progressDialog)*/
-
-                       // } else {
-                          //  CommonMethods.showSuccessInternetAlert(mContext!!)
-                    //    }
-                    }
-                }
-            }
-            dialog.show()
+            showSendEmailDialog(mContext!!)
         }
+
 
     }
 
-   /* fun callSendEmailToStaffApi(
-        title: String, message: String, staffEmail: String, dialog: Dialog, progressDialog: ProgressBar
-    )
+
+    private fun showSendEmailDialog(mContext: Context)
     {
-        val token = PreferenceManager.getUserCode(mContext!!)
-        val sendMailBody = SendStaffMailApiModel(staffEmail, title, message)
-        val call: Call<ResponseBody> =
-            ApiClient.getClient.sendStaffMail(sendMailBody, "Bearer " + token)
-        call.enqueue(object : Callback<ResponseBody> {
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+        val dialog = Dialog(mContext)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(true)
+        dialog.setContentView(R.layout.dialog_send_email)
+        dialog.window!!.setBackgroundDrawableResource(android.R.color.transparent)
+        val btn_submit = dialog.findViewById<Button>(R.id.submitButton)
+        val btn_cancel = dialog.findViewById<Button>(R.id.cancelButton)
+        val text_dialog = dialog.findViewById<EditText?>(R.id.text_dialog)
+        val text_content = dialog.findViewById<EditText>(R.id.text_content)
+
+        btn_cancel.setOnClickListener(View.OnClickListener {
+            dialog.dismiss()
+        })
+
+        btn_submit.setOnClickListener {
+            if (text_dialog.text.toString().trim().equals("")) {
+                DialogFunctions.commonErrorAlertDialog(
+                    mContext.resources.getString(R.string.alert), resources.getString(R.string.enter_subject),
+                    mContext
+                )
+
+
+            } else {
+                if (text_content.text.toString().trim().equals("")) {
+                    DialogFunctions.commonErrorAlertDialog(
+                        mContext.resources.getString(R.string.alert), resources.getString(R.string.enter_content),
+                        mContext
+                    )
+
+                } else {
+                    // progressDialog.visibility = View.VISIBLE
+
+                    callSendEmailToStaffApi(text_dialog.text.toString().trim(), text_content.text.toString().trim(), contactEmail, dialog)
+                }
+            }
+        }
+        dialog.show()
+    }
+    fun callSendEmailToStaffApi(
+        title: String, message: String, staffEmail: String, dialog: Dialog)
+    {
+        val sendMailBody = SendEmailApiModel( staffEmail, title, message)
+        val call: Call<SignUpResponseModel> = ApiClient.getClient.sendEmailStaff(sendMailBody, "Bearer " + PreferenceManager.getaccesstoken(mContext!!))
+        call.enqueue(object : Callback<SignUpResponseModel> {
+            override fun onFailure(call: Call<SignUpResponseModel>, t: Throwable) {
                 Log.e("Failed", t.localizedMessage)
-                progressDialog.visibility = View.GONE
+                //progressDialog.visibility = View.GONE
             }
 
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+            override fun onResponse(call: Call<SignUpResponseModel>, response: Response<SignUpResponseModel>) {
                 val responsedata = response.body()
-                progressDialog.visibility = View.GONE
+                //progressDialog.visibility = View.GONE
                 Log.e("Response Signup", responsedata.toString())
                 if (responsedata != null) {
                     try {
 
-                        val jsonObject = JSONObject(responsedata.string())
-                        if (jsonObject.has("status")) {
-                            val status: Int = jsonObject.optInt("status")
-                            Log.e("STATUS LOGIN", status.toString())
-                            if (status == 100) {
-                                dialog.dismiss()
-                                CommonMethods.showDialogueWithOk(
-                                    mContext!!,
-                                    "Successfully send the email.",
-                                    "Success")
-                                //dialog.dismiss()
 
-                            }
-                            else if(status==116)
-                            {
-                                PreferenceManager.setUserCode(mContext!!,"")
-                                PreferenceManager.setUserEmail(mContext!!,"")
-                                val mIntent = Intent(activity, LoginActivity::class.java)
-                                mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                                mContext!!.startActivity(mIntent)
-                            }
+                        if (response.body()!!.status==100) {
+                            dialog.dismiss()
+                            showSuccessAlert(
+                                mContext!!,
+                                "Email sent Successfully ",
+                                "Success",
+                                dialog
+                            )
+                        }else {
+                            DialogFunctions.commonErrorAlertDialog(
+                                mContext!!.resources.getString(R.string.alert),
+                                ConstantFunctions.commonErrorString(response.body()!!.status), mContext!!
+                            )
+
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()
-                        if(response.code()==116)
-                        {
-                            PreferenceManager.setUserCode(mContext!!,"")
-                            PreferenceManager.setUserEmail(mContext!!,"")
-                            val mIntent = Intent(activity, LoginActivity::class.java)
-                            mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                            mContext!!.startActivity(mIntent)
-                        }
                     }
                 }
             }
 
         })
-    }*/
+    }
 
     private fun getList() {
         val token = PreferenceManager.getaccesstoken(mContext!!)
@@ -257,6 +212,40 @@ class CCAFragment : Fragment() {
                             description = response.body()!!.data!!.description!!
                             contactEmail = response.body()!!.data!!.contact_email!!
 //
+                            PreferenceManager.setCcaOptionBadge(
+                                mContext!!,
+                                response.body()!!.data!!.cca_badge
+                            )
+                            PreferenceManager.setCcaOptionEditedBadge(
+                                mContext!!,
+                                response.body()!!.data!!.cca_edited_badge
+                            )
+                            if (PreferenceManager.getCcaOptionBadge(mContext!!)!!.equals(0) &&
+                                PreferenceManager.getCcaOptionEditedBadge(mContext!!)!!.equals(0)
+                            ) {
+                                ccaDot.setVisibility(View.GONE)
+                            } else if (PreferenceManager.getCcaOptionBadge(mContext!!)!!.equals(0) &&
+                                !PreferenceManager.getCcaOptionEditedBadge(mContext!!)!!.equals(0)
+                            ) {
+                                ccaDot.setVisibility(View.VISIBLE)
+                               ccaDot.setText(response.body()!!.data!!.cca_edited_badge)
+                               ccaDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            } else if (!PreferenceManager.getCcaOptionBadge(mContext!!)!!.equals(0)
+                                && PreferenceManager.getCcaOptionEditedBadge(
+                                    mContext!!).equals(0)
+                            ) {
+                                ccaDot.setVisibility(View.VISIBLE)
+                               ccaDot.setText(response.body()!!.data!!.cca_badge.toString())
+                                ccaDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            } else if (!PreferenceManager.getCcaOptionBadge(mContext!!).equals(0)
+                                && !PreferenceManager.getCcaOptionEditedBadge(mContext!!)!!.equals(0)
+                            ) {
+                               ccaDot.setVisibility(View.VISIBLE)
+                                ccaDot.setText(response.body()!!.data!!.cca_badge)
+                                ccaDot.setBackgroundResource(
+                                    R.drawable.shape_circle_red
+                                )
+                            }
                             if (!bannerImage.equals("", ignoreCase = true)) {
                                 Glide.with(mContext!!).load(ConstantFunctions.replace(bannerImage)).fitCenter()
 
@@ -316,5 +305,24 @@ class CCAFragment : Fragment() {
 
         })
     }
-
+    fun showSuccessAlert(context: Context, message: String, msgHead: String, mdialog: Dialog) {
+        val dialog = Dialog(context)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.dialog_common_error_alert)
+        var iconImageView = dialog.findViewById(R.id.iconImageView) as ImageView
+        var alertHead = dialog.findViewById(R.id.alertHead) as TextView
+        var text_dialog = dialog.findViewById(R.id.messageTxt) as TextView
+        var btn_Ok = dialog.findViewById(R.id.btn_Ok) as Button
+        text_dialog.text = message
+        alertHead.text = msgHead
+        iconImageView.setImageResource(R.drawable.tick)
+        btn_Ok.setOnClickListener()
+        {
+            dialog.dismiss()
+            mdialog.dismiss()
+        }
+        dialog.show()
+    }
 }

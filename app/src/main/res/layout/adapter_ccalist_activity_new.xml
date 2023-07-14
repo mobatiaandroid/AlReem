@@ -42,16 +42,8 @@
             android:text="None"
             android:textColor="@color/dark_grey1"
             android:textSize="14sp" />
-        <TextView
 
-            android:id="@+id/textViewCCAVenue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="5dp"
-            android:text="Venue:"
-            android:textColor="@color/dark_grey1"
-            android:textSize="14sp" />
+
         <RelativeLayout
             android:id="@+id/descriptionRel"
             android:layout_width="match_parent"
@@ -76,5 +68,15 @@
                 android:layout_marginRight="10dp"
                 android:textColor="@color/dark_grey1" />
         </RelativeLayout>
+        <TextView
+
+            android:id="@+id/textViewCCAVenue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:text="Venue:"
+            android:textColor="@color/dark_grey1"
+            android:textSize="14sp" />
     </LinearLayout>
 </LinearLayout>

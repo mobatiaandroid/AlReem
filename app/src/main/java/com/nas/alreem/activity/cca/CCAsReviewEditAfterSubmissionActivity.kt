@@ -129,7 +129,8 @@ class CCAsReviewEditAfterSubmissionActivity : AppCompatActivity() {
         if (PreferenceManager.getStudClassForCCA(mContext).equals("")) {
             textViewCCAaItem!!.text = Html.fromHtml(
                 PreferenceManager.getCCATitle(mContext)
-                    .toString() + "<br/>" + PreferenceManager.getStudNameForCCA(mContext)
+                    .toString() + "<br/>" + PreferenceManager.getStudentName(mContext)+ "<br/>Year Group : " + PreferenceManager.getStudentClass( mContext
+                )
             )
         } else {
             textViewCCAaItem!!.text = Html.fromHtml(
@@ -150,7 +151,7 @@ class CCAsReviewEditAfterSubmissionActivity : AppCompatActivity() {
 
     private fun ccaReviewListAPI() {
         val body = CCAReviewRequestModel(
-            PreferenceManager.getStudIdForCCA(mContext)!!,
+            PreferenceManager.getStudentID(mContext)!!,
             PreferenceManager.getCCAItemId(mContext)!!
         )
         val token = PreferenceManager.getaccesstoken(mContext)

@@ -31,7 +31,8 @@ data class CCAListResponseModel(
                     val cca_item_start_time: String?,
                     val day: String?,
                     val isAttendee: String?,
-                    val venue: String?
+                    val venue: String?,
+                     val description:String?
                 )
 
                 data class Choice2(
@@ -42,7 +43,8 @@ data class CCAListResponseModel(
                     val cca_item_start_time: String?,
                     val day: String?,
                     val isAttendee: String?,
-                    val venue: String?
+                    val venue: String?,
+                    val description:String?
                 )
             }
         }

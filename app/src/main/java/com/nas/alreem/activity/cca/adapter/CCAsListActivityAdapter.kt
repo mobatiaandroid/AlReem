@@ -70,18 +70,19 @@ class CCAsListActivityAdapter(var mContext: Context, mCCAmodelArrayList: ArrayLi
             //pending
             holder.statusImageView.setImageResource(R.drawable.pending)
         }
-        //        if (mCCAmodelArrayList.get(position).getStatus().equalsIgnoreCase("0")) {
-//            holder.statusLayout.setVisibility(View.VISIBLE);
-//            holder.status.setBackgroundResource(R.drawable.rectangle_red);
-//            holder.status.setText("New");
-//        } else if (mCCAmodelArrayList.get(position).getStatus().equalsIgnoreCase("1") || mCCAmodelArrayList.get(position).getStatus().equalsIgnoreCase("")) {
-//            holder.statusLayout.setVisibility(View.INVISIBLE);
-//
-//        } else if (mCCAmodelArrayList.get(position).getStatus().equalsIgnoreCase("2")) {
-//            holder.statusLayout.setVisibility(View.VISIBLE);
-//            holder.status.setBackgroundResource(R.drawable.rectangle_orange);
-//            holder.status.setText("Updated");
-//        }
+                if (mCCAmodelArrayList.get(position).status.equals("0")) {
+            holder.statusLayout.setVisibility(View.VISIBLE);
+            holder.status.setBackgroundResource(R.drawable.rectangle_red);
+           holder.status.setText("New");
+        } else if (mCCAmodelArrayList.get(position).status.equals("1") ||
+                    mCCAmodelArrayList.get(position).status.equals("")) {
+            holder.statusLayout.setVisibility(View.INVISIBLE);
+
+        } else if (mCCAmodelArrayList.get(position).status.equals("2")) {
+           holder.statusLayout.setVisibility(View.VISIBLE);
+            holder.status.setBackgroundResource(R.drawable.rectangle_orange);
+            holder.status.setText("Updated");
+        }
     }
 
     override fun getItemCount(): Int {

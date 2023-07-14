@@ -69,6 +69,12 @@ class CCAfinalReviewAdapter(
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        Log.e("Location", mCCADetailModelArrayList[position].location.toString())
+        Log.e("Location2", mCCADetailModelArrayList[position].location2.toString())
+        Log.e("item", mCCADetailModelArrayList[position].choice1.toString())
+        Log.e("item2", mCCADetailModelArrayList[position].choice2.toString())
+        Log.e("desc", mCCADetailModelArrayList[position].description.toString())
+        Log.e("desc", mCCADetailModelArrayList[position].description2.toString())
         if (mCCADetailModelArrayList[position].location
                 .equals("0") || mCCADetailModelArrayList[position].location
                 .equals("")

@@ -1,6 +1,5 @@
 package com.nas.alreem.activity.cca.adapter
 
-import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -283,7 +282,7 @@ class CCAfinalReviewAfterSubmissionAdapter(
         holder.deleteChoice1.setOnClickListener {
             if (mCCADetailModelArrayList[position].attending_status.equals("1")) {
                 showDialogAlertDelete(
-                    mContext as Activity,
+                    mContext as Context,
                     "Alert",
                     mContext.resources.getString(R.string.deltechoicealertques),
                     R.drawable.questionmark_icon,
@@ -299,7 +298,7 @@ class CCAfinalReviewAfterSubmissionAdapter(
         holder.deleteChoice2.setOnClickListener {
             if (mCCADetailModelArrayList[position].attending_status2.equals("1")) {
                 showDialogAlertDelete(
-                    mContext as Activity,
+                    mContext as Context,
                     "Alert",
                     mContext.resources.getString(R.string.deltechoicealertques),
                     R.drawable.questionmark_icon,
@@ -506,9 +505,10 @@ class CCAfinalReviewAfterSubmissionAdapter(
     }
 
     companion object {
-        lateinit var mContext: Context
+      //  lateinit var mContext: Context
+
         fun showDialogAlertDelete(
-            activity: Activity?,
+            activity: Context,
             msgHead: String?,
             msg: String?,
             ico: Int,
@@ -520,7 +520,7 @@ class CCAfinalReviewAfterSubmissionAdapter(
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             dialog.setCancelable(false)
-            dialog.setContentView(R.layout.dialog_common_error_alert)
+            dialog.setContentView(R.layout.dialog_ok_cancel)
             val icon = dialog.findViewById<View>(R.id.iconImageView) as ImageView
             icon.setBackgroundResource(bgIcon)
             icon.setImageResource(ico)
@@ -531,7 +531,7 @@ class CCAfinalReviewAfterSubmissionAdapter(
             val dialogButton = dialog.findViewById<View>(R.id.btn_Ok) as Button
             dialogButton.setOnClickListener {
                 dialog.dismiss()
-                ccaDeleteAPI(ccaDetailsId)
+                ccaDeleteAPI(ccaDetailsId,activity)
             }
             val dialogButtonCancel = dialog.findViewById<View>(R.id.btn_Cancel) as Button
             dialogButtonCancel.visibility = View.VISIBLE
@@ -539,12 +539,12 @@ class CCAfinalReviewAfterSubmissionAdapter(
             dialog.show()
         }
 
-        private fun ccaDeleteAPI(ccaDetailsId: String) {
+        private fun ccaDeleteAPI(ccaDetailsId: String, activity: Context) {
             val ccaDetails: ArrayList<String?> = ArrayList()
             ccaDetails.add(ccaDetailsId)
-            val token = PreferenceManager.getaccesstoken(mContext)
+            val token = PreferenceManager.getaccesstoken(activity)
             val body = CCACancelRequestModel(
-                PreferenceManager.getStudIdForCCA(mContext)!!,
+                PreferenceManager.getStudentID(activity)!!,
                 ccaDetails.toString()
             )
             //        String token = PreferenceManager.Companion.getUserCode(mContext);
@@ -568,7 +568,7 @@ class CCAfinalReviewAfterSubmissionAdapter(
                             if (response.body()!!.status!!.equals(100)) {
 //                            CommonMethods.Companion.showDialogueWithOk(mContext,"Successfully deleted the choice","Alert");
                                 showDialogAlert(
-                                    mContext,
+                                    activity,
                                     "Alert",
                                     "Successfully Deleted the choice",
                                     R.drawable.exclamationicon,
@@ -576,7 +576,7 @@ class CCAfinalReviewAfterSubmissionAdapter(
                                 )
                             } else {
                                 ConstantFunctions.showDialogueWithOk(
-                                    mContext,
+                                    activity,
                                     "Unable to delete the choice. Please try again later",
                                     "Alert"
                                 )
@@ -584,7 +584,7 @@ class CCAfinalReviewAfterSubmissionAdapter(
                         }
                     } else {
                         ConstantFunctions.showDialogueWithOk(
-                            mContext,
+                            activity,
                             "Cannot continue. Please try again later",
                             "Alert"
                         )
@@ -593,7 +593,7 @@ class CCAfinalReviewAfterSubmissionAdapter(
 
                 override fun onFailure(call: Call<CCACancelResponseModel?>, t: Throwable) {
                     ConstantFunctions.showDialogueWithOk(
-                        mContext,
+                        activity,
                         "Cannot continue. Please try again later",
                         "Alert"
                     )
@@ -616,14 +616,14 @@ class CCAfinalReviewAfterSubmissionAdapter(
             val icon = dialog.findViewById<View>(R.id.iconImageView) as ImageView
             icon.setBackgroundResource(bgIcon)
             icon.setImageResource(ico)
-            val text = dialog.findViewById<View>(R.id.text_dialog) as TextView
+            val text = dialog.findViewById<View>(R.id.messageTxt) as TextView
             val textHead = dialog.findViewById<View>(R.id.alertHead) as TextView
             text.text = msg
             textHead.text = msgHead
             val dialogButton = dialog.findViewById<View>(R.id.btn_Ok) as Button
             dialogButton.setOnClickListener { v ->
                 dialog.dismiss()
-                mContext.startActivity(
+                activity.startActivity(
                     Intent(
                         v.context,
                         CCAsReviewAfterSubmissionActivity::class.java
