@@ -84,6 +84,7 @@ class ReviewAppointmentsRecyclerViewActivity:AppCompatActivity() {
         }
     }
     private fun reviewlistcall(){
+        review_list=ArrayList()
         progressDialogAdd.visibility = View.VISIBLE
         val token = PreferenceManager.getaccesstoken(mContext)
 
@@ -179,6 +180,7 @@ class ReviewAppointmentsRecyclerViewActivity:AppCompatActivity() {
                 if (response.body()!!.status==100)
                 {
                     DialogFunctions.commonSuccessAlertDialog("Success","Successfully confirmed appointment.",mContext)
+                    reviewlistcall()
 
                 } else
                 {

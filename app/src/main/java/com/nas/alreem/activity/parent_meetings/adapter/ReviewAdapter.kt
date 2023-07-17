@@ -95,8 +95,8 @@ progressDialogAdd.visibility=View.GONE
         val date3: Date = inputFormat3.parse(inputDateStr3)
         var end_date_frmt = outputFormat3.format(date3)
         var book_endDate=review_list[position].book_end_date
-        val inputFormat4: DateFormat = SimpleDateFormat("yyyy-MM-dd")
-        val outputFormat4: DateFormat = SimpleDateFormat("dd MMM yyyy")
+        val inputFormat4: DateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        val outputFormat4: DateFormat = SimpleDateFormat("dd MMM yyyy hh:mm a")
         val inputDateStr4 = book_endDate
         val date4: Date = inputFormat4.parse(inputDateStr4)
         var bookend_date_frmt = outputFormat4.format(date4)
@@ -494,7 +494,7 @@ progressDialogAdd.visibility=View.GONE
                 if (response.body()!!.status==100)
                 {
                     DialogFunctions.commonSuccessAlertDialog("Success","Successfully confirmed appointment.",mContext)
-
+                    reviewlistcall()
                 } else
                 {
 

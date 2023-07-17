@@ -152,6 +152,7 @@ class StaffDirectoryActivity:AppCompatActivity() {
         })
     }
     private fun callStaffCatListApi(){
+        staffCatList=ArrayList()
         val token = PreferenceManager.getaccesstoken(mContext)
         progressDialogAdd.visibility=View.VISIBLE
         staffCatList= ArrayList()

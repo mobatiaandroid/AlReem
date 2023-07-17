@@ -238,7 +238,7 @@ class ParentMeetingsFragment:Fragment() {
         dialog.show()
     }
     private fun stafflistcall(studentId:String){
-
+        staffListArray=ArrayList()
         progressDialogAdd.visibility = View.VISIBLE
         val token = PreferenceManager.getaccesstoken(mContext)
         val stafflist5SuccessBody = ListStaffPtaApiModel(studentId.toString())

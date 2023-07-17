@@ -38,6 +38,7 @@ import com.nas.alreem.fragment.about_us.AboutUsFragment
 import com.nas.alreem.fragment.absence.AbsenceFragment
 import com.nas.alreem.fragment.calendar.CalendarFragment
 import com.nas.alreem.fragment.canteen.CanteenFragment
+import com.nas.alreem.fragment.cca.CCAFragment
 import com.nas.alreem.fragment.contact_us.ContactUsFragment
 import com.nas.alreem.fragment.early_years.EarlyYearsFragment
 import com.nas.alreem.fragment.gallery.GalleryFragment
@@ -47,6 +48,7 @@ import com.nas.alreem.fragment.parent_meetings.ParentMeetingsFragment
 import com.nas.alreem.fragment.parents_essentials.ParentsEssentialFragment
 import com.nas.alreem.fragment.payments.PaymentFragment
 import com.nas.alreem.fragment.payments.model.SendEmailApiModel
+import com.nas.alreem.fragment.permission_slip.PermissionSlipFragment
 import com.nas.alreem.fragment.primary.PrimaryFragment
 import com.nas.alreem.fragment.secondary.SecondaryFragment
 import com.nas.alreem.rest.ApiClient
@@ -1139,16 +1141,16 @@ class HomeFragment : Fragment() , View.OnClickListener{
                     fragmentIntent(mFragment)
                 }
                 ConstantWords.TAB_ENRICHMENT -> {
-                   /* mFragment = AboutUsFragment()
-                    fragmentIntent(mFragment)*/
+                    mFragment = CCAFragment()
+                    fragmentIntent(mFragment)
                 }
                 ConstantWords.TAB_PARENT_MEETINGS -> {
                     mFragment = ParentMeetingsFragment()
                     fragmentIntent(mFragment)
                 }
                 ConstantWords.TAB_PERMISSION_FORMS -> {
-                   /* mFragment = AboutUsFragment()
-                    fragmentIntent(mFragment)*/
+                    mFragment = PermissionSlipFragment()
+                    fragmentIntent(mFragment)
                 }
                 ConstantWords.TAB_LUNCH_BOX -> {
 
