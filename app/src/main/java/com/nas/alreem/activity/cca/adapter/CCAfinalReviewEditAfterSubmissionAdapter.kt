@@ -211,23 +211,23 @@ class CCAfinalReviewEditAfterSubmissionAdapter(
                 holder.description2Txt.text =
                     "Description      : " + mCCADetailModelArrayList[position].cca_item_description_2
             }
-            if (mCCADetailModelArrayList[position].cca_item_start_time!= null &&
-                mCCADetailModelArrayList[position].cca_item_end_time != null) {
+            if (mCCADetailModelArrayList[position].cca_item_start_time2!= null &&
+                mCCADetailModelArrayList[position].cca_item_end_time2 != null) {
                 holder.textViewCCAaDateItemChoice2.visibility = View.VISIBLE
                 holder.textViewCCAaDateItemChoice2.text = "(" + convertTimeToAMPM(
-                    mCCADetailModelArrayList[position].cca_item_start_time
+                    mCCADetailModelArrayList[position].cca_item_start_time2
                 ).toString() + " - " + convertTimeToAMPM(
-                    mCCADetailModelArrayList[position].cca_item_end_time
+                    mCCADetailModelArrayList[position].cca_item_end_time2
                 ).toString() + ")"
-            } else if (mCCADetailModelArrayList[position].cca_item_start_time != null) {
+            } else if (mCCADetailModelArrayList[position].cca_item_start_time2 != null) {
                 holder.textViewCCAaDateItemChoice2.visibility = View.VISIBLE
                 holder.textViewCCAaDateItemChoice2.text = "(" + convertTimeToAMPM(
-                    mCCADetailModelArrayList[position].cca_item_start_time
+                    mCCADetailModelArrayList[position].cca_item_start_time2
                 ).toString() + ")"
-            } else if (mCCADetailModelArrayList[position].cca_item_end_time != null) {
+            } else if (mCCADetailModelArrayList[position].cca_item_end_time2 != null) {
                 holder.textViewCCAaDateItemChoice2.visibility = View.VISIBLE
                 holder.textViewCCAaDateItemChoice2.text = "(" + convertTimeToAMPM(
-                    mCCADetailModelArrayList[position].cca_item_end_time
+                    mCCADetailModelArrayList[position].cca_item_end_time2
                 ).toString() + ")"
             } else {
                 holder.textViewCCAaDateItemChoice2.visibility = View.GONE

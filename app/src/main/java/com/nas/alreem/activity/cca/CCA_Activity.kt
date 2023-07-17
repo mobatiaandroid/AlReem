@@ -351,9 +351,9 @@ class CCA_Activity : AppCompatActivity() {
         mCCAModel.submission_dateTime = dataObject.submission_dateTime
         mCCAModel.isSubmissionDateOver = dataObject.isSubmissiondateOver
         val jsonCCADetailArray: ArrayList<CCAListResponseModel.Data.Detail>? = dataObject.details
-        Log.e("choice2adasda", dataObject.details!![0]!!.choice2.toString())
+     //   Log.e("choice2adasda", dataObject.details!![0]!!.choice2.toString())
 
-        Log.e("choice2adasda", dataObject.details!![0]!!.choice2!![0]!!.attending_status.toString())
+      //  Log.e("choice2adasda", dataObject.details!![0]!!.choice2!![0]!!.attending_status.toString())
         CCADetailModelArrayList = ArrayList<CCADetailModel>()
         if (jsonCCADetailArray!!.isNotEmpty()) {
             for (element in jsonCCADetailArray) {
@@ -489,7 +489,7 @@ class CCA_Activity : AppCompatActivity() {
             }
         }
         mCCAModel.details = CCADetailModelArrayList
-        Log.e("mCCAModel", mCCAModel.details!!.get(0).choice1.toString())
+       // Log.e("mCCAModel", mCCAModel.details!!.get(0).choice1.toString())
         return mCCAModel
     }
 
@@ -623,8 +623,7 @@ class CCA_Activity : AppCompatActivity() {
     private fun callStatusChangeApi(ccaDaysId: String?, eventPosition: Int, status: String?) {
 
 
-        var model= CCAReadStatusRequestModel(PreferenceManager.getStudentID(mContext).toString(),
-            ccaDaysId,"cca")
+        var model= CCAReadStatusRequestModel(ccaDaysId,"cca")
 
         val token = PreferenceManager.getaccesstoken(mContext)
         val call: Call<CCASubmitResponseModel> =

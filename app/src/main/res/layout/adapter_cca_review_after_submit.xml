@@ -194,19 +194,7 @@
                 android:text="None"
                 android:textColor="@color/dark_grey1"
                 android:textSize="14sp" />
-            <TextView
-                android:id="@+id/location2Txt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/textViewCCAaDateItemChoice2"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="2dp"
-                android:layout_marginRight="5dp"
-                android:layout_toLeftOf="@+id/deleteChoice2"
-                android:text="None"
-                android:textColor="@color/dark_grey1"
-                android:textSize="14sp" />
+
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -238,7 +226,19 @@
                     android:visibility="visible" />
 
             </RelativeLayout>
-
+            <TextView
+                android:id="@+id/location2Txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textViewCCAaDateItemChoice2"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginRight="5dp"
+                android:layout_toLeftOf="@+id/deleteChoice2"
+                android:text="None"
+                android:textColor="@color/dark_grey1"
+                android:textSize="14sp" />
             <ImageView
                 android:id="@+id/deleteChoice2"
                 android:layout_width="25dp"

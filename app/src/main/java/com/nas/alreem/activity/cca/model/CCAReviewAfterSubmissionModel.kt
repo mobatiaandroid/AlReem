@@ -10,6 +10,8 @@ class CCAReviewAfterSubmissionModel {
     var calendarDaysChoice2: ArrayList<CCAAttendanceModel>? = null
     var cca_item_start_time: String? = null
     var cca_item_end_time: String? = null
+    var cca_item_start_time2: String? = null
+    var cca_item_end_time2: String? = null
     var attending_status: String? = null
     var attending_status2: String? = null
     var venue: String? = null

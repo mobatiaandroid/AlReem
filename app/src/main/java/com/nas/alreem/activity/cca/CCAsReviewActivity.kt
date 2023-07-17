@@ -274,7 +274,7 @@ class CCAsReviewActivity : AppCompatActivity() {
             showDialogReviewSubmit(
                 mContext as Activity,
                 "Confirm",
-                "Do you want to confirm this ECA?",
+                "Do you want to confirm this Enrichment?",
                 R.drawable.exclamationicon,
                 R.drawable.round
             )
