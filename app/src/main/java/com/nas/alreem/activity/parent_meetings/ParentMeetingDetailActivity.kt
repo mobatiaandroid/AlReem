@@ -110,9 +110,9 @@ class ParentMeetingDetailActivity:AppCompatActivity() {
             showRoomList()
         }
         confirm.setOnClickListener {
-            val intent = Intent(mContext, ReviewAppointmentsRecyclerViewActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            startActivity(intent)
+            alertReviewPage()
+
+
         }
         cancel.setOnClickListener {
             if (timeSlotListPost.get(0).booking_open.equals("y")) {
@@ -427,6 +427,25 @@ class ParentMeetingDetailActivity:AppCompatActivity() {
         socialMediaList.adapter = socialMediaAdapter
         dialogDismiss.setOnClickListener { dialog.dismiss() }
 
+        dialog.show()
+    }
+    private fun alertReviewPage(){
+        val dialog = Dialog(mContext)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.dialog_review_parentmeeting)
+        var btn_maybelater = dialog.findViewById(R.id.btn_Cancel) as Button
+        var btn_ok = dialog.findViewById(R.id.btn_Ok) as Button
+        btn_maybelater.setOnClickListener()
+        {
+            dialog.dismiss()
+        }
+        btn_ok.setOnClickListener {
+            val intent = Intent(mContext, ReviewAppointmentsRecyclerViewActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent)
+        }
         dialog.show()
     }
 }

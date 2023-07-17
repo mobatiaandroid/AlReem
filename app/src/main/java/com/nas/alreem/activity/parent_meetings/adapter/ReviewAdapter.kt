@@ -121,7 +121,7 @@ progressDialogAdd.visibility=View.GONE
                 .transform(CircleCrop()) //4
                 .into(holder.student_image)
         }
-        if(review_list[position].status.equals("3")&&review_list[position].booking_open.equals("y")){
+        if(review_list[position].status==3&&review_list[position].booking_open.equals("y")){
             holder.confirm_img.visibility = View.GONE
             holder.cancel_img.visibility = View.VISIBLE
             holder.addtocalendar_img.visibility = View.VISIBLE
@@ -131,7 +131,7 @@ progressDialogAdd.visibility=View.GONE
             else{
                 holder.vpml_img.visibility = View.VISIBLE
             }
-        }else if (review_list[position].status.equals("2")&&review_list[position].booking_open.equals("y")){
+        }else if (review_list[position].status==2&&review_list[position].booking_open.equals("y")){
             holder.confirm_imgview.setBackgroundResource(R.drawable.doubtinparticipatingsmallicon)
             holder.confirm_img.visibility = View.VISIBLE
             holder.confirm_img.setBackgroundResource(R.drawable.confirm)
@@ -139,7 +139,7 @@ progressDialogAdd.visibility=View.GONE
             holder.addtocalendar_img.visibility = View.GONE
             holder.vpml_img.visibility = View.GONE
         }
-        else if(review_list[position].status.equals("3")&&review_list[position].booking_open.equals("n")){
+        else if(review_list[position].status==3&&review_list[position].booking_open.equals("n")){
             holder.confirm_imgview.setBackgroundResource(R.drawable.tick_icon)
             holder.addtocalendar_img.visibility = View.VISIBLE
             holder.confirm_img.visibility = View.GONE
@@ -152,7 +152,7 @@ progressDialogAdd.visibility=View.GONE
                 holder.vpml_img.visibility = View.VISIBLE
             }
         }
-        else if(review_list[position].status.equals("2")&&review_list[position].booking_open.equals("n")){
+        else if(review_list[position].status==2&&review_list[position].booking_open.equals("n")){
             holder.confirm_imgview.setBackgroundResource(R.drawable.doubtinparticipatingsmallicon)
             holder.addtocalendar_img.visibility = View.GONE
             holder.confirm_img.visibility = View.VISIBLE
@@ -162,18 +162,32 @@ progressDialogAdd.visibility=View.GONE
             holder.vpml_img.visibility = View.GONE
         }
         holder.confirm_img.setOnClickListener {
-            id_list= ArrayList()
-            var id_sel=review_list[position].id.toInt()
-            id_list.add(id_sel)
-            showerrorConfirm(mContext,"Do you want to confirm appointment?","Alert",id_list)
-
+            if(review_list[position].booking_open.equals("y")) {
+                id_list = ArrayList()
+                var id_sel = review_list[position].id.toInt()
+                id_list.add(id_sel)
+                showerrorConfirm(mContext, "Do you want to confirm appointment?", "Alert", id_list)
+            }else{
+                DialogFunctions.commonErrorAlertDialog("Alert","Booking and cancellation date is over",mContext)
+            }
             //confirmPtaApi(id_list)
         }
         holder.cancel_img.setOnClickListener {
-            id_list= ArrayList()
-            var id_sel=review_list[position].id.toInt()
-            id_list.add(id_sel)
-            showerrorCancel(mContext,"Do you want to cancel appointment?","Alert",review_list[position].pta_time_slot_id,review_list[position].student_id)
+            if (review_list[position].booking_open.equals("y")) {
+                id_list = ArrayList()
+                var id_sel = review_list[position].id.toInt()
+                id_list.add(id_sel)
+                showerrorCancel(
+                    mContext,
+                    "Do you want to cancel appointment?",
+                    "Alert",
+                    review_list[position].pta_time_slot_id,
+                    review_list[position].student_id
+                )
+            }else{
+                DialogFunctions.commonErrorAlertDialog("Alert","Booking and cancellation date is over",mContext)
+
+            }
         }
         holder.vpml_img.setOnClickListener {
             if(review_list[position].vpml.equals("")){

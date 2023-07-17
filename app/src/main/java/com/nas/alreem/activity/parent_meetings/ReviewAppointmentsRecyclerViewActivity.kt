@@ -110,7 +110,7 @@ class ReviewAppointmentsRecyclerViewActivity:AppCompatActivity() {
                     }
 
                     for (i in review_list.indices){
-                        if (review_list[i].status.equals("2")&&review_list[i].booking_open.equals("y")){
+                        if (review_list[i].status==2&&review_list[i].booking_open.equals("y")){
                             idList.add(review_list[i].id.toInt())
                             // confirm_tv.visibility=View.VISIBLE
                             confimVisibility=true
