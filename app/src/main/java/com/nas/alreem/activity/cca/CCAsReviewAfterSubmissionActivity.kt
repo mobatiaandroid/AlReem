@@ -136,7 +136,7 @@ class CCAsReviewAfterSubmissionActivity : AppCompatActivity() {
 
     private fun ccaReviewListAPI() {
         val body = CCAReviewRequestModel(
-            PreferenceManager.getStudentID(mContext)!!,
+            PreferenceManager.getStudIdForCCA(mContext)!!,
             PreferenceManager.getCCAItemId(mContext)!!
         )
         val token = PreferenceManager.getaccesstoken(mContext)

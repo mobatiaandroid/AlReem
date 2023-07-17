@@ -139,7 +139,7 @@ class CCAsChoiceListActivityAdapter :
                         mCCAmodelArrayList[position].description
                     )
                 if (mCCAmodelArrayList[position].description!!.length > 22) {
-                    holder.readMoreTxt.visibility = View.VISIBLE
+                   // holder.readMoreTxt.visibility = View.VISIBLE
                 } else {
                     holder.readMoreTxt.visibility = View.GONE
                 }
@@ -177,6 +177,9 @@ class CCAsChoiceListActivityAdapter :
                 AppController.weekList.get(dayPosition).choiceStatus=("1")
                 ccaDetailModelArrayList!![ccaDetailpos].choice1=(mCCAmodelArrayList[position].cca_item_name)
                 ccaDetailModelArrayList!![ccaDetailpos].choice1Id=(mCCAmodelArrayList[position].cca_details_id)
+
+
+
                 val mCCAsWeekListAdapter =
                     CCAsWeekListAdapter(mContext, AppController.weekList, dayPosition, msgRelative)
                 mCCAsWeekListAdapter.notifyDataSetChanged()
@@ -200,6 +203,9 @@ class CCAsChoiceListActivityAdapter :
                 AppController.weekList.get(dayPosition).choiceStatus1=("1")
                 ccaDetailModelArrayList!![ccaDetailpos].choice2=(mCCAmodelArrayList[position].cca_item_name)
                 ccaDetailModelArrayList!![ccaDetailpos].choice2Id=(mCCAmodelArrayList[position].cca_details_id)
+
+
+
                 val mCCAsWeekListAdapter =
                     CCAsWeekListAdapter(mContext, AppController.weekList, dayPosition, msgRelative)
                 mCCAsWeekListAdapter.notifyDataSetChanged()

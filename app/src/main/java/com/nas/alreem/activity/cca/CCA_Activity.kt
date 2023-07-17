@@ -57,7 +57,6 @@ class CCA_Activity : AppCompatActivity() {
     var mStudentSpinner: LinearLayout? = null
     var relativeHeader: RelativeLayout? = null
     lateinit var student_Name: String
-    lateinit var studentId: String
     lateinit var studentImg: String
     lateinit var studentClass: String
    lateinit var studImg: ImageView
@@ -132,6 +131,8 @@ class CCA_Activity : AppCompatActivity() {
                 stud_class = mStudentArray.get(position).studentClass.toString()
                 stud_img = mStudentArray.get(position).photo.toString()
                 textViewYear!!.text = "Class : " + mStudentArray.get(position).studentClass
+               // PreferenceManager.setStudentID(mContext,stud_id)
+
                 if (stud_img != "") {
                     Glide.with(mContext) //1
                         .load(stud_img)
@@ -171,18 +172,21 @@ class CCA_Activity : AppCompatActivity() {
                 if (response.body()!!.status==100)
                 {
                     studentListArrayList.addAll(response.body()!!.responseArray.studentList)
-                    if (PreferenceManager.getStudentID(mContext).equals(""))
+                    if (PreferenceManager.getStudIdForCCA(mContext).equals(""))
                     {
-                        Log.e("studentname",student_Name)
+                      //  Log.e("studentname",student_Name)
                         student_Name=studentListArrayList.get(0).name
                         studentImg=studentListArrayList.get(0).photo
-                        studentId=studentListArrayList.get(0).id
+                        stud_id=studentListArrayList.get(0).id
                         studentClass=studentListArrayList.get(0).section
-                        PreferenceManager.setStudentID(mContext,studentId)
+                        Log.e("Student_idss",stud_id)
+                       // PreferenceManager.setStudentID(mContext,studentId)
                         PreferenceManager.setStudentName(mContext,student_Name)
                         PreferenceManager.setStudentPhoto(mContext,studentImg)
                         PreferenceManager.setStudentClass(mContext,studentClass)
                         studentName.text=student_Name
+                        PreferenceManager.setCCAStudentIdPosition(mContext, "0")
+
                         if(!studentImg.equals(""))
                         {
                             Glide.with(mContext) //1
@@ -200,11 +204,15 @@ class CCA_Activity : AppCompatActivity() {
 
                     }
                     else{
+                        val studentSelectPosition = Integer.valueOf(
+                            PreferenceManager.getCCAStudentIdPosition(mContext)
+                        )
                         student_Name= PreferenceManager.getStudentName(mContext)!!
                         studentImg= PreferenceManager.getStudentPhoto(mContext)!!
-                        studentId= PreferenceManager.getStudentID(mContext)!!
-                        PreferenceManager.setStudIdForCCA(mContext, studentId)
-                        Log.e("Studentid1",studentId)
+                        stud_id=  studentListArrayList!![studentSelectPosition].id.toString()
+                       // PreferenceManager.setStudentID(mContext, studentId)
+                       // PreferenceManager.setStudIdForCCA(mContext, studentId)
+                        Log.e("Studentid1",stud_id)
                         studentClass= PreferenceManager.getStudentClass(mContext)!!
                         studentName.text=student_Name
                         if(!studentImg.equals(""))
@@ -223,7 +231,7 @@ class CCA_Activity : AppCompatActivity() {
                         }
                     }
 
-                    getCCAListAPI(studentId)
+                    getCCAListAPI(stud_id)
 //                    var internetCheck = InternetCheckClass.isInternetAvailable(nContext)
 //                    if (internetCheck)
 //                    {
@@ -346,7 +354,7 @@ class CCA_Activity : AppCompatActivity() {
         Log.e("choice2adasda", dataObject.details!![0]!!.choice2.toString())
 
         Log.e("choice2adasda", dataObject.details!![0]!!.choice2!![0]!!.attending_status.toString())
-        CCADetailModelArrayList = java.util.ArrayList<CCADetailModel>()
+        CCADetailModelArrayList = ArrayList<CCADetailModel>()
         if (jsonCCADetailArray!!.isNotEmpty()) {
             for (element in jsonCCADetailArray) {
                 val objectCCA = element
@@ -372,6 +380,8 @@ class CCA_Activity : AppCompatActivity() {
                             mCCADetailModelchoice.cca_item_start_time = objectCCAchoice.cca_item_start_time
                             mCCADetailModelchoice.cca_item_end_time = objectCCAchoice.cca_item_end_time
                             mCCADetailModelchoice.venue = objectCCAchoice.venue
+                            mCCADetailModelchoice.description = objectCCAchoice.description
+
 
                             if (objectCCAchoice.attending_status
                                     .equals("0", ignoreCase = true)
@@ -416,7 +426,7 @@ class CCA_Activity : AppCompatActivity() {
                     }
                 }
                 mCCADetailModel.ccaChoiceModel = CCAchoiceModelArrayList
-                CCAchoiceModelArrayList2 = java.util.ArrayList<CCAchoiceModel>()
+                CCAchoiceModelArrayList2 = ArrayList<CCAchoiceModel>()
                 if (jsonCCAChoiceArray2!!.isNotEmpty()) {
                     var k = 0
                     for (j in 0..jsonCCAChoiceArray2.size) {
@@ -430,6 +440,8 @@ class CCA_Activity : AppCompatActivity() {
                             mCCADetailModelchoice.cca_item_end_time = objectCCAchoice.cca_item_end_time
                             mCCADetailModelchoice.venue = objectCCAchoice.venue
                             mCCADetailModelchoice.dayChoice = objectCCAchoice.day
+                            mCCADetailModelchoice.description = objectCCAchoice.description
+
                             if (objectCCAchoice.attending_status
                                     .equals("0", ignoreCase = true)
                             ) {
@@ -477,6 +489,7 @@ class CCA_Activity : AppCompatActivity() {
             }
         }
         mCCAModel.details = CCADetailModelArrayList
+        Log.e("mCCAModel", mCCAModel.details!!.get(0).choice1.toString())
         return mCCAModel
     }
 
@@ -553,6 +566,7 @@ class CCA_Activity : AppCompatActivity() {
                             )*/
                             intent.putExtra("tab_type", tab_type)
                             PreferenceManager.saveDetailsArrayList(mContext, mCCAmodelArrayList!![position].details)
+                           // PreferenceManager.setStudentID(mContext, stud_id)
                             PreferenceManager.setStudIdForCCA(mContext, stud_id)
                             PreferenceManager.setStudNameForCCA(mContext, stud_name)
                             PreferenceManager.setStudClassForCCA(mContext, stud_class)
@@ -581,6 +595,8 @@ class CCA_Activity : AppCompatActivity() {
                    // intent.putExtra("CCA_Detail", mCCAmodelArrayList!![position].details)
                     intent.putExtra("submissiondateover", mCCAmodelArrayList!![position].isSubmissionDateOver)
                     PreferenceManager.saveDetailsArrayList(mContext, mCCAmodelArrayList!![position].details)
+                  //  PreferenceManager.setStudentID(mContext, stud_id)
+                    Log.e("id",stud_id)
                     PreferenceManager.setStudIdForCCA(mContext, stud_id)
                    PreferenceManager.setStudNameForCCA(mContext, stud_name)
                     PreferenceManager.setStudClassForCCA(mContext, stud_class)
@@ -591,6 +607,7 @@ class CCA_Activity : AppCompatActivity() {
                     val intent =
                         Intent(mContext, CCAsReviewAfterSubmissionActivity::class.java)
                     intent.putExtra("tab_type", tab_type)
+                   // PreferenceManager.setStudentID(mContext, stud_id)
                     PreferenceManager.setStudIdForCCA(mContext, stud_id)
                     PreferenceManager.setStudNameForCCA(mContext, stud_name)
                     PreferenceManager.setStudClassForCCA(mContext, stud_class)

@@ -544,7 +544,7 @@ class CCAfinalReviewAfterSubmissionAdapter(
             ccaDetails.add(ccaDetailsId)
             val token = PreferenceManager.getaccesstoken(activity)
             val body = CCACancelRequestModel(
-                PreferenceManager.getStudentID(activity)!!,
+                PreferenceManager.getStudIdForCCA(activity)!!,
                 ccaDetails.toString()
             )
             //        String token = PreferenceManager.Companion.getUserCode(mContext);

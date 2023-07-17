@@ -69,12 +69,12 @@ class CCAfinalReviewAdapter(
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        Log.e("Location", mCCADetailModelArrayList[position].location.toString())
-        Log.e("Location2", mCCADetailModelArrayList[position].location2.toString())
-        Log.e("item", mCCADetailModelArrayList[position].choice1.toString())
-        Log.e("item2", mCCADetailModelArrayList[position].choice2.toString())
-        Log.e("desc", mCCADetailModelArrayList[position].description.toString())
-        Log.e("desc", mCCADetailModelArrayList[position].description2.toString())
+      //  Log.e("Location", mCCADetailModelArrayList[position].ccaChoiceModel!!.toString())
+       // Log.e("Location2", mCCADetailModelArrayList[position].location2.toString())
+       // Log.e("item", mCCADetailModelArrayList[position].choice1.toString())
+      //  Log.e("item2", mCCADetailModelArrayList[position].choice2.toString())
+      //  Log.e("desc", mCCADetailModelArrayList[position].description.toString())
+     //   Log.e("desc", mCCADetailModelArrayList[position].description2.toString())
         if (mCCADetailModelArrayList[position].location
                 .equals("0") || mCCADetailModelArrayList[position].location
                 .equals("")
@@ -121,6 +121,7 @@ class CCAfinalReviewAdapter(
             holder.textViewCCAChoice1.text = "Choice 1 : Nil"
         } else {
             holder.linearChoice1.visibility = View.VISIBLE
+            Log.e("date", mCCADetailModelArrayList[position].cca_item_start_timechoice1.toString())
             holder.textViewCCAChoice1.text =
                 "Choice 1 : " + mCCADetailModelArrayList[position].choice1
             if (mCCADetailModelArrayList[position].cca_item_start_timechoice1 != null && mCCADetailModelArrayList[position].cca_item_end_timechoice1 != null) {

@@ -98,6 +98,8 @@ class CCAFragment : Fragment() {
         ccaOption!!.setOnClickListener {
             if (!PreferenceManager.getUserCode(mContext!!).equals("")) {
                 PreferenceManager.setStudIdForCCA(mContext!!, "")
+               // PreferenceManager.setStudentID(mContext!!, "")
+
                 val intent = Intent(mContext, CCA_Activity::class.java)
                 intent.putExtra("tab_type", "ECA Options")
                 startActivity(intent)

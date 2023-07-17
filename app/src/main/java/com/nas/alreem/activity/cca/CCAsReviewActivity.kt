@@ -113,7 +113,8 @@ class CCAsReviewActivity : AppCompatActivity() {
         if (PreferenceManager.getStudClassForCCA(mContext).equals("")) {
             textViewCCAaItem!!.text = Html.fromHtml(
                 PreferenceManager.getCCATitle(mContext)
-                    .toString() + "<br/>" + PreferenceManager.getStudNameForCCA(mContext)
+                    .toString() + "<br/>" + PreferenceManager.getStudentName(mContext)+ "<br/>Year Group : " + PreferenceManager.getStudentClass(
+                    mContext)
             )
         } else {
             textViewCCAaItem!!.text = Html.fromHtml(
@@ -137,6 +138,7 @@ class CCAsReviewActivity : AppCompatActivity() {
                     mCCADetailModel.choice2 = CCADetailModelArrayList!![j].choice2
                     mCCADetailModel.choice1Id = CCADetailModelArrayList!![j].choice1Id
                     mCCADetailModel.choice2Id = CCADetailModelArrayList!![j].choice2Id
+
                     if(CCADetailModelArrayList!![j].location != null){
                         mCCADetailModel.location = CCADetailModelArrayList!![j].location
                     }else{
@@ -168,6 +170,9 @@ class CCAsReviewActivity : AppCompatActivity() {
                         ) {
                             mCCADetailModel.cca_item_start_timechoice1 = CCADetailModelArrayList!![j].ccaChoiceModel!![k].cca_item_start_time
                             mCCADetailModel.cca_item_end_timechoice1 = CCADetailModelArrayList!![j].ccaChoiceModel!![k].cca_item_end_time
+                            mCCADetailModel.location = CCADetailModelArrayList!![j].ccaChoiceModel!![k].venue
+                            mCCADetailModel.description = CCADetailModelArrayList!![j].ccaChoiceModel!![k].description
+
                             break
                         }
                     }
@@ -182,6 +187,10 @@ class CCAsReviewActivity : AppCompatActivity() {
                         ) {
                             mCCADetailModel.cca_item_start_timechoice2 = CCADetailModelArrayList!![j].ccaChoiceModel2!![k].cca_item_start_time
                             mCCADetailModel.cca_item_end_timechoice2 = CCADetailModelArrayList!![j].ccaChoiceModel2!![k].cca_item_end_time
+                            mCCADetailModel.location2 = CCADetailModelArrayList!![j].ccaChoiceModel2!![k].venue
+                            mCCADetailModel.description2 = CCADetailModelArrayList!![j].ccaChoiceModel2!![k].description
+
+
                             break
                         }
                     }
@@ -254,7 +263,7 @@ class CCAsReviewActivity : AppCompatActivity() {
             }
         }
         cca_details = "{\"cca_days_id\":\"" + PreferenceManager.getCCAItemId(mContext)
-            .toString() + "\",\"student_id\":\"" + PreferenceManager.getStudentID(mContext)
+            .toString() + "\",\"student_id\":\"" + PreferenceManager.getStudIdForCCA(mContext)
             .toString() + "\",\"users_id\":\"" + PreferenceManager.getUserCode(mContext)
             .toString() + "\",\"cca_days_details_id\":" + cca_detailsId
 
@@ -320,7 +329,7 @@ class CCAsReviewActivity : AppCompatActivity() {
         }
         Log.e("details1",ccaDetail.toString())
 
-        var model= CCASumbitRequestModel(PreferenceManager.getStudentID(mContext).toString(),
+        var model= CCASumbitRequestModel(PreferenceManager.getStudIdForCCA(mContext).toString(),
             PreferenceManager.getCCAItemId(mContext).toString(),ccaDetail.toString()
         )
         val token = PreferenceManager.getaccesstoken(mContext)
@@ -401,7 +410,9 @@ class CCAsReviewActivity : AppCompatActivity() {
 //                callSurveyApi()
 //            } else {
                 val intent = Intent(mContext, CCA_Activity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                PreferenceManager.setStudIdForCCA(mContext!!, "")
+
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                 startActivity(intent)
 //            }
         }

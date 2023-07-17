@@ -112,6 +112,9 @@ class CCAsReviewEditAfterSubmissionActivity : AppCompatActivity() {
            // )
             intent.putExtra("tab_type", tab_type)
             intent.putExtra("ccaedit", 1)
+            Log.e("loation1", CCADetailModelArrayList!!.get(0).choice1.toString())
+            Log.e("Location2", CCADetailModelArrayList!!.get(0).location2.toString())
+           // PreferenceManager.saveDetailsArrayList(mContext, CCADetailModelArrayList)
             startActivity(intent)
         }
 //        home = headermanager.getLogoButton()
@@ -123,7 +126,7 @@ class CCAsReviewEditAfterSubmissionActivity : AppCompatActivity() {
         recycler_review!!.setHasFixedSize(true)
         recyclerViewLayoutManager = GridLayoutManager(mContext, 1)
         recycler_review!!.layoutManager = recyclerViewLayoutManager
-        mCCADetailModelArrayList = java.util.ArrayList()
+        mCCADetailModelArrayList = ArrayList()
 //        textViewCCAaItem.setText(Html.fromHtml(PreferenceManager.getCCATitle(mContext) + "<br/>" + PreferenceManager.getStudNameForCCA(mContext)));
         //        textViewCCAaItem.setText(Html.fromHtml(PreferenceManager.getCCATitle(mContext) + "<br/>" + PreferenceManager.getStudNameForCCA(mContext)));
         if (PreferenceManager.getStudClassForCCA(mContext).equals("")) {
@@ -151,7 +154,7 @@ class CCAsReviewEditAfterSubmissionActivity : AppCompatActivity() {
 
     private fun ccaReviewListAPI() {
         val body = CCAReviewRequestModel(
-            PreferenceManager.getStudentID(mContext)!!,
+            PreferenceManager.getStudIdForCCA(mContext)!!,
             PreferenceManager.getCCAItemId(mContext)!!
         )
         val token = PreferenceManager.getaccesstoken(mContext)
@@ -236,13 +239,14 @@ class CCAsReviewEditAfterSubmissionActivity : AppCompatActivity() {
     private fun addCCAReviewlist(dataObject: CCAReviewResponseModel.Data) {
         val mCCAModel = CCAReviewAfterSubmissionModel()
         mCCAModel.day = dataObject!!.day
-        datestringChoice1 = java.util.ArrayList()
-        datestringChoice2 = java.util.ArrayList()
+        datestringChoice1 = ArrayList()
+        datestringChoice2 = ArrayList()
         if (dataObject.choice1 != null) {
             val choice1  = dataObject.choice1
             if (choice1 != null) {
                 if (choice1.cca_item_name != null) {
                     mCCAModel.choice1 = choice1.cca_item_name
+                    Log.e("Satrttime", choice1.cca_item_start_time!!)
                     mCCAModel.cca_item_start_time = choice1.cca_item_start_time
                     mCCAModel.cca_item_end_time = choice1.cca_item_end_time
                     if (choice1.cca_item_description != null){
@@ -298,6 +302,7 @@ class CCAsReviewEditAfterSubmissionActivity : AppCompatActivity() {
             if (choice2 != null) {
                 if (choice2.cca_item_name != null) {
                     mCCAModel.choice2 = choice2.cca_item_name
+                    Log.e("Satrttime2", choice2.cca_item_start_time!!)
                     mCCAModel.cca_item_start_time = choice2.cca_item_start_time
                     mCCAModel.cca_item_end_time = choice2.cca_item_end_time
                     val absentDaysChoice2 = choice2.absentDays

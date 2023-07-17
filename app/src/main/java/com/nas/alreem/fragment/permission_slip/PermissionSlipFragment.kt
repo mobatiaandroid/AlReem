@@ -76,7 +76,7 @@ class PermissionSlipFragment : Fragment(){
         mContext=requireContext()
         titleTextView = view!!.findViewById(R.id.titleTextView) as TextView
         titleTextView.text = "Permission Slips"
-        formslist= ArrayList()
+        //formslist= ArrayList()
         studentSpinner = view!!.findViewById<LinearLayout>(R.id.studentSpinner)
         studImg = view!!.findViewById<ImageView>(R.id.studImg)
         studentNameTxt = view!!.findViewById<TextView>(R.id.studentName)
@@ -189,6 +189,7 @@ class PermissionSlipFragment : Fragment(){
                 progressDialog.visibility = View.GONE
                 if (response.body()!!.status==100)
                 {
+                    formslist=ArrayList()
                     formslist.addAll(response.body()!!.responseArray.request)
                     if (response.body()!!.responseArray.request.size > 0){
                         Log.e("notempty","true")
@@ -315,5 +316,28 @@ class PermissionSlipFragment : Fragment(){
 
         })
     }
+    override fun onResume() {
+        super.onResume()
+        Log.e("TEST","call 1")
+        formslistApi()
+        studentNameTxt.text = PreferenceManager.getStudentName(mContext)
+        studentId= PreferenceManager.getStudentID(mContext).toString()
+        studentImg= PreferenceManager.getStudentPhoto(mContext)!!
+        if(!studentImg.equals(""))
+        {
+            Glide.with(mContext) //1
+                .load(studentImg)
+                .placeholder(R.drawable.student)
+                .error(R.drawable.student)
+                .skipMemoryCache(true) //2
+                .diskCacheStrategy(DiskCacheStrategy.NONE) //3
+                .transform(CircleCrop()) //4
+                .into(studImg)
+        }
+        else
+        {
+            studImg.setImageResource(R.drawable.student)
+        }
 
+    }
 }

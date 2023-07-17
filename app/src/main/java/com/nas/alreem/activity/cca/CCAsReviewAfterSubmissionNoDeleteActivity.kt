@@ -5,28 +5,30 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Html
+import android.util.Log
 import android.view.View
-import android.widget.ImageView
-import android.widget.RelativeLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nas.alreem.R
-import com.nas.alreem.activity.cca.model.CCAAttendanceModel
-import com.nas.alreem.activity.cca.model.CCADetailModel
-import com.nas.alreem.activity.cca.model.CCAReviewAfterSubmissionModel
+import com.nas.alreem.activity.cca.adapter.CCAfinalReviewEditAfterSubmissionAdapter
+import com.nas.alreem.activity.cca.model.*
+import com.nas.alreem.activity.home.HomeActivity
+import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.PreferenceManager
+import com.nas.alreem.rest.ApiClient
 import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.*
 
-/*
 class CCAsReviewAfterSubmissionNoDeleteActivity : Activity(){
     var recyclerViewLayoutManager: GridLayoutManager? = null
     var recycler_review: RecyclerView? = null
    // var headermanager: HeaderManager? = null
     var relativeHeader: RelativeLayout? = null
-    var back: ImageView? = null
+   // var back: ImageView? = null
     var home: ImageView? = null
     var editCcca: RelativeLayout? = null
     var messageTxt: RelativeLayout? = null
@@ -46,6 +48,11 @@ class CCAsReviewAfterSubmissionNoDeleteActivity : Activity(){
     var datestringChoice1: ArrayList<CCAAttendanceModel>? = null
     var datestringChoice2: ArrayList<CCAAttendanceModel>? = null
     var submissiondateover = "-1"
+    lateinit var progressBar: ProgressBar
+    var CCADetailModelArrayList: ArrayList<CCADetailModel>? = null
+    lateinit var logoclick: ImageView
+    lateinit var back: ImageView
+    lateinit var backRelative: RelativeLayout
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cca_no_edit_delete)
@@ -80,19 +87,23 @@ class CCAsReviewAfterSubmissionNoDeleteActivity : Activity(){
         msgTxt = findViewById<View>(R.id.msgTxt) as TextView
         messageTxt!!.visibility = View.VISIBLE
         editCcca = findViewById<View>(R.id.editCcca) as RelativeLayout
-        headermanager = HeaderManager(this@CCAsReviewAfterSubmissionNoDeleteActivity, tab_type)
-        headermanager.getHeader(relativeHeader, 0)
-        back = headermanager.getLeftButton()
-        headermanager.setButtonLeftSelector(
-            R.drawable.back,
-            R.drawable.back
-        )
-        back!!.setOnClickListener {
-            AppUtils.hideKeyBoard(mContext)
+        progressBar = findViewById(R.id.progress)
+       // back = findViewById(R.id.btn_left)
+        backRelative = findViewById(R.id.backRelative)
+        logoclick = findViewById(R.id.logoClickImgView)
+        //  headermanager = HeaderManager(this@CCAsReviewAfterSubmissionNoDeleteActivity, tab_type)
+      //  headermanager.getHeader(relativeHeader, 0)
+        logoclick.setOnClickListener {
+            val mIntent = Intent(mContext, HomeActivity::class.java)
+            mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+
+            startActivity(mIntent)
+        }
+        backRelative.setOnClickListener {
             finish()
         }
         editCcca!!.setOnClickListener {
-            val intent = Intent(
+            /*val intent = Intent(
                 mContext,
                 CCASelectionActivity::class.java
             )
@@ -102,17 +113,10 @@ class CCAsReviewAfterSubmissionNoDeleteActivity : Activity(){
             )
             intent.putExtra("tab_type", tab_type)
             intent.putExtra("ccaedit", 1)
-            startActivity(intent)
+            startActivity(intent)*/
         }
-        home = headermanager.getLogoButton()
-        home!!.setOnClickListener {
-            val `in` = Intent(
-                mContext,
-                HomeListAppCompatActivity::class.java
-            )
-            `in`.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            startActivity(`in`)
-        }
+       // home = headermanager.getLogoButton()
+
         recycler_review!!.setHasFixedSize(true)
         recyclerViewLayoutManager = GridLayoutManager(mContext, 1)
         recycler_review!!.layoutManager = recyclerViewLayoutManager
@@ -145,270 +149,272 @@ class CCAsReviewAfterSubmissionNoDeleteActivity : Activity(){
     }
 
     private fun ccaReviewListAPI() {
-        val volleyWrapper = VolleyWrapper(URL_CCA_REVIEWS)
-        val name = arrayOf("access_token", "student_id", "cca_days_id")
-        val value = arrayOf<String>(
-            PreferenceManager.getAccessToken(mContext),
-            PreferenceManager.getStudIdForCCA(mContext),
-            PreferenceManager.getCCAItemId(mContext)
+        val body = CCAReviewRequestModel(
+            PreferenceManager.getStudentID(mContext)!!,
+            PreferenceManager.getCCAItemId(mContext)!!
         )
-        volleyWrapper.getResponsePOST(mContext, 11, name, value, object : ResponseListener() {
-            fun responseSuccess(successResponse: String) {
-                println("The response is$successResponse")
-                try {
-                    val obj = JSONObject(successResponse)
-                    val response_code = obj.getString(JTAG_RESPONSECODE)
-                    if (response_code.equals("200", ignoreCase = true)) {
-                        val secobj = obj.getJSONObject(JTAG_RESPONSE)
-                        val status_code = secobj.getString(JTAG_STATUSCODE)
-                        if (status_code.equals("303", ignoreCase = true)) {
-                            val data = secobj.optJSONArray("data")
-                            if (data.length() > 0) {
+        val token = PreferenceManager.getaccesstoken(mContext)
+        val call: Call<CCAReviewResponseModel> =
+            ApiClient.getClient.ccaReview(body, "Bearer $token")
+        progressBar.visibility = View.VISIBLE
+        call.enqueue(object : Callback<CCAReviewResponseModel> {
+            override fun onResponse(
+                call: Call<CCAReviewResponseModel>,
+                response: Response<CCAReviewResponseModel>
+            ) {
+                progressBar.visibility = View.GONE
+                if (response.isSuccessful) {
+                    if (response.body() != null) {
+                        if (response.body()!!.status.toString() == "100") {
+
+                            if (response.body()!!.data!!.size > 0) {
                                 for (j in weekList!!.indices) {
-                                    for (i in 0 until data.length()) {
-                                        val dataObject = data.getJSONObject(i)
-                                        if (dataObject.optString("day")
-                                                .equals(weekList!![j], ignoreCase = true)
-                                        ) {
-                                            mCCADetailModelArrayList!!.add(
-                                                addCCAReviewlist(
-                                                    dataObject
-                                                )
+                                    for (i in 0 until response.body()!!.data!!.size) {
+                                        if (response.body()!!.data!![i]!!.day.equals(
+                                                weekList!!.get(j)
+                                                    .toString(), ignoreCase = true
                                             )
+                                        ) {
+                                            addCCAReviewlist(response.body()!!.data!![i])
                                         }
                                     }
                                 }
-                                if (mCCADetailModelArrayList!!.size > 0) {
-                                    messageTxt!!.visibility = View.VISIBLE
-                                    val mCCAsActivityAdapter =
-                                        CCAfinalReviewEditAfterSubmissionAdapter(
-                                            mContext,
-                                            mCCADetailModelArrayList
-                                        )
-                                    recycler_review!!.adapter = mCCAsActivityAdapter
-                                }
+                                val mCCAsActivityAdapter = CCAfinalReviewEditAfterSubmissionAdapter(
+                                    mContext,
+                                    mCCADetailModelArrayList!!
+                                )
+                                recycler_review!!.setAdapter(
+                                    mCCAsActivityAdapter
+                                )
                             } else {
-                                messageTxt!!.visibility = View.GONE
+                                val mCCAsActivityAdapter = CCAfinalReviewEditAfterSubmissionAdapter(
+                                    mContext,
+                                    mCCADetailModelArrayList!!
+                                )
+                                recycler_review!!.setAdapter(
+                                    mCCAsActivityAdapter
+                                )
                                 Toast.makeText(
-                                    this@CCAsReviewAfterSubmissionNoDeleteActivity,
-                                    "No EAP available",
+                                    mContext,
+                                    "No ECA available",
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
+                        } else {
+                            ConstantFunctions.showDialogueWithOk(
+                                mContext,
+                                getString(R.string.common_error),
+                                "Alert"
+                            )
                         }
-                    } else if (response_code.equals("500", ignoreCase = true)) {
-                        AppUtils.showDialogAlertDismiss(
-                            mContext as Activity?,
-                            "Alert",
-                            getString(R.string.common_error),
-                            R.drawable.exclamationicon,
-                            R.drawable.round
-                        )
-                    } else if (response_code.equals("400", ignoreCase = true)) {
-                        AppUtils.getToken(mContext, object : GetTokenSuccess() {
-                            fun tokenrenewed() {}
-                        })
-                        ccaReviewListAPI()
-                    } else if (response_code.equals("401", ignoreCase = true)) {
-                        AppUtils.getToken(mContext, object : GetTokenSuccess() {
-                            fun tokenrenewed() {}
-                        })
-                        ccaReviewListAPI()
-                    } else if (response_code.equals("402", ignoreCase = true)) {
-                        AppUtils.getToken(mContext, object : GetTokenSuccess() {
-                            fun tokenrenewed() {}
-                        })
-                        ccaReviewListAPI()
                     } else {
-                        AppUtils.showDialogAlertDismiss(
-                            mContext as Activity?,
-                            "Alert",
+                        ConstantFunctions.showDialogueWithOk(
+                            mContext,
                             getString(R.string.common_error),
-                            R.drawable.exclamationicon,
-                            R.drawable.round
+                            "Alert"
                         )
                     }
-                } catch (ex: Exception) {
                 }
             }
 
-            fun responseFailure(failureResponse: String?) {
-                AppUtils.showDialogAlertDismiss(
-                    mContext as Activity?,
-                    "Alert",
+            override fun onFailure(call: Call<CCAReviewResponseModel>, t: Throwable) {
+                progressBar.visibility = View.GONE
+                ConstantFunctions.showDialogueWithOk(
+                    mContext,
                     getString(R.string.common_error),
-                    R.drawable.exclamationicon,
-                    R.drawable.round
+                    "Alert"
                 )
             }
+
+
         })
     }
 
-    private fun addCCAReviewlist(dataObject: JSONObject): CCAReviewAfterSubmissionModel {
+    private fun addCCAReviewlist(dataObject: CCAReviewResponseModel.Data) {
         val mCCAModel = CCAReviewAfterSubmissionModel()
-        mCCAModel.setDay(dataObject.optString("day"))
-        datestringChoice1 = ArrayList<CCAAttendanceModel>()
-        datestringChoice2 = ArrayList<CCAAttendanceModel>()
-        if (dataObject.has("choice1")) {
-            val choice1 = dataObject.optJSONObject("choice1")
+        mCCAModel.day = dataObject!!.day
+        datestringChoice1 = java.util.ArrayList()
+        datestringChoice2 = java.util.ArrayList()
+        if (dataObject.choice1 != null) {
+            val choice1  = dataObject.choice1
             if (choice1 != null) {
-                if (choice1.has("cca_item_name")) {
-                    mCCAModel.setChoice1(choice1.optString("cca_item_name"))
-                    if (choice1.has("cca_details_venue")) {
-                        mCCAModel.setVenue(choice1.optString("cca_details_venue"))
-                    } else {
-                        mCCAModel.setVenue("")
+                if (choice1.cca_item_name != null) {
+                    mCCAModel.choice1 = choice1.cca_item_name
+                    mCCAModel.cca_item_start_time = choice1.cca_item_start_time
+                    mCCAModel.cca_item_end_time = choice1.cca_item_end_time
+                    if (choice1.cca_item_description != null){
+                        mCCAModel.cca_item_description = choice1.cca_item_description
+//                        mCCAModel.cca_item_description_2 = ""
+                    }else{
+                        mCCAModel.cca_item_description = ""
+//                        mCCAModel.cca_item_description_2 = ""
                     }
-                    if (choice1.has("cca_item_description")) {
-                        mCCAModel.setCca_item_description(choice1.optString("cca_item_description"))
-                    } else {
-                        mCCAModel.setCca_item_description("")
+                    if (choice1.cca_venue != null){
+                        mCCAModel.venue = choice1.cca_venue
+//                        mCCAModel.venue2 = ""
+                    }else{
+                        mCCAModel.venue = ""
+//                        mCCAModel.venue2 = ""
                     }
-                    mCCAModel.setCca_item_start_time(choice1.optString("cca_item_start_time"))
-                    mCCAModel.setCca_item_end_time(choice1.optString("cca_item_end_time"))
-                    val absentDaysChoice1 = choice1.optJSONArray("absentDays")
-                    absentDaysChoice1Array = ArrayList()
-                    if (choice1.has("absentDays")) {
-                        for (i in 0 until absentDaysChoice1.length()) {
-                            absentDaysChoice1Array!!.add(absentDaysChoice1.optString(i))
+
+                    Log.e("des1",choice1.cca_item_description.toString())
+                    mCCAModel.venue2 = ""
+                    mCCAModel.cca_item_description_2 = ""
+                    val absentDaysChoice1 = choice1.absentDays
+                    absentDaysChoice1Array = java.util.ArrayList()
+                    if (choice1.absentDays !=null) {
+                        for (i in 0 until absentDaysChoice1!!.size) {
+                            absentDaysChoice1Array!!.add(absentDaysChoice1[i]!!)
                         }
                     }
-                    presentDaysChoice1Array = ArrayList()
-                    if (choice1.has("presentDays")) {
-                        val presentDaysChoice1 = choice1.optJSONArray("presentDays")
-                        for (i in 0 until presentDaysChoice1.length()) {
-                            presentDaysChoice1Array!!.add(presentDaysChoice1.optString(i))
+                    presentDaysChoice1Array = java.util.ArrayList()
+                    if (choice1.presentDays != null) {
+                        val presentDaysChoice1 = choice1.presentDays
+                        for (i in 0 until presentDaysChoice1.size) {
+                            presentDaysChoice1Array!!.add(presentDaysChoice1[i]!!)
                         }
                     }
-                    upcomingDaysChoice1Array = ArrayList()
-                    if (choice1.has("upcomingDays")) {
-                        val upcomingDaysChoice1 = choice1.optJSONArray("upcomingDays")
-                        for (i in 0 until upcomingDaysChoice1.length()) {
-                            upcomingDaysChoice1Array!!.add(upcomingDaysChoice1.optString(i))
+                    upcomingDaysChoice1Array = java.util.ArrayList()
+                    if (choice1.upcomingDays !=null) {
+                        val upcomingDaysChoice1 = choice1.upcomingDays
+                        for (i in 0 until upcomingDaysChoice1.size) {
+                            upcomingDaysChoice1Array!!.add(upcomingDaysChoice1[i]!!)
                         }
                     }
                 } else {
-                    mCCAModel.setChoice1("0")
+                    mCCAModel.choice1 = "0"
                 }
             } else {
-                mCCAModel.setChoice1("0")
+                mCCAModel.choice1 = "0"
             }
         } else {
-            mCCAModel.setChoice1("-1")
+            mCCAModel.choice1 = "-1"
         }
-        if (dataObject.has("choice2")) {
-            val choice2 = dataObject.optJSONObject("choice2")
+        if (dataObject.choice2 != null) {
+            val choice2 = dataObject.choice2
             if (choice2 != null) {
-                if (choice2.has("cca_item_name")) {
-                    mCCAModel.setChoice2(choice2.optString("cca_item_name"))
-                    if (choice2.has("cca_details_venue")) {
-                        mCCAModel.setVenue2(choice2.optString("cca_details_venue"))
-                    } else {
-                        mCCAModel.setVenue2("")
+                if (choice2.cca_item_name != null) {
+                    mCCAModel.choice2 = choice2.cca_item_name
+                    mCCAModel.cca_item_start_time = choice2.cca_item_start_time
+                    mCCAModel.cca_item_end_time = choice2.cca_item_end_time
+                    val absentDaysChoice2 = choice2.absentDays
+                    Log.e("des",choice2.cca_item_description.toString())
+                    if (choice2.cca_item_description != null){
+                        mCCAModel.cca_item_description_2 = choice2.cca_item_description
+//                        mCCAModel.cca_item_description = ""
+                    }else{
+                        mCCAModel.cca_item_description_2 = ""
+//                        mCCAModel.cca_item_description = ""
                     }
-                    if (choice2.has("cca_item_description")) {
-                        mCCAModel.setCca_item_description_2(choice2.optString("cca_item_description"))
-                    } else {
-                        mCCAModel.setCca_item_description_2("")
+                    if (choice2.cca_venue != null){
+                        mCCAModel.venue2 = choice2.cca_venue
+//                        mCCAModel.venue = ""
+                    }else{
+                        mCCAModel.venue2 = ""
+//                        mCCAModel.venue = ""
                     }
-                    mCCAModel.setCca_item_start_time(choice2.optString("cca_item_start_time"))
-                    mCCAModel.setCca_item_end_time(choice2.optString("cca_item_end_time"))
-                    val absentDaysChoice2 = choice2.optJSONArray("absentDays")
-                    if (choice2.has("absentDays")) {
-                        absentDaysChoice2Array = ArrayList()
-                        for (i in 0 until absentDaysChoice2.length()) {
-                            absentDaysChoice2Array!!.add(absentDaysChoice2.optString(i))
+
+                    if (choice2.absentDays != null) {
+                        absentDaysChoice2Array = java.util.ArrayList()
+                        for (i in 0 until absentDaysChoice2!!.size) {
+                            absentDaysChoice2Array!!.add(absentDaysChoice2[i]!!)
                         }
                     }
-                    presentDaysChoice2Array = ArrayList()
-                    val presentDaysChoice2 = choice2.optJSONArray("presentDays")
-                    if (choice2.has("presentDays")) {
-                        for (i in 0 until presentDaysChoice2.length()) {
-                            presentDaysChoice2Array!!.add(presentDaysChoice2.optString(i))
+                    presentDaysChoice2Array = java.util.ArrayList()
+                    val presentDaysChoice2 = choice2.presentDays
+                    if (choice2.presentDays != null) {
+                        for (i in 0 until presentDaysChoice2!!.size) {
+                            presentDaysChoice2Array!!.add(presentDaysChoice2[i]!!)
                         }
                     }
-                    upcomingDaysChoice2Array = ArrayList()
-                    val upcomingDaysChoice2 = choice2.optJSONArray("upcomingDays")
-                    if (choice2.has("upcomingDays")) {
-                        for (i in 0 until upcomingDaysChoice2.length()) {
-                            upcomingDaysChoice2Array!!.add(upcomingDaysChoice2.optString(i))
+                    upcomingDaysChoice2Array = java.util.ArrayList()
+                    val upcomingDaysChoice2 = choice2.upcomingDays
+                    if (choice2.upcomingDays != null) {
+                        for (i in 0 until upcomingDaysChoice2!!.size) {
+                            upcomingDaysChoice2Array!!.add(upcomingDaysChoice2[i]!!)
                         }
                     }
                 } else {
-                    mCCAModel.setChoice2("0")
+                    mCCAModel.choice2 = "0"
                 }
             } else {
-                mCCAModel.setChoice2("0")
+                mCCAModel.choice2 = "0"
             }
         } else {
-            mCCAModel.setChoice2("-1")
+            mCCAModel.choice2 = "-1"
         }
+
         if (absentDaysChoice1Array!!.size > 0) {
             for (i in absentDaysChoice1Array!!.indices) {
                 val mCCAAttendanceModel = CCAAttendanceModel()
-                mCCAAttendanceModel.setDateAttend(absentDaysChoice1Array!![i])
-                mCCAAttendanceModel.setStatusCCA("a")
+                mCCAAttendanceModel.dateAttend = absentDaysChoice1Array!![i]
+                mCCAAttendanceModel.statusCCA = "a"
                 datestringChoice1!!.add(mCCAAttendanceModel)
             }
         }
+
         if (upcomingDaysChoice1Array!!.size > 0) {
             for (i in upcomingDaysChoice1Array!!.indices) {
                 val mCCAAttendanceModel = CCAAttendanceModel()
-                mCCAAttendanceModel.setDateAttend(upcomingDaysChoice1Array!![i])
-                mCCAAttendanceModel.setStatusCCA("u")
+                mCCAAttendanceModel.dateAttend = upcomingDaysChoice1Array!![i]
+                mCCAAttendanceModel.statusCCA = "u"
                 datestringChoice1!!.add(mCCAAttendanceModel)
             }
         }
+
         if (presentDaysChoice1Array!!.size > 0) {
             for (i in presentDaysChoice1Array!!.indices) {
                 val mCCAAttendanceModel = CCAAttendanceModel()
-                mCCAAttendanceModel.setDateAttend(presentDaysChoice1Array!![i])
-                mCCAAttendanceModel.setStatusCCA("p")
+                mCCAAttendanceModel.dateAttend = presentDaysChoice1Array!![i]
+                mCCAAttendanceModel.statusCCA = "p"
                 datestringChoice1!!.add(mCCAAttendanceModel)
             }
         }
         if (absentDaysChoice2Array!!.size > 0) {
             for (i in absentDaysChoice2Array!!.indices) {
                 val mCCAAttendanceModel = CCAAttendanceModel()
-                mCCAAttendanceModel.setDateAttend(absentDaysChoice2Array!![i])
-                mCCAAttendanceModel.setStatusCCA("a")
+                mCCAAttendanceModel.dateAttend = absentDaysChoice2Array!![i]
+                mCCAAttendanceModel.statusCCA = "a"
                 datestringChoice2!!.add(mCCAAttendanceModel)
             }
         }
         if (upcomingDaysChoice2Array!!.size > 0) {
             for (i in upcomingDaysChoice2Array!!.indices) {
                 val mCCAAttendanceModel = CCAAttendanceModel()
-                mCCAAttendanceModel.setDateAttend(upcomingDaysChoice2Array!![i])
-                mCCAAttendanceModel.setStatusCCA("u")
+                mCCAAttendanceModel.dateAttend = upcomingDaysChoice2Array!![i]
+                mCCAAttendanceModel.statusCCA = "u"
                 datestringChoice2!!.add(mCCAAttendanceModel)
             }
         }
         if (presentDaysChoice2Array!!.size > 0) {
             for (i in presentDaysChoice2Array!!.indices) {
                 val mCCAAttendanceModel = CCAAttendanceModel()
-                mCCAAttendanceModel.setDateAttend(presentDaysChoice2Array!![i])
-                mCCAAttendanceModel.setStatusCCA("p")
+                mCCAAttendanceModel.dateAttend = presentDaysChoice2Array!![i]
+                mCCAAttendanceModel.statusCCA = "p"
                 datestringChoice2!!.add(mCCAAttendanceModel)
             }
         }
         if (datestringChoice1!!.size > 0) {
-            Collections.sort(datestringChoice1,
-                Comparator<Any?> { s1, s2 ->
-                    s1.getDateAttend().compareToIgnoreCase(s2.getDateAttend())
-                })
+            Collections.sort(datestringChoice1, object : Comparator<CCAAttendanceModel?> {
+
+                override fun compare(s1: CCAAttendanceModel?, s2: CCAAttendanceModel?): Int {
+                    return s1!!.dateAttend!!.compareTo(s2!!.dateAttend!!)
+                }
+            })
         }
         if (datestringChoice2!!.size > 0) {
-            Collections.sort(datestringChoice1,
-                Comparator<Any?> { s1, s2 ->
-                    s1.getDateAttend().compareToIgnoreCase(s2.getDateAttend())
-                })
+            Collections.sort(datestringChoice1, object : Comparator<CCAAttendanceModel?> {
+
+                override fun compare(s1: CCAAttendanceModel?, s2: CCAAttendanceModel?): Int {
+                    return s1!!.dateAttend!!.compareTo(s2!!.dateAttend!!)
+                }
+            })
         }
-        mCCAModel.setCalendarDaysChoice1(datestringChoice1)
-        mCCAModel.setCalendarDaysChoice2(datestringChoice2)
-        return mCCAModel
+        mCCAModel.calendarDaysChoice1 = datestringChoice1
+        mCCAModel.calendarDaysChoice2 = datestringChoice2
+
+        mCCADetailModelArrayList!!.add(mCCAModel)
+
     }
 
-    companion object {
-        var CCADetailModelArrayList: ArrayList<CCADetailModel>? = null
-    }
-}*/
+}
