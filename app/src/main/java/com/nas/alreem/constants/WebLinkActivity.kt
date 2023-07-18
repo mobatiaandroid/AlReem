@@ -7,10 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.webkit.WebResourceError
-import android.webkit.WebResourceRequest
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -38,7 +35,7 @@ class WebLinkActivity : AppCompatActivity() {
 
     }
     private fun getWebViewSettings() {
-        progressDialogAdd.visibility=View.VISIBLE
+       // progressDialogAdd.visibility=View.VISIBLE
         val settings = webView.settings
         settings.domStorageEnabled = true
     }
@@ -50,6 +47,7 @@ class WebLinkActivity : AppCompatActivity() {
         heading = findViewById(R.id.heading)
         backRelative = findViewById(R.id.backRelative)
         logoClickImgView = findViewById(R.id.logoClickImgView)
+
         backRelative.setOnClickListener(View.OnClickListener {
             finish()
         })
@@ -62,7 +60,19 @@ class WebLinkActivity : AppCompatActivity() {
         webView.settings.javaScriptEnabled = true
         webView.webViewClient = MyWebViewClient(this)
         webView.loadUrl(url!!)
-        progressDialogAdd.visibility= View.GONE
+       // progressDialogAdd.visibility= View.GONE
+
+        webView.webChromeClient = object : WebChromeClient() {
+
+            override fun onProgressChanged(view: WebView, newProgress: Int) {
+                progressDialogAdd.progress = newProgress
+                if (newProgress == 100) {
+                    progressDialogAdd.visibility = View.GONE
+                   // back.visibility = View.VISIBLE
+
+                }
+            }
+        }
     }
 
 
@@ -73,18 +83,18 @@ class WebLinkActivity : AppCompatActivity() {
         override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
             val url: String = request?.url.toString()
             view?.loadUrl(url)
-            progressDialogAdd.visibility= View.GONE
+            //progressDialogAdd.visibility= View.GONE
             return true
         }
 
         override fun shouldOverrideUrlLoading(webView: WebView, url: String): Boolean {
             webView.loadUrl(url)
-            progressDialogAdd.visibility= View.GONE
+           // progressDialogAdd.visibility= View.GONE
             return true
         }
 
         override fun onReceivedError(view: WebView, request: WebResourceRequest, error: WebResourceError) {
-            progressDialogAdd.visibility= View.GONE
+            //progressDialogAdd.visibility= View.GONE
             Log.e("ERROR",error.toString())
             //Toast.makeText(activity, "Got Error! $error", Toast.LENGTH_SHORT).show()
         }

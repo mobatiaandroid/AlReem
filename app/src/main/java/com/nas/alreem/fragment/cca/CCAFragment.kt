@@ -30,7 +30,7 @@ import retrofit2.Response
 class CCAFragment : Fragment() {
     var mTitleTextView: TextView? = null
     var descriptionTV: TextView? = null
-   lateinit var ccaDot: TextView
+  public lateinit var ccaDot: TextView
     private var mRootView: View? = null
     private var mContext: Context? = null
     private val mTitle: String? = null
@@ -45,6 +45,7 @@ class CCAFragment : Fragment() {
     private var description = ""
     var text_content: TextView? = null
     var text_dialog: TextView? = null
+    lateinit var progress: ProgressBar
 
 
     override fun onCreateView(
@@ -69,6 +70,7 @@ class CCAFragment : Fragment() {
         ccaDot = mRootView!!.findViewById<View>(R.id.ccaDot) as TextView
         mTitleTextView!!.setText(R.string.Enrichment)
         mtitleRel = mRootView!!.findViewById<View>(R.id.title) as LinearLayout
+        progress = mRootView!!.findViewById(R.id.progress)
 
         externalCCA = mRootView!!.findViewById<View>(R.id.epRelative) as RelativeLayout
         ccaOption = mRootView!!.findViewById<View>(R.id.CcaOptionRelative) as RelativeLayout
@@ -199,6 +201,7 @@ class CCAFragment : Fragment() {
     }
 
     private fun getList() {
+        progress.visibility = View.VISIBLE
         val token = PreferenceManager.getaccesstoken(mContext!!)
         val call: Call<BannerResponseModelCCa> =
             ApiClient.getClient.getBanner( "Bearer $token")
@@ -207,6 +210,8 @@ class CCAFragment : Fragment() {
                 call: Call<BannerResponseModelCCa>,
                 response: Response<BannerResponseModelCCa>
             ) {
+                progress.visibility = View.GONE
+
                 if (response.isSuccessful){
                     if (response.body() != null){
                         if (response.body()!!.status.toString() == "100"){
@@ -291,18 +296,20 @@ class CCAFragment : Fragment() {
                             // CCAFRegisterRel.setVisibility(View.VISIBLE);
 
                         }else{
-                          //  CommonMethods.showDialogueWithOk(mContext!!,getString(R.string.common_error),"Alert")
+                            ConstantFunctions.showDialogueWithOk(mContext!!,getString(R.string.common_error),"Alert")
                         }
                     }else{
-                       // CommonMethods.showDialogueWithOk(mContext!!,getString(R.string.common_error),"Alert")
+                        ConstantFunctions.showDialogueWithOk(mContext!!,getString(R.string.common_error),"Alert")
                     }
                 }else{
-                   // CommonMethods.showDialogueWithOk(mContext!!,getString(R.string.common_error),"Alert")
+                    ConstantFunctions.showDialogueWithOk(mContext!!,getString(R.string.common_error),"Alert")
                 }
             }
 
             override fun onFailure(call: Call<BannerResponseModelCCa>, t: Throwable) {
-               // CommonMethods.showDialogueWithOk(mContext!!,getString(R.string.common_error),"Alert")
+                progress.visibility = View.GONE
+
+                 ConstantFunctions.showDialogueWithOk(mContext!!,getString(R.string.common_error),"Alert")
             }
 
         })

@@ -298,7 +298,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                     1->
                     {
                         //Notification
-                        mFragment = CCAFragment()
+                        mFragment = NotificationFragment()
                         replaceFragmentsSelected(position)
                     }
                     2->

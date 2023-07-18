@@ -31,6 +31,7 @@ import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.OnItemClickListener
 import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.constants.addOnItemClickListener
+import com.nas.alreem.fragment.cca.CCAFragment
 import com.nas.alreem.rest.ApiClient
 import retrofit2.Call
 import retrofit2.Callback
@@ -587,22 +588,39 @@ class CCA_Activity : AppCompatActivity() {
                         
                     }
                 } else if (mCCAmodelArrayList!![position].isAttendee.equals("2")) {
-                    val intent =
-                        Intent(mContext, CCAsReviewEditAfterSubmissionActivity::class.java)
-                    Log.e("cca choice1s", mCCAmodelArrayList!![position].details!!.get(0).choice1!!)
-                    Log.e("cca choice2s", mCCAmodelArrayList!![position].details!!.get(0).choice2!!)
-                    intent.putExtra("tab_type", tab_type)
-                   // intent.putExtra("CCA_Detail", mCCAmodelArrayList!![position].details)
-                    intent.putExtra("submissiondateover", mCCAmodelArrayList!![position].isSubmissionDateOver)
-                    PreferenceManager.saveDetailsArrayList(mContext, mCCAmodelArrayList!![position].details)
-                  //  PreferenceManager.setStudentID(mContext, stud_id)
-                    Log.e("id",stud_id)
-                    PreferenceManager.setStudIdForCCA(mContext, stud_id)
-                   PreferenceManager.setStudNameForCCA(mContext, stud_name)
-                    PreferenceManager.setStudClassForCCA(mContext, stud_class)
-                    PreferenceManager.setCCATitle(mContext, mCCAmodelArrayList!![position].title)
-                    PreferenceManager.setCCAItemId(mContext, mCCAmodelArrayList!![position].cca_days_id)
-                    startActivity(intent)
+                    if(mCCAmodelArrayList!!.get(position).isSubmissionDateOver.equals("0"))
+                    {
+                        val intent =
+                            Intent(mContext, CCAsReviewEditAfterSubmissionActivity::class.java)
+                        Log.e("cca choice1s", mCCAmodelArrayList!![position].details!!.get(0).choice1!!)
+                        Log.e("cca choice2s", mCCAmodelArrayList!![position].details!!.get(0).choice2!!)
+                        intent.putExtra("tab_type", tab_type)
+                        // intent.putExtra("CCA_Detail", mCCAmodelArrayList!![position].details)
+                        intent.putExtra("submissiondateover", mCCAmodelArrayList!![position].isSubmissionDateOver)
+                        PreferenceManager.saveDetailsArrayList(mContext, mCCAmodelArrayList!![position].details)
+                        //  PreferenceManager.setStudentID(mContext, stud_id)
+                        Log.e("id",stud_id)
+                        PreferenceManager.setStudIdForCCA(mContext, stud_id)
+                        PreferenceManager.setStudNameForCCA(mContext, stud_name)
+                        PreferenceManager.setStudClassForCCA(mContext, stud_class)
+                        PreferenceManager.setCCATitle(mContext, mCCAmodelArrayList!![position].title)
+                        PreferenceManager.setCCAItemId(mContext, mCCAmodelArrayList!![position].cca_days_id)
+                        startActivity(intent)
+                    }
+                    else{
+                        val intent = Intent(mContext, CCAsReviewAfterSubmissionNoDeleteActivity::class.java)
+                        intent.putExtra("tab_type", tab_type)
+                        //intent.putExtra("CCA_Detail", mCCAmodelArrayList!![position].getDetails())
+                        intent.putExtra("submissiondateover", mCCAmodelArrayList!![position].isSubmissionDateOver)
+                        PreferenceManager.saveDetailsArrayList(mContext, mCCAmodelArrayList!![position].details)
+                        PreferenceManager.setStudIdForCCA(mContext, stud_id)
+                        PreferenceManager.setStudNameForCCA(mContext, stud_name)
+                        PreferenceManager.setStudClassForCCA(mContext, stud_class)
+                        PreferenceManager.setCCATitle(mContext, mCCAmodelArrayList!![position].title)
+                        PreferenceManager.setCCAItemId(mContext, mCCAmodelArrayList!![position].cca_days_id)
+                        startActivity(intent)
+                    }
+
                 } else {
                     val intent =
                         Intent(mContext, CCAsReviewAfterSubmissionActivity::class.java)
@@ -674,5 +692,16 @@ class CCA_Activity : AppCompatActivity() {
             }
 
         })
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        if (!PreferenceManager.getCcaOptionBadge(mContext).equals("0")) {
+           CCAFragment(). ccaDot.setText(PreferenceManager.getCcaOptionBadge(mContext))
+        } else if (!PreferenceManager.getCcaOptionEditedBadge(mContext).equals("0")) {
+            CCAFragment(). ccaDot.setText(PreferenceManager.getCcaOptionEditedBadge(mContext))
+        } else {
+            CCAFragment().ccaDot.setVisibility(View.GONE)
+        }
     }
 }

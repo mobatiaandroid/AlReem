@@ -281,6 +281,7 @@ class CCAsReviewActivity : AppCompatActivity() {
         })
     }
 
+
     private fun showDialogReviewSubmit(activity: Activity, msgHead: String, msg: String, ico: Int, bgIcon: Int) {
         val dialog = Dialog(activity)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)

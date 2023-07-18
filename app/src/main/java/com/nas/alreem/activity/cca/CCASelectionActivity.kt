@@ -202,6 +202,7 @@ class CCASelectionActivity : AppCompatActivity() {
             }
         })
 
+
         recycler_review!!.setHasFixedSize(true)
         recyclerViewLayoutManager = GridLayoutManager(mContext, 1)
         val spacing = 5 // 50px

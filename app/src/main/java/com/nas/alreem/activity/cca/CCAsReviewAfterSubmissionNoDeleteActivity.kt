@@ -124,9 +124,8 @@ class CCAsReviewAfterSubmissionNoDeleteActivity : Activity(){
         //        textViewCCAaItem.setText(Html.fromHtml(PreferenceManager.getCCATitle(mContext) + "<br/>" + PreferenceManager.getStudNameForCCA(mContext)));
         if (PreferenceManager.getStudClassForCCA(mContext).equals("")) {
             textViewCCAaItem!!.text = Html.fromHtml(
-                PreferenceManager.getCCATitle(mContext) + "<br/>" + PreferenceManager.getStudNameForCCA(
-                    mContext
-                )
+                PreferenceManager.getCCATitle(mContext) + "<br/>" + PreferenceManager.getStudentName(
+                    mContext)+ "<br/>Year Group : " + PreferenceManager.getStudentClass(mContext)
             )
         } else {
             textViewCCAaItem!!.text = Html.fromHtml(
@@ -295,8 +294,8 @@ class CCAsReviewAfterSubmissionNoDeleteActivity : Activity(){
             if (choice2 != null) {
                 if (choice2.cca_item_name != null) {
                     mCCAModel.choice2 = choice2.cca_item_name
-                    mCCAModel.cca_item_start_time = choice2.cca_item_start_time
-                    mCCAModel.cca_item_end_time = choice2.cca_item_end_time
+                    mCCAModel.cca_item_start_time2 = choice2.cca_item_start_time
+                    mCCAModel.cca_item_end_time2 = choice2.cca_item_end_time
                     val absentDaysChoice2 = choice2.absentDays
                     Log.e("des",choice2.cca_item_description.toString())
                     if (choice2.cca_item_description != null){
