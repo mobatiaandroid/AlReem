@@ -449,4 +449,16 @@ class ParentMeetingDetailActivity:AppCompatActivity() {
         }
         dialog.show()
     }
+
+    override fun onResume() {
+        super.onResume()
+        //other stuff
+        if (firstVisit) {
+            //do stuff for first visit only
+            firstVisit = false
+        } else {
+            timeslotList()
+
+        }
+    }
 }

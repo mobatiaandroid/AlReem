@@ -30,7 +30,7 @@ import retrofit2.Response
 class CCAFragment : Fragment() {
     var mTitleTextView: TextView? = null
     var descriptionTV: TextView? = null
-  public lateinit var ccaDot: TextView
+    lateinit var ccaDot: TextView
     private var mRootView: View? = null
     private var mContext: Context? = null
     private val mTitle: String? = null

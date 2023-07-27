@@ -71,6 +71,9 @@ class ReviewAppointmentsRecyclerViewActivity:AppCompatActivity() {
         reviewlistcall()
         backRelative.setOnClickListener(View.OnClickListener {
             finish()
+           /* val intent = Intent(mContext, ParentMeetingDetailActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent)*/
         })
         heading.text= ConstantWords.parentmeetings
         logoClickImgView.setOnClickListener(View.OnClickListener {
@@ -182,7 +185,8 @@ class ReviewAppointmentsRecyclerViewActivity:AppCompatActivity() {
                     DialogFunctions.commonSuccessAlertDialog("Success","Successfully confirmed appointment.",mContext)
                     reviewlistcall()
 
-                } else
+                }
+                else
                 {
 
                     DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), mContext)
