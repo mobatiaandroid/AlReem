@@ -95,7 +95,7 @@ class AbsenceFragment  : Fragment() {
         initializeUI()
         callStudentListApi()
         selectCategory()
-        callStudentListApi()
+        //callStudentListApi()
     }
     private fun initializeUI()
     {
@@ -400,6 +400,8 @@ class AbsenceFragment  : Fragment() {
                             }
 
 
+                        }else if(response.body()!!.status==103){
+                            callStudentLeaveInfo()
                         }
                         else
                         {

@@ -129,7 +129,8 @@ class RequestabsenceActivity: AppCompatActivity() {
                 if(enterStratDate.text.equals(""))
                 {
                     DialogFunctions.commonErrorAlertDialog("Alert","Please select First day of absence",mContext)
-
+                }else if(enterEndDate.text.equals("")){
+                    DialogFunctions.commonErrorAlertDialog("Alert","Please select Return day",mContext)
                 }
                 else{
                     if (enterMessage.text.toString().trim().equals("")){
@@ -168,7 +169,12 @@ class RequestabsenceActivity: AppCompatActivity() {
         }
 
         enterEndDate.setOnClickListener{
-            calToDate()
+            if(enterStratDate.text.equals("")){
+                DialogFunctions.commonErrorAlertDialog("Alert","Please select First day of absence",mContext)
+            }else{
+                calToDate()
+            }
+
 
 
         }
