@@ -119,9 +119,10 @@ class ReviewAppointmentsRecyclerViewActivity:AppCompatActivity() {
                             // confirm_tv.visibility=View.VISIBLE
                             confimVisibility=true
 
-                        }/*else{
-                            confirm_tv.visibility=View.GONE
-                        }*/
+                        }else{
+                            confimVisibility=false
+                           // confirm_tv.visibility=View.GONE
+                        }
                     }
                     if (confimVisibility==true){
                         confirm_tv.visibility=View.VISIBLE

@@ -12,6 +12,7 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.nas.alreem.R
@@ -327,47 +328,51 @@ class ParentsEveningCalendarActivity:AppCompatActivity() {
             override fun onResponse(call: Call<PtaDatesModel>, response: Response<PtaDatesModel>) {
                 progressDialogAdd.visibility = View.GONE
                 //val arraySize :Int = response.body()!!.responseArray.studentList.size
-                if (response.body()!!.status==100)
-                {
-                    val datelistSize=response.body()!!.data.size-1
-                    for (i in 0..datelistSize ){
-                        var dates=response.body()!!.data[i]
-                        val inputFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd")
-                        val outputFormat: DateFormat = SimpleDateFormat("d/M/yyyy")
-                        val inputDateStr = dates
-                        val date: Date = inputFormat.parse(inputDateStr)
-                        val outputDateStr: String = outputFormat.format(date)
-                        Log.e("dt",outputDateStr)
-                        datesToPlot.add(i,outputDateStr)
-                    }
-                    for (i in 0..datesToPlot.size-1){
-                        var days_s=datesToPlot[i]
+                if (response.body()!!.status==100) {
+                    val datelistSize = response.body()!!.data.size - 1
+                    if (response.body()!!.data.size > 0){
+                        for (i in 0..datelistSize) {
+                            var dates = response.body()!!.data[i]
+                            val inputFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd")
+                            val outputFormat: DateFormat = SimpleDateFormat("d/M/yyyy")
+                            val inputDateStr = dates
+                            val date: Date = inputFormat.parse(inputDateStr)
+                            val outputDateStr: String = outputFormat.format(date)
+                            Log.e("dt", outputDateStr)
+                            datesToPlot.add(i, outputDateStr)
+                        }
+                    for (i in 0..datesToPlot.size - 1) {
+                        var days_s = datesToPlot[i]
 
-                        Log.e("days_s",days_s)
+                        Log.e("days_s", days_s)
 
-                        for (i in 0..nums_Array.size-1) {
+                        for (i in 0..nums_Array.size - 1) {
 
-                            var c_day=nums_Array.get(i)
-                            var c_month= count_month!! +1
-                            var c_year=count_year
-                            var c_date=c_day+"/"+c_month+"/"+c_year
-                            Log.e("c_date",c_date)
+                            var c_day = nums_Array.get(i)
+                            var c_month = count_month!! + 1
+                            var c_year = count_year
+                            var c_date = c_day + "/" + c_month + "/" + c_year
+                            Log.e("c_date", c_date)
 
-                            if (days_s.equals(c_date)){
+                            if (days_s.equals(c_date)) {
 
-                                Log.e("match","match")
+                                Log.e("match", "match")
                                 dateTextView[i]!!.setBackgroundResource(R.drawable.roundred)
                                 dateTextView[i]!!.setTextColor(Color.WHITE)
 
-                            }
-
-                            else{
+                            } else {
                                 //Log.e("no_match","no_match")
 
                             }
                         }
                     }
-
+                }else{
+                        Toast.makeText(
+                            mContext,
+                            "No dates available " ,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                }
                 } else
                 {
 
