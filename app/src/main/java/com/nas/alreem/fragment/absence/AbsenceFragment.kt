@@ -100,6 +100,7 @@ class AbsenceFragment  : Fragment() {
     private fun initializeUI()
     {
         progressDialogAdd = requireView().findViewById(R.id.progressDialogAdd)
+        progressDialogAdd.visibility=View.VISIBLE
         studentSpinner = requireView().findViewById<LinearLayout>(R.id.studentSpinner)
         studImg = requireView().findViewById<ImageView>(R.id.imagicon)
         studentNameTxt =requireView().findViewById<TextView>(R.id.studentName)
@@ -140,12 +141,12 @@ class AbsenceFragment  : Fragment() {
                 val intent =Intent(activity, EarlyPickupDetailActivity::class.java)
                 intent.putExtra("studentName",PreferenceManager.getStudentName(mContext))
                 intent.putExtra("studentClass",PreferenceManager.getStudentClass(mContext))
-                intent.putExtra("date",pickupListSort.get(position).pickup_date)
-                intent.putExtra("time",pickupListSort.get(position).pickup_time)
-                intent.putExtra("pickupby",pickupListSort.get(position).pickup_by_whom)
-                intent.putExtra("reason",pickupListSort.get(position).reason)
-                intent.putExtra("status",pickupListSort.get(position).status)
-                intent.putExtra("reason_for_rejection",pickupListSort.get(position).reason_for_rejection)
+                intent.putExtra("date",pickup_list.get(position).pickup_date)
+                intent.putExtra("time",pickup_list.get(position).pickup_time)
+                intent.putExtra("pickupby",pickup_list.get(position).pickup_by_whom)
+                intent.putExtra("reason",pickup_list.get(position).reason)
+                intent.putExtra("status",pickup_list.get(position).status)
+                intent.putExtra("reason_for_rejection",pickup_list.get(position).reason_for_rejection)
                 activity?.startActivity(intent)
             }
         })
@@ -324,6 +325,7 @@ class AbsenceFragment  : Fragment() {
     }
     private fun  selectCategory(){
         absence_btn.setOnClickListener {
+            progressDialogAdd.visibility=View.VISIBLE
             select_val=0
             callStudentLeaveInfo()
             absence_btn.setBackgroundResource(R.drawable.event_spinnerfill)
@@ -338,6 +340,7 @@ class AbsenceFragment  : Fragment() {
 
         }
         pickup_btn.setOnClickListener {
+            progressDialogAdd.visibility=View.VISIBLE
             select_val=1
             callpickuplist_api()
             absence_btn.setBackgroundResource(R.drawable.event_greyfill)
@@ -445,17 +448,28 @@ class AbsenceFragment  : Fragment() {
                 val responsedata = response.body()
                 //progressDialog.visibility = View.GONE
                 Log.e("Response Signup", responsedata.toString())
-                progressDialogAdd.visibility=View.GONE
+
                 if (responsedata != null) {
                     try {
 
                         if (response.body()!!.status==100) {
 
                             pickup_list.addAll(response.body()!!.pickupListArray)
+                            progressDialogAdd.visibility=View.GONE
                             mPickupListView.visibility = View.VISIBLE
                             var list_size=pickup_list.size-1
                             pickupListSort=ArrayList()
-                            for (i in pickup_list.indices){
+                            if (pickup_list.size>0){
+                                mPickupListView.layoutManager=LinearLayoutManager(mContext)
+                                var pickuplistAdapter= PickuplistAdapter(mContext,pickup_list)
+                                mPickupListView.adapter=pickuplistAdapter
+                            }else{
+                                mPickupListView.layoutManager=LinearLayoutManager(mContext)
+                                var pickuplistAdapter= PickuplistAdapter(mContext,pickup_list)
+                                mPickupListView.adapter=pickuplistAdapter
+                                Toast.makeText(mContext, "No Registered Early Pickup Found", Toast.LENGTH_SHORT).show()
+                            }
+                            /*for (i in pickup_list.indices){
                                 pickupListSort.add(pickup_list[list_size-i])
                             }
                             if (pickupListSort.size>0){
@@ -467,7 +481,7 @@ class AbsenceFragment  : Fragment() {
                                 var pickuplistAdapter= PickuplistAdapter(mContext,pickupListSort)
                                 mPickupListView.adapter=pickuplistAdapter
                                 Toast.makeText(mContext, "No Registered Early Pickup Found", Toast.LENGTH_SHORT).show()
-                            }
+                            }*/
 
                         }
                         else
@@ -523,6 +537,8 @@ class AbsenceFragment  : Fragment() {
     }
     override fun onResume() {
         super.onResume()
+        mPickupListView.visibility = View.GONE
+        mAbsenceListView.visibility=View.GONE
         studentNameTxt.text = PreferenceManager.getStudentName(mContext)
         studentId= PreferenceManager.getStudentID(mContext).toString()
         studentImg= PreferenceManager.getStudentPhoto(mContext)!!
@@ -542,9 +558,11 @@ class AbsenceFragment  : Fragment() {
             studImg.setImageResource(R.drawable.student)
         }
         if (select_val==0){
+            progressDialogAdd.visibility=View.VISIBLE
             callStudentLeaveInfo()
         }
         else if (select_val==1){
+            progressDialogAdd.visibility=View.VISIBLE
             callpickuplist_api()
         }
     }
