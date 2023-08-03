@@ -28,7 +28,7 @@ class OrderHistoryPreorderDetailsAdapter (val type:Int,val preorderhis_list: Arr
 
         viewHolder.itemNameTxt.text=preorderhis_list.get(position).item_name
         viewHolder.itemDescription.text=preorderhis_list.get(position).item_description
-        if (type==1){
+        if (type==2){
             viewHolder.orderbadge.text="POS"
 
         }else{
