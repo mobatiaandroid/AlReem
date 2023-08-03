@@ -169,7 +169,8 @@ class ParentMeetingDetailActivity:AppCompatActivity() {
     private fun postSelectedSlot(){
         progressDialogAdd.visibility = View.VISIBLE
         val token = PreferenceManager.getaccesstoken(mContext)
-        val ptaInsertSuccessBody = PtaInsertApiModel(studId,timeSlotListPost[0].slot_id)
+        val ptaInsertSuccessBody = PtaInsertApiModel(studId,timeSlotListPost[0].slot_id,
+            PreferenceManager.getstaffId(mContext).toString())
         val call: Call<PtaInsertModel> = ApiClient.getClient.pta_insert(ptaInsertSuccessBody,"Bearer "+token)
         call.enqueue(object : Callback<PtaInsertModel> {
             override fun onFailure(call: Call<PtaInsertModel>, t: Throwable) {

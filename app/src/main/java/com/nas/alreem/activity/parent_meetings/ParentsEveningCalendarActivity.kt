@@ -78,6 +78,7 @@ class ParentsEveningCalendarActivity:AppCompatActivity() {
         studentClass=intent.getStringExtra("studClass").toString()
         staffId=intent.getStringExtra("staffId").toString()
         staffName=intent.getStringExtra("staffName").toString()
+        PreferenceManager.setstaffId(mContext,staffId)
         heading=findViewById(R.id.heading)
         header=findViewById(R.id.Header)
         nums_Array= ArrayList()

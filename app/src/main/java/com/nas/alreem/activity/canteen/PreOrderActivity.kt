@@ -307,10 +307,11 @@ class PreOrderActivity : AppCompatActivity(){
         }
         if (time_exeed.equals("1")) {
             val c = Calendar.getInstance()
+            c.add(Calendar.DATE,1)
             calendarView.setMinimumDate(c)
         } else {
             val c = Calendar.getInstance()
-            c.add(Calendar.DATE, -1)
+            c.add(Calendar.DATE, 0)
             calendarView.setMinimumDate(c)
         }
         calendarView.setPreviousButtonImage(

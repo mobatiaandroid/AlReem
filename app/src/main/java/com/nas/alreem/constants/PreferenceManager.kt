@@ -1079,5 +1079,24 @@ class PreferenceManager {
             )
             return prefs.getBoolean("is_first_pe", true)
         }
+        fun setstaffId(context: Context, staffId: String?) {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            val editor = prefs.edit()
+            editor.putString("staffId", staffId)
+            editor.commit()
+        }
+
+        fun getstaffId(context: Context): String? {
+            var staffId = ""
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            staffId = prefs.getString("staffId", "").toString()
+            return staffId
+        }
     }
 }

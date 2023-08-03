@@ -182,7 +182,8 @@ progressDialogAdd.visibility=View.GONE
                     "Do you want to cancel appointment?",
                     "Alert",
                     review_list[position].pta_time_slot_id,
-                    review_list[position].student_id
+                    review_list[position].student_id,
+                    review_list[position].staff_id
                 )
             }else{
                 DialogFunctions.commonErrorAlertDialog("Alert","Booking and cancellation date is over",mContext)
@@ -295,11 +296,11 @@ progressDialogAdd.visibility=View.GONE
         })
 
     }
-    private fun postSelectedSlot(idList: Int,stud_id:String){
+    private fun postSelectedSlot(idList: Int,stud_id:String,staff_id: String){
         progressDialogAdd.visibility = View.VISIBLE
         val token = PreferenceManager.getaccesstoken(mContext)
         var idString:String=idList.toString()
-        val ptaInsertSuccessBody = PtaInsertApiModel(stud_id,idList)
+        val ptaInsertSuccessBody = PtaInsertApiModel(stud_id,idList,staff_id)
         val call: Call<PtaInsertModel> = ApiClient.getClient.pta_insert(ptaInsertSuccessBody,"Bearer "+token)
         call.enqueue(object : Callback<PtaInsertModel> {
             override fun onFailure(call: Call<PtaInsertModel>, t: Throwable) {
@@ -423,7 +424,7 @@ progressDialogAdd.visibility=View.GONE
         }
         dialog.show()
     }
-    private fun showerrorCancel(context: Context,message : String,msgHead : String,id_list:Int,stud_id:String)
+    private fun showerrorCancel(context: Context,message : String,msgHead : String,id_list:Int,stud_id:String,staff_id:String)
     {
         val dialog = Dialog(context)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -441,7 +442,7 @@ progressDialogAdd.visibility=View.GONE
         btn_Ok.setOnClickListener()
         {
             dialog.dismiss()
-            postSelectedSlot(id_list,stud_id)
+            postSelectedSlot(id_list,stud_id,staff_id)
             //cancelPtaApi(id_list)
 
         }
