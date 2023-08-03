@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 class OrderHistoryDataModel (
 
     @SerializedName("id") var id:Int,
-    @SerializedName("type_status") var type_status:String,
+    @SerializedName("type_status") var type_status:Int,
     @SerializedName("delivery_date") var delivery_date:String,
     @SerializedName("total_amount") var total_amount:String,
     @SerializedName("status") var status:String,

@@ -120,7 +120,7 @@ class ReviewAppointmentsRecyclerViewActivity:AppCompatActivity() {
                             confimVisibility=true
 
                         }else{
-                            confimVisibility=false
+                           // confimVisibility=false
                            // confirm_tv.visibility=View.GONE
                         }
                     }

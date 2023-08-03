@@ -74,6 +74,22 @@ progressDialogAdd.visibility=View.GONE
         holder.student_name.text = review_list[position].student
         holder.student_class.text = review_list[position].class_name
         holder.staff_name.text = review_list[position].staff
+        for (i in review_list.indices){
+            if (review_list[i].status==2&&review_list[i].booking_open.equals("y")){
+                idList.add(review_list[i].id.toInt())
+                // confirm_tv.visibility=View.VISIBLE
+                confimVisibility=true
+
+            }else{
+                // confimVisibility=false
+                // confirm_tv.visibility=View.GONE
+            }
+        }
+        if (confimVisibility==true){
+            confirm_tv.visibility=View.VISIBLE
+        }else{
+            confirm_tv.visibility=View.GONE
+        }
         var date_sel=review_list[position].date
         Log.e("dt",date_sel.toString())
         val inputFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd")
