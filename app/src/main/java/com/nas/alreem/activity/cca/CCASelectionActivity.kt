@@ -146,8 +146,8 @@ class CCASelectionActivity : AppCompatActivity() {
         if (PreferenceManager.getStudClassForCCA(mContext).equals("")) {
            // textViewStudName!!.setText(PreferenceManager.getStudNameForCCA(mContext))
 
-            textViewStudName!!.text = Html.fromHtml(PreferenceManager.getStudentName(
-                    mContext)+"<br/>Year Group : " + PreferenceManager.getStudentClass( mContext))
+            textViewStudName!!.text = Html.fromHtml(PreferenceManager.getStudNameForCCA(
+                    mContext)+"<br/>Year Group : " + PreferenceManager.getStudClassForCCA( mContext))
         } else {
             textViewStudName!!.text = Html.fromHtml(
                 PreferenceManager.getStudNameForCCA(mContext)
@@ -159,7 +159,7 @@ class CCASelectionActivity : AppCompatActivity() {
         if (ccaedit == 0) {
             ConstantFunctions.showDialogueWithOk(
                 mContext,
-                "Please select a ECA or None for each choice and each day",
+                "Please select a EAP or None for each choice and each day",
                 "Info"
             )
 
@@ -359,7 +359,7 @@ class CCASelectionActivity : AppCompatActivity() {
                     mCCAsActivityAdapter.notifyDataSetChanged()
                     AppController.weekList!!.get(position).choiceStatus=("2")
                     AppController.weekList!!.get(position).choiceStatus1=("2")
-                    Toast.makeText(mContext, "ECA choice not available", Toast.LENGTH_SHORT)
+                    Toast.makeText(mContext, "EAP choice not available", Toast.LENGTH_SHORT)
                         .show()
                 } else {
                     textViewCCAaSelect!!.visibility = View.VISIBLE
@@ -443,7 +443,7 @@ class CCASelectionActivity : AppCompatActivity() {
                     mCCAsActivityAdapter.notifyDataSetChanged()
                     AppController.weekList!!.get(j).choiceStatus=("2")
                     AppController.weekList!!.get(j).choiceStatus1=("2")
-                    Toast.makeText(mContext, "ECA choice not available", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(mContext, "EAP choice not available", Toast.LENGTH_SHORT).show()
                 } else {
                     textViewCCAaSelect!!.visibility = View.VISIBLE
                     TVselectedForWeek!!.visibility = View.VISIBLE

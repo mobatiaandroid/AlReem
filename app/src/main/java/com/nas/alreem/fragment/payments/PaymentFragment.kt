@@ -134,9 +134,7 @@ class PaymentFragment : Fragment() {
                                     .into(bannerImageViewPager)
                             } else {
                                 Log.e("bann","emp")
-                                Glide.with(mContext)
-                                    .load(R.drawable.default_banner)
-                                    .into(bannerImageViewPager)
+                                bannerImageViewPager!!.setBackgroundResource(R.drawable.default_banner)
                             }
 
 

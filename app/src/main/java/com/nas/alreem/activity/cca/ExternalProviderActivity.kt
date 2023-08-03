@@ -33,7 +33,7 @@ class ExternalProviderActivity : AppCompatActivity() {
     lateinit var back: ImageView
     lateinit var backRelative: RelativeLayout
     lateinit var logoclick: ImageView
-    lateinit var bannerImage: ImageView
+   // lateinit var bannerImage: ImageView
     lateinit var progressBar: ProgressBar
     var extras: Bundle? = null
     var tab_type: String? = null
@@ -88,11 +88,11 @@ class ExternalProviderActivity : AppCompatActivity() {
                         if (response.body()!!.status == 100){
 
                             val bannerImageUrl: String = response.body()!!.data!!.banner_image.toString()
-                            if (!response.body()!!.data!!.banner_image!!.equals("")){
+                           /* if (!response.body()!!.data!!.banner_image!!.equals("")){
                                 Glide.with(mContext!!).load(ConstantFunctions.replace(bannerImageUrl)).fitCenter()
 
                                     .centerCrop().into(bannerImage!!)
-                            }
+                            }*/
 
 
 
@@ -129,7 +129,7 @@ class ExternalProviderActivity : AppCompatActivity() {
         back = findViewById(R.id.btn_left)
         backRelative = findViewById(R.id.backRelative)
         logoclick = findViewById(R.id.logoClickImgView)
-        bannerImage = findViewById(R.id.bannerImagePager)
+       // bannerImage = findViewById(R.id.bannerImagePager)
         progressBar = findViewById(R.id.progress)
         extras = intent.extras
         if (extras != null) {

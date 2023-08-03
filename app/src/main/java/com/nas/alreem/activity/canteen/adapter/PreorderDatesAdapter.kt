@@ -31,7 +31,7 @@ class PreorderDatesAdapter(val preorderhis_list: ArrayList<OrderHistoryDataModel
 
         viewHolder.date.text=ConstantFunctions.dateParsingToddMMMyyyyBasket(preorderhis_list.get(position).delivery_date)
         viewHolder.recyclerview.layoutManager = LinearLayoutManager(mcontext)
-        var adapter = OrderHistoryPreorderDetailsAdapter(preorderhis_list.get(position).canteen_preordered_items, mcontext)
+        var adapter = OrderHistoryPreorderDetailsAdapter(preorderhis_list.get(position).type_status,preorderhis_list.get(position).canteen_preordered_items, mcontext)
         viewHolder.recyclerview.adapter=adapter
 
     }

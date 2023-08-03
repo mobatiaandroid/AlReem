@@ -113,7 +113,7 @@ class CCAsReviewActivity : AppCompatActivity() {
         if (PreferenceManager.getStudClassForCCA(mContext).equals("")) {
             textViewCCAaItem!!.text = Html.fromHtml(
                 PreferenceManager.getCCATitle(mContext)
-                    .toString() + "<br/>" + PreferenceManager.getStudentName(mContext)+ "<br/>Year Group : " + PreferenceManager.getStudentClass(
+                    .toString() + "<br/>" + PreferenceManager.getStudNameForCCA(mContext)+ "<br/>Year Group : " + PreferenceManager.getStudClassForCCA(
                     mContext)
             )
         } else {
@@ -274,7 +274,7 @@ class CCAsReviewActivity : AppCompatActivity() {
             showDialogReviewSubmit(
                 mContext as Activity,
                 "Confirm",
-                "Do you want to confirm this Enrichment?",
+                "Do you want to confirm this EAP?",
                 R.drawable.exclamationicon,
                 R.drawable.round
             )
@@ -411,7 +411,7 @@ class CCAsReviewActivity : AppCompatActivity() {
 //                callSurveyApi()
 //            } else {
                 val intent = Intent(mContext, CCA_Activity::class.java)
-                PreferenceManager.setStudIdForCCA(mContext!!, "")
+              //  PreferenceManager.setStudIdForCCA(mContext!!, "")
 
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                 startActivity(intent)

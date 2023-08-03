@@ -67,7 +67,10 @@ class CCAsReviewAfterSubmissionActivity : AppCompatActivity() {
             startActivity(mIntent)
         }
         backRelative.setOnClickListener {
-            finish()
+          //  finish()
+            val mIntent = Intent(mContext, CCA_Activity::class.java)
+            mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(mIntent)
         }
         extras = intent.extras
         if (extras != null) {
@@ -185,7 +188,7 @@ class CCAsReviewAfterSubmissionActivity : AppCompatActivity() {
                                 )
                                 Toast.makeText(
                                     mContext,
-                                    "No ECA available",
+                                    "No EAP available",
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }

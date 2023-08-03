@@ -3,10 +3,8 @@ package com.nas.alreem.fragment.about_us
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -19,18 +17,15 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-
 import com.nas.alreem.R
-import com.nas.alreem.activity.absence.AbsenceDetailActivity
-import com.nas.alreem.activity.primary.PrimaryActivity
-import com.nas.alreem.activity.primary.PrimaryComingUpActivity
+import com.nas.alreem.activity.about_us.AccreditationsActivity
+import com.nas.alreem.activity.about_us.FacilityActivity
 import com.nas.alreem.activity.staff_directory.StaffDirectoryActivity
 import com.nas.alreem.constants.*
 import com.nas.alreem.fragment.about_us.adapter.AboutUsAdapter
 import com.nas.alreem.fragment.about_us.model.AboutUsDataModel
 import com.nas.alreem.fragment.about_us.model.AboutUsResponseModel
 import com.nas.alreem.rest.ApiClient
-
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -83,20 +78,53 @@ class AboutUsFragment  : Fragment() {
 //                    intent.putExtra("heading",aboutUsArrayList.get(position).tab_type)
 //                    startActivity(intent)
 
+                 if (aboutUsArrayList.get(position).tab_type.equals("Facilities")) {
+                val mIntent = Intent(activity, FacilityActivity::class.java)
+               /* mIntent.putExtra(
+                    "array",
+                    aboutUsArrayList.get(position).items
+                )*/
+                     PreferenceManager.saveAboutsArrayList(mContext,aboutUsArrayList.get(position).items)
+                mIntent.putExtra("desc", aboutUsArrayList.get(position).description)
+                mIntent.putExtra("title", aboutUsArrayList.get(position).tab_type)
+                mIntent.putExtra("banner_image", aboutUsArrayList.get(position).banner_image)
+                mContext.startActivity(mIntent)
+                System.out.println(
+                    "faci array--" + aboutUsArrayList.get(position).items
+                        .size
+                )
+            } else if (aboutUsArrayList.get(position).tab_type
+                    .equals("Accreditations & Examinations")
+            ) {
+                val mIntent = Intent(mContext, AccreditationsActivity::class.java)
+                /*mIntent.putExtra(
+                    "array",
+                    aboutUsArrayList.get(position).items
+                )*/
+                     PreferenceManager.saveAboutsArrayList(mContext,aboutUsArrayList.get(position).items)
 
+                     mIntent.putExtra("desc", aboutUsArrayList.get(position).description)
+                mIntent.putExtra("title", aboutUsArrayList.get(position).tab_type)
+                mIntent.putExtra("banner_image", aboutUsArrayList.get(position).banner_image)
+                mContext.startActivity(mIntent)
+            }
 
-                if (aboutUsArrayList.get(position).url.contains(".pdf"))
-                {
-                    val intent = Intent(mContext, PDFViewerActivity::class.java)
-                    intent.putExtra("Url",aboutUsArrayList.get(position).url)
-                    intent.putExtra("title",aboutUsArrayList.get(position).name)
-                    startActivity(intent)
-                }
                 else{
-                    val intent = Intent(mContext, WebLinkActivity::class.java)
-                    intent.putExtra("url",aboutUsArrayList.get(position).url)
-                    intent.putExtra("heading",aboutUsArrayList.get(position).name)
-                    startActivity(intent)
+                     if (aboutUsArrayList.get(position).url.contains(".pdf"))
+                     {
+                         val intent = Intent(mContext, PDFViewerActivity::class.java)
+                         intent.putExtra("Url",aboutUsArrayList.get(position).url)
+                         intent.putExtra("title",aboutUsArrayList.get(position).tab_type)
+                         startActivity(intent)
+                     }
+                     else
+                     {
+                         val intent = Intent(mContext, WebLinkActivity::class.java)
+                         intent.putExtra("url",aboutUsArrayList.get(position).url)
+                         intent.putExtra("heading",aboutUsArrayList.get(position).tab_type)
+                         startActivity(intent)
+                     }
+
                 }
             }
 

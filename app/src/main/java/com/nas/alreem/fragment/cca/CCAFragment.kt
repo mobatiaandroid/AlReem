@@ -11,11 +11,14 @@ import android.view.*
 import android.widget.*
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.nas.alreem.R
 import com.nas.alreem.activity.cca.CCA_Activity
 import com.nas.alreem.activity.cca.ExternalProviderActivity
 import com.nas.alreem.activity.cca.InformationCCAActivity
 import com.nas.alreem.activity.login.model.SignUpResponseModel
+import com.nas.alreem.appcontroller.AppController
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.PreferenceManager
@@ -27,12 +30,12 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class CCAFragment : Fragment() {
+  class CCAFragment : Fragment() {
     var mTitleTextView: TextView? = null
     var descriptionTV: TextView? = null
-    lateinit var ccaDot: TextView
+    var ccaDot: TextView? = null
     private var mRootView: View? = null
-    private var mContext: Context? = null
+    lateinit var mContext: Context
     private val mTitle: String? = null
     private val mTabId: String? = null
     var mtitleRel: LinearLayout? = null
@@ -58,7 +61,7 @@ class CCAFragment : Fragment() {
             false
         )
 
-        mContext = activity
+        mContext = requireActivity()
         initialiseUI()
 
         return mRootView
@@ -68,6 +71,7 @@ class CCAFragment : Fragment() {
         mTitleTextView = mRootView!!.findViewById<View>(R.id.titleTextView) as TextView
         descriptionTV = mRootView!!.findViewById<View>(R.id.descriptionTitle) as TextView
         ccaDot = mRootView!!.findViewById<View>(R.id.ccaDot) as TextView
+       // AppController.ccdots=ccaDot
         mTitleTextView!!.setText(R.string.Enrichment)
         mtitleRel = mRootView!!.findViewById<View>(R.id.title) as LinearLayout
         progress = mRootView!!.findViewById(R.id.progress)
@@ -230,26 +234,26 @@ class CCAFragment : Fragment() {
                             if (PreferenceManager.getCcaOptionBadge(mContext!!)!!.equals(0) &&
                                 PreferenceManager.getCcaOptionEditedBadge(mContext!!)!!.equals(0)
                             ) {
-                                ccaDot.setVisibility(View.GONE)
+                                ccaDot!!.setVisibility(View.GONE)
                             } else if (PreferenceManager.getCcaOptionBadge(mContext!!)!!.equals(0) &&
                                 !PreferenceManager.getCcaOptionEditedBadge(mContext!!)!!.equals(0)
                             ) {
-                                ccaDot.setVisibility(View.VISIBLE)
-                               ccaDot.setText(response.body()!!.data!!.cca_edited_badge)
-                               ccaDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                                ccaDot!!.setVisibility(View.VISIBLE)
+                               ccaDot!!.setText(response.body()!!.data!!.cca_edited_badge)
+                               ccaDot!!.setBackgroundResource(R.drawable.shape_circle_navy)
                             } else if (!PreferenceManager.getCcaOptionBadge(mContext!!)!!.equals(0)
                                 && PreferenceManager.getCcaOptionEditedBadge(
                                     mContext!!).equals(0)
                             ) {
-                                ccaDot.setVisibility(View.VISIBLE)
-                               ccaDot.setText(response.body()!!.data!!.cca_badge.toString())
-                                ccaDot.setBackgroundResource(R.drawable.shape_circle_red)
+                                ccaDot!!.setVisibility(View.VISIBLE)
+                               ccaDot!!.setText(response.body()!!.data!!.cca_badge.toString())
+                                ccaDot!!.setBackgroundResource(R.drawable.shape_circle_red)
                             } else if (!PreferenceManager.getCcaOptionBadge(mContext!!).equals(0)
                                 && !PreferenceManager.getCcaOptionEditedBadge(mContext!!)!!.equals(0)
                             ) {
-                               ccaDot.setVisibility(View.VISIBLE)
-                                ccaDot.setText(response.body()!!.data!!.cca_badge)
-                                ccaDot.setBackgroundResource(
+                               ccaDot!!.setVisibility(View.VISIBLE)
+                                ccaDot!!.setText(response.body()!!.data!!.cca_badge)
+                                ccaDot!!.setBackgroundResource(
                                     R.drawable.shape_circle_red
                                 )
                             }
@@ -334,4 +338,18 @@ class CCAFragment : Fragment() {
         }
         dialog.show()
     }
+
+      override fun onResume() {
+          super.onResume()
+          Log.e("TEST","call 1")
+          getList()
+          /*if (!PreferenceManager.getCcaOptionBadge(mContext).equals("0")) {
+              ccaDot!!.setText(PreferenceManager.getCcaOptionBadge(mContext))
+          } else if (!PreferenceManager.getCcaOptionEditedBadge(mContext).equals("0")) {
+              ccaDot!!.setText(PreferenceManager.getCcaOptionEditedBadge(mContext))
+          } else {
+              ccaDot!!.setVisibility(View.GONE)
+          }*/
+
+      }
 }

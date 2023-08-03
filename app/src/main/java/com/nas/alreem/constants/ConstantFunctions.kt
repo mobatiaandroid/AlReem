@@ -11,6 +11,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.util.Log
+import android.view.View
 import android.view.Window
 import android.widget.Button
 import android.widget.ImageView
@@ -183,4 +184,6 @@ class ConstantFunctions {
             return str.replace(" ".toRegex(), "%20")
         }
     }
+
+
 }

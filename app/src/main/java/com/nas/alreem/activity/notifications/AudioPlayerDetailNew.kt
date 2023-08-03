@@ -50,9 +50,11 @@ class AudioPlayerDetailNew:AppCompatActivity() {
     var title: String = ""
     var message: String = ""
     var updated_at: String = ""
+    var currenrdr:String=""
+    var duration:String=""
     var url: String = ""
     var flag:Boolean = true
-    private lateinit var progressDialog: ProgressBar
+  //  private lateinit var progressDialog: ProgressBar
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_audio_player_details_new)
@@ -74,6 +76,8 @@ class AudioPlayerDetailNew:AppCompatActivity() {
         back_arrow=findViewById(R.id.back_arrow)
         mediaplayer = MediaPlayer()
         seebbar!!.max = 100
+      //  duration_time.visibility=View.GONE
+       // textcurrent_time.visibility=View.GONE
         btn_left.setOnClickListener(View.OnClickListener {
             finish()
         })
@@ -86,10 +90,10 @@ class AudioPlayerDetailNew:AppCompatActivity() {
             startActivity(intent)
         })
 
-        progressDialog = findViewById(R.id.progressDialog)
-        val aniRotate: Animation =
-            AnimationUtils.loadAnimation(mContext, R.anim.linear_interpolator)
-        progressDialog.startAnimation(aniRotate)
+       // progressDialog = findViewById(R.id.progressDialog)
+      //  val aniRotate: Animation =
+       //     AnimationUtils.loadAnimation(mContext, R.anim.linear_interpolator)
+      //  progressDialog.startAnimation(aniRotate)
         playbutton_audio.setOnClickListener {
             if(flag)
             {
@@ -113,17 +117,17 @@ class AudioPlayerDetailNew:AppCompatActivity() {
     fun audiodetails() {
         val token = PreferenceManager.getaccesstoken(mContext)
         val studentbody= MessageDetailApiModel(audio_id)
-        progressDialog.visibility = View.VISIBLE
+       // progressDialog.visibility = View.VISIBLE
         val call: Call<MessageDetailModel> = ApiClient.getClient.notifictaionDetail(studentbody,"Bearer "+token)
         call.enqueue(object : Callback<MessageDetailModel> {
             override fun onFailure(call: Call<MessageDetailModel>, t: Throwable) {
-                  progressDialog.visibility = View.GONE
+                //  progressDialog.visibility = View.GONE
                 Log.e("Error", t.localizedMessage)
-                progressDialog.visibility = View.GONE
+              //  progressDialog.visibility = View.GONE
             }
             override fun onResponse(call: Call<MessageDetailModel>, response: Response<MessageDetailModel>) {
-                progressDialog.visibility = View.GONE
-                 progressDialog.visibility = View.GONE
+               // progressDialog.visibility = View.GONE
+                // progressDialog.visibility = View.GONE
                 if (response.body()!!.status==100)
 
                 {
@@ -136,7 +140,7 @@ class AudioPlayerDetailNew:AppCompatActivity() {
                     if (mediaplayer!!.isPlaying()) {
                         handler2.removeCallbacks(updater)
                         mediaplayer!!.pause()
-                        playbutton_audio.setImageResource(R.drawable.ic_baseline_pause_circle_outline_24)
+                        playbutton_audio.setImageResource(R.drawable.ic_baseline_play_circle_outline_24)
                     } else {
                         Log.e("suess","success")
                         mediaplayer!!.start()
@@ -174,8 +178,12 @@ class AudioPlayerDetailNew:AppCompatActivity() {
 
             mediaplayer!!.setOnPreparedListener(MediaPlayer.OnPreparedListener { mp -> mp.start() })
             mediaplayer!!.prepare()
-            duration_time.setText("/" + milliseconds(player!!.getDuration().toLong()))
-
+            duration_time.setText("/" + milliseconds(mediaplayer!!.getDuration().toLong()))
+            duration= milliseconds(mediaplayer!!.getDuration().toLong())!!
+           /* if(currenrdr.equals(duration))
+            {
+                playbutton_audio.setImageResource(R.drawable.ic_baseline_play_circle_outline_24)
+            }*/
         } catch (exception: Exception) {
             //Toast.makeText(this, "failed to load audio" + exception.getMessage(), Toast.LENGTH_SHORT).show();
             println("failed for load" + exception.message)
@@ -186,8 +194,10 @@ class AudioPlayerDetailNew:AppCompatActivity() {
     val updater = Runnable {
         try {
             updateseekbar()
-            val currentduration: Long = player!!.getCurrentPosition().toLong()
+            val currentduration: Long = mediaplayer!!.getCurrentPosition().toLong()
             textcurrent_time.text=(milliseconds(currentduration).toString())
+            currenrdr=(milliseconds(currentduration).toString())
+            Log.e("testcurrentTime",(milliseconds(currentduration).toString()))
         }catch (e:Exception)
         {
 
@@ -201,6 +211,7 @@ class AudioPlayerDetailNew:AppCompatActivity() {
         Log.e("dfgdh","success")
         try {
             seebbar!!.setProgress((mediaplayer!!.getCurrentPosition().toFloat() / mediaplayer!!.getDuration() * 100).toInt())
+           // Log.e("")
             System.out.print("seekbar"+seebbar)
             handler2.postDelayed(updater, 1000)
         }catch (e:InterruptedException)

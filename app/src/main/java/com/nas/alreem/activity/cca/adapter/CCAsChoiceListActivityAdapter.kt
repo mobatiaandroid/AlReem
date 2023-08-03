@@ -114,7 +114,7 @@ class CCAsChoiceListActivityAdapter :
                 holder.textViewCCAVenue.visibility = View.GONE
             } else {
                 holder.textViewCCAVenue.text =
-                    java.lang.String.format("Location: %s", mCCAmodelArrayList[position].venue)
+                    java.lang.String.format("Location    : %s", mCCAmodelArrayList[position].venue)
                 holder.textViewCCAVenue.visibility = View.VISIBLE
             }
         } else {
@@ -134,8 +134,7 @@ class CCAsChoiceListActivityAdapter :
             } else {
                 holder.descriptionRel.visibility = View.VISIBLE
                 holder.descriptionTxt.text =
-                    java.lang.String.format(
-                        "Description : %s",
+                    java.lang.String.format("Description : %s",
                         mCCAmodelArrayList[position].description
                     )
                 if (mCCAmodelArrayList[position].description!!.length > 22) {

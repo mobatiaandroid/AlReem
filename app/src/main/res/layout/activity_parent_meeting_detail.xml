@@ -165,7 +165,7 @@
                 android:paddingBottom="2dp"
                 android:paddingTop="2dp"
                 android:singleLine="true"
-                android:text="Choose a time slot" />
+                android:text="Please choose a time slot" />
 
             <com.nas.alreem.commonviews.CustomTextViewRegular
                 android:id="@+id/reviewConfirmTextView"

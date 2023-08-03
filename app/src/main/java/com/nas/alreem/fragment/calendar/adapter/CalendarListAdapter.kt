@@ -150,7 +150,9 @@ class CalendarListAdapter(
         var linkBtn = dialog.findViewById(R.id.linkBtn) as Button
         var deleteCalendar = dialog.findViewById(R.id.deleteCalendar) as Button
         var addToCalendar = dialog.findViewById(R.id.addToCalendar) as Button
+        var eventNameText=dialog.findViewById(R.id.eventName) as TextView
         eventDate?.text =eventDateStr
+        eventNameText?.text =eventNameStr
         if(eventTypeStr.equals(""))
         {
 

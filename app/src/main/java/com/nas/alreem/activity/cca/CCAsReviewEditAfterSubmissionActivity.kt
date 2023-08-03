@@ -114,7 +114,7 @@ class CCAsReviewEditAfterSubmissionActivity : AppCompatActivity() {
             intent.putExtra("ccaedit", 1)
             Log.e("loation1", CCADetailModelArrayList!!.get(0).choice1.toString())
             Log.e("Location2", CCADetailModelArrayList!!.get(0).location2.toString())
-           // PreferenceManager.saveDetailsArrayList(mContext, CCADetailModelArrayList)
+            PreferenceManager.saveDetailsArrayList(mContext, CCADetailModelArrayList)
             startActivity(intent)
         }
 //        home = headermanager.getLogoButton()
@@ -132,7 +132,7 @@ class CCAsReviewEditAfterSubmissionActivity : AppCompatActivity() {
         if (PreferenceManager.getStudClassForCCA(mContext).equals("")) {
             textViewCCAaItem!!.text = Html.fromHtml(
                 PreferenceManager.getCCATitle(mContext)
-                    .toString() + "<br/>" + PreferenceManager.getStudentName(mContext)+ "<br/>Year Group : " + PreferenceManager.getStudentClass( mContext
+                    .toString() + "<br/>" + PreferenceManager.getStudNameForCCA(mContext)+ "<br/>Year Group : " + PreferenceManager.getStudentClass( mContext
                 )
             )
         } else {
@@ -202,7 +202,7 @@ class CCAsReviewEditAfterSubmissionActivity : AppCompatActivity() {
                                 )
                                 Toast.makeText(
                                     mContext,
-                                    "No ECA available",
+                                    "No EAP available",
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }

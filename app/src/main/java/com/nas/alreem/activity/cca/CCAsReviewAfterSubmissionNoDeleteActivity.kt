@@ -195,7 +195,7 @@ class CCAsReviewAfterSubmissionNoDeleteActivity : Activity(){
                                 )
                                 Toast.makeText(
                                     mContext,
-                                    "No ECA available",
+                                    "No EAP available",
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }

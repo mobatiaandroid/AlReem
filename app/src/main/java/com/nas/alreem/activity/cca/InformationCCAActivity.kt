@@ -102,7 +102,7 @@ class InformationCCAActivity : AppCompatActivity() {
                             } else {
                                 ConstantFunctions.showDialogueWithOk(
                                     mContext,
-                                    getString(R.string.common_error),
+                                    "No Data Found!",
                                     "Alert"
                                 )
                             }

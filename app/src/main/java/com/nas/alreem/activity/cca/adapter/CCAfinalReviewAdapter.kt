@@ -69,12 +69,8 @@ class CCAfinalReviewAdapter(
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-      //  Log.e("Location", mCCADetailModelArrayList[position].ccaChoiceModel!!.toString())
-       // Log.e("Location2", mCCADetailModelArrayList[position].location2.toString())
-       // Log.e("item", mCCADetailModelArrayList[position].choice1.toString())
-      //  Log.e("item2", mCCADetailModelArrayList[position].choice2.toString())
-      //  Log.e("desc", mCCADetailModelArrayList[position].description.toString())
-     //   Log.e("desc", mCCADetailModelArrayList[position].description2.toString())
+        if (mCCADetailModelArrayList[position].location != null) {
+
         if (mCCADetailModelArrayList[position].location
                 .equals("0") || mCCADetailModelArrayList[position].location
                 .equals("")
@@ -83,8 +79,15 @@ class CCAfinalReviewAdapter(
         } else {
             holder.locationTxt.visibility = View.VISIBLE
             holder.locationTxt.text =
-                "Location       : " + mCCADetailModelArrayList[position].location
+                "Location      : " + mCCADetailModelArrayList[position].location
+        } }
+        else {
+            holder.locationTxt.visibility = View.GONE
         }
+
+
+        if (mCCADetailModelArrayList[position].location2 != null) {
+
         if (mCCADetailModelArrayList[position].location2
                 .equals("0") || mCCADetailModelArrayList[position].location2
                 .equals("")
@@ -93,8 +96,16 @@ class CCAfinalReviewAdapter(
         } else {
             holder.location2Txt.visibility = View.VISIBLE
             holder.location2Txt.text =
-                "Location       : " + mCCADetailModelArrayList[position].location2
+                "Location      : " + mCCADetailModelArrayList[position].location2
         }
+        }
+
+        else {
+            holder.location2Txt.visibility = View.GONE
+        }
+
+        if (mCCADetailModelArrayList[position].description != null) {
+
         if (mCCADetailModelArrayList[position].description
                 .equals("0") || mCCADetailModelArrayList[position].description
                 .equals("")
@@ -105,6 +116,15 @@ class CCAfinalReviewAdapter(
             holder.descriptionTxt.text =
                 "Description : " + mCCADetailModelArrayList[position].description
         }
+        }
+        else {
+            holder.descriptionTxt.visibility = View.GONE
+        }
+
+
+        if (mCCADetailModelArrayList[position].description2 != null) {
+
+
         if (mCCADetailModelArrayList[position].description2
                 .equals("0") || mCCADetailModelArrayList[position].description2
                 .equals("")
@@ -115,6 +135,13 @@ class CCAfinalReviewAdapter(
             holder.description2Txt.text =
                 "Description : " + mCCADetailModelArrayList[position].description2
         }
+        }
+        else {
+            holder.description2Txt.visibility = View.GONE
+        }
+
+
+
         holder.textViewCCADay.setText(mCCADetailModelArrayList[position].day)
         if (mCCADetailModelArrayList[position].choice1 == null) {
             holder.linearChoice1.visibility = View.GONE

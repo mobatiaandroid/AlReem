@@ -65,7 +65,7 @@
             android:layout_marginBottom="10dp"
             android:gravity="center"
             android:textColor="@color/canteen_red"
-            android:text="Pre-ordering for the day closes at 7.30am" />
+            android:text="Pre-ordering for the day closes at 5:00pm" />
         <Button
             android:id="@+id/GetDate"
             android:layout_width="120dp"

@@ -135,7 +135,7 @@ class SurveyListActivity: AppCompatActivity(){
                                 mListView.adapter = SurveyListAdapter(response.body()!!.responseArray!!.data, mContext)
                             }
                             else{
-
+                                DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), "No Data Found!", mContext)
                             }
                         }
                         else

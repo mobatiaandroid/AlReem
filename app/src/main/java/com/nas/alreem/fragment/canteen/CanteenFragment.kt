@@ -139,9 +139,7 @@ class CanteenFragment  : Fragment() {
                             .load(banner_image)
                             .into(bannerImg)
                     } else {
-                        Glide.with(mContext)
-                            .load(R.drawable.default_banner)
-                            .into(bannerImg)
+                        bannerImg!!.setBackgroundResource(R.drawable.default_banner)
                     }
 
                 }

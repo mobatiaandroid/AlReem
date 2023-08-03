@@ -27,11 +27,13 @@ import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.activity.payments.adapter.StudentListAdapter
 import com.nas.alreem.activity.payments.model.StudentList
 import com.nas.alreem.activity.payments.model.StudentListModel
+import com.nas.alreem.appcontroller.AppController
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.OnItemClickListener
 import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.constants.addOnItemClickListener
 import com.nas.alreem.fragment.cca.CCAFragment
+import com.nas.alreem.fragment.home.homeActivity
 import com.nas.alreem.rest.ApiClient
 import retrofit2.Call
 import retrofit2.Callback
@@ -41,6 +43,8 @@ class CCA_Activity : AppCompatActivity() {
     lateinit var mContext: Context
     lateinit var titleTextView: TextView
     lateinit var back: ImageView
+
+
     lateinit var backRelative: RelativeLayout
     lateinit var logoclick: ImageView
     lateinit var progress: ProgressBar
@@ -57,9 +61,9 @@ class CCA_Activity : AppCompatActivity() {
     var stud_name = ""
     var mStudentSpinner: LinearLayout? = null
     var relativeHeader: RelativeLayout? = null
-    lateinit var student_Name: String
-    lateinit var studentImg: String
-    lateinit var studentClass: String
+   // lateinit var student_Name: String
+   // lateinit var studentImg: String
+   // lateinit var studentClass: String
    lateinit var studImg: ImageView
     var stud_img = ""
 
@@ -79,6 +83,7 @@ class CCA_Activity : AppCompatActivity() {
 
             startActivity(mIntent)
         }
+
         backRelative.setOnClickListener {
             finish()
         }
@@ -164,7 +169,7 @@ class CCA_Activity : AppCompatActivity() {
         val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+token)
         call.enqueue(object : Callback<StudentListModel> {
             override fun onFailure(call: Call<StudentListModel>, t: Throwable) {
-                Log.e("Error", t.localizedMessage)
+               // Log.e("Error", t.localizedMessage)
                 progress.visibility = View.GONE
             }
             override fun onResponse(call: Call<StudentListModel>, response: Response<StudentListModel>) {
@@ -176,22 +181,22 @@ class CCA_Activity : AppCompatActivity() {
                     if (PreferenceManager.getStudIdForCCA(mContext).equals(""))
                     {
                       //  Log.e("studentname",student_Name)
-                        student_Name=studentListArrayList.get(0).name
-                        studentImg=studentListArrayList.get(0).photo
+                        stud_name=studentListArrayList.get(0).name
+                        stud_img=studentListArrayList.get(0).photo
                         stud_id=studentListArrayList.get(0).id
-                        studentClass=studentListArrayList.get(0).section
-                        Log.e("Student_idss",stud_id)
+                        stud_class=studentListArrayList.get(0).section
+                       // Log.e("Student_idss",stud_id)
                        // PreferenceManager.setStudentID(mContext,studentId)
-                        PreferenceManager.setStudentName(mContext,student_Name)
-                        PreferenceManager.setStudentPhoto(mContext,studentImg)
-                        PreferenceManager.setStudentClass(mContext,studentClass)
-                        studentName.text=student_Name
+                      //  PreferenceManager.setStudentName(mContext,student_Name)
+                        //PreferenceManager.setStudentPhoto(mContext,studentImg)
+                      //  PreferenceManager.setStudentClass(mContext,studentClass)
+                        studentName.text=stud_name
                         PreferenceManager.setCCAStudentIdPosition(mContext, "0")
 
-                        if(!studentImg.equals(""))
+                        if(!stud_img.equals(""))
                         {
                             Glide.with(mContext) //1
-                                .load(studentImg)
+                                .load(stud_img)
                                 .placeholder(R.drawable.student)
                                 .error(R.drawable.student)
                                 .skipMemoryCache(true) //2
@@ -208,18 +213,18 @@ class CCA_Activity : AppCompatActivity() {
                         val studentSelectPosition = Integer.valueOf(
                             PreferenceManager.getCCAStudentIdPosition(mContext)
                         )
-                        student_Name= PreferenceManager.getStudentName(mContext)!!
-                        studentImg= PreferenceManager.getStudentPhoto(mContext)!!
+                        stud_name= studentListArrayList[studentSelectPosition].name!!
+                        stud_img= studentListArrayList[studentSelectPosition].photo!!
                         stud_id=  studentListArrayList!![studentSelectPosition].id.toString()
                        // PreferenceManager.setStudentID(mContext, studentId)
                        // PreferenceManager.setStudIdForCCA(mContext, studentId)
-                        Log.e("Studentid1",stud_id)
-                        studentClass= PreferenceManager.getStudentClass(mContext)!!
-                        studentName.text=student_Name
-                        if(!studentImg.equals(""))
+                      //  Log.e("Studentid1",stud_id)
+                        stud_class= studentListArrayList[studentSelectPosition].studentClass!!
+                        studentName.text=stud_name
+                        if(!stud_img.equals(""))
                         {
                             Glide.with(mContext) //1
-                                .load(studentImg)
+                                .load(stud_img)
                                 .placeholder(R.drawable.student)
                                 .error(R.drawable.student)
                                 .skipMemoryCache(true) //2
@@ -252,7 +257,7 @@ class CCA_Activity : AppCompatActivity() {
     }
 
     private fun getCCAListAPI(studId: String) {
-        Log.e("studId",studId)
+       // Log.e("studId",studId)
         val body = CCAListRequestModel(studId)
         val token = PreferenceManager.getaccesstoken(mContext)
         val call: Call<CCAListResponseModel> =
@@ -275,8 +280,8 @@ class CCA_Activity : AppCompatActivity() {
                                     Log.e("isattentii", response.body()!!.data!![i].isAttendee.toString())
                                     mCCAmodelArrayList!!.add(addCCAlist(response.body()!!.data!![i]))
                                 }
-                                Log.e("arraty", mCCAmodelArrayList!!.get(0).isAttendee.toString())
-                                Log.e("title", mCCAmodelArrayList!!.get(0).title.toString())
+                              //  Log.e("arraty", mCCAmodelArrayList!!.get(0).isAttendee.toString())
+                              //  Log.e("title", mCCAmodelArrayList!!.get(0).title.toString())
                                 if (mCCAmodelArrayList!!.size > 0) {
                                     mCCAsActivityAdapter = CCAsListActivityAdapter(
                                         this@CCA_Activity,
@@ -291,7 +296,7 @@ class CCA_Activity : AppCompatActivity() {
                                 enterTextView!!.visibility = View.GONE
                                 Toast.makeText(
                                     this@CCA_Activity,
-                                    "No ECA available",
+                                    "No EAP available",
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
@@ -364,10 +369,10 @@ class CCA_Activity : AppCompatActivity() {
 
                 val jsonCCAChoiceArray = objectCCA.choice1
                 val jsonCCAChoiceArray2 = objectCCA.choice2
-                Log.e("choice1",objectCCA.choice1.toString())
-                Log.e("choice2 atte", objectCCA.choice1!![0]!!.attending_status.toString())
-                Log.e("choice2 atte", objectCCA.choice2!![0]!!.attending_status.toString())
-                Log.e("choice2 atte", jsonCCAChoiceArray2!![0]!!.attending_status.toString())
+               // Log.e("choice1",objectCCA.choice1.toString())
+               // Log.e("choice2 atte", objectCCA.choice1!![0]!!.attending_status.toString())
+               // Log.e("choice2 atte", objectCCA.choice2!![0]!!.attending_status.toString())
+              //  Log.e("choice2 atte", jsonCCAChoiceArray2!![0]!!.attending_status.toString())
                 CCAchoiceModelArrayList = java.util.ArrayList<CCAchoiceModel>()
                 if (jsonCCAChoiceArray!!.size > 0) {
                     var k = 0
@@ -452,7 +457,7 @@ class CCA_Activity : AppCompatActivity() {
                                     mCCADetailModelchoice.status = "1"
                                     mCCADetailModel.choice2 = objectCCAchoice.cca_item_name
                                     mCCADetailModel.choice2Id = objectCCAchoice.cca_details_id.toString()
-                                    Log.e("choice2qqq",mCCADetailModel.choice2.toString())
+                                 //   Log.e("choice2qqq",mCCADetailModel.choice2.toString())
                                 } else {
                                     mCCADetailModelchoice.status = "0"
                                 }
@@ -584,7 +589,7 @@ class CCA_Activity : AppCompatActivity() {
                             ConstantFunctions.showDialogueWithOk(mContext,"No Data Available","Alert")
                         }
                     } else {
-                        ConstantFunctions.showDialogueWithOk(mContext,"CCA Sign-Up Closed","Alert")
+                        ConstantFunctions.showDialogueWithOk(mContext,"EAP Sign-Up Closed","Alert")
                         
                     }
                 } else if (mCCAmodelArrayList!![position].isAttendee.equals("2")) {
@@ -592,14 +597,14 @@ class CCA_Activity : AppCompatActivity() {
                     {
                         val intent =
                             Intent(mContext, CCAsReviewEditAfterSubmissionActivity::class.java)
-                        Log.e("cca choice1s", mCCAmodelArrayList!![position].details!!.get(0).choice1!!)
-                        Log.e("cca choice2s", mCCAmodelArrayList!![position].details!!.get(0).choice2!!)
+                      //  Log.e("cca choice1s", mCCAmodelArrayList!![position].details!!.get(0).choice1!!)
+                      //  Log.e("cca choice2s", mCCAmodelArrayList!![position].details!!.get(0).choice2!!)
                         intent.putExtra("tab_type", tab_type)
                         // intent.putExtra("CCA_Detail", mCCAmodelArrayList!![position].details)
                         intent.putExtra("submissiondateover", mCCAmodelArrayList!![position].isSubmissionDateOver)
                         PreferenceManager.saveDetailsArrayList(mContext, mCCAmodelArrayList!![position].details)
                         //  PreferenceManager.setStudentID(mContext, stud_id)
-                        Log.e("id",stud_id)
+                      //  Log.e("id",stud_id)
                         PreferenceManager.setStudIdForCCA(mContext, stud_id)
                         PreferenceManager.setStudNameForCCA(mContext, stud_name)
                         PreferenceManager.setStudClassForCCA(mContext, stud_class)
@@ -694,14 +699,5 @@ class CCA_Activity : AppCompatActivity() {
         })
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        if (!PreferenceManager.getCcaOptionBadge(mContext).equals("0")) {
-           CCAFragment(). ccaDot.setText(PreferenceManager.getCcaOptionBadge(mContext))
-        } else if (!PreferenceManager.getCcaOptionEditedBadge(mContext).equals("0")) {
-            CCAFragment(). ccaDot.setText(PreferenceManager.getCcaOptionEditedBadge(mContext))
-        } else {
-            CCAFragment().ccaDot.setVisibility(View.GONE)
-        }
-    }
+
 }

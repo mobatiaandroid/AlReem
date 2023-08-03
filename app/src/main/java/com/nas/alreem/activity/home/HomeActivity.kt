@@ -310,18 +310,21 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                     3->
                     {
                         //About Us
-                        mFragment = AbsenceFragment()
+                        mFragment = PaymentFragment()
                         replaceFragmentsSelected(position)
+
+
                     }
                     4->
                     {
                         //payment
-                        mFragment = PaymentFragment()
+                        mFragment = CanteenFragment()
                         replaceFragmentsSelected(position)
                     }
                     5->
                     {
-                        mFragment = CanteenFragment()
+
+                        mFragment = ParentsEssentialFragment()
                         replaceFragmentsSelected(position)
 //                        DialogFunctions.commonErrorAlertDialog("Coming Soon!","This Feature will be available shortly",
 //                            mContext
@@ -329,7 +332,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                     }
                     6->
                     {
-                        mFragment = ParentsEssentialFragment()
+                        mFragment = AbsenceFragment()
                         replaceFragmentsSelected(position)
 //                        DialogFunctions.commonErrorAlertDialog("Coming Soon!","This Feature will be available shortly",
 //                            mContext
@@ -356,20 +359,23 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                     10->
                     {
                         //Secondary
-                        mFragment = CCAFragment()
+                        mFragment = PermissionSlipFragment()
                         replaceFragmentsSelected(position)
+
+
                     }
                     11->
                     {
                         //About Us
-                        mFragment = ParentMeetingsFragment()
+                        mFragment = CCAFragment()
                         replaceFragmentsSelected(position)
+
                     }
 
                     12->
                     {
                         //About Us
-                        mFragment = PermissionSlipFragment()
+                        mFragment = ParentMeetingsFragment()
                         replaceFragmentsSelected(position)
                     }
                     13->
@@ -381,12 +387,8 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                     14->
                     {
                         //About Us
-                        mFragment = AboutUsFragment()
-                        replaceFragmentsSelected(position)
-                    }
-                    15->
-                    {
-                        // Contact Us
+
+
                         if (ActivityCompat.checkSelfPermission(
                                 context,
                                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -405,6 +407,12 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                             mFragment = ContactUsFragment()
                             replaceFragmentsSelected(position)
                         }
+                    }
+                    15->
+                    {
+                        // Contact Us
+                        mFragment = AboutUsFragment()
+                        replaceFragmentsSelected(position)
                     }
 
 

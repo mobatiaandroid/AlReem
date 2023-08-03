@@ -154,8 +154,7 @@ class CCAfinalReviewAfterSubmissionAdapter(
                 holder.locationTxt.visibility = View.GONE
             } else {
                 holder.locationTxt.visibility = View.VISIBLE
-                holder.locationTxt.text =
-                    "Location            : " + mCCADetailModelArrayList[position].venue
+                holder.locationTxt.text = "Location           : " + mCCADetailModelArrayList[position].venue
             }
             System.out.println("DESC EDIT" + mCCADetailModelArrayList[position].cca_item_description)
             if (mCCADetailModelArrayList[position].cca_item_description
@@ -198,10 +197,21 @@ class CCAfinalReviewAfterSubmissionAdapter(
                 holder.deleteChoice1.setImageResource(R.drawable.delete_disabled)
                 holder.textViewCCAaDateItemChoice1.setTextColor(mContext.resources.getColor(R.color.light_grey))
                 holder.textViewCCAChoice1.setTextColor(mContext.resources.getColor(R.color.light_grey))
+                holder.locationTxt.setTextColor(mContext.resources.getColor(R.color.light_grey))
+                holder.descriptionTxt.setTextColor(mContext.resources.getColor(R.color.light_grey))
+                holder.readMore1.visibility=View.GONE
+                holder.descriptionTxt.setOnClickListener {  }
+
+
             } else {
                 holder.deleteChoice2.setImageResource(R.drawable.delete_disabled)
                 holder.textViewCCAaDateItemChoice2.setTextColor(mContext.resources.getColor(R.color.light_grey))
                 holder.textViewCCAChoice2.setTextColor(mContext.resources.getColor(R.color.light_grey))
+                holder.location2Txt.setTextColor(mContext.resources.getColor(R.color.light_grey))
+                holder.description2Txt.setTextColor(mContext.resources.getColor(R.color.light_grey))
+                holder.readMore.visibility=View.GONE
+
+                holder.description2Txt.setOnClickListener {  }
             }
         }
         if (mCCADetailModelArrayList[position].choice2.equals("0")) {
@@ -222,8 +232,7 @@ class CCAfinalReviewAfterSubmissionAdapter(
             } else {
                 holder.location2Txt.visibility = View.VISIBLE
                 holder.readMore.visibility = View.VISIBLE
-                holder.location2Txt.text =
-                    "Location            : " + mCCADetailModelArrayList[position].venue2
+                holder.location2Txt.text = "Location           : " + mCCADetailModelArrayList[position].venue2
             }
             if (mCCADetailModelArrayList[position].cca_item_description_2
                     .equals("0") || mCCADetailModelArrayList[position].cca_item_description_2
@@ -263,10 +272,21 @@ class CCAfinalReviewAfterSubmissionAdapter(
                 holder.deleteChoice2.setImageResource(R.drawable.delete_disabled)
                 holder.textViewCCAaDateItemChoice2.setTextColor(mContext.resources.getColor(R.color.light_grey))
                 holder.textViewCCAChoice2.setTextColor(mContext.resources.getColor(R.color.light_grey))
+                holder.textViewCCAChoice2.setTextColor(mContext.resources.getColor(R.color.light_grey))
+                holder.location2Txt.setTextColor(mContext.resources.getColor(R.color.light_grey))
+                holder.description2Txt.setTextColor(mContext.resources.getColor(R.color.light_grey))
+                holder.readMore.visibility=View.GONE
+                holder.description2Txt.setOnClickListener {  }
             } else {
                 holder.deleteChoice2.setImageResource(R.drawable.delete_disabled)
                 holder.textViewCCAaDateItemChoice2.setTextColor(mContext.resources.getColor(R.color.light_grey))
                 holder.textViewCCAChoice2.setTextColor(mContext.resources.getColor(R.color.light_grey))
+                holder.textViewCCAChoice2.setTextColor(mContext.resources.getColor(R.color.light_grey))
+                holder.location2Txt.setTextColor(mContext.resources.getColor(R.color.light_grey))
+                holder.description2Txt.setTextColor(mContext.resources.getColor(R.color.light_grey))
+                holder.readMore.visibility=View.GONE
+
+                holder.description2Txt.setOnClickListener {  }
             }
         }
         if ((mCCADetailModelArrayList[position].choice1
@@ -531,6 +551,7 @@ class CCAfinalReviewAfterSubmissionAdapter(
             val dialogButton = dialog.findViewById<View>(R.id.btn_Ok) as Button
             dialogButton.setOnClickListener {
                 dialog.dismiss()
+                //CCAsReviewAfterSubmissionActivity().ccaDeleteAPI(ccaDetailsId,activity)
                 ccaDeleteAPI(ccaDetailsId,activity)
             }
             val dialogButtonCancel = dialog.findViewById<View>(R.id.btn_Cancel) as Button

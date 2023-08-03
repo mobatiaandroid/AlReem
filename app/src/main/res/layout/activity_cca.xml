@@ -89,7 +89,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/relativeHeader"
         android:orientation="vertical">
-        <TextView
+        <com.nas.alreem.commonviews.CustomTextViewRegular
             android:id="@+id/select"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -173,12 +173,12 @@
             android:background="@color/light_grey"
             />
 
-        <TextView
+        <com.nas.alreem.commonviews.CustomTextViewRegular
             android:textSize="16sp"
             android:id="@+id/enterTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Select Enrichment"
+            android:text="Select EAP"
             android:layout_marginTop="5dp"
             android:visibility="visible"
             android:layout_marginLeft="10dp"

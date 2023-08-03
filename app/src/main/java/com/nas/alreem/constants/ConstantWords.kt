@@ -36,19 +36,19 @@ class ConstantWords {
         /*TAB_ID*/
         var TAB_NOTIFICATIONS = "1"
         var TAB_CALENDAR = "2"
-        var TAB_ABSENCE = "3"
-        var TAB_PAYMENTS = "4"
-        var TAB_LUNCH_BOX = "5"
-        var TAB_PARENT_ESSENTIAL = "6"
+        var TAB_ABSENCE = "6"
+        var TAB_PAYMENTS = "3"
+        var TAB_LUNCH_BOX = "4"
+        var TAB_PARENT_ESSENTIAL = "5"
         var TAB_EARLY_YEARS = "7"
         var TAB_PRIMARY = "8"
         var TAB_SECONDARY = "9"
-        var TAB_ENRICHMENT = "10"
-        var TAB_PARENT_MEETINGS = "11"
-        var TAB_PERMISSION_FORMS = "12"
+        var TAB_ENRICHMENT = "11"
+        var TAB_PARENT_MEETINGS = "12"
+        var TAB_PERMISSION_FORMS = "10"
         var TAB_GALLERY = "13"
-        var TAB_ABOUT_US = "14"
-        var TAB_CONTACT_US = "15"
+        var TAB_ABOUT_US = "15"
+        var TAB_CONTACT_US = "14"
 
 
 

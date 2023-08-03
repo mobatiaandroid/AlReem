@@ -485,7 +485,7 @@ class PreOrderActivity : AppCompatActivity(){
         dialog.setContentView(R.layout.dialog_common_error_alert)
         dialog.window!!.setBackgroundDrawableResource(android.R.color.transparent)
         val btn_Ok = dialog.findViewById<Button>(R.id.btn_Ok)
-        val descriptionTxt = dialog.findViewById<TextView>(R.id.text_dialog)
+        val descriptionTxt = dialog.findViewById<TextView>(R.id.messageTxt)
         val titleTxt = dialog.findViewById<TextView>(R.id.alertHead)
         titleTxt.text = title
         descriptionTxt.text = description

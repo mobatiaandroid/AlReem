@@ -90,12 +90,7 @@
         android:orientation="vertical"
         android:background="@color/white"
         >
-        <ImageView
-            android:id="@+id/bannerImagePager"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="30"
-            android:background="@drawable/default_banner"/>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/mnewsLetterListView"
             android:layout_width="match_parent"

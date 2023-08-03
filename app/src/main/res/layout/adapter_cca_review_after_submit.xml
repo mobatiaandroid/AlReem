@@ -95,7 +95,7 @@
                 android:id="@+id/locationTxt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/textViewCCAaDateItemChoice1"
+                android:layout_below="@+id/rell1"
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="2dp"
@@ -107,7 +107,8 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/locationTxt"
+                android:layout_below="@+id/textViewCCAaDateItemChoice1"
+                android:id="@+id/rell1"
                 android:layout_marginRight="10dp"
                 android:layout_alignParentLeft="true">
 
@@ -199,7 +200,8 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/location2Txt"
+                android:layout_below="@+id/textViewCCAaDateItemChoice2"
+                android:id="@+id/rell"
                 android:layout_marginRight="10dp"
                 android:layout_alignParentLeft="true">
 
@@ -230,7 +232,7 @@
                 android:id="@+id/location2Txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/textViewCCAaDateItemChoice2"
+                android:layout_below="@+id/rell"
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="2dp"

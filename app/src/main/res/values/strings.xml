@@ -5,19 +5,20 @@
         <item>Home</item>
         <item>Notifications</item>
         <item>Calendar</item>
-        <item>Absence &amp; Early Pickup</item>
         <item>Payments</item>
         <item>Lunch Box</item>
         <item>Parent Essentials</item>
+        <item>Absence &amp; Early Pickup</item>
         <item>Early Years</item>
         <item>Primary</item>
         <item>Secondary</item>
+        <item>Permission Forms</item>
         <item>Enrichment</item>
         <item>Parent Meetings</item>
-        <item>Permission Forms</item>
         <item>Gallery</item>
-        <item>About Us</item>
         <item>Contact Us</item>
+        <item>About Us</item>
+
 
 
 
@@ -27,19 +28,20 @@
         <item>@drawable/home</item>
         <item>@drawable/notif</item>
         <item>@drawable/calendar</item>
-        <item>@drawable/absence</item>
         <item>@drawable/payment</item>
         <item>@drawable/lunchbox_icon</item>
         <item>@drawable/parent</item>
+        <item>@drawable/absence</item>
         <item>@drawable/earlyyears</item>
         <item>@drawable/primary</item>
         <item>@drawable/secondary</item>
+        <item>@drawable/permission_slip</item>
         <item>@drawable/ccas</item>
         <item>@drawable/parentevening</item>
-        <item>@drawable/permission_slip</item>
         <item>@drawable/gallery</item>
-        <item>@drawable/aboutus</item>
         <item>@drawable/contacts</item>
+        <item>@drawable/aboutus</item>
+
 
 
 
@@ -291,6 +293,7 @@
     <string name="Enrichment">Enrichment</string>
     <string name="common_error">Cannot continue. Please try again later</string>
 
+    <string name="introduction">Introduction:</string>
 
 
     <string name="aed">AED</string>

@@ -75,7 +75,7 @@ class PermissionSlipFragment : Fragment(){
     private fun initializeUI(){
         mContext=requireContext()
         titleTextView = view!!.findViewById(R.id.titleTextView) as TextView
-        titleTextView.text = "Permission Slips"
+        titleTextView.text = "Permission Forms"
         //formslist= ArrayList()
         studentSpinner = view!!.findViewById<LinearLayout>(R.id.studentSpinner)
         studImg = view!!.findViewById<ImageView>(R.id.studImg)
@@ -203,7 +203,7 @@ class PermissionSlipFragment : Fragment(){
                         var forms_adapter= FormslistAdapter(mContext,formslist)
                         forms_recycler.adapter=forms_adapter
                         //showerror(mContext,"No Data Found","Alert")
-                        Toast.makeText(mContext, "No Permission Slips Found", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(mContext, "No Permission Forms Found", Toast.LENGTH_SHORT).show()
                     }
 
 

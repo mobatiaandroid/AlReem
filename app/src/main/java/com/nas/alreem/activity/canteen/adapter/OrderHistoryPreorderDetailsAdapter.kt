@@ -13,7 +13,7 @@ import com.nas.alreem.R
 import com.nas.alreem.activity.canteen.model.order_history.OrderCanteenPreOrderItems
 
 
-class OrderHistoryPreorderDetailsAdapter (val preorderhis_list: ArrayList<OrderCanteenPreOrderItems>, var mcontext: Context) :
+class OrderHistoryPreorderDetailsAdapter (val type:String,val preorderhis_list: ArrayList<OrderCanteenPreOrderItems>, var mcontext: Context) :
     RecyclerView.Adapter<OrderHistoryPreorderDetailsAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
@@ -28,6 +28,7 @@ class OrderHistoryPreorderDetailsAdapter (val preorderhis_list: ArrayList<OrderC
 
         viewHolder.itemNameTxt.text=preorderhis_list.get(position).item_name
         viewHolder.itemDescription.text=preorderhis_list.get(position).item_description
+        viewHolder.orderbadge.text=type
         viewHolder.amountTxt.text=preorderhis_list.get(position).item_total.toString() +".00 AED"
         if (preorderhis_list.get(position).quantity==1)
         {
@@ -62,14 +63,14 @@ class OrderHistoryPreorderDetailsAdapter (val preorderhis_list: ArrayList<OrderC
         var amountTxt: TextView
         var itemsCount: TextView
         var status: TextView
-
+         var orderbadge:TextView
         init {
             itemNameTxt = itemView.findViewById(R.id.itemNameTxt)
             itemDescription = itemView.findViewById(R.id.itemDescription)
             amountTxt = itemView.findViewById(R.id.amountTxt)
             itemsCount = itemView.findViewById(R.id.itemsCount)
             status = itemView.findViewById(R.id.status)
-
+            orderbadge=itemView.findViewById(R.id.orderbadge)
         }
     }
 

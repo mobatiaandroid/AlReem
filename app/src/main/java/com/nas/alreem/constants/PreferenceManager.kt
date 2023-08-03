@@ -5,6 +5,8 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.nas.alreem.R
 import com.nas.alreem.activity.cca.model.CCADetailModel
+import com.nas.alreem.fragment.about_us.model.AboutUsDataModel
+import com.nas.alreem.fragment.about_us.model.AboutusList
 import java.lang.reflect.Type
 
 class PreferenceManager {
@@ -1097,6 +1099,30 @@ class PreferenceManager {
             )
             staffId = prefs.getString("staffId", "").toString()
             return staffId
+        }
+
+
+        fun saveAboutsArrayList(context: Context, list: ArrayList<AboutusList>?) {
+            val prefs = context.getSharedPreferences(
+                "ALGUBRA",
+                Context.MODE_PRIVATE
+            )
+            val editor = prefs.edit()
+            val gson = Gson()
+            val json = gson.toJson(list)
+            editor.putString("about_us_list", json)
+            editor.apply()
+        }
+
+        fun getAboutsArrayList(context: Context): ArrayList<AboutusList>? {
+            val prefs = context.getSharedPreferences(
+                "ALGUBRA",
+                Context.MODE_PRIVATE
+            )
+            val gson = Gson()
+            val json = prefs.getString("about_us_list", null)
+            val type: Type = object : TypeToken<ArrayList<AboutusList>?>() {}.getType()
+            return gson.fromJson(json, type)
         }
     }
 }

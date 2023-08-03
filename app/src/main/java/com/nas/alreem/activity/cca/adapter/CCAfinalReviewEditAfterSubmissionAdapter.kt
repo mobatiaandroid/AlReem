@@ -108,8 +108,7 @@ class CCAfinalReviewEditAfterSubmissionAdapter(
                 holder.locationTxt.visibility = View.GONE
             } else {
                 holder.locationTxt.visibility = View.VISIBLE
-                holder.locationTxt.text =
-                    "Location            : " + mCCADetailModelArrayList[position].venue
+                holder.locationTxt.text = "Location           : " + mCCADetailModelArrayList[position].venue
             }
             if (mCCADetailModelArrayList[position].cca_item_description
                     .equals("0") || mCCADetailModelArrayList[position].cca_item_description
@@ -198,8 +197,7 @@ class CCAfinalReviewEditAfterSubmissionAdapter(
             } else {
                 holder.location2Txt.visibility = View.VISIBLE
                 holder.readMore.visibility = View.VISIBLE
-                holder.location2Txt.text =
-                    "Location            : " + mCCADetailModelArrayList[position].venue2
+                holder.location2Txt.text = "Location           : " + mCCADetailModelArrayList[position].venue2
             }
             if (mCCADetailModelArrayList[position].cca_item_description_2
                     .equals("0") || mCCADetailModelArrayList[position].cca_item_description_2
