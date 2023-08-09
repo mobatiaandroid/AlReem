@@ -362,6 +362,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                     10->
                     {
                         //Secondary
+                        PreferenceManager.setStudentID(context,"")
                         mFragment = PermissionSlipFragment()
                         replaceFragmentsSelected(position)
 

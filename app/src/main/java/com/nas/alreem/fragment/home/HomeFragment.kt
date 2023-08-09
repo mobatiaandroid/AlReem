@@ -1149,6 +1149,7 @@ class HomeFragment : Fragment() , View.OnClickListener{
                     fragmentIntent(mFragment)
                 }
                 ConstantWords.TAB_PERMISSION_FORMS -> {
+                    PreferenceManager.setStudentID(mContext,"")
                     mFragment = PermissionSlipFragment()
                     fragmentIntent(mFragment)
                 }
