@@ -41,6 +41,7 @@ class CanteenFragment  : Fragment() {
     lateinit var title: TextView
     lateinit var description: TextView
     lateinit var contactEmail:String
+    lateinit var progress: ProgressBar
 
      var walletTopUpLimit:Int=0
      var walletTopUpLimit_str:String=""
@@ -65,6 +66,8 @@ class CanteenFragment  : Fragment() {
     //    progress = view?.findViewById(R.id.progressDialog)!!
     //    progress.visibility=View.GONE
         email_icon = view?.findViewById(R.id.email_icon)!!
+        progress = view?.findViewById(R.id.progress)!!
+
         preorder_image = view?.findViewById(R.id.preOrderLinear)!!
         information_image = view?.findViewById(R.id.informationLinear)!!
         payment_image = view?.findViewById(R.id.paymentLinear)!!
@@ -80,6 +83,8 @@ class CanteenFragment  : Fragment() {
         }
         preorder_image.setOnClickListener {
             val i = Intent(mContext, PreOrderActivity::class.java)
+            PreferenceManager.setStudentID(mContext,"")
+
             mContext.startActivity(i)
         }
         information_image.setOnClickListener {
@@ -99,16 +104,23 @@ class CanteenFragment  : Fragment() {
 
     fun callGetCanteenBanner()
     {
+        progress.visibility = View.VISIBLE
+
         val token = PreferenceManager.getaccesstoken(mContext)
         val call: Call<CanteenBannerResponseModel> = ApiClient.getClient.get_canteen_banner("Bearer "+token)
         call.enqueue(object : Callback<CanteenBannerResponseModel>
         {
             override fun onFailure(call: Call<CanteenBannerResponseModel>, t: Throwable) {
+                progress.visibility = View.GONE
+
                 Log.e("Failed", t.localizedMessage)
+
             }
             override fun onResponse(call: Call<CanteenBannerResponseModel>, response: Response<CanteenBannerResponseModel>) {
                 val responsedata = response.body()
                 Log.e("Response", responsedata.toString())
+                progress.visibility = View.GONE
+
                 if (responsedata!!.status==100) {
 
                     contactEmail=response.body()!!.responseArray.data.contact_email
