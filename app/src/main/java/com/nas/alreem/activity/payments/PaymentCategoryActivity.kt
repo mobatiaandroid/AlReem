@@ -35,10 +35,10 @@ class PaymentCategoryActivity : AppCompatActivity() {
     lateinit var studentSpinner: LinearLayout
     var studentListArrayList = ArrayList<StudentList>()
     lateinit var studImg: ImageView
-    lateinit var studentName: String
-    lateinit var studentId: String
-    lateinit var studentImg: String
-    lateinit var studentClass: String
+    var studentName: String=""
+    var studentId: String=""
+    var studentImg: String=""
+    var studentClass: String=""
     lateinit var studentNameTxt: TextView
     lateinit var catListRec:RecyclerView
     lateinit var catList:ArrayList<PayCatDataList>
@@ -50,7 +50,7 @@ class PaymentCategoryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_payment_category)
         init()
-        callStudentListApi()
+
     }
 
     private fun init(){
@@ -77,6 +77,8 @@ class PaymentCategoryActivity : AppCompatActivity() {
         studentSpinner.setOnClickListener(){
             showStudentList(mContext,studentListArrayList)
         }
+        callStudentListApi()
+
 
     }
     fun callStudentListApi()
@@ -169,11 +171,7 @@ class PaymentCategoryActivity : AppCompatActivity() {
     }
 
 
-    override fun onResume() {
-        super.onResume()
-        callStudentListApi()
-        catListRec.visibility=View.GONE
-    }
+
 
     fun showStudentList(context: Context ,mStudentList : ArrayList<StudentList>)
     {
@@ -252,8 +250,9 @@ class PaymentCategoryActivity : AppCompatActivity() {
     fun callCategoryList()
     {
         progressDialogAdd.visibility = View.VISIBLE
-        val paymentCategoriesBody = PaymentCategoriesApiModel( studentId)
-        val call: Call<PayCategoryModel> = ApiClient.getClient.payment_categories(paymentCategoriesBody, "Bearer " + PreferenceManager.getaccesstoken(mContext))
+        val paymentCategoriesBody = PaymentCategoriesApiModel( PreferenceManager.getStudentID(mContext).toString())
+        val call: Call<PayCategoryModel> = ApiClient.getClient.payment_categories(paymentCategoriesBody, "Bearer " +
+                PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<PayCategoryModel> {
             override fun onFailure(call: Call<PayCategoryModel>, t: Throwable) {
                 Log.e("Failed", t.localizedMessage)
@@ -302,5 +301,18 @@ class PaymentCategoryActivity : AppCompatActivity() {
 
         })
 
+    }
+    override fun onResume() {
+        super.onResume()
+        catListRec.visibility=View.GONE
+        Log.e("resume","resume")
+        if(PreferenceManager.getStudentID(mContext).equals("")){
+
+        }else {
+            callStudentListApi()
+
+            //callCategoryList()
+            //callStudentListApi()
+        }
     }
 }

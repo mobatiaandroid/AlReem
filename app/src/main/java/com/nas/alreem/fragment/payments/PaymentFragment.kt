@@ -76,6 +76,7 @@ class PaymentFragment : Fragment() {
         paymentRelative.setOnClickListener(View.OnClickListener {
 
             // Payment Activity
+            PreferenceManager.setStudentID(mContext,"")
             val intent = Intent(mContext, PaymentCategoryActivity::class.java)
             startActivity(intent)
         })

@@ -92,6 +92,7 @@ class AbsenceFragment  : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mContext=requireContext()
+
         initializeUI()
         callStudentListApi()
         selectCategory()
@@ -175,6 +176,7 @@ class AbsenceFragment  : Fragment() {
 
                         if (response.body()!!.status==100)
                         {
+
                             studentListArrayList=ArrayList()
                             studentListArrayList.addAll(response.body()!!.responseArray.studentList)
                             if (PreferenceManager.getStudentID(mContext).equals(""))
@@ -537,33 +539,31 @@ class AbsenceFragment  : Fragment() {
     }
     override fun onResume() {
         super.onResume()
-        mPickupListView.visibility = View.GONE
-        mAbsenceListView.visibility=View.GONE
-        studentNameTxt.text = PreferenceManager.getStudentName(mContext)
-        studentId= PreferenceManager.getStudentID(mContext).toString()
-        studentImg= PreferenceManager.getStudentPhoto(mContext)!!
-        if(!studentImg.equals(""))
-        {
-            Glide.with(mContext) //1
-                .load(studentImg)
-                .placeholder(R.drawable.student)
-                .error(R.drawable.student)
-                .skipMemoryCache(true) //2
-                .diskCacheStrategy(DiskCacheStrategy.NONE) //3
-                .transform(CircleCrop()) //4
-                .into(studImg)
-        }
-        else
-        {
-            studImg.setImageResource(R.drawable.student)
-        }
-        if (select_val==0){
-            progressDialogAdd.visibility=View.VISIBLE
-            callStudentLeaveInfo()
-        }
-        else if (select_val==1){
-            progressDialogAdd.visibility=View.VISIBLE
-            callpickuplist_api()
-        }
+
+            mPickupListView.visibility = View.GONE
+            mAbsenceListView.visibility = View.GONE
+            studentNameTxt.text = PreferenceManager.getStudentName(mContext)
+            studentId = PreferenceManager.getStudentID(mContext).toString()
+            studentImg = PreferenceManager.getStudentPhoto(mContext)!!
+            if (!studentImg.equals("")) {
+                Glide.with(mContext) //1
+                    .load(studentImg)
+                    .placeholder(R.drawable.student)
+                    .error(R.drawable.student)
+                    .skipMemoryCache(true) //2
+                    .diskCacheStrategy(DiskCacheStrategy.NONE) //3
+                    .transform(CircleCrop()) //4
+                    .into(studImg)
+            } else {
+                studImg.setImageResource(R.drawable.student)
+            }
+            if (select_val == 0) {
+                progressDialogAdd.visibility = View.VISIBLE
+                callStudentLeaveInfo()
+            } else if (select_val == 1) {
+                progressDialogAdd.visibility = View.VISIBLE
+                callpickuplist_api()
+            }
+
     }
 }

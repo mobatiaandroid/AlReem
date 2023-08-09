@@ -335,6 +335,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                     }
                     6->
                     {
+                        PreferenceManager.setStudentID(mContext,"")
                         mFragment = AbsenceFragment()
                         replaceFragmentsSelected(position)
 //                        DialogFunctions.commonErrorAlertDialog("Coming Soon!","This Feature will be available shortly",

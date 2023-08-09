@@ -1137,6 +1137,7 @@ class HomeFragment : Fragment() , View.OnClickListener{
                     fragmentIntent(mFragment)
                 }
                 ConstantWords.TAB_ABSENCE -> {
+                    PreferenceManager.setStudentID(mContext,"")
                     mFragment = AbsenceFragment()
                     fragmentIntent(mFragment)
                 }
