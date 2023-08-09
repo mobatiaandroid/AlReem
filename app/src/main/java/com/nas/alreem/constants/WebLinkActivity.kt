@@ -47,6 +47,7 @@ class WebLinkActivity : AppCompatActivity() {
         heading = findViewById(R.id.heading)
         backRelative = findViewById(R.id.backRelative)
         logoClickImgView = findViewById(R.id.logoClickImgView)
+        Log.e("weburl", url!!)
 
         backRelative.setOnClickListener(View.OnClickListener {
             finish()

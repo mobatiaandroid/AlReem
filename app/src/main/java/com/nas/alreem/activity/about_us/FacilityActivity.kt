@@ -35,6 +35,7 @@ class FacilityActivity : Activity(){
     var extras: Bundle? = null
     var aboutusModelArrayList: ArrayList<AboutUsDataModel> = ArrayList<AboutUsDataModel>()
     lateinit var  mContext: Context
+    lateinit var heading: TextView
 
     //    private GridView mAboutUsList;
     private var mAboutUsList: RecyclerView? = null
@@ -86,6 +87,8 @@ class FacilityActivity : Activity(){
         relativeHeader = findViewById<View>(R.id.relativeHeader) as RelativeLayout
         bannerImagePager = findViewById<View>(R.id.bannerImagePager) as ImageView
         //        bannerImagePager= (ViewPager) findViewById(R.id.bannerImagePager);
+        heading=findViewById(R.id.heading)
+        heading.text= title
 
 
         backRelative=findViewById(R.id.backRelative)
@@ -166,18 +169,16 @@ class FacilityActivity : Activity(){
                                     mContext,
                                     PDFViewerActivity::class.java
                                 )
-                                intent.putExtra("pdf_url", "Facilities")
+                                intent.putExtra("Url", mAboutUsListArray!![position].url)
+                                intent.putExtra("title", mAboutUsListArray!![position].title)
                                 startActivity(intent)
                             } else {
                                 val intent = Intent(
                                     mContext,
                                     WebLinkActivity::class.java
                                 )
-                                intent.putExtra(
-                                    "url",
-                                    mAboutUsListArray!![position].url
-                                )
-                                intent.putExtra("tab_type", "Facilities")
+                                intent.putExtra("url", mAboutUsListArray!![position].url)
+                                intent.putExtra("heading",  mAboutUsListArray!![position].title)
                                 startActivity(intent)
                             }
                         } else {
@@ -186,21 +187,16 @@ class FacilityActivity : Activity(){
                                     mContext,
                                     PDFViewerActivity::class.java
                                 )
-                                intent.putExtra(
-                                    "pdf_url",
-                                    mAboutUsListArray!![position].url
-                                )
+                                intent.putExtra("Url", mAboutUsListArray!![position].url)
+                                intent.putExtra("title", mAboutUsListArray!![position].title)
                                 startActivity(intent)
                             } else {
                                 val intent = Intent(
                                     mContext,
                                     WebLinkActivity::class.java
                                 )
-                                intent.putExtra(
-                                    "url",
-                                    mAboutUsListArray!![position].url
-                                )
-                                intent.putExtra("tab_type", "Facilities")
+                                intent.putExtra("url", mAboutUsListArray!![position].url)
+                                intent.putExtra("heading",  mAboutUsListArray!![position].title)
                                 startActivity(intent)
                             }
                         }

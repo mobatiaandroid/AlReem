@@ -5,10 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ImageView
-import android.widget.ListView
-import android.widget.RelativeLayout
+import android.widget.*
 import com.bumptech.glide.Glide
 import com.nas.alreem.R
 import com.nas.alreem.activity.about_us.adapter.AccreditationsRecyclerViewAdapter
@@ -29,6 +26,8 @@ class AccreditationsActivity : Activity(), AdapterView.OnItemClickListener
     var relativeHeader: RelativeLayout? = null
         lateinit var backRelative: RelativeLayout
         lateinit var logoClickImgView: ImageView
+        lateinit var heading: TextView
+        var title: String? = null
 
     var back: ImageView? = null
     var home: ImageView? = null
@@ -53,8 +52,8 @@ class AccreditationsActivity : Activity(), AdapterView.OnItemClickListener
                 mContext,
                 PDFViewerActivity::class.java
             )
-            intent.putExtra("pdf_url", mAboutUsListArray!![position].url)
-            intent.putExtra("tab_type", "Accreditiations & Examinations")
+            intent.putExtra("Url", mAboutUsListArray!![position].url)
+            intent.putExtra("title", "Accreditiations & Examinations")
             startActivity(intent)
         } else {
             val intent = Intent(
@@ -62,7 +61,7 @@ class AccreditationsActivity : Activity(), AdapterView.OnItemClickListener
                 WebLinkActivity::class.java
             )
             intent.putExtra("url", mAboutUsListArray!![position].url)
-            intent.putExtra("tab_type", "Accreditiations & Examinations")
+            intent.putExtra("heading", "Accreditiations & Examinations")
             startActivity(intent)
         }
     }
@@ -72,6 +71,7 @@ class AccreditationsActivity : Activity(), AdapterView.OnItemClickListener
         if (extras != null) {
             mAboutUsListArray = PreferenceManager.getAboutsArrayList(mContext)
             bannner_img = extras!!.getString("banner_image")
+            title = extras!!.getString("title")
             println("Image url--$bannner_img")
 
             //desc=extras.getString("desc");
@@ -89,6 +89,8 @@ class AccreditationsActivity : Activity(), AdapterView.OnItemClickListener
         backRelative=findViewById(R.id.backRelative)
         logoClickImgView=findViewById(R.id.logoClickImgView)
 
+        heading=findViewById(R.id.heading)
+        heading.text= title
 
         mTermsCalendarListView!!.onItemClickListener = this
         backRelative!!.setOnClickListener {

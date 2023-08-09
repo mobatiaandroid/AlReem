@@ -128,7 +128,7 @@ class Myorderbasket_Activity : AppCompatActivity() {
                 var basketDetailPos = 0
 
 
-                    if (WalletAmount >cartTotalAmount) {
+                    if (WalletAmount >=cartTotalAmount) {
 
 
                             itemArray = ArrayList()

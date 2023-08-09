@@ -41,15 +41,19 @@
                     android:textSize="14sp"
                     android:maxLines="1"
                     />
+
                     <com.nas.alreem.commonviews.CustomTextViewRegular
                         android:id="@+id/orderbadge"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:layout_margin="5dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginBottom="5dp"
                         android:background="@drawable/shape_circle_red"
                         android:gravity="center"
                         android:text="100"
-                        android:layout_alignParentRight="true"
                         android:textColor="@color/white"
                         android:textSize="8sp"
                         android:visibility="visible" />
@@ -76,7 +80,6 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="5dp"
-                        android:layout_marginBottom="5dp"
                         android:layout_weight="10"
                         android:textSize="14sp"
                         android:textColor="@color/black"

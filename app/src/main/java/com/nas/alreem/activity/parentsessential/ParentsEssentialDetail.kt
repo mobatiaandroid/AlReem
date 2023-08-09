@@ -120,8 +120,21 @@ class ParentsEssentialDetail : AppCompatActivity() {
         mListView.layoutManager = linearLayoutManager
         mListView.itemAnimator = DefaultItemAnimator()
 
-        var subAdapter= ParentsEssentialSubMenuAdapter(subMenuArray,mContext)
-        mListView.adapter=subAdapter
+
+        if(subMenuArray.size>0)
+        {
+            var subAdapter= ParentsEssentialSubMenuAdapter(subMenuArray,mContext)
+            mListView.adapter=subAdapter
+        }
+        else
+        {
+            ConstantFunctions.showDialogueWithOk(
+                mContext,
+                "No Data Found!",
+                "Alert"
+            )
+        }
+
 
         mListView.addOnItemClickListener(object : OnItemClickListener {
             @SuppressLint("SimpleDateFormat", "SetTextI18n")

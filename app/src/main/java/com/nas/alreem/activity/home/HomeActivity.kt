@@ -257,12 +257,9 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                   14->
                   {
                       //About Us
-                      mFragment = AboutUsFragment()
-                      replaceFragmentsSelected(position)
-                  }
-                  15->
-                  {
-                      // Contact Us
+
+
+
                       if (ActivityCompat.checkSelfPermission(
                               context,
                               Manifest.permission.ACCESS_FINE_LOCATION
@@ -283,6 +280,12 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                           mFragment = ContactUsFragment()
                           replaceFragmentsSelected(position)
                       }
+                  }
+                  15->
+                  {
+                      // Contact Us
+                      mFragment = AboutUsFragment()
+                      replaceFragmentsSelected(position)
                   }
               }
             }

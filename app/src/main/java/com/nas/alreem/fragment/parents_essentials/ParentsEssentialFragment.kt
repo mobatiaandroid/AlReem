@@ -53,6 +53,7 @@ class ParentsEssentialFragment : Fragment() {
     lateinit var dataArray:ArrayList<ParentsEssentialDataModel>
     lateinit var contact_email:String
     lateinit var titleTextView: TextView
+    lateinit var progressDialogAdd: ProgressBar
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -69,6 +70,7 @@ class ParentsEssentialFragment : Fragment() {
     }
     private fun initializeUI()
     {
+        progressDialogAdd=requireView().findViewById(R.id.progressDialogAdd)
 
         bannerImagePager=requireView().findViewById(R.id.bannerImagePager)
         sendEmail=requireView().findViewById(R.id.sendEmail)
@@ -107,19 +109,25 @@ class ParentsEssentialFragment : Fragment() {
 
     fun callParentsEssentialApi()
     {
+        progressDialogAdd.visibility = View.VISIBLE
+
         dataArray= ArrayList()
         val call: Call<ParentsEssentialResponseModel> = ApiClient.getClient.parentsEssential("Bearer "+PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<ParentsEssentialResponseModel> {
             override fun onFailure(call: Call<ParentsEssentialResponseModel>, t: Throwable) {
+                progressDialogAdd.visibility = View.GONE
+
                 Log.e("Failed", t.localizedMessage)
             }
             override fun onResponse(call: Call<ParentsEssentialResponseModel>, response: Response<ParentsEssentialResponseModel>) {
+                progressDialogAdd.visibility = View.GONE
                 val responsedata = response.body()
                 if (responsedata != null) {
                     try {
 
                         if (response.body()!!.status==100)
                         {
+
                             var bannerImage=response.body()!!.responseArray!!.parentEssentialData.banner_image
                             contact_email=response.body()!!.responseArray!!.parentEssentialData.contact_email
                             var description=response.body()!!.responseArray!!.parentEssentialData.description
@@ -161,7 +169,13 @@ class ParentsEssentialFragment : Fragment() {
                                 var pAdapter= ParentsEssentialListAdapter(dataArray,mContext)
                                 mListView.adapter=pAdapter
                             }
-
+                            else {
+                                ConstantFunctions.showDialogueWithOk(
+                                    mContext,
+                                    "No Data Found!",
+                                    "Alert"
+                                )
+                            }
                         }
                         else
                         {

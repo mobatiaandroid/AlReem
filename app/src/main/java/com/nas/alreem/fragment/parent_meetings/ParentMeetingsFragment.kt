@@ -125,7 +125,18 @@ class ParentMeetingsFragment:Fragment() {
 
         }
         staff_image.setOnClickListener {
-            showStaffList(mContext, staffListArray)
+            if(staffListArray.size>0)
+            {
+                showStaffList(mContext, staffListArray)
+            }
+            else
+            {
+                ConstantFunctions.showDialogueWithOk(
+                    mContext,
+                    "No Data Found!",
+                    "Alert"
+                )
+            }
         }
         nxtbtn.setOnClickListener {
             val mIntent = Intent(mContext, ParentsEveningCalendarActivity::class.java)

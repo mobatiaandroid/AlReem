@@ -104,7 +104,13 @@ class ExternalProviderActivity : AppCompatActivity() {
                                 mnewsLetterListView!!.adapter =
                                     ExternalProviderRecyclerAdapter(mContext, mListViewArray!!)
                             }
-
+                            else {
+                                ConstantFunctions.showDialogueWithOk(
+                                    mContext,
+                                    "No Data Found!",
+                                    "Alert"
+                                )
+                            }
                         }else{
                             ConstantFunctions.showDialogueWithOk(mContext,getString(R.string.common_error),"Alert")
                         }
