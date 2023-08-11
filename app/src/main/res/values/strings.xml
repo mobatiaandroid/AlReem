@@ -273,13 +273,14 @@
         <item> December </item>
     </string-array>
     <string-array name="Weeks">
-        <item> Sun</item>
+
         <item> Mon</item>
         <item> Tue</item>
         <item> Wed</item>
         <item> Thur</item>
         <item> Fri</item>
         <item> Sat</item>
+        <item> Sun</item>
     </string-array>
     <string name="review_confirm"><![CDATA[Review & Confirm]]></string>
 

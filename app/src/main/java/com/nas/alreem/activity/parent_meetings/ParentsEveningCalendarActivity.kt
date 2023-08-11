@@ -187,17 +187,8 @@ class ParentsEveningCalendarActivity:AppCompatActivity() {
         month_total_days=yearMonthObject.lengthOfMonth()
 
 
-        if (day_name.toString().equals("SUNDAY"))
+        if (day_name.toString().equals("MONDAY"))
         {
-            for (i in 1..month_total_days!!)
-            {
-                nums_Array.add(i.toString())
-            }
-        }
-
-        else if (day_name.toString().equals("MONDAY"))
-        {
-            nums_Array.add("0")
             for (i in 1..month_total_days!!)
             {
                 nums_Array.add(i.toString())
@@ -206,7 +197,6 @@ class ParentsEveningCalendarActivity:AppCompatActivity() {
 
         else if (day_name.toString().equals("TUESDAY"))
         {
-            nums_Array.add("0")
             nums_Array.add("0")
             for (i in 1..month_total_days!!)
             {
@@ -218,7 +208,6 @@ class ParentsEveningCalendarActivity:AppCompatActivity() {
         {
             nums_Array.add("0")
             nums_Array.add("0")
-            nums_Array.add("0")
             for (i in 1..month_total_days!!)
             {
                 nums_Array.add(i.toString())
@@ -227,7 +216,6 @@ class ParentsEveningCalendarActivity:AppCompatActivity() {
 
         else if (day_name.toString().equals("THURSDAY"))
         {
-            nums_Array.add("0")
             nums_Array.add("0")
             nums_Array.add("0")
             nums_Array.add("0")
@@ -243,7 +231,6 @@ class ParentsEveningCalendarActivity:AppCompatActivity() {
             nums_Array.add("0")
             nums_Array.add("0")
             nums_Array.add("0")
-            nums_Array.add("0")
             for (i in 1..month_total_days!!)
             {
                 nums_Array.add(i.toString())
@@ -251,6 +238,19 @@ class ParentsEveningCalendarActivity:AppCompatActivity() {
         }
 
         else if (day_name.toString().equals("SATURDAY"))
+        {
+            nums_Array.add("0")
+            nums_Array.add("0")
+            nums_Array.add("0")
+            nums_Array.add("0")
+            nums_Array.add("0")
+            for (i in 1..month_total_days!!)
+            {
+                nums_Array.add(i.toString())
+            }
+        }
+
+        else if (day_name.toString().equals("SUNDAY"))
         {
             nums_Array.add("0")
             nums_Array.add("0")
