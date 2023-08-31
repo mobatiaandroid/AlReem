@@ -96,7 +96,15 @@ class ContactUsFragment  : Fragment(), LocationListener,
 
         initializeUI()
         fetchlatitudelongitude()
-        callContactUsApi()
+        if (ConstantFunctions.internetCheck(mContext))
+        {
+            callContactUsApi()
+        }
+        else
+        {
+            DialogFunctions.showInternetAlertDialog(mContext)
+        }
+
         // permissioncheck()
 
 

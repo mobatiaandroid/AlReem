@@ -19,6 +19,8 @@ import com.nas.alreem.R
 import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.activity.permission_slip.model.PermissionResApiModel
 import com.nas.alreem.activity.permission_slip.model.PermissionResponseModel
+import com.nas.alreem.constants.ConstantFunctions
+import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.rest.ApiClient
 import retrofit2.Call
@@ -55,6 +57,7 @@ class FormDetailActivity: AppCompatActivity()  {
         setContentView(R.layout.activity_permission_slip_detail)
        // sharedprefs = PreferenceData()
         init()
+
     }
     private fun init() {
         mContext = this
@@ -106,7 +109,15 @@ class FormDetailActivity: AppCompatActivity()  {
         rejct_btn.setBackgroundResource(R.drawable.event_spinnerbg)
         rejct_btn.setOnClickListener {
             status_slip = "2"
-            callpermissionresponseApi()
+            if (ConstantFunctions.internetCheck(mContext))
+            {
+                callpermissionresponseApi()
+            }
+            else
+            {
+                DialogFunctions.showInternetAlertDialog(mContext)
+            }
+
         }
         if (status_txt.equals("0")) {
             Log.e("eqls0", status_txt.toString())
@@ -125,7 +136,15 @@ class FormDetailActivity: AppCompatActivity()  {
                         accpt_btn.setOnClickListener {
                             if (radioButton.isSelected) {
                                 status_slip = "1"
-                                callpermissionresponseApi()
+                                if (ConstantFunctions.internetCheck(mContext))
+                                {
+                                    callpermissionresponseApi()
+                                }
+                                else
+                                {
+                                    DialogFunctions.showInternetAlertDialog(mContext)
+                                }
+
                             }else{
                                 Log.e("else","true")
                                 //showSuccessmailAlert(mContext,"Please select the checkbox","Alert")
@@ -200,7 +219,15 @@ class FormDetailActivity: AppCompatActivity()  {
                     if (responsedata.status == 116) {
                         //call Token Expired
                        // AccessTokenClass.getAccessToken(com.mobatia.bisad.fragment.home.mContext)
-                        callpermissionresponseApi()
+                        if (ConstantFunctions.internetCheck(mContext))
+                        {
+                            callpermissionresponseApi()
+                        }
+                        else
+                        {
+                            DialogFunctions.showInternetAlertDialog(mContext)
+                        }
+
                     } else {
                         if (responsedata.status == 103) {
                             //validation check error

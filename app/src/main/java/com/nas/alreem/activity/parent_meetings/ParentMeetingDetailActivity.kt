@@ -104,7 +104,16 @@ class ParentMeetingDetailActivity:AppCompatActivity() {
         info_img=findViewById(R.id.infoRoomImg)
         timeSlotList= ArrayList()
         timeSlotListPost= ArrayList()
-        timeslotList()
+
+        if (ConstantFunctions.internetCheck(mContext))
+        {
+            timeslotList()
+        }
+        else
+        {
+            DialogFunctions.showInternetAlertDialog(mContext)
+        }
+
 
         info_img.setOnClickListener {
             showRoomList()
@@ -159,7 +168,14 @@ class ParentMeetingDetailActivity:AppCompatActivity() {
         textHead.text = msgHead
         val dialogButton = dialog.findViewById(R.id.btn_Ok) as Button
         dialogButton.setOnClickListener {
-            postSelectedSlot()
+            if (ConstantFunctions.internetCheck(mContext))
+            {
+                postSelectedSlot()
+            }
+            else
+            {
+                DialogFunctions.showInternetAlertDialog(mContext)
+            }
             dialog.dismiss()
         }
         val dialogButtonCancel = dialog.findViewById(R.id.btn_Cancel) as Button
@@ -190,7 +206,15 @@ class ParentMeetingDetailActivity:AppCompatActivity() {
                         R.drawable.tick,
                         R.drawable.round
                     )
-                    timeslotList()
+                    if (ConstantFunctions.internetCheck(mContext))
+                    {
+                        timeslotList()
+                    }
+                    else
+                    {
+                        DialogFunctions.showInternetAlertDialog(mContext)
+                    }
+
                 } else if (response.body()!!.status == 109) {
                     DialogFunctions.showDialogAlertSingleBtn(
                         mContext,
@@ -199,7 +223,15 @@ class ParentMeetingDetailActivity:AppCompatActivity() {
                         R.drawable.tick,
                         R.drawable.round
                     )
-                    timeslotList()
+                    if (ConstantFunctions.internetCheck(mContext))
+                    {
+                        timeslotList()
+                    }
+                    else
+                    {
+                        DialogFunctions.showInternetAlertDialog(mContext)
+                    }
+
                 } else if (response.body()!!.status == 126) {
                     DialogFunctions.showDialogAlertSingleBtn(
                         mContext ,
@@ -458,7 +490,14 @@ class ParentMeetingDetailActivity:AppCompatActivity() {
             //do stuff for first visit only
             firstVisit = false
         } else {
-            timeslotList()
+            if (ConstantFunctions.internetCheck(mContext))
+            {
+                timeslotList()
+            }
+            else
+            {
+                DialogFunctions.showInternetAlertDialog(mContext)
+            }
 
         }
     }

@@ -56,8 +56,14 @@ class ImageMessageActivity : AppCompatActivity(){
         id=intent.getStringExtra("id").toString()
         title=intent.getStringExtra("title").toString()
         initUI()
-        callMessageDetailAPI()
 
+        if (ConstantFunctions.internetCheck(mContext))
+        {
+            callMessageDetailAPI()        }
+        else
+        {
+            DialogFunctions.showInternetAlertDialog(mContext)
+        }
         getSettings()
 
     }

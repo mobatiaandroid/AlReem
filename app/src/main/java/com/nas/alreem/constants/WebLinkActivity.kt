@@ -3,6 +3,8 @@ package com.nas.alreem.constants
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -59,8 +61,20 @@ class WebLinkActivity : AppCompatActivity() {
         })
         heading.text=headingValue
         webView.settings.javaScriptEnabled = true
+        webView.settings.javaScriptCanOpenWindowsAutomatically = true
+        webView.settings.loadsImagesAutomatically = true
+        webView.setBackgroundColor(Color.TRANSPARENT)
+        webView.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null)
         webView.webViewClient = MyWebViewClient(this)
+
+
+
+            Log.e("fa","fa")
+     //   webView.getSettings().setUserAgentString("ur user agent");
         webView.loadUrl(url!!)
+
+
+        //webView.loadUrl(url!!)
        // progressDialogAdd.visibility= View.GONE
 
         webView.webChromeClient = object : WebChromeClient() {
@@ -89,14 +103,25 @@ class WebLinkActivity : AppCompatActivity() {
         }
 
         override fun shouldOverrideUrlLoading(webView: WebView, url: String): Boolean {
-            webView.loadUrl(url)
+            var overrideUrlLoading = false
+            if (url != null && url.contains("whatsapp")) {
+                Log.e("su","su")
+                webView.getContext().startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                overrideUrlLoading = true
+            }
+            else {
+                Log.e("fa","fa")
+                webView.loadUrl(url)
+            }
+
            // progressDialogAdd.visibility= View.GONE
-            return true
+            return overrideUrlLoading
         }
 
         override fun onReceivedError(view: WebView, request: WebResourceRequest, error: WebResourceError) {
             //progressDialogAdd.visibility= View.GONE
             Log.e("ERROR",error.toString())
+            System.out.println("ERROR"+error)
             //Toast.makeText(activity, "Got Error! $error", Toast.LENGTH_SHORT).show()
         }
     }

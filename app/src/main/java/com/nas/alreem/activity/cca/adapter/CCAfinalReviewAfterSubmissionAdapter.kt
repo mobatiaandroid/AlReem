@@ -210,7 +210,6 @@ class CCAfinalReviewAfterSubmissionAdapter(
                 holder.location2Txt.setTextColor(mContext.resources.getColor(R.color.light_grey))
                 holder.description2Txt.setTextColor(mContext.resources.getColor(R.color.light_grey))
                 holder.readMore.visibility=View.GONE
-
                 holder.description2Txt.setOnClickListener {  }
             }
         }

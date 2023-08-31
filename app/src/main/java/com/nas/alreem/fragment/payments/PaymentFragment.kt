@@ -58,7 +58,15 @@ class PaymentFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         mContext = requireContext()
         initializeUI()
-        callPaymentBannerApi()
+        if (ConstantFunctions.internetCheck(mContext))
+        {
+            callPaymentBannerApi()
+        }
+        else
+        {
+            DialogFunctions.showInternetAlertDialog(mContext)
+        }
+
     }
 
     private fun initializeUI() {
@@ -184,8 +192,15 @@ class PaymentFragment : Fragment() {
 
                 } else {
                     // progressDialog.visibility = View.VISIBLE
+                    if (ConstantFunctions.internetCheck(mContext))
+                    {
+                        sendEmail(text_dialog.text.toString().trim(), text_content.text.toString().trim(), contact_email, dialog)
+                    }
+                    else
+                    {
+                        DialogFunctions.showInternetAlertDialog(mContext)
+                    }
 
-                    sendEmail(text_dialog.text.toString().trim(), text_content.text.toString().trim(), contact_email, dialog)
                 }
             }
         }

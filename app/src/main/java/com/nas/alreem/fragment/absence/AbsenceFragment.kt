@@ -94,7 +94,15 @@ class AbsenceFragment  : Fragment() {
         mContext=requireContext()
 
         initializeUI()
-        callStudentListApi()
+        if (ConstantFunctions.internetCheck(mContext))
+        {
+            callStudentListApi()
+        }
+        else
+        {
+            DialogFunctions.showInternetAlertDialog(mContext)
+        }
+
         selectCategory()
         //callStudentListApi()
     }
@@ -318,7 +326,15 @@ class AbsenceFragment  : Fragment() {
                     callStudentLeaveInfo()
                 }
                 else if (select_val==1) {
-                    callpickuplist_api()
+                    if (ConstantFunctions.internetCheck(mContext))
+                    {
+                        callpickuplist_api()
+                    }
+                    else
+                    {
+                        DialogFunctions.showInternetAlertDialog(mContext)
+                    }
+
                 }
                 dialog.dismiss()
             }
@@ -344,7 +360,15 @@ class AbsenceFragment  : Fragment() {
         pickup_btn.setOnClickListener {
             progressDialogAdd.visibility=View.VISIBLE
             select_val=1
-            callpickuplist_api()
+            if (ConstantFunctions.internetCheck(mContext))
+            {
+                callpickuplist_api()
+            }
+            else
+            {
+                DialogFunctions.showInternetAlertDialog(mContext)
+            }
+
             absence_btn.setBackgroundResource(R.drawable.event_greyfill)
             absence_btn.setTextColor(Color.BLACK)
             pickup_btn.setBackgroundResource(R.drawable.event_spinnerfill)
@@ -562,7 +586,15 @@ class AbsenceFragment  : Fragment() {
                 callStudentLeaveInfo()
             } else if (select_val == 1) {
                 progressDialogAdd.visibility = View.VISIBLE
-                callpickuplist_api()
+                if (ConstantFunctions.internetCheck(mContext))
+                {
+                    callpickuplist_api()
+                }
+                else
+                {
+                    DialogFunctions.showInternetAlertDialog(mContext)
+                }
+
             }
 
     }

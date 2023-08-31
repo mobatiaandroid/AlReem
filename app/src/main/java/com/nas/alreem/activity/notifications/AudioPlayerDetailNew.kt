@@ -108,7 +108,15 @@ class AudioPlayerDetailNew:AppCompatActivity() {
             }
             flag = !flag
         }
-        audiodetails()
+      if (ConstantFunctions.internetCheck(mContext))
+      {
+          audiodetails()
+      }
+      else
+      {
+          DialogFunctions.showInternetAlertDialog(mContext)
+      }
+
 
 
     }

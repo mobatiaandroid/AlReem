@@ -68,7 +68,16 @@ class ReviewAppointmentsRecyclerViewActivity:AppCompatActivity() {
         review_list = ArrayList()
         review_rec = findViewById(R.id.recycler_review)
         idList= ArrayList()
-        reviewlistcall()
+
+        if (ConstantFunctions.internetCheck(mContext))
+        {
+            reviewlistcall()
+        }
+        else
+        {
+            DialogFunctions.showInternetAlertDialog(mContext)
+        }
+
         backRelative.setOnClickListener(View.OnClickListener {
             finish()
            /* val intent = Intent(mContext, ParentMeetingDetailActivity::class.java)
@@ -184,7 +193,15 @@ class ReviewAppointmentsRecyclerViewActivity:AppCompatActivity() {
                 if (response.body()!!.status==100)
                 {
                     DialogFunctions.commonSuccessAlertDialog("Success","Successfully confirmed appointment.",mContext)
-                    reviewlistcall()
+                    if (ConstantFunctions.internetCheck(mContext))
+                    {
+                        reviewlistcall()
+                    }
+                    else
+                    {
+                        DialogFunctions.showInternetAlertDialog(mContext)
+                    }
+
 
                 }
                 else

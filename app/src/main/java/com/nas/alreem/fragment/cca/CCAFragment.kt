@@ -154,8 +154,16 @@ import retrofit2.Response
 
                 } else {
                     // progressDialog.visibility = View.VISIBLE
+                    if (ConstantFunctions.internetCheck(mContext))
+                    {
+                        callSendEmailToStaffApi(text_dialog.text.toString().trim(), text_content.text.toString().trim(), contactEmail, dialog)
+                    }
+                    else
+                    {
+                        DialogFunctions.showInternetAlertDialog(mContext)
+                    }
 
-                    callSendEmailToStaffApi(text_dialog.text.toString().trim(), text_content.text.toString().trim(), contactEmail, dialog)
+
                 }
             }
         }
@@ -342,7 +350,14 @@ import retrofit2.Response
       override fun onResume() {
           super.onResume()
           Log.e("TEST","call 1")
-          getList()
+          if (ConstantFunctions.internetCheck(mContext!!))
+          {
+              getList()
+          }
+          else
+          {
+              //DialogFunctions.showInternetAlertDialog(mContext!!)
+          }
           /*if (!PreferenceManager.getCcaOptionBadge(mContext).equals("0")) {
               ccaDot!!.setText(PreferenceManager.getCcaOptionBadge(mContext))
           } else if (!PreferenceManager.getCcaOptionEditedBadge(mContext).equals("0")) {

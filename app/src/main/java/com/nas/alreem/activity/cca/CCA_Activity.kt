@@ -28,10 +28,7 @@ import com.nas.alreem.activity.payments.adapter.StudentListAdapter
 import com.nas.alreem.activity.payments.model.StudentList
 import com.nas.alreem.activity.payments.model.StudentListModel
 import com.nas.alreem.appcontroller.AppController
-import com.nas.alreem.constants.ConstantFunctions
-import com.nas.alreem.constants.OnItemClickListener
-import com.nas.alreem.constants.PreferenceManager
-import com.nas.alreem.constants.addOnItemClickListener
+import com.nas.alreem.constants.*
 import com.nas.alreem.fragment.cca.CCAFragment
 import com.nas.alreem.fragment.home.homeActivity
 import com.nas.alreem.rest.ApiClient
@@ -93,8 +90,9 @@ class CCA_Activity : AppCompatActivity() {
             getStudentList()
 
         } else {
-            //  InternetCheckClass.showSuccessInternetAlert(mContext)
+            DialogFunctions.showInternetAlertDialog(mContext)
         }
+
     }
 
     private fun showStudentsList(mContext: Context, mStudentArray: ArrayList<StudentList>) {
@@ -155,7 +153,14 @@ class CCA_Activity : AppCompatActivity() {
                     mContext,
                     position.toString() + ""
                 )
-                getCCAListAPI(stud_id)
+
+                var internetCheck = ConstantFunctions.internetCheck(mContext)
+                if (internetCheck) {
+                    getCCAListAPI(stud_id)
+
+                } else {
+                    DialogFunctions.showInternetAlertDialog(mContext)
+                }
             }
 
         })
@@ -236,18 +241,15 @@ class CCA_Activity : AppCompatActivity() {
                             studImg.setImageResource(R.drawable.student)
                         }
                     }
+                    var internetCheck = ConstantFunctions.internetCheck(mContext)
+                    if (internetCheck) {
+                        getCCAListAPI(stud_id)
 
-                    getCCAListAPI(stud_id)
-//                    var internetCheck = InternetCheckClass.isInternetAvailable(nContext)
-//                    if (internetCheck)
-//                    {
-//                        //callStudentLeaveInfo()
-//                    }
-//                    else{
-//                        InternetCheckClass.showSuccessInternetAlert(com.mobatia.bisad.fragment.home.mContext)
-//                    }
+                    } else {
+                        DialogFunctions.showInternetAlertDialog(mContext)
+                    }
 
-                    //callStudentInfoApi()
+//
                 }
 
 

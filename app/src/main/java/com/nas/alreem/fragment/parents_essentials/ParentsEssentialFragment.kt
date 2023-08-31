@@ -66,7 +66,15 @@ class ParentsEssentialFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         mContext=requireContext()
         initializeUI()
-        callParentsEssentialApi()
+        if (ConstantFunctions.internetCheck(mContext))
+        {
+            callParentsEssentialApi()
+        }
+        else
+        {
+            DialogFunctions.showInternetAlertDialog(mContext)
+        }
+
     }
     private fun initializeUI()
     {
@@ -221,8 +229,15 @@ class ParentsEssentialFragment : Fragment() {
 
                 } else {
                     // progressDialog.visibility = View.VISIBLE
+                    if (ConstantFunctions.internetCheck(mContext))
+                    {
+                        sendEmail(text_dialog.text.toString().trim(), text_content.text.toString().trim(), contact_email, dialog)
+                    }
+                    else
+                    {
+                        DialogFunctions.showInternetAlertDialog(mContext)
+                    }
 
-                    sendEmail(text_dialog.text.toString().trim(), text_content.text.toString().trim(), contact_email, dialog)
                 }
             }
         }

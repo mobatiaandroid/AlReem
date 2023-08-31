@@ -230,7 +230,15 @@ class PaymentDetailActivity : AppCompatActivity() {
         }
         payTotalButton.setOnClickListener(){
             Log.e("click","1")
-            getpaymenttoken()
+            if (ConstantFunctions.internetCheck(context))
+            {
+                getpaymenttoken()
+            }
+            else
+            {
+                DialogFunctions.showInternetAlertDialog(context)
+            }
+
 
         }
 
@@ -238,7 +246,7 @@ class PaymentDetailActivity : AppCompatActivity() {
     private fun getpaymenttoken(){
         mProgressRelLayout.visibility= View.VISIBLE
         val token = PreferenceManager.getaccesstoken(context)
-        val paymentTokenBody = PaymentTokenApiModel( PreferenceManager.getStudentID(context).toString())
+        val paymentTokenBody = PaymentTokenApiModel( PreferenceManager.getStudentID(context).toString(),"fee_payment")
         val call: Call<PaymentTokenModel> =
             ApiClient.getClient.payment_token(paymentTokenBody, "Bearer " + token)
         call.enqueue(object : Callback<PaymentTokenModel> {
@@ -265,7 +273,16 @@ class PaymentDetailActivity : AppCompatActivity() {
                             val strDoubleAmount = amuntInt.toString()
                             Log.e("amount",strDoubleAmount)
                             //order_id= "BISAD" + id + "S" + studentId
-                            callForPayment(payment_token,strDoubleAmount)
+
+                            if (ConstantFunctions.internetCheck(context))
+                            {
+                                callForPayment(payment_token,strDoubleAmount)
+                            }
+                            else
+                            {
+                                DialogFunctions.showInternetAlertDialog(context)
+                            }
+
 
 
                         }
@@ -291,7 +308,7 @@ class PaymentDetailActivity : AppCompatActivity() {
         val token = PreferenceManager.getaccesstoken(context)
         val paymentGatewayBody = PaymentGatewayApiModel(amount,PreferenceManager.getEmailId(context).toString(),
             mechantorderRef,student_name,"","ABUBHABI","","Abu Dhabi",
-            payment_token)
+            payment_token,"fee_payment")
         val call: Call<PaymentGatewayModel> =
             ApiClient.getClient.payment_gateway(paymentGatewayBody, "Bearer " + token)
         call.enqueue(object : Callback<PaymentGatewayModel> {
@@ -350,7 +367,15 @@ class PaymentDetailActivity : AppCompatActivity() {
                 Log.d("PAYMM", cardPaymentData.reason.toString())
                 if (cardPaymentData.code == 2) {
 
-                    paySuccessApi()
+                    if (ConstantFunctions.internetCheck(context))
+                    {
+                        paySuccessApi()
+                    }
+                    else
+                    {
+                        DialogFunctions.showInternetAlertDialog(context)
+                    }
+
 
                 } else {
                     Toast.makeText(context, "Transaction failed", Toast.LENGTH_SHORT).show()

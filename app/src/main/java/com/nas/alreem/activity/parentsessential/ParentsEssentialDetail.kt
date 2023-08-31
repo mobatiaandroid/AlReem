@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -150,10 +151,28 @@ class ParentsEssentialDetail : AppCompatActivity() {
                     startActivity(intent)
                 }
                 else{
-                    val intent = Intent(mContext, WebLinkActivity::class.java)
-                    intent.putExtra("url",subMenuArray.get(position).filename)
-                    intent.putExtra("heading",subMenuArray.get(position).submenu)
-                    startActivity(intent)
+                    if(subMenuArray.get(position).filename.contains("chat.whatsapp.com"))
+                        {
+                   Log.e("watsapp","watsap")
+                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(subMenuArray.get(position).filename))
+
+                                // Set the package name to explicitly open in WhatsApp
+                               // intent.setPackage("com.whatsapp")
+
+                                // Check if WhatsApp is installed on the device
+                               // if (intent.resolveActivity(packageManager) != null) {
+                                    startActivity(intent)
+
+                           // }
+                        }
+                    else{
+                        Log.e("nowatsapp","nowatsap")
+                        val intent = Intent(mContext, WebLinkActivity::class.java)
+                        intent.putExtra("url",subMenuArray.get(position).filename)
+                        intent.putExtra("heading",subMenuArray.get(position).submenu)
+                        startActivity(intent)
+                    }
+
                 }
             }
 
@@ -191,7 +210,15 @@ class ParentsEssentialDetail : AppCompatActivity() {
                 } else {
                     // progressDialog.visibility = View.VISIBLE
 
-                    sendEmail(text_dialog.text.toString().trim(), text_content.text.toString().trim(), contact_email, dialog)
+                    if (ConstantFunctions.internetCheck(mContext))
+                    {
+                        sendEmail(text_dialog.text.toString().trim(), text_content.text.toString().trim(), contact_email, dialog)
+                    }
+                    else
+                    {
+                        DialogFunctions.showInternetAlertDialog(mContext)
+                    }
+
                 }
             }
         }

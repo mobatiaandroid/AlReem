@@ -66,8 +66,15 @@ class ExternalProviderActivity : AppCompatActivity() {
             finish()
         }
 
-
+        var internetCheck = ConstantFunctions.internetCheck(mContext)
+        if (internetCheck) {
             getList()
+
+        } else {
+            DialogFunctions.showInternetAlertDialog(mContext)
+
+        }
+
 
     }
 

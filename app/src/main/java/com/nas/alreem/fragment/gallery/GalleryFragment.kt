@@ -61,7 +61,15 @@ class GalleryFragment : Fragment() {
         mContext=requireContext()
         initializeUI()
         progressDialogAdd.visibility=View.VISIBLE
-        callGalleryThumnail()
+        if (ConstantFunctions.internetCheck(mContext))
+        {
+            callGalleryThumnail()
+        }
+        else
+        {
+            DialogFunctions.showInternetAlertDialog(mContext)
+        }
+
     }
     private fun initializeUI()
     {

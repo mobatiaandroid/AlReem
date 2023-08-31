@@ -114,8 +114,14 @@ class Myorderbasket_Activity : AppCompatActivity() {
             startActivity(intent)
         }
         progressDialogAdd.visibility=View.VISIBLE
-        wallet_details()
-        getcanteen_cart()
+        if (ConstantFunctions.internetCheck(nContext)) {
+//            progressDialog.visibility= View.VISIBLE
+            wallet_details()
+            getcanteen_cart()
+        } else {
+            DialogFunctions.showInternetAlertDialog(nContext)
+        }
+
 
         dateRecyclerView.layoutManager = LinearLayoutManager(nContext)
         dateRecyclerView.adapter =
@@ -160,7 +166,13 @@ class Myorderbasket_Activity : AppCompatActivity() {
                             Log.e("JSON:", JSON)
                             //get pre order
                         progressDialogAdd.visibility=View.VISIBLE
-                        getPreOrder( JSON,itemArray)
+
+                        if (ConstantFunctions.internetCheck(nContext)) {
+                            getPreOrder( JSON,itemArray)
+                        } else {
+                            DialogFunctions.showInternetAlertDialog(nContext)
+                        }
+
                     } else {
                         showInsufficientBal(
                             nContext,

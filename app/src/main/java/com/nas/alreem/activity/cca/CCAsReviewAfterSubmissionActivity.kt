@@ -17,6 +17,7 @@ import com.nas.alreem.activity.cca.model.CCAReviewRequestModel
 import com.nas.alreem.activity.cca.model.CCAReviewResponseModel
 import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.constants.ConstantFunctions
+import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.rest.ApiClient
 
@@ -132,7 +133,7 @@ class CCAsReviewAfterSubmissionActivity : AppCompatActivity() {
             ccaReviewListAPI()
 
         } else {
-            //  InternetCheckClass.showSuccessInternetAlert(mContext)
+            DialogFunctions.showInternetAlertDialog(mContext)
         }
 
     }

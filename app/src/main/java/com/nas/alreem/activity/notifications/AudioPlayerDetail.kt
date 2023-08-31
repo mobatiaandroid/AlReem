@@ -84,7 +84,15 @@ class AudioPlayerDetail : AppCompatActivity() {
         val aniRotate: Animation =
             AnimationUtils.loadAnimation(mContext, R.anim.linear_interpolator)
         progressDialog.startAnimation(aniRotate)
-        audiodetails()
+        if (ConstantFunctions.internetCheck(mContext))
+        {
+            audiodetails()
+        }
+        else
+        {
+            DialogFunctions.showInternetAlertDialog(mContext)
+        }
+
         player.onComplete {
             Toast.makeText(applicationContext, "Play completed", Toast.LENGTH_SHORT).show()
         }.onInfo { what, extra ->

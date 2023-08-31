@@ -65,7 +65,15 @@ class AboutUsFragment  : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         mContext=requireContext()
         initializeUI()
-        callAboutUsApi()
+        if (ConstantFunctions.internetCheck(mContext))
+        {
+            callAboutUsApi()
+        }
+        else
+        {
+            DialogFunctions.showInternetAlertDialog(mContext)
+        }
+
     }
     private fun initializeUI()
     {
@@ -291,14 +299,14 @@ class AboutUsFragment  : Fragment() {
                         {
 
                             val bannerImage: String = response.body()!!.responseArray!!.banner_image
-                           // contactEmail=response.body()!!.responseArray!!.contact_email
-                            //description = response.body()!!.responseArray!!.description!!
-                            //weburlString = response.body()!!.responseArray!!.website_link
+                            contactEmail=response.body()!!.responseArray!!.contact_email
+                            description = response.body()!!.responseArray!!.description!!
+                            weburlString = response.body()!!.responseArray!!.website_link
 
                             if (!bannerImage.equals("", ignoreCase = true)) {
-                                Glide.with(mContext!!).load(ConstantFunctions.replace(bannerImage)).fitCenter()
-
-                                    .centerCrop().into(bannerImagePager!!)
+                                Glide.with(mContext) //1
+                                    .load(bannerImage)
+                                    .into(bannerImagePager)
 
 
 

@@ -99,7 +99,15 @@ class ParentsEveningCalendarActivity:AppCompatActivity() {
             startActivity(intent)
         })
         setTextview()
-        allotedDatedApi()
+        if (ConstantFunctions.internetCheck(mContext))
+        {
+            allotedDatedApi()
+        }
+        else
+        {
+            DialogFunctions.showInternetAlertDialog(mContext)
+        }
+
     }
     private fun setTextview(){
         for (i in 0..41)
@@ -136,7 +144,15 @@ class ParentsEveningCalendarActivity:AppCompatActivity() {
                 header.text = m + count_year
                 daysinweek()
                 setTextview()
-                allotedDatedApi()
+                if (ConstantFunctions.internetCheck(mContext))
+                {
+                    allotedDatedApi()
+                }
+                else
+                {
+                    DialogFunctions.showInternetAlertDialog(mContext)
+                }
+
                 //holiday()
             }
             else
@@ -147,7 +163,15 @@ class ParentsEveningCalendarActivity:AppCompatActivity() {
                 header.text = m + count_year
                 daysinweek()
                 setTextview()
-                allotedDatedApi()
+                if (ConstantFunctions.internetCheck(mContext))
+                {
+                    allotedDatedApi()
+                }
+                else
+                {
+                    DialogFunctions.showInternetAlertDialog(mContext)
+                }
+
                 // holiday()
             }
         }
@@ -161,7 +185,15 @@ class ParentsEveningCalendarActivity:AppCompatActivity() {
                 header.text = m + count_year
                 daysinweek()
                 setTextview()
-                allotedDatedApi()
+                if (ConstantFunctions.internetCheck(mContext))
+                {
+                    allotedDatedApi()
+                }
+                else
+                {
+                    DialogFunctions.showInternetAlertDialog(mContext)
+                }
+
                 //holiday()
             }
             else
@@ -172,7 +204,15 @@ class ParentsEveningCalendarActivity:AppCompatActivity() {
                 header.text = m + count_year
                 daysinweek()
                 setTextview()
-                allotedDatedApi()
+                if (ConstantFunctions.internetCheck(mContext))
+                {
+                    allotedDatedApi()
+                }
+                else
+                {
+                    DialogFunctions.showInternetAlertDialog(mContext)
+                }
+
                 // holiday()
             }
         }

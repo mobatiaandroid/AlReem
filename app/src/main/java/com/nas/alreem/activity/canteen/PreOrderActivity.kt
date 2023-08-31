@@ -70,7 +70,13 @@ class PreOrderActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.canteen_preorder)
         initfn()
-        callStudentListApi()
+        if (ConstantFunctions.internetCheck(nContext)) {
+//            progressDialog.visibility= View.VISIBLE
+            callStudentListApi()
+        } else {
+            DialogFunctions.showInternetAlertDialog(nContext)
+        }
+
 
         onclick()
     }
@@ -114,7 +120,13 @@ class PreOrderActivity : AppCompatActivity(){
     private fun onclick() {
         add_order.setOnClickListener {
             progressDialogAdd.visibility=View.VISIBLE
-            time_exeed()
+            if (ConstantFunctions.internetCheck(nContext)) {
+//            progressDialog.visibility= View.VISIBLE
+                time_exeed()
+            } else {
+                DialogFunctions.showInternetAlertDialog(nContext)
+            }
+
 
         }
         my_orders.setOnClickListener {

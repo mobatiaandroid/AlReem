@@ -23,6 +23,7 @@ import com.nas.alreem.activity.cca.model.CCASumbitRequestModel
 import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.appcontroller.AppController
 import com.nas.alreem.constants.ConstantFunctions
+import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.rest.ApiClient
 
@@ -305,7 +306,8 @@ class CCAsReviewActivity : AppCompatActivity() {
 
 
             } else {
-              //  internetCheck.showSuccessInternetAlert(mContext)
+                DialogFunctions.showInternetAlertDialog(mContext)
+
             }
             dialog.dismiss()
 

@@ -193,7 +193,7 @@ internal class StaffDetailAdapter  (var mContext: Context, var staff_cat_list: A
         dialog.setContentView(R.layout.dialog_common_error_alert)
         var iconImageView = dialog.findViewById(R.id.iconImageView) as ImageView
         var alertHead = dialog.findViewById(R.id.alertHead) as TextView
-        var text_dialog = dialog.findViewById(R.id.text_dialog) as TextView
+        var text_dialog = dialog.findViewById(R.id.messageTxt) as TextView
         var btn_Ok = dialog.findViewById(R.id.btn_Ok) as Button
         text_dialog.text = message
         alertHead.text = msgHead

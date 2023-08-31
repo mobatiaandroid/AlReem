@@ -45,7 +45,15 @@ class NotificationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         mContext=requireContext()
         initializeUI()
-        callNotificationApi()
+        if (ConstantFunctions.internetCheck(mContext))
+        {
+            callNotificationApi()
+        }
+        else
+        {
+            DialogFunctions.showInternetAlertDialog(mContext)
+        }
+
     }
     private fun initializeUI()
     {

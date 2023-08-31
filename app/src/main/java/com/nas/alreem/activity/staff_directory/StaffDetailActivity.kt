@@ -57,7 +57,15 @@ class StaffDetailActivity : AppCompatActivity() {
 
         mContext=this
         initfn()
-        callStaffDetailListApi()
+        if (ConstantFunctions.internetCheck(mContext))
+        {
+            callStaffDetailListApi()
+        }
+        else
+        {
+            DialogFunctions.showInternetAlertDialog(mContext)
+        }
+
 
     }
     private fun initfn() {

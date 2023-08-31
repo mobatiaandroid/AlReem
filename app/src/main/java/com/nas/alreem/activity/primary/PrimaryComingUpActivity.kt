@@ -46,7 +46,15 @@ class PrimaryComingUpActivity : AppCompatActivity(){
         setContentView(R.layout.activity_coming_up)
         mContext=this
         initUI()
-        callComingUpApi()
+        if (ConstantFunctions.internetCheck(mContext))
+        {
+            callComingUpApi()
+        }
+        else
+        {
+            DialogFunctions.showInternetAlertDialog(mContext)
+        }
+
 
     }
     fun initUI()

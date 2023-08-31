@@ -103,7 +103,15 @@ class SurveyListActivity: AppCompatActivity(){
             override fun onItemClicked(position: Int, view: View)
             {
 
-                callSurveyDetailApi(surveyArrayList.get(position).id.toString())
+                if (ConstantFunctions.internetCheck(mContext))
+                {
+                    callSurveyDetailApi(surveyArrayList.get(position).id.toString())
+                }
+                else
+                {
+                    DialogFunctions.showInternetAlertDialog(mContext)
+                }
+
 
             }
         })

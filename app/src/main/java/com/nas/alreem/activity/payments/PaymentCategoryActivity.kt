@@ -77,7 +77,15 @@ class PaymentCategoryActivity : AppCompatActivity() {
         studentSpinner.setOnClickListener(){
             showStudentList(mContext,studentListArrayList)
         }
-        callStudentListApi()
+        if (ConstantFunctions.internetCheck(mContext))
+        {
+            callStudentListApi()
+        }
+        else
+        {
+            DialogFunctions.showInternetAlertDialog(mContext)
+        }
+
 
 
     }
@@ -152,7 +160,15 @@ class PaymentCategoryActivity : AppCompatActivity() {
                                 }
                             }
                             catListRec.visibility=View.GONE
-                            callCategoryList()
+                            if (ConstantFunctions.internetCheck(mContext))
+                            {
+                                callCategoryList()
+                            }
+                            else
+                            {
+                                DialogFunctions.showInternetAlertDialog(mContext)
+                            }
+
                         }
                         else
                         {
@@ -240,7 +256,15 @@ class PaymentCategoryActivity : AppCompatActivity() {
                 }
                 progressDialogAdd.visibility = View.VISIBLE
                 catListRec.visibility=View.GONE
-                callCategoryList()
+                if (ConstantFunctions.internetCheck(mContext))
+                {
+                    callCategoryList()
+                }
+                else
+                {
+                    DialogFunctions.showInternetAlertDialog(mContext)
+                }
+
                 dialog.dismiss()
             }
         })

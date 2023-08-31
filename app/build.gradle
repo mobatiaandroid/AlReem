@@ -11,8 +11,8 @@ android {
         minSdk 19
         minSdkVersion 19
         targetSdkVersion 31
-        versionCode 4
-        versionName "1.4"
+        versionCode 8
+        versionName "1.8"
         multiDexEnabled true
         generatedDensities = []
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -84,7 +84,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     implementation project(':ijkplayer-java')
     implementation project(':giraffeplayer')
-    implementation 'com.applandeo:material-calendar-view:1.7.0'
+    implementation 'com.applandeo:material-calendar-view:1.9.0-rc04'
     implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
     implementation 'com.mindorks.android:prdownloader:0.6.0'
     implementation 'me.leolin:ShortcutBadger:1.1.21@aar'

@@ -103,7 +103,15 @@ class ParentMeetingsFragment:Fragment() {
         nxtbtn=requireView().findViewById(R.id.next)
         review_img=requireView().findViewById(R.id.reviewImageView)
         onclick()
-        callStudentListApi()
+        if (ConstantFunctions.internetCheck(mContext))
+        {
+            callStudentListApi()
+        }
+        else
+        {
+            DialogFunctions.showInternetAlertDialog(mContext)
+        }
+
 
         Log.e("time", PreferenceManager.getIsFirstTimeInPE(mContext).toString())
         if (PreferenceManager.getIsFirstTimeInPE(mContext)) {
@@ -230,7 +238,15 @@ class ParentMeetingsFragment:Fragment() {
                 staff_image.setImageResource(R.drawable.addiconinparentsevng)
                 staffNameTV.text = "Staff Name:-"
                 nxtbtn.visibility = View.GONE
-                stafflistcall(studentId)
+                if (ConstantFunctions.internetCheck(mContext))
+                {
+                    stafflistcall(studentId)
+                }
+                else
+                {
+                    DialogFunctions.showInternetAlertDialog(mContext)
+                }
+
                 if (studentImg != "") {
                     Glide.with(mContext) //1
                         .load(studentImg)

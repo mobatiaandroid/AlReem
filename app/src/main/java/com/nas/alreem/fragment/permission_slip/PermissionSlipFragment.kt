@@ -24,10 +24,7 @@ import com.nas.alreem.R
 import com.nas.alreem.activity.payments.adapter.StudentListAdapter
 import com.nas.alreem.activity.payments.model.StudentList
 import com.nas.alreem.activity.payments.model.StudentListModel
-import com.nas.alreem.constants.ConstantFunctions
-import com.nas.alreem.constants.OnItemClickListener
-import com.nas.alreem.constants.PreferenceManager
-import com.nas.alreem.constants.addOnItemClickListener
+import com.nas.alreem.constants.*
 import com.nas.alreem.fragment.permission_slip.adapter.FormslistAdapter
 import com.nas.alreem.fragment.permission_slip.model.PermissionSlipListApiModel
 import com.nas.alreem.fragment.permission_slip.model.PermissionSlipListModel
@@ -69,8 +66,9 @@ class PermissionSlipFragment : Fragment(){
             callStudentListApi()
 
         } else {
-          //  InternetCheckClass.showSuccessInternetAlert(mContext)
+            DialogFunctions.showInternetAlertDialog(mContext)
         }
+
     }
     private fun initializeUI(){
         mContext=requireContext()
@@ -86,7 +84,7 @@ class PermissionSlipFragment : Fragment(){
             AnimationUtils.loadAnimation(mContext, R.anim.linear_interpolator)
         progressDialog.startAnimation(aniRotate)
 
-
+        forms_recycler.visibility=View.GONE
 
         studentSpinner.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
@@ -164,7 +162,14 @@ class PermissionSlipFragment : Fragment(){
                     studImg.setImageResource(R.drawable.student)
                 }
                 progressDialog.visibility = View.VISIBLE
-                formslistApi()
+                var internetCheck = ConstantFunctions.internetCheck(mContext)
+                if (internetCheck) {
+                    formslistApi()
+
+                } else {
+                    DialogFunctions.showInternetAlertDialog(mContext)
+                }
+
                 Log.e("TEST","call 2")
 
                 //  Toast.makeText(activity, mStudentList.get(position).name, Toast.LENGTH_SHORT).show()
@@ -176,6 +181,7 @@ class PermissionSlipFragment : Fragment(){
     private fun formslistApi(){
         progressDialog.visibility = View.VISIBLE
         formslist=ArrayList()
+
         val token = PreferenceManager.getaccesstoken(mContext)
         Log.e("stid", PreferenceManager.getStudentID(mContext).toString())
         val list_permissionSlip= PermissionSlipListApiModel("0","20",PreferenceManager.getStudentID(mContext).toString())
@@ -189,6 +195,7 @@ class PermissionSlipFragment : Fragment(){
                 progressDialog.visibility = View.GONE
                 if (response.body()!!.status==100)
                 {
+                    forms_recycler.visibility=View.VISIBLE
                     formslist=ArrayList()
                     formslist.addAll(response.body()!!.responseArray.request)
                     if (response.body()!!.responseArray.request.size > 0){
@@ -297,8 +304,14 @@ class PermissionSlipFragment : Fragment(){
                             studImg.setImageResource(R.drawable.student)
                         }
                     }
+                    var internetCheck = ConstantFunctions.internetCheck(mContext)
+                    if (internetCheck) {
+                        formslistApi()
 
-                    formslistApi()
+                    } else {
+                        DialogFunctions.showInternetAlertDialog(mContext)
+                    }
+
 //                    var internetCheck = InternetCheckClass.isInternetAvailable(nContext)
 //                    if (internetCheck)
 //                    {
@@ -319,7 +332,15 @@ class PermissionSlipFragment : Fragment(){
     override fun onResume() {
         super.onResume()
         Log.e("TEST","call 1")
-        formslistApi()
+        forms_recycler.visibility=View.GONE
+        var internetCheck = ConstantFunctions.internetCheck(mContext)
+        if (internetCheck) {
+            formslistApi()
+
+        } else {
+            //DialogFunctions.showInternetAlertDialog(mContext)
+        }
+
         studentNameTxt.text = PreferenceManager.getStudentName(mContext)
         studentId= PreferenceManager.getStudentID(mContext).toString()
         studentImg= PreferenceManager.getStudentPhoto(mContext)!!

@@ -59,7 +59,15 @@ class StaffDirectoryActivity:AppCompatActivity() {
 
         mContext=this
         initfn()
-        callStaffCatListApi()
+        if (ConstantFunctions.internetCheck(mContext))
+        {
+            callStaffCatListApi()
+        }
+        else
+        {
+            DialogFunctions.showInternetAlertDialog(mContext)
+        }
+
 
     }
     private fun initfn() {

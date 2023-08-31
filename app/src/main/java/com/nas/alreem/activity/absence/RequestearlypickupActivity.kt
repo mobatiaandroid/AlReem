@@ -91,7 +91,14 @@ class RequestearlypickupActivity:AppCompatActivity() {
 
         mContext=this
         initfn()
-        callStudentListApi()
+
+        if (ConstantFunctions.internetCheck(mContext)) {
+//            progressDialog.visibility= View.VISIBLE
+            callStudentListApi()
+        } else {
+            DialogFunctions.showInternetAlertDialog(mContext)
+        }
+
 
     }
     @RequiresApi(Build.VERSION_CODES.N)

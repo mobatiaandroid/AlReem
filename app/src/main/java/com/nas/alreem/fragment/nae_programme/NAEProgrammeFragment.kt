@@ -47,7 +47,15 @@ class NAEProgrammeFragment  : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         mContext=requireContext()
         initializeUI()
-        callPrimaryApi()
+        if (ConstantFunctions.internetCheck(mContext))
+        {
+            callPrimaryApi()
+        }
+        else
+        {
+            DialogFunctions.showInternetAlertDialog(mContext)
+        }
+
     }
     private fun initializeUI()
     {

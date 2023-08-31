@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -30,13 +32,20 @@ class InformationActivity : AppCompatActivity() {
     private lateinit var logoClickImg: ImageView
     lateinit var recyclerview: RecyclerView
     lateinit var back: RelativeLayout
+    lateinit var progress: ProgressBar
     lateinit var informationlist: ArrayList<InfoListModel>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.canteen_information)
 
         initfn()
-        callCanteenInformation()
+        if (ConstantFunctions.internetCheck(mContext)) {
+//            progressDialog.visibility= View.VISIBLE
+            callCanteenInformation()
+        } else {
+            DialogFunctions.showInternetAlertDialog(mContext)
+        }
+
     }
 
     private fun initfn() {
@@ -45,7 +54,10 @@ class InformationActivity : AppCompatActivity() {
         informationlist = ArrayList()
         recyclerview = findViewById(R.id.canteen_info_list)
         back = findViewById(R.id.backRelative)
+        progress = findViewById(R.id.progressDialogAdd)!!
+
         val text1 = findViewById<TextView>(R.id.heading)
+
         text1.text = "Information"
         back.setOnClickListener {
             finish()
@@ -58,16 +70,17 @@ class InformationActivity : AppCompatActivity() {
 
     }
     private fun callCanteenInformation(){
-
-
+        progress.visibility = View.VISIBLE
         val token = PreferenceManager.getaccesstoken(mContext)
-
         val call: Call<InfoCanteenModel> = ApiClient.getClient.getCanteenInformation("Bearer "+token)
         call.enqueue(object : Callback<InfoCanteenModel> {
             override fun onFailure(call: Call<InfoCanteenModel>, t: Throwable) {
                 Log.e("Failed", t.localizedMessage)
+                progress.visibility = View.GONE
+
             }
             override fun onResponse(call: Call<InfoCanteenModel>, response: Response<InfoCanteenModel>) {
+                progress.visibility = View.GONE
                 val responsedata = response.body()
                 Log.e("Response", responsedata.toString())
                 if (responsedata!!.status==100) {

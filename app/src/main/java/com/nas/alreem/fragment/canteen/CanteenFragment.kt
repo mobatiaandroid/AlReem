@@ -56,7 +56,15 @@ class CanteenFragment  : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initFn()
         onClick()
-        callGetCanteenBanner()
+        if (ConstantFunctions.internetCheck(mContext))
+        {
+            callGetCanteenBanner()
+        }
+        else
+        {
+            DialogFunctions.showInternetAlertDialog(mContext)
+        }
+
 
     }
     private fun initFn(){
@@ -94,6 +102,7 @@ class CanteenFragment  : Fragment() {
         payment_image.setOnClickListener {
             val i = Intent(mContext, CanteenPaymentActivity::class.java)
             i.putExtra("WALLET_TOPUP_LIMIT",walletTopUpLimit_str.toString())
+            PreferenceManager.setStudentID(mContext,"")
             mContext.startActivity(i)
         }
         staffLinear.setOnClickListener(View.OnClickListener {
@@ -193,8 +202,15 @@ class CanteenFragment  : Fragment() {
 
                 } else {
                     // progressDialog.visibility = View.VISIBLE
+                    if (ConstantFunctions.internetCheck(mContext))
+                    {
+                        sendEmail(text_dialog.text.toString().trim(), text_content.text.toString().trim(), contactEmail, dialog)
+                    }
+                    else
+                    {
+                        DialogFunctions.showInternetAlertDialog(mContext)
+                    }
 
-                    sendEmail(text_dialog.text.toString().trim(), text_content.text.toString().trim(), contactEmail, dialog)
                 }
             }
         }

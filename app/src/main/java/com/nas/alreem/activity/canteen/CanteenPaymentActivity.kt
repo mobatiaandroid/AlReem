@@ -25,6 +25,7 @@ import com.nas.alreem.activity.canteen.model.topup.WalletAmountApiModel
 import com.nas.alreem.activity.canteen.model.topup.WalletAmountModel
 import com.nas.alreem.activity.canteen.model.wallet.WalletBalanceApiModel
 import com.nas.alreem.activity.canteen.model.wallet.WalletBalanceModel
+import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.activity.payments.adapter.StudentListAdapter
 import com.nas.alreem.activity.payments.model.StudentList
 import com.nas.alreem.activity.payments.model.StudentListModel
@@ -99,12 +100,20 @@ class CanteenPaymentActivity:AppCompatActivity() {
    lateinit var title:TextView
    lateinit var mProgressRelLayout:ProgressBar
    lateinit var WALLET_TOPUP_LIMIT:String
+   lateinit var logoClickImg:ImageView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.canteen_first_activity)
         nContext = this
         initialiseUI()
-        callStudentListApi()
+        if (ConstantFunctions.internetCheck(nContext)) {
+//            progressDialog.visibility= View.VISIBLE
+            callStudentListApi()
+        } else {
+            DialogFunctions.showInternetAlertDialog(nContext)
+        }
+
+       // wallet_details()
         studentSpinner.setOnClickListener(){
             showStudentList(nContext,studentListArrayList)
         }
@@ -119,7 +128,7 @@ class CanteenPaymentActivity:AppCompatActivity() {
         amount = findViewById(R.id.et_amount)
         addToWallet = findViewById(R.id.addToWallet)
         walletbalance = findViewById(R.id.walletbalance)
-
+        logoClickImg = findViewById(R.id.logoclick)
         card_walletbalance = findViewById(R.id.card_walletbalance)
         belowViewRelative = findViewById(R.id.belowViewRelative)
         paymentRelative.visibility = View.GONE
@@ -136,12 +145,18 @@ class CanteenPaymentActivity:AppCompatActivity() {
         back!!.setOnClickListener(){
             finish()
         }
+        logoClickImg.setOnClickListener {
+            val intent = Intent(nContext, HomeActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent)
+        }
         btn_history.setOnClickListener(){
             val i = Intent(nContext, PaymentHistory_Activity::class.java)
+            PreferenceManager.setStudentID(nContext,"")
             nContext.startActivity(i)
         }
 
-        wallet_details()
+
         addToWallet!!.setOnClickListener(){
 
             if (!amount.getText().toString().equals("")) {
@@ -175,7 +190,12 @@ class CanteenPaymentActivity:AppCompatActivity() {
                             order_id = ""
                             merchantOrderReference = ""
                             mProgressRelLayout.visibility=View.VISIBLE
-                            getpaymenttoken()
+                            if (ConstantFunctions.internetCheck(nContext)) {
+                                getpaymenttoken()
+                            } else {
+                                DialogFunctions.showInternetAlertDialog(nContext)
+                            }
+
                         }
                         else{
                             Toast.makeText(
@@ -264,7 +284,13 @@ class CanteenPaymentActivity:AppCompatActivity() {
                             studImg.setImageResource(R.drawable.student)
                         }
                     }
-                    wallet_details()
+                    if (ConstantFunctions.internetCheck(nContext)) {
+//            progressDialog.visibility= View.VISIBLE
+                        wallet_details()
+                    } else {
+                        DialogFunctions.showInternetAlertDialog(nContext)
+                    }
+
 
                     //callStudentInfoApi()
                 }
@@ -342,7 +368,14 @@ class CanteenPaymentActivity:AppCompatActivity() {
                 {
                     studImg.setImageResource(R.drawable.student)
                 }
-                wallet_details()
+
+                if (ConstantFunctions.internetCheck(nContext)) {
+//            progressDialog.visibility= View.VISIBLE
+                    wallet_details()
+                } else {
+                    DialogFunctions.showInternetAlertDialog(nContext)
+                }
+
                 //progressDialog.visibility = View.VISIBLE
 
                 //  Toast.makeText(activity, mStudentList.get(position).name, Toast.LENGTH_SHORT).show()
@@ -352,7 +385,7 @@ class CanteenPaymentActivity:AppCompatActivity() {
         dialog.show()
     }
     private fun wallet_details(){
-//mProgressRelLayout.visibility=View.VISIBLE
+mProgressRelLayout.visibility=View.VISIBLE
         val token = PreferenceManager.getaccesstoken(nContext)
         var canteenCart= WalletBalanceApiModel(PreferenceManager.getStudentID(nContext).toString())
         val call: Call<WalletBalanceModel> = ApiClient.getClient.get_wallet_balance(canteenCart,"Bearer "+token)
@@ -381,7 +414,7 @@ class CanteenPaymentActivity:AppCompatActivity() {
     private fun getpaymenttoken(){
         mProgressRelLayout.visibility=View.VISIBLE
         val token = PreferenceManager.getaccesstoken(nContext)
-        val paymentTokenBody = PaymentTokenApiModel( PreferenceManager.getStudentID(nContext).toString())
+        val paymentTokenBody = PaymentTokenApiModel( PreferenceManager.getStudentID(nContext).toString(),"wallet_topup")
         val call: Call<PaymentTokenModel> =
             ApiClient.getClient.payment_token(paymentTokenBody, "Bearer " + token)
         call.enqueue(object : Callback<PaymentTokenModel> {
@@ -412,7 +445,12 @@ class CanteenPaymentActivity:AppCompatActivity() {
                             //order_id= "BISAD" + id + "S" + studentId
                             var amt:Int=payAmount.toInt() * 100
                             mProgressRelLayout.visibility=View.VISIBLE
-                            callForPayment(payment_token,amt.toString())
+                            if (ConstantFunctions.internetCheck(nContext)) {
+                                callForPayment(payment_token,amt.toString())
+                            } else {
+                                DialogFunctions.showInternetAlertDialog(nContext)
+                            }
+
 
 
                         }else
@@ -439,7 +477,7 @@ class CanteenPaymentActivity:AppCompatActivity() {
         val token = PreferenceManager.getaccesstoken(nContext)
         val paymentGatewayBody = PaymentGatewayApiModel(amount,PreferenceManager.getEmailId(nContext).toString(),
             mechantorderRef,studentName,"","NAS","","Abu Dhabi",
-            payment_token)
+            payment_token,"wallet_topup")
         val call: Call<PaymentGatewayModel> =
             ApiClient.getClient.payment_gateway(paymentGatewayBody, "Bearer " + token)
         call.enqueue(object : Callback<PaymentGatewayModel> {
@@ -524,8 +562,13 @@ class CanteenPaymentActivity:AppCompatActivity() {
                     paidImg.visibility = View.VISIBLE
                     mainLinear.visibility = View.VISIBLE
                     printLinear.visibility = View.VISIBLE*/
-                    paySuccessApi()
 
+                    if (ConstantFunctions.internetCheck(nContext)) {
+//            progressDialog.visibility= View.VISIBLE
+                        paySuccessApi()
+                    } else {
+                        DialogFunctions.showInternetAlertDialog(nContext)
+                    }
 
 //                Log.d("reason",cardPaymentData.getReason());
                 } else {

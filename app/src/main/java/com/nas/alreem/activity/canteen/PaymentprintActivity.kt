@@ -26,6 +26,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import com.nas.alreem.R
 import com.nas.alreem.activity.home.HomeActivity
+import com.nas.alreem.constants.ConstantFunctions
+import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.PreferenceManager
 
 import java.io.BufferedReader
@@ -71,7 +73,13 @@ class PaymentprintActivity:AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.preview_activity)
         initfn()
-        getWebViewSettings()
+        if (ConstantFunctions.internetCheck(nContext)) {
+//            progressDialog.visibility= View.VISIBLE
+            getWebViewSettings()
+        } else {
+            DialogFunctions.showInternetAlertDialog(nContext)
+        }
+
 
     }
     private fun initfn(){
@@ -325,7 +333,7 @@ class PaymentprintActivity:AppCompatActivity() {
     fun uriFromFile(context:Context, file:File):Uri {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
         {
-            return FileProvider.getUriForFile(context, "com.mobatia.bisad" + ".provider", file)
+            return FileProvider.getUriForFile(context, "com.nas.alreem" + ".provider", file)
         }
         else
         {
