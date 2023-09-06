@@ -240,6 +240,7 @@ class CalendarListAdapter(
             var addToCalendar = true
             val prefData: List<String> = PreferenceManager
                 .getCalendarEventNames(mContext)!!.split(",")
+            Log.e("pref", prefData.toString())
             for (i in prefData.indices) {
                 if (prefData[i].equals(
                         mCalendarEventModels[eventPosition].title + mCalendarEventModels[eventPosition].title,
@@ -250,6 +251,7 @@ class CalendarListAdapter(
                     break
                 }
             }
+            println("addToCalendar---$addToCalendar")
             if (addToCalendar) {
                 Log.e("Values", year.toString()+" M "+month.toString()+" D "+day.toString()+ " H "+hour.toString()+" MIN "+min.toString())
                 if (year != -1 && month != -1 && day != -1 && hour != -1 && min != -1) {

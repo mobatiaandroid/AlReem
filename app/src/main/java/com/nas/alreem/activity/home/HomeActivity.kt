@@ -2,14 +2,18 @@ package com.nas.alreem.activity.home
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.ClipData
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.content.res.TypedArray
 import android.graphics.Color
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
@@ -19,6 +23,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBar
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
@@ -37,7 +42,6 @@ import com.nas.alreem.fragment.absence.AbsenceFragment
 import com.nas.alreem.fragment.calendar.CalendarFragment
 import com.nas.alreem.fragment.canteen.CanteenFragment
 import com.nas.alreem.fragment.cca.CCAFragment
-import com.nas.alreem.fragment.communication.CommunicationFragment
 import com.nas.alreem.fragment.contact_us.ContactUsFragment
 import com.nas.alreem.fragment.early_years.EarlyYearsFragment
 import com.nas.alreem.fragment.gallery.GalleryFragment
@@ -51,7 +55,6 @@ import com.nas.alreem.fragment.permission_slip.PermissionSlipFragment
 import com.nas.alreem.fragment.primary.PrimaryFragment
 import com.nas.alreem.fragment.secondary.SecondaryFragment
 import com.nas.alreem.fragment.settings.SettingsFragment
-import com.nas.alreem.fragment.staff_directory.StaffDirectoryFragment
 
 class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
 
@@ -60,6 +63,8 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
     lateinit var settings_icon: ImageView
     lateinit var shadowBuilder: MyDragShadowBuilder
     lateinit var context: Context
+    lateinit var mActivity: Activity
+
     lateinit var clipData: ClipData
     lateinit var mListItemArray: Array<String>
     var mListImgArray: TypedArray? = null
@@ -70,6 +75,14 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
     lateinit var homelist: ListView
     var mFragment: Fragment? = null
     var sPosition: Int = 0
+    private val PERMISSION_CALLBACK_CONSTANT_CALENDAR = 1
+    private val REQUEST_PERMISSION_CALENDAR = 101
+    var permissionsRequiredCalendar = arrayOf(
+        Manifest.permission.READ_CALENDAR,
+        Manifest.permission.WRITE_CALENDAR
+    )
+    lateinit var calendarPermissionStatus: SharedPreferences
+    private var calendarToSettings = false
     lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,6 +94,9 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
         setContentView(R.layout.activtiy_home)
         Intent.FLAG_ACTIVITY_CLEAR_TASK
         initializeUI()
+        calendarPermissionStatus =
+            getSharedPreferences("calendarPermissionStatus", Context.MODE_PRIVATE)
+
         showfragmenthome()
 
     }
@@ -95,9 +111,8 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
     @SuppressLint("Recycle", "WrongViewCast")
     @RequiresApi(Build.VERSION_CODES.M)
     private fun initializeUI() {
-
-
         context = this
+        mActivity = this
         homelist = findViewById(R.id.homelistview)
         drawer_layout = findViewById(R.id.drawer_layout)
         linear_layout = findViewById(R.id.linear_layout)
@@ -308,7 +323,151 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                     {
                         //Calendar
                         mFragment = CalendarFragment()
-                        replaceFragmentsSelected(position)
+
+                        if (Build.VERSION.SDK_INT < 23) {
+                            //Do not need to check the permission
+                            replaceFragmentsSelected(position)
+                        } else {
+                            if (ActivityCompat.checkSelfPermission(
+                                    mActivity,
+                                    permissionsRequiredCalendar.get(0)
+                                ) != PackageManager.PERMISSION_GRANTED
+                                || ActivityCompat.checkSelfPermission(
+                                    mActivity,
+                                    permissionsRequiredCalendar.get(1)
+                                ) != PackageManager.PERMISSION_GRANTED
+                            ) {
+                                if (ActivityCompat.shouldShowRequestPermissionRationale(
+                                        mActivity,
+                                        permissionsRequiredCalendar.get(0)
+                                    )
+                                    || ActivityCompat.shouldShowRequestPermissionRationale(
+                                        mActivity,
+                                        permissionsRequiredCalendar.get(1)
+                                    )
+                                ) {
+                                    //Show information about why you need the permission
+                                    val builder = AlertDialog.Builder(mActivity)
+                                    builder.setTitle("Need Calendar Permission")
+                                    builder.setMessage("This module needs Calendar permissions.")
+                                    builder.setCancelable(false)
+                                    builder.setPositiveButton(
+                                        "Grant"
+                                    ) { dialog, which ->
+                                        dialog.cancel()
+                                        ActivityCompat.requestPermissions(
+                                            mActivity,
+                                            permissionsRequiredCalendar,
+                                            HomeActivity().PERMISSION_CALLBACK_CONSTANT_CALENDAR
+                                        )
+                                    }
+                                    builder.setNegativeButton(
+                                        "Cancel"
+                                    ) { dialog, which -> dialog.cancel() }
+                                    builder.show()
+                                } else if (calendarPermissionStatus.getBoolean(
+                                        permissionsRequiredCalendar.get(0),
+                                        false
+                                    )
+                                ) {
+                                    //Previously Permission Request was cancelled with 'Dont Ask Again',
+                                    // Redirect to Settings after showing information about why you need the permission
+                                    println("Permission0")
+                                    val builder = AlertDialog.Builder(mActivity)
+                                    builder.setTitle("Need Calendar Permission")
+                                    builder.setMessage("This module needs Calendar permissions.")
+                                    builder.setCancelable(false)
+                                    builder.setPositiveButton(
+                                        "Grant"
+                                    ) { dialog, which ->
+                                        dialog.cancel()
+                                        calendarToSettings = true
+                                        val intent =
+                                            Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                                        val uri = Uri.fromParts(
+                                            "package",
+                                            mActivity.getPackageName(),
+                                            null
+                                        )
+                                        intent.data = uri
+                                        startActivityForResult(
+                                            intent,
+                                            HomeActivity().REQUEST_PERMISSION_CALENDAR
+                                        )
+                                        Toast.makeText(
+                                            mContext,
+                                            "Go to settings and grant access to calendar",
+                                            Toast.LENGTH_LONG
+                                        ).show()
+                                    }
+                                    builder.setNegativeButton(
+                                        "Cancel"
+                                    ) { dialog, which ->
+                                        dialog.cancel()
+                                        calendarToSettings = false
+                                    }
+                                    builder.show()
+                                } else if (calendarPermissionStatus.getBoolean(
+                                        permissionsRequiredCalendar.get(1),
+                                        false
+                                    )
+                                ) {
+                                    //Previously Permission Request was cancelled with 'Dont Ask Again',
+                                    // Redirect to Settings after showing information about why you need the permission
+                                    println("Permission1")
+                                    val builder = AlertDialog.Builder(mActivity)
+                                    builder.setTitle("Need Calendar Permission")
+                                    builder.setMessage("This module needs Calendar permissions.")
+                                    builder.setCancelable(false)
+                                    builder.setPositiveButton(
+                                        "Grant"
+                                    ) { dialog, which ->
+                                        dialog.cancel()
+                                        calendarToSettings = true
+                                        val intent =
+                                            Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                                        val uri = Uri.fromParts(
+                                            "package",
+                                            mActivity.getPackageName(),
+                                            null
+                                        )
+                                        intent.data = uri
+                                        startActivityForResult(
+                                            intent,
+                                            HomeActivity().REQUEST_PERMISSION_CALENDAR
+                                        )
+                                        Toast.makeText(
+                                            mContext,
+                                            "Go to settings and grant access to calendar",
+                                            Toast.LENGTH_LONG
+                                        ).show()
+                                    }
+                                    builder.setNegativeButton(
+                                        "Cancel"
+                                    ) { dialog, which ->
+                                        dialog.cancel()
+                                        calendarToSettings = false
+                                    }
+                                    builder.show()
+                                } else {
+                                    println("Permission3")
+
+                                    //just request the permission
+//                        ActivityCompat.requestPermissions(mActivity, permissionsRequired, PERMISSION_CALLBACK_CONSTANT_CALENDAR);
+                                    ActivityCompat.requestPermissions(
+                                        mActivity,
+                                        permissionsRequiredCalendar,
+                                       HomeActivity().PERMISSION_CALLBACK_CONSTANT_CALENDAR
+                                    )
+                                }
+                                val editor: SharedPreferences.Editor =
+                                    calendarPermissionStatus.edit()
+                                editor.putBoolean(permissionsRequiredCalendar.get(0), true)
+                                editor.commit()
+                            } else {
+                                replaceFragmentsSelected(position)
+                            }
+                        }
                     }
                     3->
                     {

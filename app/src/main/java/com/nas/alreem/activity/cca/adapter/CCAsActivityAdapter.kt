@@ -264,12 +264,17 @@ class CCAsActivityAdapter : RecyclerView.Adapter<CCAsActivityAdapter.MyViewHolde
                                                     } else {
                                                         mCCAchoiceModel2!![j].disableCccaiem=(false)
                                                     }
-                                                    mCCAsActivityAdapter2!!.notifyDataSetChanged()
 
+                                                    if (mCCAsActivityAdapter2 != null) {
+                                                        mCCAsActivityAdapter2!!.notifyDataSetChanged()
+                                                    }
 //                                                    break;
                                                 } else {
                                                     mCCAchoiceModel2!![j].disableCccaiem=(false)
-                                                    mCCAsActivityAdapter2!!.notifyDataSetChanged()
+                                                    if (mCCAsActivityAdapter2 != null) {
+                                                        mCCAsActivityAdapter2!!.notifyDataSetChanged()
+                                                    }
+
                                                 }
                                             }
                                         }
@@ -288,12 +293,17 @@ class CCAsActivityAdapter : RecyclerView.Adapter<CCAsActivityAdapter.MyViewHolde
                                                     } else {
                                                         mCCAchoiceModel1!![j].disableCccaiem=(false)
                                                     }
-                                                    mCCAsActivityAdapter1!!.notifyDataSetChanged()
 
+                                                    if (mCCAsActivityAdapter1 != null) {
+                                                        mCCAsActivityAdapter1!!.notifyDataSetChanged()
+                                                    }
 //                                                    break;
                                                 } else {
                                                     mCCAchoiceModel1!![j].disableCccaiem=(false)
-                                                    mCCAsActivityAdapter1!!.notifyDataSetChanged()
+                                                    if (mCCAsActivityAdapter1 != null) {
+                                                        mCCAsActivityAdapter1!!.notifyDataSetChanged()
+                                                    }
+
                                                 }
                                             }
                                         }
@@ -344,12 +354,17 @@ class CCAsActivityAdapter : RecyclerView.Adapter<CCAsActivityAdapter.MyViewHolde
                                                     } else {
                                                         mCCAchoiceModel1!![j].disableCccaiem=(false)
                                                     }
-                                                    mCCAsActivityAdapter1!!.notifyDataSetChanged()
 
+                                                    if (mCCAsActivityAdapter1 != null) {
+                                                        mCCAsActivityAdapter1!!.notifyDataSetChanged()
+                                                    }
 //                                                    break;
                                                 } else {
                                                     mCCAchoiceModel1!![j].disableCccaiem=(false)
-                                                    mCCAsActivityAdapter1!!.notifyDataSetChanged()
+                                                    if (mCCAsActivityAdapter1 != null) {
+                                                        mCCAsActivityAdapter1!!.notifyDataSetChanged()
+                                                    }
+
                                                 }
                                             }
                                         }
@@ -365,12 +380,17 @@ class CCAsActivityAdapter : RecyclerView.Adapter<CCAsActivityAdapter.MyViewHolde
                                                     } else {
                                                         mCCAchoiceModel2!![j].disableCccaiem=(false)
                                                     }
-                                                    mCCAsActivityAdapter2!!.notifyDataSetChanged()
 
+                                                    if (mCCAsActivityAdapter2 != null) {
+                                                        mCCAsActivityAdapter2!!.notifyDataSetChanged()
+                                                    }
 //                                                    break;
                                                 } else {
                                                     mCCAchoiceModel2!![j].disableCccaiem=(false)
-                                                    mCCAsActivityAdapter2!!.notifyDataSetChanged()
+                                                    if (mCCAsActivityAdapter2 != null) {
+                                                        mCCAsActivityAdapter2!!.notifyDataSetChanged()
+                                                    }
+
                                                 }
                                             }
                                         }
