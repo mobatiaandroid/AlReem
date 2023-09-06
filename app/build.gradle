@@ -11,8 +11,8 @@ android {
         minSdk 19
         minSdkVersion 19
         targetSdkVersion 31
-        versionCode 8
-        versionName "1.8"
+        versionCode 10
+        versionName "2.0"
         multiDexEnabled true
         generatedDensities = []
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
