@@ -10,9 +10,9 @@ android {
         applicationId "com.nas.alreem"
         minSdk 19
         minSdkVersion 19
-        targetSdkVersion 31
-        versionCode 10
-        versionName "2.0"
+        targetSdkVersion 33
+        versionCode 12
+        versionName "2.2"
         multiDexEnabled true
         generatedDensities = []
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

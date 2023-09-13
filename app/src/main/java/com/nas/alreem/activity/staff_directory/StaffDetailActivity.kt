@@ -174,11 +174,18 @@ class StaffDetailActivity : AppCompatActivity() {
                             staffDetailList=responsedata.responseArray.department_staffs
                             //staffDetailList.addAll(responsedata.responseArray.department_staffs)
 
-                            Log.e("listsize",staffDetailList.size.toString())
-                            staff_detail_rec.layoutManager= LinearLayoutManager(mContext)
-                            var staff_detail_adapter= StaffDetailAdapter(mContext,staffDetailList)
-                            staff_detail_rec.adapter=staff_detail_adapter
+                            if(staffDetailList.size>0)
+                            {
+                                Log.e("listsize",staffDetailList.size.toString())
+                                staff_detail_rec.layoutManager= LinearLayoutManager(mContext)
+                                var staff_detail_adapter= StaffDetailAdapter(mContext,staffDetailList)
+                                staff_detail_rec.adapter=staff_detail_adapter
+                            }
 
+                            else
+                            {
+                                DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), "No Data Found", mContext)
+                            }
                         }
                         else
                         {
