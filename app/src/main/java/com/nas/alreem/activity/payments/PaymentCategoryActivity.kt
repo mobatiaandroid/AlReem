@@ -35,10 +35,10 @@ class PaymentCategoryActivity : AppCompatActivity() {
     lateinit var studentSpinner: LinearLayout
     var studentListArrayList = ArrayList<StudentList>()
     lateinit var studImg: ImageView
-    lateinit var studentName: String
-    lateinit var studentId: String
-    lateinit var studentImg: String
-    lateinit var studentClass: String
+    var studentName: String=""
+    var studentId: String=""
+    var studentImg: String=""
+    var studentClass: String=""
     lateinit var studentNameTxt: TextView
     lateinit var catListRec:RecyclerView
     lateinit var catList:ArrayList<PayCatDataList>
@@ -50,7 +50,7 @@ class PaymentCategoryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_payment_category)
         init()
-        callStudentListApi()
+
     }
 
     private fun init(){
@@ -64,7 +64,7 @@ class PaymentCategoryActivity : AppCompatActivity() {
         heading=findViewById(R.id.heading)
         backRelative=findViewById(R.id.backRelative)
         logoClickImgView=findViewById(R.id.logoClickImgView)
-        heading.text="Payment"
+        heading.text="Payments"
         backRelative.setOnClickListener(View.OnClickListener {
             finish()
         })
@@ -77,6 +77,16 @@ class PaymentCategoryActivity : AppCompatActivity() {
         studentSpinner.setOnClickListener(){
             showStudentList(mContext,studentListArrayList)
         }
+        if (ConstantFunctions.internetCheck(mContext))
+        {
+            callStudentListApi()
+        }
+        else
+        {
+            DialogFunctions.showInternetAlertDialog(mContext)
+        }
+
+
 
     }
     fun callStudentListApi()
@@ -150,7 +160,15 @@ class PaymentCategoryActivity : AppCompatActivity() {
                                 }
                             }
                             catListRec.visibility=View.GONE
-                            callCategoryList()
+                            if (ConstantFunctions.internetCheck(mContext))
+                            {
+                                callCategoryList()
+                            }
+                            else
+                            {
+                                DialogFunctions.showInternetAlertDialog(mContext)
+                            }
+
                         }
                         else
                         {
@@ -169,10 +187,7 @@ class PaymentCategoryActivity : AppCompatActivity() {
     }
 
 
-    override fun onResume() {
-        super.onResume()
-        callStudentListApi()
-    }
+
 
     fun showStudentList(context: Context ,mStudentList : ArrayList<StudentList>)
     {
@@ -241,7 +256,15 @@ class PaymentCategoryActivity : AppCompatActivity() {
                 }
                 progressDialogAdd.visibility = View.VISIBLE
                 catListRec.visibility=View.GONE
-                callCategoryList()
+                if (ConstantFunctions.internetCheck(mContext))
+                {
+                    callCategoryList()
+                }
+                else
+                {
+                    DialogFunctions.showInternetAlertDialog(mContext)
+                }
+
                 dialog.dismiss()
             }
         })
@@ -250,8 +273,10 @@ class PaymentCategoryActivity : AppCompatActivity() {
 
     fun callCategoryList()
     {
-        val paymentCategoriesBody = PaymentCategoriesApiModel( studentId)
-        val call: Call<PayCategoryModel> = ApiClient.getClient.payment_categories(paymentCategoriesBody, "Bearer " + PreferenceManager.getaccesstoken(mContext))
+        progressDialogAdd.visibility = View.VISIBLE
+        val paymentCategoriesBody = PaymentCategoriesApiModel( PreferenceManager.getStudentID(mContext).toString())
+        val call: Call<PayCategoryModel> = ApiClient.getClient.payment_categories(paymentCategoriesBody, "Bearer " +
+                PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<PayCategoryModel> {
             override fun onFailure(call: Call<PayCategoryModel>, t: Throwable) {
                 Log.e("Failed", t.localizedMessage)
@@ -260,7 +285,9 @@ class PaymentCategoryActivity : AppCompatActivity() {
 
             override fun onResponse(call: Call<PayCategoryModel>, response: Response<PayCategoryModel>) {
                 val responsedata = response.body()
-                progressDialogAdd.visibility = View.GONE
+
+                catListRec.visibility=View.VISIBLE
+
                 Log.e("Response Signup", responsedata.toString())
                 if (responsedata != null) {
                     try {
@@ -274,18 +301,20 @@ class PaymentCategoryActivity : AppCompatActivity() {
                             if(catList.size>0)
                             {
                                 catListRec.visibility=View.VISIBLE
+                                progressDialogAdd.visibility = View.GONE
+                                var categorytitle_adapter= PayCategoryListAdapter(mContext,catList)
+                                catListRec.adapter=categorytitle_adapter
                             }
                             else
                             {
                                 catListRec.visibility=View.GONE
                             }
-                            var categorytitle_adapter= PayCategoryListAdapter(mContext,catList)
-                            catListRec.adapter=categorytitle_adapter
+
 
                         }else {
                             catListRec.visibility=View.GONE
                             DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), mContext)
-
+                            progressDialogAdd.visibility = View.GONE
                         }
 
                     } catch (e: Exception) {
@@ -296,5 +325,18 @@ class PaymentCategoryActivity : AppCompatActivity() {
 
         })
 
+    }
+    override fun onResume() {
+        super.onResume()
+        catListRec.visibility=View.GONE
+        Log.e("resume","resume")
+        if(PreferenceManager.getStudentID(mContext).equals("")){
+
+        }else {
+            callStudentListApi()
+
+            //callCategoryList()
+            //callStudentListApi()
+        }
     }
 }

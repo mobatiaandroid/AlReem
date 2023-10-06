@@ -25,7 +25,7 @@ class AboutUsAdapter (private var aboutUsArrayList: ArrayList<AboutUsDataModel>,
     }
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
-        holder.listTxtTitle.text = aboutUsArrayList[position].name
+        holder.listTxtTitle.text = aboutUsArrayList[position].tab_type
 
 
     }

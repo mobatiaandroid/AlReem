@@ -11,6 +11,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.os.StrictMode
+import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -54,6 +55,7 @@ class PDFViewerActivity : AppCompatActivity() {
         btn_left = findViewById(R.id.btn_left)
         urltoshow = intent.getStringExtra("Url").toString()
         title = intent.getStringExtra("title").toString()
+        Log.e("url",urltoshow)
         progressBar.visibility = View.VISIBLE
         heading.text=title
         btn_left.setOnClickListener {

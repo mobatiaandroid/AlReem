@@ -39,13 +39,23 @@ class GalleryImageListActivity : AppCompatActivity(){
     lateinit var heading: TextView
     lateinit var logoClickImgView: ImageView
     lateinit var imageArrayList:ArrayList<AlbumImageModel>
+    lateinit var progress: ProgressBar
+
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gallery_images)
         mContext=this
         initUI()
-        callAlbumAPi()
+        if (ConstantFunctions.internetCheck(mContext))
+        {
+            callAlbumAPi()
+        }
+        else
+        {
+            DialogFunctions.showInternetAlertDialog(mContext)
+        }
+
 
     }
     fun initUI()
@@ -55,6 +65,7 @@ class GalleryImageListActivity : AppCompatActivity(){
         heading=findViewById(R.id.heading)
         backRelative=findViewById(R.id.backRelative)
         logoClickImgView=findViewById(R.id.logoClickImgView)
+        progress = findViewById(R.id.progress)
         backRelative.setOnClickListener(View.OnClickListener {
             finish()
         })
@@ -83,16 +94,18 @@ class GalleryImageListActivity : AppCompatActivity(){
     }
     fun callAlbumAPi()
     {
-
+        progress.visibility = View.VISIBLE
         imageArrayList= ArrayList()
-        var model=AlbumApiModel("1","new")
+        var model=AlbumApiModel("0","new")
         val call: Call<AlbumResponseModel> = ApiClient.getClient.albums(model,"Bearer "+PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<AlbumResponseModel> {
             override fun onFailure(call: Call<AlbumResponseModel>, t: Throwable) {
+                progress.visibility = View.GONE
                 Log.e("Failed", t.localizedMessage)
 
             }
             override fun onResponse(call: Call<AlbumResponseModel>, response: Response<AlbumResponseModel>) {
+                progress.visibility = View.GONE
                 val responsedata = response.body()
 
                 if (responsedata != null) {

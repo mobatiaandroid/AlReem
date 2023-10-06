@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -42,7 +43,13 @@ class OrderhistoryActivity : AppCompatActivity() {
         setContentView(R.layout.canteen_orderhistory)
 
         initfn()
-        callOderHistory()
+        if (ConstantFunctions.internetCheck(nContext)) {
+//            progressDialog.visibility= View.VISIBLE
+            callOderHistory()
+        } else {
+            DialogFunctions.showInternetAlertDialog(nContext)
+        }
+
 
     }
 
@@ -55,6 +62,8 @@ class OrderhistoryActivity : AppCompatActivity() {
         title = findViewById(R.id.textViewtitle)
         id = PreferenceManager.getStudentID(nContext).toString()
         basket = findViewById(R.id.basket)
+        progress = findViewById(R.id.progress)!!
+
         preorderhis_list = ArrayList()
         preorderhis_itemlist = ArrayList()
         recyclerview = findViewById(R.id.date_rec)
@@ -77,14 +86,18 @@ class OrderhistoryActivity : AppCompatActivity() {
 
     fun callOderHistory()
     {
+        progress.visibility=View.VISIBLE
         val token = PreferenceManager.getaccesstoken(nContext)
         var model= OrderHistoryApiModel(studentID,"0","100")
         val call: Call<OrderHistoryResponseModel> = ApiClient.getClient.canteen_order_history(model,"Bearer "+token)
         call.enqueue(object : Callback<OrderHistoryResponseModel> {
             override fun onFailure(call: Call<OrderHistoryResponseModel>, t: Throwable) {
+                progress.visibility=View.GONE
+
                 Log.e("Failed", t.localizedMessage)
             }
             override fun onResponse(call: Call<OrderHistoryResponseModel>, response: Response<OrderHistoryResponseModel>) {
+                progress.visibility=View.GONE
                 val responsedata = response.body()
                 Log.e("Response", responsedata.toString())
                 if (responsedata!!.status==100) {

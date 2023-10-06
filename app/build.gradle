@@ -10,9 +10,9 @@ android {
         applicationId "com.nas.alreem"
         minSdk 19
         minSdkVersion 19
-        targetSdkVersion 31
-        versionCode 2
-        versionName "1.1"
+        targetSdkVersion 33
+        versionCode 13
+        versionName "2.3"
         multiDexEnabled true
         generatedDensities = []
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -84,12 +84,13 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     implementation project(':ijkplayer-java')
     implementation project(':giraffeplayer')
-    implementation 'com.applandeo:material-calendar-view:1.7.0'
+    implementation 'com.applandeo:material-calendar-view:1.9.0-rc04'
     implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
     implementation 'com.mindorks.android:prdownloader:0.6.0'
     implementation 'me.leolin:ShortcutBadger:1.1.21@aar'
     implementation 'com.github.network-international.payment-sdk-android:payment-sdk-core:3.0.1'
     implementation 'com.cepheuen.elegant-number-button:lib:1.0.2'
+    implementation 'com.github.siyamed:android-shape-imageview:0.9.+@aar'
 
 // For card payment
     implementation 'com.github.network-international.payment-sdk-android:payment-sdk:3.0.1'

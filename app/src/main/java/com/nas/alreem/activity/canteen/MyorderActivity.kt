@@ -16,6 +16,8 @@ import com.nas.alreem.activity.canteen.model.myorders.PreOrdersModel
 import com.nas.alreem.activity.canteen.model.myorders.Preorderitems_list
 import com.nas.alreem.activity.canteen.model.order_history.OrderHistoryApiModel
 import com.nas.alreem.activity.home.HomeActivity
+import com.nas.alreem.constants.ConstantFunctions
+import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.rest.ApiClient
 import retrofit2.Call
@@ -61,7 +63,13 @@ class MyorderActivity:AppCompatActivity() {
 
         initfn()
         progressDialogAdd.visibility=View.VISIBLE
-        getMyOrderDetails()
+        if (ConstantFunctions.internetCheck(nContext)) {
+//            progressDialog.visibility= View.VISIBLE
+            getMyOrderDetails()
+        } else {
+            DialogFunctions.showInternetAlertDialog(nContext)
+        }
+
     }
     private fun initfn(){
         nContext=this

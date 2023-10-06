@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.annotation.RequiresApi
@@ -33,13 +34,22 @@ class GalleryVideoList : AppCompatActivity(){
     lateinit var heading: TextView
     lateinit var logoClickImgView: ImageView
     lateinit var imageArrayList:ArrayList<VideoModel>
+    lateinit var progress: ProgressBar
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gallery_images)
         mContext=this
         initUI()
-        callAlbumAPi()
+        if (ConstantFunctions.internetCheck(mContext))
+        {
+            callAlbumAPi()
+        }
+        else
+        {
+            DialogFunctions.showInternetAlertDialog(mContext)
+        }
+
     }
     fun initUI()
     {
@@ -48,6 +58,7 @@ class GalleryVideoList : AppCompatActivity(){
         heading=findViewById(R.id.heading)
         backRelative=findViewById(R.id.backRelative)
         logoClickImgView=findViewById(R.id.logoClickImgView)
+        progress = findViewById(R.id.progress)
         backRelative.setOnClickListener(View.OnClickListener {
             finish()
         })
@@ -76,16 +87,18 @@ class GalleryVideoList : AppCompatActivity(){
     }
     fun callAlbumAPi()
     {
-
+        progress.visibility = View.VISIBLE
         imageArrayList= ArrayList()
-        var model= AlbumApiModel("1","new")
+        var model= AlbumApiModel("0","new")
         val call: Call<VideoResponseModel> = ApiClient.getClient.videos(model,"Bearer "+ PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<VideoResponseModel> {
             override fun onFailure(call: Call<VideoResponseModel>, t: Throwable) {
+                progress.visibility = View.GONE
                 Log.e("Failed", t.localizedMessage)
 
             }
             override fun onResponse(call: Call<VideoResponseModel>, response: Response<VideoResponseModel>) {
+                progress.visibility = View.GONE
                 val responsedata = response.body()
 
                 if (responsedata != null) {

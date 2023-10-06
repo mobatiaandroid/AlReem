@@ -9,11 +9,14 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.Window
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nas.alreem.R
+import com.nas.alreem.activity.ProgressBarDialog
 import com.nas.alreem.activity.canteen.adapter.DateAdapter
 import com.nas.alreem.activity.canteen.adapter.ItemCategoriesAdapter
 import com.nas.alreem.activity.canteen.adapter.PreorderItemsAdapter
@@ -48,11 +51,11 @@ class Addorder_Activity : AppCompatActivity() {
     lateinit var recyclerview_item: RecyclerView
 
     //lateinit var selected:ImageView
-    lateinit var progress: RelativeLayout
+   // lateinit var progress: RelativeLayout
     lateinit var title: TextView
     lateinit var cart_empty: ImageView
-    lateinit var progressDialog: ProgressBar
-    lateinit var progressDialogP: ProgressBar
+   // lateinit var progressDialog: ProgressBar
+    lateinit var progressDialogP: ProgressBarDialog
     lateinit var category_list: ArrayList<CategoryListModel>
     lateinit var item_list:ArrayList<CatItemsListModel>
     lateinit var bottomview: LinearLayout
@@ -75,9 +78,15 @@ class Addorder_Activity : AppCompatActivity() {
         firstVisit = true
         initfn()
         setdate()
-        progressDialog.visibility=View.VISIBLE
-        item_categories()
-        getcanteen_cart()
+        //progressDialog.visibility=View.VISIBLE
+        if (ConstantFunctions.internetCheck(nContext)) {
+//            progressDialog.visibility= View.VISIBLE
+            item_categories()
+            getcanteen_cart()
+        } else {
+            DialogFunctions.showInternetAlertDialog(nContext)
+        }
+
 
     }
 
@@ -88,11 +97,15 @@ class Addorder_Activity : AppCompatActivity() {
         title = findViewById(R.id.titleTextView)
         id = PreferenceManager.getStudentID(nContext).toString()
         date_title = findViewById(R.id.date_title)
-        progress=findViewById(R.id.progressDialog)
+       // progress=findViewById(R.id.progressDialog)
         title.text = "Pre-Order"
         cart_empty = findViewById(R.id.item_empty)
-        progressDialog = findViewById(R.id.progressDialogM)
-        progressDialogP = findViewById(R.id.progressDialogP)
+       // progressDialog = findViewById(R.id.progressDialogM)
+        progressDialogP= ProgressBarDialog(nContext)
+
+        //   val aniRotate: Animation =
+          //  AnimationUtils.loadAnimation(nContext, R.anim.linear_interpolator)
+       // progress.startAnimation(aniRotate)
         category_list = ArrayList()
         cart_list = ArrayList()
         cart_items_list = ArrayList()
@@ -206,7 +219,7 @@ class Addorder_Activity : AppCompatActivity() {
 
     private fun item_categories(){
         category_list= ArrayList()
-        progressDialog.visibility = View.VISIBLE
+        progressDialogP.show()
 
         val token = PreferenceManager.getaccesstoken(nContext)
         val call: Call<CatListModel> = ApiClient.getClient.get_canteen_categories("Bearer "+token)
@@ -216,7 +229,7 @@ class Addorder_Activity : AppCompatActivity() {
             }
             override fun onResponse(call: Call<CatListModel>, response: Response<CatListModel>) {
                 val responsedata = response.body()
-                progressDialog.visibility = View.GONE
+                progressDialogP.hide()
                 if (responsedata!!.status==100) {
                     category_list= ArrayList()
 
@@ -231,7 +244,7 @@ class Addorder_Activity : AppCompatActivity() {
                     llm.orientation = LinearLayoutManager.HORIZONTAL
                     recyclerview_category.layoutManager = llm
                     recyclerview_category.adapter = ItemCategoriesAdapter(category_list, nContext)
-                    progressDialog.visibility=View.VISIBLE
+                   // progressDialogP.visibility=View.VISIBLE
                     items()
 
 
@@ -251,7 +264,12 @@ class Addorder_Activity : AppCompatActivity() {
                 //cat_selected= category_list.get(position).id
                 var foundPosition = -1
                 var isFound: Boolean = false
-                getcanteen_cart()
+                if (ConstantFunctions.internetCheck(nContext)) {
+                    getcanteen_cart()
+                } else {
+                    DialogFunctions.showInternetAlertDialog(nContext)
+                }
+
                 for (i in 0..category_list.size - 1) {
                     if (category_list.get(i).isItemSelected) {
                         foundPosition = i
@@ -289,8 +307,9 @@ class Addorder_Activity : AppCompatActivity() {
     }
     private fun items(){
         item_list= ArrayList()
-        progressDialog.visibility = View.VISIBLE
-       Log.e("dsel",date_selected)
+        progressDialogP.show()
+
+        Log.e("dsel",date_selected)
         val token = PreferenceManager.getaccesstoken(nContext)
         var canteenItems= CanteenItemsApiModel(PreferenceManager.getStudentID(nContext).toString(),def_cat_id,
             date_selected,"0","50")
@@ -298,11 +317,11 @@ class Addorder_Activity : AppCompatActivity() {
         call.enqueue(object : Callback<ItemsListModel> {
             override fun onFailure(call: Call<ItemsListModel>, t: Throwable) {
                 Log.e("Failed", t.localizedMessage)
-                progressDialog.visibility = View.GONE
+                progressDialogP.hide()
             }
             override fun onResponse(call: Call<ItemsListModel>, response: Response<ItemsListModel>) {
                 val responsedata = response.body()
-                progressDialog.visibility = View.GONE
+                progressDialogP.hide()
                 if (responsedata!!.status==100) {
 
                     //bottomview.visibility=View.VISIBLE
@@ -376,17 +395,19 @@ class Addorder_Activity : AppCompatActivity() {
     }
     private fun items_onclick(){
         item_list= ArrayList()
-        progress.visibility = View.VISIBLE
+        progressDialogP.show()
         val token =PreferenceManager.getaccesstoken(nContext)
         var canteenItems= CanteenItemsApiModel(PreferenceManager.getStudentID(nContext).toString(),cat_selected,
             date_selected,"0","200")
         val call: Call<ItemsListModel> = ApiClient.getClient.get_canteen_items(canteenItems,"Bearer "+token)
         call.enqueue(object : Callback<ItemsListModel> {
             override fun onFailure(call: Call<ItemsListModel>, t: Throwable) {
+                progressDialogP.hide()
+
                 Log.e("Failed", t.localizedMessage)
             }
             override fun onResponse(call: Call<ItemsListModel>, response: Response<ItemsListModel>) {
-                progress.visibility = View.GONE
+                progressDialogP.hide()
                 cart_empty.visibility=View.GONE
                 recyclerview_item.visibility=View.VISIBLE
                 val responsedata = response.body()
@@ -462,16 +483,18 @@ class Addorder_Activity : AppCompatActivity() {
         cart_list= ArrayList()
         cartTotalAmount=0
         cartTotalItem=0
+        progressDialogP.show()
         val token = PreferenceManager.getaccesstoken(nContext)
         var canteenCart= CanteenCartApiModel(PreferenceManager.getStudentID(nContext).toString())
         val call: Call<CanteenCartModel> = ApiClient.getClient.get_canteen_cart(canteenCart,"Bearer "+token)
         call.enqueue(object : Callback<CanteenCartModel> {
             override fun onFailure(call: Call<CanteenCartModel>, t: Throwable) {
+                progressDialogP.hide()
                 Log.e("Failed", t.localizedMessage)
             }
             override fun onResponse(call: Call<CanteenCartModel>, response: Response<CanteenCartModel>) {
                 val responsedata = response.body()
-                progress.visibility = View.GONE
+                progressDialogP.hide()
                 if (responsedata!!.status==100) {
                     bottomview.visibility=View.VISIBLE
 
@@ -531,8 +554,14 @@ class Addorder_Activity : AppCompatActivity() {
     }
 
     override fun onResume() {
-        item_categories()
-        getcanteen_cart()
+        if (ConstantFunctions.internetCheck(nContext)) {
+//            progressDialog.visibility= View.VISIBLE
+            item_categories()
+            getcanteen_cart()
+        } else {
+            DialogFunctions.showInternetAlertDialog(nContext)
+        }
+
         super.onResume()
     }
     }

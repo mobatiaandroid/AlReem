@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
 import com.nas.alreem.R
+import com.nas.alreem.activity.ProgressBarDialog
 import com.nas.alreem.activity.canteen.model.add_orders.CatItemsListModel
 import com.nas.alreem.activity.canteen.model.add_to_cart.*
 import com.nas.alreem.activity.canteen.model.canteen_cart.CanteenCartApiModel
@@ -42,7 +43,7 @@ class PreorderItemsAdapter(
     var totalPrice:TextView,
     var bottomView:LinearLayout,
     var cart_empty:ImageView,
-    var progressDialogP:ProgressBar) :
+    var progressDialogP: ProgressBarDialog) :
     RecyclerView.Adapter<PreorderItemsAdapter.ViewHolder>() {
   // lateinit var onBottomReachedListener: OnBottomReachedListener
     lateinit var homeBannerUrlImageArray:ArrayList<String>
@@ -157,7 +158,7 @@ class PreorderItemsAdapter(
         cart_list= ArrayList()
         cartTotalAmount=0
         cartTotalItems=0
-        progressDialogP.visibility=View.VISIBLE
+        progressDialogP.show()
         //progressDialogP.show()
         val token = PreferenceManager.getaccesstoken(mcontext)
         var canteenCart= CanteenCartApiModel(PreferenceManager.getStudentID(mcontext).toString())
@@ -165,12 +166,13 @@ class PreorderItemsAdapter(
         call.enqueue(object : Callback<CanteenCartModel> {
             override fun onFailure(call: Call<CanteenCartModel>, t: Throwable) {
                 Log.e("Failed", t.localizedMessage)
-                progressDialogP.visibility=View.GONE
+                progressDialogP.hide()
               //  progressDialogP.hide()
             }
             override fun onResponse(call: Call<CanteenCartModel>, response: Response<CanteenCartModel>) {
                 val responsedata = response.body()
-                progressDialogP.visibility=View.GONE
+                progressDialogP.hide()
+
                 //progressDialogP.hide()
                 if (responsedata!!.status==100) {
                     bottomView.visibility=View.VISIBLE
@@ -190,8 +192,9 @@ class PreorderItemsAdapter(
 
                         totalItems.setText(cartTotalItems.toString() + "Items")
                         totalPrice.setText(cartTotalAmount.toString() + "AED")
-                        progressDialogP.visibility=View.GONE
-                  //  progressDialogP.hide()
+                    progressDialogP.hide()
+
+                    //  progressDialogP.hide()
                      notifyDataSetChanged()
                 }else
                 {
@@ -203,7 +206,7 @@ class PreorderItemsAdapter(
         })
     }
 private fun addToCart(id:String,price:String,position: Int){
-    progressDialogP.visibility=View.VISIBLE
+    progressDialogP.show()
  //   progressDialogP.show()
     val token = PreferenceManager.getaccesstoken(mcontext)
     var canteenadd= AddToCartCanteenApiModel(
@@ -212,7 +215,7 @@ private fun addToCart(id:String,price:String,position: Int){
     call.enqueue(object : Callback<AddToCartCanteenModel> {
         override fun onFailure(call: Call<AddToCartCanteenModel>, t: Throwable) {
             Log.e("Failed", t.localizedMessage)
-            progressDialogP.visibility=View.GONE
+            progressDialogP.hide()
            // progressDialogP.hide()
         }
         override fun onResponse(call: Call<AddToCartCanteenModel>, response: Response<AddToCartCanteenModel>) {
@@ -238,7 +241,7 @@ private fun addToCart(id:String,price:String,position: Int){
     })
 }
     private fun updateCart(id:String,position: Int,quant:String){
-        progressDialogP.visibility=View.VISIBLE
+        progressDialogP.show()
        // progressDialogP.show()
         val token = PreferenceManager.getaccesstoken(mcontext)
         var canteenadd= CanteenCartUpdateApiModel(
@@ -248,12 +251,14 @@ private fun addToCart(id:String,price:String,position: Int){
         call.enqueue(object : Callback<CanteenCartUpdateModel> {
             override fun onFailure(call: Call<CanteenCartUpdateModel>, t: Throwable) {
                 Log.e("Failed", t.localizedMessage)
-                progressDialogP.visibility=View.GONE
-             //   progressDialogP.hide()
+                progressDialogP.hide()
+
+                //   progressDialogP.hide()
             }
             override fun onResponse(call: Call<CanteenCartUpdateModel>, response: Response<CanteenCartUpdateModel>) {
                 val responsedata = response.body()
-                progressDialogP.visibility=View.GONE
+                progressDialogP.hide()
+
                 //progressDialogP.hide()
                 if (responsedata!!.status==100) {
                 itemlist[position].quantityCart=quant.toInt()
@@ -278,7 +283,7 @@ private fun addToCart(id:String,price:String,position: Int){
         })
     }
     private fun cancelCart(position: Int){
-        progressDialogP.visibility=View.VISIBLE
+        progressDialogP.show()
        // progressDialogP.show()
         val token = PreferenceManager.getaccesstoken(mcontext)
         var canteenadd= CanteenCartRemoveApiModel(
@@ -287,12 +292,14 @@ private fun addToCart(id:String,price:String,position: Int){
         call.enqueue(object : Callback<CanteenCartRemoveModel> {
             override fun onFailure(call: Call<CanteenCartRemoveModel>, t: Throwable) {
                 Log.e("Failed", t.localizedMessage)
-                progressDialogP.visibility=View.GONE
+                progressDialogP.hide()
+
                 //progressDialogP.hide()
             }
             override fun onResponse(call: Call<CanteenCartRemoveModel>, response: Response<CanteenCartRemoveModel>) {
                 val responsedata = response.body()
-                progressDialogP.visibility=View.GONE
+                progressDialogP.hide()
+
                 //progressDialogP.hide()
                 if (responsedata!!.status==100) {
 

@@ -29,7 +29,7 @@ class SettingsAdapter(private var settingsArrayList: ArrayList<String>, var cont
             if (!PreferenceManager.getaccesstoken(context).equals(""))
             {
 
-                if (position==6)
+                if (position==7)
                 {
 
                     holder.listTxtTitle.setText(settingsArrayList.get(position).toString())

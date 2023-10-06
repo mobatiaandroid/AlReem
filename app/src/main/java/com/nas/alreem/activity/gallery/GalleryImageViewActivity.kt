@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.annotation.RequiresApi
@@ -35,13 +36,22 @@ class GalleryImageViewActivity : AppCompatActivity(){
     lateinit var logoClickImgView: ImageView
     lateinit var album_id: String
     lateinit var imageArrayList:ArrayList<PhotosModel>
+    lateinit var progress: ProgressBar
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gallery_images)
         mContext=this
         initUI()
-        callAlbumAPi()
+        if (ConstantFunctions.internetCheck(mContext))
+        {
+            callAlbumAPi()
+        }
+        else
+        {
+            DialogFunctions.showInternetAlertDialog(mContext)
+        }
+
 
     }
     fun initUI()
@@ -51,6 +61,7 @@ class GalleryImageViewActivity : AppCompatActivity(){
         heading=findViewById(R.id.heading)
         backRelative=findViewById(R.id.backRelative)
         logoClickImgView=findViewById(R.id.logoClickImgView)
+        progress = findViewById(R.id.progress)
         backRelative.setOnClickListener(View.OnClickListener {
             finish()
         })
@@ -82,16 +93,18 @@ class GalleryImageViewActivity : AppCompatActivity(){
     }
     fun callAlbumAPi()
     {
-
+        progress.visibility = View.VISIBLE
         imageArrayList= ArrayList()
         var model=PhotosApiModel("1",album_id,"new")
         val call: Call<PhotosResponseModel> = ApiClient.getClient.photos(model,"Bearer "+PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<PhotosResponseModel> {
             override fun onFailure(call: Call<PhotosResponseModel>, t: Throwable) {
+                progress.visibility = View.GONE
                 Log.e("Failed", t.localizedMessage)
 
             }
             override fun onResponse(call: Call<PhotosResponseModel>, response: Response<PhotosResponseModel>) {
+                progress.visibility = View.GONE
                 val responsedata = response.body()
 
                 if (responsedata != null) {

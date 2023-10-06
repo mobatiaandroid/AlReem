@@ -45,11 +45,12 @@ class PaymentHistory_Activity : AppCompatActivity() {
     lateinit var back: ImageView
     //lateinit var amount: EditText
     //lateinit var addToWallet: Button
-    lateinit var progress: RelativeLayout
+   // lateinit var progress: RelativeLayout
     lateinit var studentlist: ArrayList<String>
     //lateinit var studentname: TextView
     lateinit var dropdown: LinearLayout
     lateinit var title: TextView
+    lateinit var progress: ProgressBar
 
     lateinit var studImg: ImageView
     lateinit var studentNameTxt: TextView
@@ -73,7 +74,13 @@ class PaymentHistory_Activity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.canteen_paymenthistory)
         initfn()
-        callStudentListApi()
+        if (ConstantFunctions.internetCheck(nContext)) {
+//            progressDialog.visibility= View.VISIBLE
+            callStudentListApi()
+        } else {
+            DialogFunctions.showInternetAlertDialog(nContext)
+        }
+
 
 
     }
@@ -90,13 +97,13 @@ class PaymentHistory_Activity : AppCompatActivity() {
         studentNameTxt = findViewById(R.id.studentName)!!
         studImg = findViewById(R.id.imagicon)
         recyclerView = findViewById(R.id.history_rec)
-        progress = findViewById(R.id.progressDialog)
+        progress = findViewById(R.id.progress)
         title = findViewById(R.id.titleTextView)
 
         title.text = "Payment History"
-        val aniRotate: Animation =
+        /*val aniRotate: Animation =
             AnimationUtils.loadAnimation(nContext, R.anim.linear_interpolator)
-        progress.startAnimation(aniRotate)
+        progress.startAnimation(aniRotate)*/
         back.setOnClickListener {
             finish()
         }
@@ -112,7 +119,7 @@ class PaymentHistory_Activity : AppCompatActivity() {
 
             }
         })
-        walletHistory()
+       // walletHistory()
 
     }
     fun showStudentList(context: Context ,mStudentList : ArrayList<StudentList>)
@@ -184,7 +191,14 @@ class PaymentHistory_Activity : AppCompatActivity() {
                     studImg.setImageResource(R.drawable.student)
                 }
                 //progressDialog.visibility = View.VISIBLE
-                walletHistory()
+
+                if (ConstantFunctions.internetCheck(nContext)) {
+//            progressDialog.visibility= View.VISIBLE
+                    walletHistory()
+                } else {
+                    DialogFunctions.showInternetAlertDialog(nContext)
+                }
+
                 //  Toast.makeText(activity, mStudentList.get(position).name, Toast.LENGTH_SHORT).show()
                 dialog.dismiss()
             }
@@ -193,16 +207,17 @@ class PaymentHistory_Activity : AppCompatActivity() {
     }
     fun callStudentListApi()
     {
-        //progressDialog.visibility = View.VISIBLE
+
+        progress.visibility = View.VISIBLE
         val token = PreferenceManager.getaccesstoken(nContext)
         val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+token)
         call.enqueue(object : Callback<StudentListModel> {
             override fun onFailure(call: Call<StudentListModel>, t: Throwable) {
                 Log.e("Error", t.localizedMessage)
-                //progressDialog.visibility = View.GONE
+                progress.visibility = View.GONE
             }
             override fun onResponse(call: Call<StudentListModel>, response: Response<StudentListModel>) {
-               // progressDialog.visibility = View.GONE
+                progress.visibility = View.GONE
                 //val arraySize :Int = response.body()!!.responseArray.studentList.size
                 if (response.body()!!.status==100)
                 {
@@ -256,7 +271,13 @@ class PaymentHistory_Activity : AppCompatActivity() {
                             studImg.setImageResource(R.drawable.student)
                         }
                     }
-                    walletHistory()
+                    if (ConstantFunctions.internetCheck(nContext)) {
+//            progressDialog.visibility= View.VISIBLE
+                        walletHistory()
+                    } else {
+                        DialogFunctions.showInternetAlertDialog(nContext)
+                    }
+
 
                     //callStudentInfoApi()
                 }
@@ -267,6 +288,8 @@ class PaymentHistory_Activity : AppCompatActivity() {
         })
     }
     private fun walletHistory(){
+        progress.visibility=View.VISIBLE
+
         val token = PreferenceManager.getaccesstoken(nContext)
         val paymentSuccessBody = WalletHistoryApiModel(PreferenceManager.getStudentID(nContext).toString(),"0","50")
         val call: Call<WalletHistoryModel> =
@@ -274,12 +297,12 @@ class PaymentHistory_Activity : AppCompatActivity() {
         call.enqueue(object : Callback<WalletHistoryModel> {
             override fun onFailure(call: Call<WalletHistoryModel>, t: Throwable) {
                 Log.e("Failed", t.localizedMessage)
-                //mProgressRelLayout.visibility=View.GONE
+                progress.visibility=View.GONE
             }
 
             override fun onResponse(call: Call<WalletHistoryModel>, response: Response<WalletHistoryModel>) {
                 val responsedata = response.body()
-                //progressDialog.visibility = View.GONE
+                progress.visibility = View.GONE
                 Log.e("Response Signup", responsedata.toString())
                 if (responsedata != null) {
                     try {

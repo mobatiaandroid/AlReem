@@ -38,14 +38,15 @@ class CalendarDetailListAdapter(
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         Log.e("ADAPTAR", "DETAIL")
         holder.eventName.text = calendarModels.get(position).title
-
+        //Log.e("isalladay", calendarModels.get(position).isAllday)
         if (calendarModels.get(position).isAllday.equals("1")) {
             holder.eventTime.text = "All Day Event"
         } else {
-            if (!calendarModels.get(position).starttime.equals("") && !(calendarModels.get(position).endtime).equals(
-                    ""
-                )
+          //  Log.e("satrttime",calendarModels.get(position).starttime)
+          //  Log.e("endtime",calendarModels.get(position).endtime)
+            if (!calendarModels.get(position).starttime.equals("") && !(calendarModels.get(position).endtime).equals("")
             ) {
+                Log.e("minus","minus")
                 holder.eventTime.text =
                     calendarModels.get(position).starttime + " - " + calendarModels.get(
                         position
@@ -54,11 +55,13 @@ class CalendarDetailListAdapter(
                     position
                 ).endtime).equals("")
             ) {
+                //Log.e("Success1","Suucess")
                 holder.eventTime.text = calendarModels.get(position).starttime
             } else if (calendarModels.get(position).starttime.equals("") && !(calendarModels.get(
                     position
                 ).endtime).equals("")
             ) {
+               // Log.e("Success2","Suucess")
                 holder.eventTime.text = calendarModels.get(position).endtime
             }
         }

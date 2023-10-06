@@ -20,18 +20,126 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="30"
+            android:scaleType="centerCrop"
             android:background="@drawable/default_banner"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusableInTouchMode="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp">
 
+        <RelativeLayout
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp">
+
+            <ImageView
+                android:id="@+id/sendEmail"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/mailiconpe"
+                android:visibility="invisible" />
+
+            <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
+                android:id="@+id/descriptionTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@+id/mailImageView"
+                android:singleLine="true"
+                android:text="@string/introduction"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:visibility="invisible" />
+        </RelativeLayout>
+            <com.nas.alreem.commonviews.CustomFontSansProTextBlack
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/title"
+                android:layout_marginTop="5dp"
+                android:text=""
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:visibility="invisible" />
+
+            <com.nas.alreem.commonviews.CustomFontSansProTextBlack
+                android:id="@+id/weburl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/description"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:singleLine="true"
+                android:visibility="invisible"
+                android:text="http://www.nordangliaeducation.com/our-schools/dubai/our-school/our-uniform"
+                android:textColor="@color/dark_blue" />
+        </RelativeLayout>
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/term_button_bg"
+            android:layout_below="@id/weburl">
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="7dp"
+                android:background="@color/list_bg">
+
+                <RelativeLayout
+                    android:id="@+id/relSub"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10dp">
+
+                    <com.nas.alreem.commonviews.CustomTextViewRegular
+                        android:id="@+id/listTxtTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:text="Staff Directory"
+                        android:layout_toLeftOf="@+id/arrowImg"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:singleLine="true"
+                        android:textColor="@color/white" />
+                    <ImageView
+                        android:id="@+id/arrowImg"
+                        android:layout_width="20dp"
+                        android:layout_height="25dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="5dp"
+                        android:background="@drawable/arrow" />
+                </RelativeLayout>
+            </RelativeLayout>
+
+
+        </RelativeLayout>
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/aboutUsRecycler"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_margin="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
             android:layout_weight="70"
             android:background="@color/white"
             android:overScrollMode="never"
             android:scrollbars="vertical"
             android:visibility="visible" />
+
     </LinearLayout>
 
     <ProgressBar

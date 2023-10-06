@@ -1,14 +1,22 @@
 package com.nas.alreem.constants
 
+import android.app.Dialog
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.util.Log
+import android.view.View
+import android.view.Window
 import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
+import com.nas.alreem.R
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -130,6 +138,26 @@ class ConstantFunctions {
             return msg
         }
 
+
+        fun showDialogueWithOk(context: Context, message: String, msgHead: String)
+        {
+            val dialog = Dialog(context)
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog.setCancelable(false)
+            dialog.setContentView(R.layout.dialog_common_error_alert)
+            var iconImageView = dialog.findViewById(R.id.iconImageView) as? ImageView
+            var alertHead = dialog.findViewById(R.id.alertHead) as? TextView
+            var text_dialog = dialog.findViewById(R.id.messageTxt) as? TextView
+            var btn_Ok = dialog.findViewById(R.id.btn_Ok) as Button
+            text_dialog?.text = message
+            alertHead?.text = msgHead
+            btn_Ok.setOnClickListener()
+            {
+                dialog.dismiss()
+            }
+            dialog.show()
+        }
         fun htmlparsing(text: String): String? {
             var encodedString: String = text.replace("&lt;".toRegex(), "<")
             encodedString = encodedString.replace("&gt;".toRegex(), ">")
@@ -152,6 +180,10 @@ class ConstantFunctions {
             Log.e("Date converted",strCurrentDate)
             return strCurrentDate
         }
-
+        fun replace(str: String): String? {
+            return str.replace(" ".toRegex(), "%20")
+        }
     }
+
+
 }

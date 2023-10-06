@@ -2,12 +2,14 @@ package com.nas.alreem.fragment.home
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.TypedArray
 import android.graphics.Color
+import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
@@ -20,35 +22,36 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
-import com.google.android.material.internal.ContextUtils.getActivity
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 import com.nas.alreem.BuildConfig
 import com.nas.alreem.R
 import com.nas.alreem.activity.home.HomeActivity
-import com.nas.alreem.activity.login.LoginActivity
-import com.nas.alreem.activity.settings.TutorialActivity
+import com.nas.alreem.activity.login.model.SignUpResponseModel
+import com.nas.alreem.activity.survey.adapter.SurveyQuestionPagerAdapter
+import com.nas.alreem.activity.survey.model.*
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.ConstantWords
 import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.fragment.about_us.AboutUsFragment
-import com.nas.alreem.fragment.about_us.model.AboutUsResponseModel
+import com.nas.alreem.fragment.absence.AbsenceFragment
 import com.nas.alreem.fragment.calendar.CalendarFragment
 import com.nas.alreem.fragment.canteen.CanteenFragment
+import com.nas.alreem.fragment.cca.CCAFragment
 import com.nas.alreem.fragment.contact_us.ContactUsFragment
 import com.nas.alreem.fragment.early_years.EarlyYearsFragment
 import com.nas.alreem.fragment.gallery.GalleryFragment
 import com.nas.alreem.fragment.home.model.BannerResponseModel
 import com.nas.alreem.fragment.notifications.NotificationFragment
-import com.nas.alreem.fragment.notifications.adapter.NotificationListAdapter
-import com.nas.alreem.fragment.notifications.model.NotificationApiModel
-import com.nas.alreem.fragment.notifications.model.NotificationResponseModel
+import com.nas.alreem.fragment.parent_meetings.ParentMeetingsFragment
+import com.nas.alreem.fragment.parents_essentials.ParentsEssentialFragment
 import com.nas.alreem.fragment.payments.PaymentFragment
-import com.nas.alreem.fragment.payments.model.PaymentResponseModel
+import com.nas.alreem.fragment.payments.model.SendEmailApiModel
+import com.nas.alreem.fragment.permission_slip.PermissionSlipFragment
 import com.nas.alreem.fragment.primary.PrimaryFragment
 import com.nas.alreem.fragment.secondary.SecondaryFragment
 import com.nas.alreem.rest.ApiClient
-import okhttp3.ResponseBody
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -118,6 +121,17 @@ lateinit var mContext: Context
 lateinit var current_date:String
 var currentPage: Int = 0
 private val NOTICE_TIME_OUT:Long = 5000
+var currentPageSurvey = 0
+var survey_satisfation_status = 0
+private var surveyEmail = ""
+private var surveySize = 0
+var pos = -1
+var poss = 0
+lateinit var surveyArrayList: ArrayList<SurveyDetailDataModel>
+lateinit var surveyQuestionArrayList: ArrayList<SurveyQuestionsModel>
+lateinit var surveyAnswersArrayList: ArrayList<SurveyOfferedAnswersModel>
+lateinit var mAnswerList: ArrayList<SurveySubmitDataModel>
+
 class HomeFragment : Fragment() , View.OnClickListener{
 
     override fun onCreateView(
@@ -175,10 +189,33 @@ class HomeFragment : Fragment() , View.OnClickListener{
                             else {
                                 pager.setBackgroundResource(R.drawable.default_banner)
                             }
-                            var notice="https://cms.nasabudhabi.ae//storage/banner_images/1685530996.PNG"
+                            var notice=response.body()!!.responseArray!!.notice
+                            val survey: Int = response.body()!!.responseArray!!.survey
+                            //										int survey=0;
+                            PreferenceManager.setSurvey(mContext, survey)
                             if(notice.equals(""))
                             {
+                                if (PreferenceManager.getSurvey(mContext) === 1) {
+                                    if (PreferenceManager.getIsSurveyHomeVisible(mContext))
+                                    {
+                                    }
+                                    else
+                                    {
+                                        Log.e("SURVEY VALUE", "API CALL")
+                                        if (ConstantFunctions.internetCheck(mContext))
+                                        {
+                                            callSurveyApi()
+                                        }
+                                        else
+                                        {
+                                            DialogFunctions.showInternetAlertDialog(mContext)
+                                        }
 
+                                    }
+                                } else
+                                {
+
+                                }
                             }
                             else{
                                 if (PreferenceManager.getNoticeFirstTime(mContext).equals(""))
@@ -751,6 +788,21 @@ class HomeFragment : Fragment() , View.OnClickListener{
                 textdata.equals(ConstantWords.contact_us, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_CONTACT_US
 
+                } textdata.equals(ConstantWords.parentessential, ignoreCase = true) -> {
+                    TAB_ID = ConstantWords.TAB_PARENT_ESSENTIAL
+
+                }
+                textdata.equals(ConstantWords.absence_earlypickup, ignoreCase = true) -> {
+                    TAB_ID = ConstantWords.TAB_ABSENCE
+                }
+                textdata.equals(ConstantWords.enrichment, ignoreCase = true) -> {
+                TAB_ID = ConstantWords.TAB_ENRICHMENT
+            }
+                textdata.equals(ConstantWords.parentmeetings, ignoreCase = true) -> {
+                    TAB_ID = ConstantWords.TAB_PARENT_MEETINGS
+                }
+                textdata.equals(ConstantWords.permission_forms, ignoreCase = true) -> {
+                    TAB_ID = ConstantWords.TAB_PERMISSION_FORMS
                 }
 
             }
@@ -948,6 +1000,22 @@ class HomeFragment : Fragment() , View.OnClickListener{
                     DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert),mContext.resources.getString(R.string.feature_only_for_registered_user),mContext)
 
                 }
+                ConstantWords.TAB_ABSENCE -> {
+                    DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert),mContext.resources.getString(R.string.feature_only_for_registered_user),mContext)
+
+                }
+                ConstantWords.TAB_ENRICHMENT -> {
+                    DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert),mContext.resources.getString(R.string.feature_only_for_registered_user),mContext)
+
+                }
+                ConstantWords.TAB_PARENT_MEETINGS -> {
+                    DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert),mContext.resources.getString(R.string.feature_only_for_registered_user),mContext)
+
+                }
+                ConstantWords.TAB_PERMISSION_FORMS -> {
+                    DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert),mContext.resources.getString(R.string.feature_only_for_registered_user),mContext)
+
+                }
                 ConstantWords.TAB_EARLY_YEARS -> {
                     mFragment = EarlyYearsFragment()
                     fragmentIntent(mFragment)
@@ -965,6 +1033,10 @@ class HomeFragment : Fragment() , View.OnClickListener{
 
                 }
                 ConstantWords.TAB_LUNCH_BOX -> {
+                    DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert),mContext.resources.getString(R.string.feature_only_for_registered_user),mContext)
+
+                }
+                ConstantWords.TAB_PARENT_ESSENTIAL -> {
                     DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert),mContext.resources.getString(R.string.feature_only_for_registered_user),mContext)
 
                 }
@@ -1051,6 +1123,10 @@ class HomeFragment : Fragment() , View.OnClickListener{
                     mFragment = SecondaryFragment()
                     fragmentIntent(mFragment)
                 }
+                ConstantWords.TAB_PARENT_ESSENTIAL -> {
+                    mFragment = ParentsEssentialFragment()
+                    fragmentIntent(mFragment)
+                }
                 ConstantWords.TAB_GALLERY -> {
 //                    DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert),mContext.resources.getString(R.string.feature_only_for_registered_user),context)
                     mFragment = GalleryFragment()
@@ -1058,6 +1134,24 @@ class HomeFragment : Fragment() , View.OnClickListener{
                 }
                 ConstantWords.TAB_ABOUT_US -> {
                     mFragment = AboutUsFragment()
+                    fragmentIntent(mFragment)
+                }
+                ConstantWords.TAB_ABSENCE -> {
+                    PreferenceManager.setStudentID(mContext,"")
+                    mFragment = AbsenceFragment()
+                    fragmentIntent(mFragment)
+                }
+                ConstantWords.TAB_ENRICHMENT -> {
+                    mFragment = CCAFragment()
+                    fragmentIntent(mFragment)
+                }
+                ConstantWords.TAB_PARENT_MEETINGS -> {
+                    mFragment = ParentMeetingsFragment()
+                    fragmentIntent(mFragment)
+                }
+                ConstantWords.TAB_PERMISSION_FORMS -> {
+                    PreferenceManager.setStudentID(mContext,"")
+                    mFragment = PermissionSlipFragment()
                     fragmentIntent(mFragment)
                 }
                 ConstantWords.TAB_LUNCH_BOX -> {
@@ -1110,12 +1204,58 @@ private fun showPopUpImage(notice:String,context: Context)
     Glide.with(context).load(notice).centerCrop().into(bannerImg)
     closeImg.setOnClickListener()
     {
+
+        if (PreferenceManager.getSurvey(mContext) === 1)
+        {
+            if (PreferenceManager.getIsSurveyHomeVisible(mContext))
+            {
+
+            }
+            else
+            {
+                Log.e("SURVEY VALUE", "API CALL")
+                if (ConstantFunctions.internetCheck(mContext))
+                {
+                    callSurveyApi()
+                }
+                else
+                {
+                    DialogFunctions.showInternetAlertDialog(mContext)
+                }
+            }
+        }
+        else
+        {
+
+        }
         dialog.dismiss()
+
     }
 
 
     Handler().postDelayed({
+        if (PreferenceManager.getSurvey(mContext) === 1) {
+            if (PreferenceManager.getIsSurveyHomeVisible(mContext))
+            {
 
+            }
+            else
+            {
+                Log.e("SURVEY VALUE", "API CALL")
+                if (ConstantFunctions.internetCheck(mContext))
+                {
+                    callSurveyApi()
+                }
+                else
+                {
+                    DialogFunctions.showInternetAlertDialog(mContext)
+                }
+            }
+        }
+        else
+        {
+
+        }
       dialog.dismiss()
 
     }, NOTICE_TIME_OUT)
@@ -1124,6 +1264,924 @@ private fun showPopUpImage(notice:String,context: Context)
     dialog.show()
 }
 
+fun callSurveyApi() {
+    surveyArrayList = ArrayList()
+    var model= SurveyApiModel("16")
+
+    val call: Call<SurveyResponseModel> = ApiClient.getClient.survey(model,"Bearer "+ PreferenceManager.getaccesstoken(mContext))
+    call.enqueue(object : Callback<SurveyResponseModel> {
+        override fun onFailure(call: Call<SurveyResponseModel>, t: Throwable) {
+            Log.e("Failed", t.localizedMessage)
+
+        }
+        override fun onResponse(call: Call<SurveyResponseModel>, response: Response<SurveyResponseModel>) {
+            val responsedata = response.body()
+
+            if (responsedata != null) {
+                try {
+
+                    if (response.body()!!.status==100)
+                    {
+                        PreferenceManager.setIsSurveyHomeVisible(mContext, true)
+
+                        if (response.body()!!.responseArray!!.data!!.size > 0) {
+                            surveySize = response.body()!!.responseArray!!.data!!.size
+                            for (i in response.body()!!.responseArray!!.data!!.indices) {
+                               // val dataObject = dataArray.getJSONObject(i)
+                                surveyEmail = response.body()!!.responseArray!!.data!!.get(i).contact_email
+                                Log.e("surveyEmail",surveyEmail)
+                                val model = SurveyDetailDataModel()
+                                model.id=(response.body()!!.responseArray!!.data!!.get(i).id)
+                                model.survey_name=(response.body()!!.responseArray!!.data!!.get(i).survey_name)
+                                model.image=(response.body()!!.responseArray!!.data!!.get(i).image)
+                                model.title=(response.body()!!.responseArray!!.data!!.get(i).title)
+                                model.description=(response.body()!!.responseArray!!.data!!.get(i).description)
+                                model.created_at=(response.body()!!.responseArray!!.data!!.get(i).created_at)
+                                model.updated_at=(response.body()!!.responseArray!!.data!!.get(i).updated_at)
+
+                                surveyQuestionArrayList = ArrayList()
+                               // val questionsArray = dataObject.getJSONArray("questions")
+                                if (response.body()!!.responseArray!!.data!!.get(i).questions!!.size > 0) {
+                                    for (j in  response.body()!!.responseArray!!.data!!.get(i).questions!!.indices) {
+                                       // val questionsObject = questionsArray.getJSONObject(j)
+                                        val mModel = SurveyQuestionsModel()
+                                        mModel.id=(response.body()!!.responseArray!!.data!!.get(i).questions!!.get(j).id)
+                                        mModel.question=(response.body()!!.responseArray!!.data!!.get(i).questions!!.get(j).question)
+                                        mModel.answer_type=(response.body()!!.responseArray!!.data!!.get(i).questions!!.get(j).answer_type)
+                                        mModel.answer=("")
+                                        surveyAnswersArrayList = ArrayList()
+
+                                        if (response.body()!!.responseArray!!.data!!.get(i).questions!!.get(j).offered_answers!!.size>0) {
+                                            for (k in response.body()!!.responseArray!!.data!!.get(i).questions!!.get(j).offered_answers!!.indices) {
+
+                                                val nModel = SurveyOfferedAnswersModel()
+                                                nModel.id=(response.body()!!.responseArray!!.data!!.get(i).questions!!.get(j).offered_answers!!.get(k).id)
+                                                nModel.answer=(response.body()!!.responseArray!!.data!!.get(i).questions!!.get(j).offered_answers!!.get(k).answer)
+                                                nModel.label=(response.body()!!.responseArray!!.data!!.get(i).questions!!.get(j).offered_answers!!.get(k).label)
+                                                nModel.is_clicked=(false)
+                                                nModel.is_clicked0=(false)
+                                                surveyAnswersArrayList.add(nModel)
+                                            }
+                                        }
+                                        mModel.offered_answers=(surveyAnswersArrayList)
+                                        surveyQuestionArrayList.add(mModel)
+                                        Log.e("surveydata", surveyQuestionArrayList.size.toString())
+
+
+                                    }
+                                }
+                                model.questions=(surveyQuestionArrayList)
+                                surveyArrayList.add(model)
+                            }
+                            //showSurvey(getActivity(),surveyArrayList);
+                            Log.e("data", surveyArrayList.size.toString())
+                            showSurveyWelcomeDialogue(mContext, surveyArrayList, false)
+                        }
+                    }
+                    else
+                    {
+
+                        DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), mContext)
+                    }
+
+
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+
+    })
+}
+fun showSurveyWelcomeDialogue(
+    activity: Context,
+    surveyArrayList: ArrayList<SurveyDetailDataModel>,
+    isThankyou: Boolean?
+
+) {
+//        final Dialog dialog = new Dialog(activity,android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+//        dialog.requestWindowFeature(R.style.full_screen_dialog);
+    val dialog = Dialog(activity!!)
+    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+    dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    dialog.setCancelable(false)
+    dialog.setContentView(R.layout.dialog_survey_wlcome)
+    val startNowBtn = dialog.findViewById<View>(R.id.startNowBtn) as Button
+    val imgClose = dialog.findViewById<View>(R.id.closeImg) as ImageView
+
+    val headingTxt = dialog.findViewById<View>(R.id.titleTxt) as TextView
+    val descriptionTxt = dialog.findViewById<View>(R.id.descriptionTxt) as TextView
+    //        if (isThankyou)
+//		{
+//			thankyouTxt.setVisibility(View.VISIBLE);
+//			thankyouTxt.setText("Thank you For Submitting your Survey");
+//		}
+//        else {
+//			thankyouTxt.setVisibility(View.GONE);
+//		}
+    Log.e("surveyArrayList", surveyArrayList.size.toString())
+    Log.e("surveyArrayList1", surveyArrayList[pos+1].description.toString())
+   // Log.e("surveyArrayList2", surveyArrayList[pos+2].description)
+
+    headingTxt.setText(surveyArrayList[pos + 1].title)
+    descriptionTxt.setText(surveyArrayList[pos + 1].description)
+    val bannerImg = dialog.findViewById<View>(R.id.bannerImg) as ImageView
+    if (!surveyArrayList[pos + 1].image.equals("")) {
+        Glide.with(mContext).load(surveyArrayList[pos + 1].image).centerCrop().into(bannerImg)
+
+    } else {
+        bannerImg.setImageResource(R.drawable.survey)
+    }
+    startNowBtn.setOnClickListener {
+        dialog.dismiss()
+
+        if (surveyArrayList.size > 0) {
+            pos = pos + 1
+            if (pos < surveyArrayList.size) {
+                Log.e("insidewelcome", surveyQuestionArrayList.size.toString())
+                if(surveyArrayList[pos].questions!!.size>0)
+                {
+                    showSurveyQuestionAnswerDialog(
+                        activity,
+                        surveyArrayList[pos].questions!!,
+                        surveyArrayList[pos].survey_name,
+                        surveyArrayList[pos].id.toString(),
+                        surveyArrayList[pos].contact_email,isThankyou
+                    )
+                    dialog.dismiss()
+                }
+                else{
+                    DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), "No Survey Questions Available.", mContext)
+                    dialog.dismiss()
+                }
+
+            }
+        }
+    }
+    imgClose.setOnClickListener {
+        showCloseSurveyDialog(dialog,isThankyou)
+    }
+    val skipBtn = dialog.findViewById<View>(R.id.skipBtn) as Button
+    skipBtn.setOnClickListener {
+       // dialog.dismiss()
+        surveySize = surveySize - 1
+
+        if (surveySize <= 0) {
+            showCloseSurveyDialog(dialog,false)
+        }
+        else
+        {
+            showCloseSurveyDialog(dialog,true)
+        }
+    }
+    dialog.show()
+}
+fun showSurveyQuestionAnswerDialog(
+    activity: Context,
+    surveyQuestionArrayList: ArrayList<SurveyQuestionsModel>,
+    surveyname: String?,
+    surveyID: String?,
+    contactEmail: String?,
+    isThankyou: Boolean?
+) {
+    val dialog = Dialog(activity!!)
+    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+    dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    dialog.setCancelable(false)
+    dialog.setContentView(R.layout.dialog_question_answer_survey)
+    val surveyPager = dialog.findViewById<View>(R.id.surveyPager) as ViewPager
+    val questionCount = dialog.findViewById<View>(R.id.questionCount) as TextView
+    val nxtQnt = dialog.findViewById<View>(R.id.nxtQnt) as TextView
+    val currentQntTxt = dialog.findViewById<View>(R.id.currentQntTxt) as TextView
+    val surveyName = dialog.findViewById<View>(R.id.surveyName) as TextView
+    val previousBtn = dialog.findViewById<View>(R.id.previousBtn) as ImageView
+    val nextQuestionBtn = dialog.findViewById<View>(R.id.nextQuestionBtn) as ImageView
+    val closeImg = dialog.findViewById<View>(R.id.closeImg) as ImageView
+    val progressBar = dialog.findViewById<View>(R.id.progressBar) as ProgressBar
+    val emailImg = dialog.findViewById<View>(R.id.emailImg) as ImageView
+
+    progressBar.max = surveyQuestionArrayList.size
+    progressBar.progressDrawable.setColorFilter(
+        mContext.resources.getColor(R.color.rel_one),
+        PorterDuff.Mode.SRC_IN
+    )
+    closeImg.setOnClickListener {
+        surveySize = surveySize - 1
+        if (surveySize <= 0) {
+            showCloseSurveyDialog(dialog,false)
+        }
+        else
+        {
+            showCloseSurveyDialog(dialog,true)
+        }
+       // showCloseSurveyDialog(dialog,true)
+    }
+    if (surveyQuestionArrayList.size > 9) {
+        currentQntTxt.text = "01"
+        questionCount.text = "/" + surveyQuestionArrayList.size.toString()
+    } else {
+        currentQntTxt.text = "01"
+        questionCount.text = "/0" + surveyQuestionArrayList.size.toString()
+    }
+    surveyName.text = surveyname
+
+    if (surveyEmail.equals(""))
+    {
+        emailImg.visibility=View.GONE
+    }
+    else{
+        emailImg.visibility=View.VISIBLE
+    }
+
+    emailImg.setOnClickListener {
+        showSendEmailDialog()
+    }
+    //        if (contactEmail.equalsIgnoreCase(""))
+//		{
+//			emailImg.setVisibility(View.GONE);
+//		}
+//        else {
+//			emailImg.setVisibility(View.GONE);
+//		}
+    currentPageSurvey = 1
+    surveyPager.currentItem = currentPageSurvey - 1
+    progressBar.progress = currentPageSurvey
+    surveyPager.adapter = SurveyQuestionPagerAdapter(activity, surveyQuestionArrayList)
+    if (currentPageSurvey == surveyQuestionArrayList.size) {
+        previousBtn.visibility = View.INVISIBLE
+        nextQuestionBtn.visibility = View.INVISIBLE
+        nxtQnt.visibility = View.VISIBLE
+    } else {
+        if (currentPageSurvey == 1) {
+            previousBtn.visibility = View.INVISIBLE
+            nextQuestionBtn.visibility = View.VISIBLE
+            nxtQnt.visibility = View.INVISIBLE
+        } else {
+            previousBtn.visibility = View.INVISIBLE
+            nextQuestionBtn.visibility = View.VISIBLE
+            nxtQnt.visibility = View.INVISIBLE
+        }
+    }
+    nextQuestionBtn.setOnClickListener {
+        if (currentPageSurvey == surveyQuestionArrayList.size) {
+        } else {
+            currentPageSurvey++
+            progressBar.progress = currentPageSurvey
+            surveyPager.currentItem = currentPageSurvey - 1
+            if (currentPageSurvey == surveyQuestionArrayList.size) {
+                nextQuestionBtn.visibility = View.INVISIBLE
+                previousBtn.visibility = View.VISIBLE
+                nxtQnt.visibility = View.VISIBLE
+            } else {
+                nextQuestionBtn.visibility = View.VISIBLE
+                previousBtn.visibility = View.VISIBLE
+                nxtQnt.visibility = View.INVISIBLE
+            }
+        }
+        if (surveyQuestionArrayList.size > 9) {
+            if (currentPageSurvey < 9) {
+                currentQntTxt.text = "0$currentPageSurvey"
+                questionCount.text = "/" + surveyQuestionArrayList.size.toString()
+            } else {
+                currentQntTxt.setText(currentPageSurvey.toString())
+                questionCount.text = "/" + surveyQuestionArrayList.size.toString()
+            }
+        } else {
+            if (currentPageSurvey < 9) {
+                currentQntTxt.text = "0$currentPageSurvey"
+                questionCount.text = "/" + "0" + surveyQuestionArrayList.size.toString()
+            } else {
+                currentQntTxt.setText(currentPageSurvey.toString())
+                questionCount.text = "/" + "0" + surveyQuestionArrayList.size.toString()
+            }
+        }
+    }
+    previousBtn.setOnClickListener {
+        if (currentPageSurvey == 1) {
+            previousBtn.visibility = View.INVISIBLE
+            nxtQnt.visibility = View.INVISIBLE
+            if (currentPageSurvey == surveyQuestionArrayList.size) {
+                nxtQnt.visibility = View.VISIBLE
+            } else {
+                nxtQnt.visibility = View.INVISIBLE
+            }
+        } else {
+            currentPageSurvey--
+            progressBar.progress = currentPageSurvey
+            surveyPager.currentItem = currentPageSurvey - 1
+            if (currentPageSurvey == surveyQuestionArrayList.size) {
+                nextQuestionBtn.visibility = View.INVISIBLE
+                previousBtn.visibility = View.VISIBLE
+                nxtQnt.visibility = View.VISIBLE
+            } else {
+                if (currentPageSurvey == 1) {
+                    previousBtn.visibility = View.INVISIBLE
+                    nextQuestionBtn.visibility = View.VISIBLE
+                    nxtQnt.visibility = View.INVISIBLE
+                } else {
+                    nextQuestionBtn.visibility = View.VISIBLE
+                    previousBtn.visibility = View.VISIBLE
+                    nxtQnt.visibility = View.INVISIBLE
+                }
+            }
+        }
+        if (surveyQuestionArrayList.size > 9) {
+            if (currentPageSurvey < 9) {
+                currentQntTxt.text = "0$currentPageSurvey"
+                questionCount.text = "/" + surveyQuestionArrayList.size.toString()
+            } else {
+                currentQntTxt.setText(currentPageSurvey.toString())
+                questionCount.text = "/" + surveyQuestionArrayList.size.toString()
+            }
+        } else {
+            if (currentPageSurvey < 9) {
+                currentQntTxt.text = "0$currentPageSurvey"
+                questionCount.text = "/" + "0" + surveyQuestionArrayList.size.toString()
+            } else {
+                currentQntTxt.setText(currentPageSurvey.toString())
+                questionCount.text = "/" + "0" + surveyQuestionArrayList.size.toString()
+            }
+        }
+    }
+    nxtQnt.setOnClickListener {
+        var isFound = false
+        var pos = -1
+        var emptyvalue = 0
+        for (i in surveyQuestionArrayList.indices) {
+            if (surveyQuestionArrayList[i].answer.equals("")) {
+                emptyvalue = emptyvalue + 1
+                if (!isFound) {
+                    isFound = true
+                    pos = i
+                }
+            }
+        }
+        if (isFound) {
+            mAnswerList = ArrayList()
+            for (k in surveyQuestionArrayList.indices) {
+                val model = SurveySubmitDataModel()
+                model.question_id=(surveyQuestionArrayList[k].id.toString())
+                model.answer_id=(surveyQuestionArrayList[k].answer)
+                mAnswerList.add(model)
+            }
+            val gson = Gson()
+            val PassportArray = ArrayList<String>()
+            for (i in mAnswerList.indices) {
+                val nmodel = SurveySubmitDataModel()
+                nmodel.answer_id=(mAnswerList.get(i).answer_id)
+                nmodel.question_id=(mAnswerList.get(i).question_id)
+                val json = gson.toJson(nmodel)
+                PassportArray.add(i, json)
+            }
+            val JSON_STRING = "" + PassportArray + ""
+            Log.e("JSON", JSON_STRING)
+            if (emptyvalue == surveyQuestionArrayList.size) {
+                val isEmpty = true
+                showSurveyContinueDialog(
+                    activity,
+                    surveyID!!,
+                    JSON_STRING,
+                    surveyArrayList,
+                    progressBar,
+                    surveyPager,
+                    surveyQuestionArrayList,
+                    previousBtn,
+                    nextQuestionBtn,
+                    nxtQnt,
+                    currentQntTxt,
+                    questionCount,
+                    pos,
+                    dialog,
+                    isEmpty
+                )
+            } else {
+                val isEmpty = false
+                showSurveyContinueDialog(
+                    activity,
+                    surveyID!!,
+                    JSON_STRING,
+                    surveyArrayList,
+                    progressBar,
+                    surveyPager,
+                    surveyQuestionArrayList,
+                    previousBtn,
+                    nextQuestionBtn,
+                    nxtQnt,
+                    currentQntTxt,
+                    questionCount,
+                    pos,
+                    dialog,
+                    isEmpty
+                )
+            }
+        } else {
+            surveySize = surveySize - 1
+            if (surveySize <= 0) {
+                mAnswerList = ArrayList()
+                for (k in surveyQuestionArrayList.indices) {
+                    val model =SurveySubmitDataModel()
+                    model.question_id=(surveyQuestionArrayList[k].id.toString())
+                    model.answer_id=(surveyQuestionArrayList[k].answer)
+                    mAnswerList.add(model)
+                }
+                val gson = Gson()
+                val PassportArray = ArrayList<String>()
+                for (i in mAnswerList.indices) {
+                    val nmodel = SurveySubmitDataModel()
+                    nmodel.answer_id=(mAnswerList.get(i).answer_id)
+                    nmodel.question_id=(mAnswerList.get(i).question_id)
+                    val json = gson.toJson(nmodel)
+                    PassportArray.add(i, json)
+                }
+                val JSON_STRING = "" + PassportArray + ""
+                Log.e("JSON", JSON_STRING)
+                dialog.dismiss()
+
+                if (ConstantFunctions.internetCheck(mContext))
+                {
+                    callSurveySubmitApi(
+                        surveyID!!,
+                        JSON_STRING,
+                        false,
+                        1,mAnswerList,surveyArrayList)
+                }
+                else
+                {
+                    DialogFunctions.showInternetAlertDialog(mContext)
+                }
+
+            } else {
+                mAnswerList = ArrayList()
+                for (k in surveyQuestionArrayList.indices) {
+                    val model = SurveySubmitDataModel()
+                    model.question_id=(surveyQuestionArrayList[k].id.toString())
+                    model.answer_id=(surveyQuestionArrayList[k].answer)
+                    mAnswerList.add(model)
+                }
+                val gson = Gson()
+                val PassportArray = ArrayList<String>()
+                for (i in mAnswerList.indices) {
+                    val nmodel =SurveySubmitDataModel()
+                    nmodel.answer_id=(mAnswerList.get(i).answer_id)
+                    nmodel.question_id=(mAnswerList.get(i).question_id)
+                    val json = gson.toJson(nmodel)
+                    PassportArray.add(i, json)
+                }
+                val JSON_STRING = "" + PassportArray + ""
+                Log.e("JSON", JSON_STRING)
+                dialog.dismiss()
+
+                if (ConstantFunctions.internetCheck(mContext))
+                {
+                    callSurveySubmitApi(
+                        surveyID!!,
+                        JSON_STRING,
+                        true,
+                        1, mAnswerList, surveyArrayList
+                    )
+                }
+                else
+                {
+                    DialogFunctions.showInternetAlertDialog(mContext)
+                }
+
+            }
+        }
+        Log.e("POS", pos.toString())
+    }
+    dialog.show()
+}
+
+fun callSurveySubmitApi(
+    survey_ID: String,
+    JSON_STRING: String,
+    isThankyou: Boolean,
+    status: Int,
+    mAnswerList: ArrayList<SurveySubmitDataModel>,
+    surveyArrayList: ArrayList<SurveyDetailDataModel>
+)
+{
+    //surveyDetailQuestionsArrayList= ArrayList()
+    currentPageSurvey=0
+
+    val paramObject = JsonObject().apply {
+        addProperty("data", JSON_STRING)
+        addProperty("survey_id",survey_ID)
+        addProperty("survey_satisfaction_status",status)
+
+    }
+
+    Log.e("paramobject", paramObject.toString())
+    var model=SurveySubmitApiModel(survey_ID.toString(), status.toString(),mAnswerList)
+    Log.e("model", model.toString())
+    Log.e("model", model.id .toString())
+    Log.e("model", model.survey_satisfaction_status.toString())
+    Log.e("model", model.questions.toString())
+
+    val call: Call<SurveySubmitResponseModel> = ApiClient.getClient.surveysubmit(model,"Bearer "+ PreferenceManager.getaccesstoken(mContext))
+    call.enqueue(object : Callback<SurveySubmitResponseModel> {
+        override fun onFailure(call: Call<SurveySubmitResponseModel>, t: Throwable) {
+            Log.e("Failed", t.localizedMessage)
+           // progressDialogAdd.visibility= View.GONE
+        }
+        override fun onResponse(call: Call<SurveySubmitResponseModel>, response: Response<SurveySubmitResponseModel>) {
+            val responsedata = response.body()
+           // progressDialogAdd.visibility= View.GONE
+            if (responsedata != null) {
+                try {
+
+                    if (response.body()!!.status==100)
+                    {
+
+                        showSurveyThankYouDialog(mContext as Activity, isThankyou,surveyArrayList)
+                    }
+                    else
+                    {
+
+                        DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), mContext)
+                    }
+
+
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+
+    })
+}
+
+fun showSurveyThankYouDialog(
+    activity: Activity?,
+    //  surveyArrayList: ArrayList<SurveyModel?>?,
+    isThankyou: Boolean,
+    surveyArrayList: ArrayList<SurveyDetailDataModel>
+) {
+    val dialog = Dialog(activity!!)
+    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+    dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    dialog.setCancelable(false)
+    dialog.setContentView(R.layout.dialog_survey_thank_you)
+    survey_satisfation_status = 0
+    //callSurveySubmitApi(URL_SURVEY_SUBMIT,surveyId,jsonData,getActivity(),surveyArrayList,isThankyou,survey_satisfation_status,dialog);
+    val btn_Ok = dialog.findViewById<View>(R.id.btn_Ok) as Button
+    btn_Ok.setOnClickListener {
+        if (isThankyou) {
+            poss=poss+1
+            showSurveyWelcomeDialogue(mContext, surveyArrayList, false)
+        } else {
+        }
+        dialog.dismiss()
+    }
+    val emailImg = dialog.findViewById<View>(R.id.emailImg) as ImageView
+    if (surveyEmail.equals("", ignoreCase = true)) {
+        emailImg.visibility = View.GONE
+    } else {
+        emailImg.visibility = View.VISIBLE
+    }
+    emailImg.setOnClickListener {
+        showSendEmailDialog()
+    }
+    dialog.show()
+}
+private fun showSendEmailDialog()
+{
+    val dialog = Dialog(mContext)
+    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+    dialog.setCancelable(true)
+    dialog.setContentView(R.layout.dialog_send_email)
+    dialog.window!!.setBackgroundDrawableResource(android.R.color.transparent)
+    val btn_submit = dialog.findViewById<Button>(R.id.submitButton)
+    val btn_cancel = dialog.findViewById<Button>(R.id.cancelButton)
+    val text_dialog = dialog.findViewById<EditText?>(R.id.text_dialog)
+    val text_content = dialog.findViewById<EditText>(R.id.text_content)
+
+    btn_cancel.setOnClickListener(View.OnClickListener {
+        dialog.dismiss()
+    })
+
+    btn_submit.setOnClickListener {
+        if (text_dialog.text.toString().trim().equals("")) {
+            DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), mContext.resources.getString(R.string.enter_subject), mContext)
+
+
+        } else {
+            if (text_content.text.toString().trim().equals("")) {
+                DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), mContext.resources.getString(R.string.enter_content), mContext)
+
+            } else {
+                // progressDialog.visibility = View.VISIBLE
+
+                sendEmail(text_dialog.text.toString().trim(), text_content.text.toString().trim(), surveyEmail, dialog)
+            }
+        }
+    }
+    dialog.show()
+}
+
+fun sendEmail(title: String, message: String,  staffEmail: String, dialog: Dialog)
+{
+   // progressDialog.visibility = View.VISIBLE
+    val sendMailBody = SendEmailApiModel( staffEmail, title, message)
+    val call: Call<SignUpResponseModel> = ApiClient.getClient.sendEmailStaff(sendMailBody, "Bearer " + PreferenceManager.getaccesstoken(mContext))
+    call.enqueue(object : Callback<SignUpResponseModel> {
+        override fun onFailure(call: Call<SignUpResponseModel>, t: Throwable) {
+            Log.e("Failed", t.localizedMessage)
+         //   progressDialog.visibility = View.GONE
+        }
+
+        override fun onResponse(call: Call<SignUpResponseModel>, response: Response<SignUpResponseModel>) {
+            val responsedata = response.body()
+         //   progressDialog.visibility = View.GONE
+            Log.e("Response Signup", responsedata.toString())
+            if (responsedata != null) {
+                try {
+
+
+                    if (response.body()!!.status==100) {
+                        dialog.dismiss()
+                        showSuccessAlert(
+                            mContext,
+                            "Email sent Successfully ",
+                            "Success",
+                            dialog
+                        )
+                    }else {
+                        DialogFunctions.commonErrorAlertDialog(
+                            mContext.resources.getString(R.string.alert),
+                            ConstantFunctions.commonErrorString(response.body()!!.status),
+                            mContext
+                        )
+
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+
+    })
+}
+fun showCloseSurveyDialog(dialogW: Dialog, isThankyou: Boolean?)
+{
+    val dialog = Dialog(mContext)
+    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+    dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    dialog.setCancelable(false)
+    dialog.setContentView(R.layout.dialog_survey_close)
+    var text_dialog = dialog.findViewById(R.id.text_dialog) as TextView
+    var btn_Ok = dialog.findViewById(R.id.btn_Ok) as Button
+    var btn_Cancel = dialog.findViewById(R.id.btn_Cancel) as Button
+    text_dialog.text="Are you sure you want to close this survey."
+
+    btn_Ok.setOnClickListener()
+    {
+        if (isThankyou!!) {
+            poss = poss + 1
+            showSurveyWelcomeDialogueclose(mContext, surveyArrayList, false)
+        } else {
+        }
+        dialogW.dismiss()
+        dialog.dismiss()
+    }
+
+
+    btn_Cancel.setOnClickListener()
+    {
+        dialog.dismiss()
+    }
+    dialog.show()
+}
+
+fun showSurveyWelcomeDialogueclose(mContext: Context, surveyArrayList: ArrayList<SurveyDetailDataModel>, isThankyou: Boolean) {
+  //  final Dialog dialog = new Dialog(activity,android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+//        dialog.requestWindowFeature(R.style.full_screen_dialog);
+    val dialog = Dialog(mContext!!)
+    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+    dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    dialog.setCancelable(false)
+    dialog.setContentView(R.layout.dialog_survey_wlcome)
+    val startNowBtn = dialog.findViewById<View>(R.id.startNowBtn) as Button
+    val imgClose = dialog.findViewById<View>(R.id.closeImg) as ImageView
+
+    val headingTxt = dialog.findViewById<View>(R.id.titleTxt) as TextView
+    val descriptionTxt = dialog.findViewById<View>(R.id.descriptionTxt) as TextView
+    //        if (isThankyou)
+//		{
+//			thankyouTxt.setVisibility(View.VISIBLE);
+//			thankyouTxt.setText("Thank you For Submitting your Survey");
+//		}
+//        else {
+//			thankyouTxt.setVisibility(View.GONE);
+//		}
+    Log.e("surveyArrayList", surveyArrayList.size.toString())
+  //  Log.e("surveyArrayList1", surveyArrayList[pos+1].description.toString())
+   // Log.e("surveyArrayList2", surveyArrayList[pos+2].description)
+    Log.e("poss", poss.toString())
+    headingTxt.setText(surveyArrayList[poss ].title)
+    descriptionTxt.setText(surveyArrayList[poss ].description)
+    val bannerImg = dialog.findViewById<View>(R.id.bannerImg) as ImageView
+    if (!surveyArrayList[poss].image.equals("")) {
+        Glide.with(mContext).load(surveyArrayList[poss].image).centerCrop().into(bannerImg)
+
+    } else {
+        bannerImg.setImageResource(R.drawable.survey)
+    }
+    startNowBtn.setOnClickListener {
+        dialog.dismiss()
+
+        if (surveyArrayList.size > 0) {
+           // poss = poss + 1
+            if (poss < surveyArrayList.size) {
+                Log.e("insidewelcome", surveyQuestionArrayList.size.toString())
+                if(surveyArrayList[poss].questions!!.size>0)
+                {
+                    showSurveyQuestionAnswerDialog(
+                        mContext,
+                        surveyArrayList[poss].questions!!,
+                        surveyArrayList[poss].survey_name,
+                        surveyArrayList[poss].id.toString(),
+                        surveyArrayList[poss].contact_email,isThankyou
+                    )
+                    dialog.dismiss()
+                }
+                else{
+                    DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), "No Survey Questions Available.", mContext)
+                    dialog.dismiss()
+                }
+
+            }
+        }
+    }
+    imgClose.setOnClickListener {
+        showCloseSurveyDialog(dialog,isThankyou)
+    }
+    val skipBtn = dialog.findViewById<View>(R.id.skipBtn) as Button
+    skipBtn.setOnClickListener {
+        // dialog.dismiss()
+        surveySize = surveySize - 1
+        if (surveySize <= 0) {
+            showCloseSurveyDialog(dialog,false)
+        }
+        else
+        {
+            showCloseSurveyDialog(dialog,true)
+        }
+    }
+    dialog.show()
+}
+
+fun showSurveyContinueDialog(
+    activity: Context,
+    surveyID: String,
+    JSON_STRING: String?,
+    surveyArrayList: ArrayList<SurveyDetailDataModel>,
+    progressBar: ProgressBar,
+    surveyPager: ViewPager,
+    surveyQuestionArrayList: ArrayList<SurveyQuestionsModel>,
+    previousBtn: ImageView,
+    nextQuestionBtn: ImageView,
+    nxtQnt: TextView,
+    currentQntTxt: TextView,
+    questionCount: TextView,
+    pos: Int,
+    nDialog: Dialog,
+    isEmpty: Boolean
+) {
+    val dialog = Dialog(activity!!)
+    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+    dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    dialog.setCancelable(false)
+    dialog.setContentView(R.layout.dialog_continue_layout)
+    survey_satisfation_status = 0
+    //callSurveySubmitApi(URL_SURVEY_SUBMIT,surveyId,jsonData,getActivity(),surveyArrayList,isThankyou,survey_satisfation_status,dialog);
+    val btn_Ok = dialog.findViewById<View>(R.id.btn_Ok) as Button
+    val submit = dialog.findViewById<View>(R.id.submit) as Button
+    val thoughtsTxt = dialog.findViewById<View>(R.id.thoughtsTxt) as TextView
+    if (isEmpty) {
+        submit.isClickable = false
+        submit.alpha = 0.5f
+        thoughtsTxt.text = "Appreciate atleast one feedback from you."
+    } else {
+        submit.isClickable = true
+        submit.alpha = 1.0f
+        thoughtsTxt.text =
+            "There is an unanswered question on this survey. Would you like to continue?"
+    }
+    submit.setOnClickListener {
+        if (!isEmpty) {
+            nDialog.dismiss()
+            Log.e("SURVEY SIZE", surveySize.toString())
+            surveySize = surveySize - 1
+            if (surveySize <= 0) {
+                Log.e("SURVEY SIZE ", surveySize.toString())
+
+                if (ConstantFunctions.internetCheck(mContext))
+                {
+                    callSurveySubmitApi(
+                        surveyID!!,
+                        JSON_STRING!!,
+                        false,
+                        1,
+                        mAnswerList,
+                        surveyArrayList
+                    )
+                }
+                else
+                {
+                    DialogFunctions.showInternetAlertDialog(mContext)
+                }
+
+            } else {
+
+                if (ConstantFunctions.internetCheck(mContext))
+                {
+                    callSurveySubmitApi(surveyID!!, JSON_STRING!!, true, 1, mAnswerList, surveyArrayList)
+                }
+                else
+                {
+                    DialogFunctions.showInternetAlertDialog(mContext)
+                }
+
+            }
+            dialog.dismiss()
+        }
+    }
+    btn_Ok.setOnClickListener {
+        currentPageSurvey = pos + 1
+        progressBar.progress = currentPageSurvey
+        surveyPager.currentItem = currentPageSurvey - 1
+        Log.e("WORKING", "SURVEY COUNT$currentPageSurvey")
+        if (surveyQuestionArrayList.size > 1) {
+            if (currentPageSurvey != surveyQuestionArrayList.size) {
+                if (currentPageSurvey == 1) {
+                    previousBtn.visibility = View.INVISIBLE
+                    nextQuestionBtn.visibility = View.VISIBLE
+                    nxtQnt.visibility = View.INVISIBLE
+                } else {
+                    if (currentPageSurvey == 1) {
+                        previousBtn.visibility = View.INVISIBLE
+                        nextQuestionBtn.visibility = View.VISIBLE
+                        nxtQnt.visibility = View.INVISIBLE
+                    } else {
+                        previousBtn.visibility = View.VISIBLE
+                        nextQuestionBtn.visibility = View.VISIBLE
+                        nxtQnt.visibility = View.INVISIBLE
+                    }
+                }
+            } else {
+                previousBtn.visibility = View.VISIBLE
+                nextQuestionBtn.visibility = View.INVISIBLE
+                nxtQnt.visibility = View.VISIBLE
+            }
+        } else {
+            if (currentPageSurvey == 1) {
+                previousBtn.visibility = View.INVISIBLE
+                nextQuestionBtn.visibility = View.INVISIBLE
+                nxtQnt.visibility = View.VISIBLE
+            }
+        }
+        if (surveyQuestionArrayList.size > 9) {
+            if (currentPageSurvey < 9) {
+                currentQntTxt.text = "0$currentPageSurvey"
+                questionCount.text = "/" + surveyQuestionArrayList.size.toString()
+            } else {
+                currentQntTxt.setText(currentPageSurvey.toString())
+                questionCount.text = "/" + surveyQuestionArrayList.size.toString()
+            }
+        } else {
+            if (currentPageSurvey < 9) {
+                currentQntTxt.text = "0$currentPageSurvey"
+                questionCount.text = "/" + "0" + surveyQuestionArrayList.size.toString()
+            } else {
+                currentQntTxt.setText(currentPageSurvey.toString())
+                questionCount.text = "/" + "0" + surveyQuestionArrayList.size.toString()
+            }
+        }
+        dialog.dismiss()
+    }
+    dialog.show()
+}
+fun showSuccessAlert(context: Context, message: String, msgHead: String, mdialog: Dialog) {
+    val dialog = Dialog(context)
+    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+    dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    dialog.setCancelable(false)
+    dialog.setContentView(R.layout.dialog_common_error_alert)
+    var iconImageView = dialog.findViewById(R.id.iconImageView) as ImageView
+    var alertHead = dialog.findViewById(R.id.alertHead) as TextView
+    var text_dialog = dialog.findViewById(R.id.messageTxt) as TextView
+    var btn_Ok = dialog.findViewById(R.id.btn_Ok) as Button
+    text_dialog.text = message
+    alertHead.text = msgHead
+    iconImageView.setImageResource(R.drawable.tick)
+    btn_Ok.setOnClickListener()
+    {
+        dialog.dismiss()
+        mdialog.dismiss()
+    }
+    dialog.show()
+}
 fun fragmentIntent(mFragment: Fragment?) {
     if (mFragment != null) {
 

@@ -1,6 +1,14 @@
 package com.nas.alreem.rest
 
 import com.google.gson.JsonObject
+import com.nas.alreem.activity.absence.model.AbsenceListModel
+import com.nas.alreem.activity.absence.model.EarlyPickupModel
+import com.nas.alreem.activity.absence.model.ListAbsenceApiModel
+import com.nas.alreem.activity.absence.model.ListPickupApiModel
+import com.nas.alreem.activity.absence.model.PickupListModel
+import com.nas.alreem.activity.absence.model.RequestLeaveApiModel
+import com.nas.alreem.activity.absence.model.RequestLeaveModel
+import com.nas.alreem.activity.absence.model.RequestPickupApiModel
 import com.nas.alreem.activity.canteen.model.TimeExceedModel
 import com.nas.alreem.activity.canteen.model.add_orders.CanteenItemsApiModel
 import com.nas.alreem.activity.canteen.model.add_orders.CatListModel
@@ -22,12 +30,22 @@ import com.nas.alreem.activity.canteen.model.wallet.WalletBalanceApiModel
 import com.nas.alreem.activity.canteen.model.wallet.WalletBalanceModel
 import com.nas.alreem.activity.canteen.model.wallethistory.WalletHistoryApiModel
 import com.nas.alreem.activity.canteen.model.wallethistory.WalletHistoryModel
+import com.nas.alreem.activity.cca.model.*
 import com.nas.alreem.activity.gallery.model.*
 import com.nas.alreem.activity.login.model.ForgetPasswordResponseModel
 import com.nas.alreem.activity.login.model.LoginResponseModel
 import com.nas.alreem.activity.login.model.SignUpResponseModel
 import com.nas.alreem.activity.notifications.model.MessageDetailApiModel
 import com.nas.alreem.activity.notifications.model.MessageDetailModel
+import com.nas.alreem.activity.parent_meetings.model.PtaConfirmApiModel
+import com.nas.alreem.activity.parent_meetings.model.PtaConfirmModel
+import com.nas.alreem.activity.parent_meetings.model.PtaDatesApiModel
+import com.nas.alreem.activity.parent_meetings.model.PtaDatesModel
+import com.nas.alreem.activity.parent_meetings.model.PtaInsertApiModel
+import com.nas.alreem.activity.parent_meetings.model.PtaInsertModel
+import com.nas.alreem.activity.parent_meetings.model.PtaListApiModel
+import com.nas.alreem.activity.parent_meetings.model.PtaListModel
+import com.nas.alreem.activity.parent_meetings.model.PtaReviewListResponseModel
 import com.nas.alreem.activity.payments.model.InfoCanteenModel
 import com.nas.alreem.activity.payments.model.PayCategoryModel
 import com.nas.alreem.activity.payments.model.PaymentCategoriesApiModel
@@ -38,20 +56,32 @@ import com.nas.alreem.activity.payments.model.payment_submit.PaymentSubmitApiMod
 import com.nas.alreem.activity.payments.model.payment_submit.PaymentSubmitModel
 import com.nas.alreem.activity.payments.model.payment_token.PaymentTokenApiModel
 import com.nas.alreem.activity.payments.model.payment_token.PaymentTokenModel
+import com.nas.alreem.activity.permission_slip.model.PermissionResApiModel
+import com.nas.alreem.activity.permission_slip.model.PermissionResponseModel
 import com.nas.alreem.activity.primary.model.ComingUpResponseModel
 import com.nas.alreem.activity.settings.model.TermsOfServiceResponseModel
+import com.nas.alreem.activity.staff_directory.model.ListStaffDetailApiModel
+import com.nas.alreem.activity.staff_directory.model.ListStaffDetailModel
+import com.nas.alreem.activity.staff_directory.model.StaffCatListResponseModel
+import com.nas.alreem.activity.survey.model.*
 import com.nas.alreem.fragment.about_us.model.AboutUsResponseModel
 import com.nas.alreem.fragment.calendar.model.CalendarAPIModel
 import com.nas.alreem.fragment.calendar.model.CalendarResponseModel
 import com.nas.alreem.fragment.calendar.model.TermCalendarResponseModel
 import com.nas.alreem.fragment.canteen.model.CanteenBannerResponseModel
+import com.nas.alreem.fragment.cca.model.BannerResponseModelCCa
 import com.nas.alreem.fragment.contact_us.model.ContactUsResponseModel
 import com.nas.alreem.fragment.gallery.model.ThumnailResponseModel
 import com.nas.alreem.fragment.home.model.BannerResponseModel
 import com.nas.alreem.fragment.notifications.model.NotificationApiModel
 import com.nas.alreem.fragment.notifications.model.NotificationResponseModel
+import com.nas.alreem.fragment.parent_meetings.model.ListStaffPtaApiModel
+import com.nas.alreem.fragment.parent_meetings.model.ListStaffPtaModel
+import com.nas.alreem.fragment.parents_essentials.model.ParentsEssentialResponseModel
 import com.nas.alreem.fragment.payments.model.PaymentResponseModel
 import com.nas.alreem.fragment.payments.model.SendEmailApiModel
+import com.nas.alreem.fragment.permission_slip.model.PermissionSlipListApiModel
+import com.nas.alreem.fragment.permission_slip.model.PermissionSlipModel
 import com.nas.alreem.fragment.primary.model.PrimaryResponseModel
 import com.nas.alreem.fragment.settings.model.ChangePasswordApiModel
 
@@ -146,6 +176,39 @@ interface ApiInterface {
         @Header("Authorization") token:String
     ): Call<TermsOfServiceResponseModel>
 
+    /*************Survey_list****************/
+    @GET("survey_list")
+    @Headers("Content-Type: application/json")
+    fun surveyList(
+        @Header("Authorization") token:String
+    ): Call<SurveyListResponseModel>
+
+
+    /*************Survey_detail****************/
+    @POST("survey_details")
+    @Headers("Content-Type: application/json")
+    fun surveyDetail(
+        @Body  SurveyDetailApi: SurveyDetailApiModel,
+        @Header("Authorization") token:String
+    ): Call<SurveyDetailResponseModel>
+
+    /*************Surveys****************/
+    @POST("surveys")
+    @Headers("Content-Type: application/json")
+    fun survey(
+        @Body  SurveyApi: SurveyApiModel,
+        @Header("Authorization") token:String
+    ): Call<SurveyResponseModel>
+
+    /*************Survey_submit****************/
+    @POST("survey_submit")
+    @Headers("Content-Type: application/json")
+    fun surveysubmit(
+        @Body  SurveysubmitApi: SurveySubmitApiModel,
+        @Header("Authorization") token:String
+    ): Call<SurveySubmitResponseModel>
+
+
     /*************CHANGE_PASSWORD****************/
     @POST("change-password")
     @Headers("Content-Type: application/json")
@@ -209,6 +272,13 @@ interface ApiInterface {
     fun paymentBanner(
         @Header("Authorization") token:String
     ): Call<PaymentResponseModel>
+
+    /*************PAYMENT_BANNER****************/
+    @GET("parent_essential ")
+    @Headers("Content-Type: application/json")
+    fun parentsEssential(
+        @Header("Authorization") token:String
+    ): Call<ParentsEssentialResponseModel>
 
 
     /*************STUDENT_LIST****************/
@@ -414,4 +484,167 @@ interface ApiInterface {
         @Body  walletamount: WalletAmountApiModel,
         @Header("Authorization") token:String
     ): Call<WalletAmountModel>
+
+    @POST("request-early-pickup")
+    @Headers("Content-Type: application/json")
+    fun pickupRequest(
+        @Body  requestPickupApiModel: RequestPickupApiModel,
+        @Header("Authorization") token:String
+    ): Call<EarlyPickupModel>
+
+    @POST("list-early-pickup")
+    @Headers("Content-Type: application/json")
+    fun pickuplist(
+        @Body  listPickupApiModel: ListPickupApiModel,
+        @Header("Authorization") token:String
+    ): Call<PickupListModel>
+
+    @POST("request-leave")
+    @Headers("Content-Type: application/json")
+    fun leaveRequest(
+        @Body  requestleaveApiModel: RequestLeaveApiModel,
+        @Header("Authorization") token:String
+    ): Call<RequestLeaveModel>
+
+    @POST("list-leave")
+    @Headers("Content-Type: application/json")
+    fun absencelist(
+        @Body  absenceApiModel: ListAbsenceApiModel,
+        @Header("Authorization") token:String
+    ): Call<AbsenceListModel>
+
+    @GET("staff-departments")
+    @Headers("Content-Type: application/json")
+    fun staff_depatrtments(
+        @Header("Authorization") token:String
+    ): Call<StaffCatListResponseModel>
+
+    @POST("department-staff-list")
+    @Headers("Content-Type: application/json")
+    fun staff_detail_list(
+        @Body  staffListApiModel: ListStaffDetailApiModel,
+        @Header("Authorization") token:String
+    ): Call<ListStaffDetailModel>
+
+    @POST("staff-list")
+    @Headers("Content-Type: application/json")
+    fun staff_list_pta(
+        @Body  staffListPtaApiModel: ListStaffPtaApiModel,
+        @Header("Authorization") token:String
+    ): Call<ListStaffPtaModel>
+
+
+    @POST("pta-allotted-dates")
+    @Headers("Content-Type: application/json")
+    fun pta_allotted_dates(
+        @Body  ptaDatesApiModel: PtaDatesApiModel,
+        @Header("Authorization") token:String
+    ): Call<PtaDatesModel>
+
+    @POST("pta-list")
+    @Headers("Content-Type: application/json")
+    fun pta_list(
+        @Body  ptaListApiModel: PtaListApiModel,
+        @Header("Authorization") token:String
+    ): Call<PtaListModel>
+
+    @POST("pta-insert")
+    @Headers("Content-Type: application/json")
+    fun pta_insert(
+        @Body  ptaInsertApiModel: PtaInsertApiModel,
+        @Header("Authorization") token:String
+    ): Call<PtaInsertModel>
+
+    @POST("pta-confirmation")
+    @Headers("Content-Type: application/json")
+    fun pta_confirm(
+        @Body  ptaConfirmApiModel: PtaConfirmApiModel,
+        @Header("Authorization") token:String
+    ): Call<PtaConfirmModel>
+
+    @GET("pta-review-list")
+    @Headers("Content-Type: application/json")
+    fun ptaReviewList(
+        @Header("Authorization") token:String
+    ): Call<PtaReviewListResponseModel>
+
+    /*************PERMISSIONSLIP LIST****************/
+    @POST("permission-slips")
+    @Headers("Content-Type: application/json")
+    fun permissnslipList(
+        @Body  permissionSlipListModel: PermissionSlipListApiModel,
+        @Header("Authorization") token:String
+    ): Call<PermissionSlipModel>
+
+    /*************PERMISSION SLIP RESPONSE****************/
+    @POST("permission-slip-status-update")
+    @Headers("Content-Type: application/json")
+    fun permsnlistResponse(
+        @Body  pickupListApiModel: PermissionResApiModel,
+        @Header("Authorization") token:String
+    ): Call<PermissionResponseModel>
+
+
+    @GET("cca-banner")
+    @Headers("Content-Type: application/json")
+    fun getBanner(
+        @Header("Authorization") token: String
+    ): Call<BannerResponseModelCCa>
+
+    /* CCA INFO*/
+    @POST("cca-informations")
+    @Headers("Content-Type: application/json")
+    fun getCCAInfo(
+        @Body body: CCAInfoRequestModel,
+        @Header("Authorization") token: String
+    )
+            : Call<CCAInfoResponseModel>
+
+    /* CCA INFO*/
+
+    @POST("cca-details")
+    @Headers("Content-Type: application/json")
+    fun getCCAList(
+        @Body body: CCAListRequestModel,
+        @Header("Authorization") token: String
+    ): Call<CCAListResponseModel>
+
+    /*CCA SUBMIT*/
+    @POST("cca-submit")
+    @Headers("Content-Type: application/json")
+    fun ccaSubmit(
+        @Body body: CCASumbitRequestModel,
+        @Header("Authorization") token: String
+    ): Call<CCASubmitResponseModel>
+
+    /*CCA SUBMIT*/
+    @POST("cca-read-status-update")
+    @Headers("Content-Type: application/json")
+    fun readstatusupdate(
+        @Body body: CCAReadStatusRequestModel,
+        @Header("Authorization") token: String
+    ): Call<CCASubmitResponseModel>
+
+
+    @POST("cca-reviews")
+    @Headers("Content-Type: application/json")
+    fun ccaReview(
+        @Body body: CCAReviewRequestModel,
+        @Header("Authorization") token: String
+    ): Call<CCAReviewResponseModel>
+
+    @POST("cca-selection-cancel")
+    @Headers("Content-Type: application/json")
+    fun ccaCancel(
+        @Body body: CCACancelRequestModel,
+        @Header("Authorization") token: String
+    ): Call<CCACancelResponseModel>
+
+
+    @POST("external-providers")
+    @Headers("Content-Type: application/json")
+    fun getExternalProviders(
+        @Body body: ExternalProvidersRequestModel,
+        @Header("Authorization") token: String
+    ): Call<ExternalProvidersResponseModel>
 }

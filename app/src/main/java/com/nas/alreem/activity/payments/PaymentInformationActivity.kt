@@ -42,7 +42,15 @@ class PaymentInformationActivity : AppCompatActivity() {
 
         initfn()
         progressDialogAdd.visibility=View.VISIBLE
-        callPaymentInformation()
+        if (ConstantFunctions.internetCheck(mContext))
+        {
+            callPaymentInformation()
+        }
+        else
+        {
+            DialogFunctions.showInternetAlertDialog(mContext)
+        }
+
     }
 
     private fun initfn() {

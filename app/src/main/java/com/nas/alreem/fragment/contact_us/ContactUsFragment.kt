@@ -96,7 +96,15 @@ class ContactUsFragment  : Fragment(), LocationListener,
 
         initializeUI()
         fetchlatitudelongitude()
-        callContactUsApi()
+        if (ConstantFunctions.internetCheck(mContext))
+        {
+            callContactUsApi()
+        }
+        else
+        {
+            DialogFunctions.showInternetAlertDialog(mContext)
+        }
+
         // permissioncheck()
 
 
@@ -130,6 +138,7 @@ class ContactUsFragment  : Fragment(), LocationListener,
 
                     location =
                         locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)!!
+                    Log.e("loc", location.toString())
                     if (location != null) {
                         lat = location.latitude
                         long = location.longitude

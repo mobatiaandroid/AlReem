@@ -41,6 +41,7 @@ class CanteenFragment  : Fragment() {
     lateinit var title: TextView
     lateinit var description: TextView
     lateinit var contactEmail:String
+    lateinit var progress: ProgressBar
 
      var walletTopUpLimit:Int=0
      var walletTopUpLimit_str:String=""
@@ -55,7 +56,15 @@ class CanteenFragment  : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initFn()
         onClick()
-        callGetCanteenBanner()
+        if (ConstantFunctions.internetCheck(mContext))
+        {
+            callGetCanteenBanner()
+        }
+        else
+        {
+            DialogFunctions.showInternetAlertDialog(mContext)
+        }
+
 
     }
     private fun initFn(){
@@ -65,6 +74,8 @@ class CanteenFragment  : Fragment() {
     //    progress = view?.findViewById(R.id.progressDialog)!!
     //    progress.visibility=View.GONE
         email_icon = view?.findViewById(R.id.email_icon)!!
+        progress = view?.findViewById(R.id.progress)!!
+
         preorder_image = view?.findViewById(R.id.preOrderLinear)!!
         information_image = view?.findViewById(R.id.informationLinear)!!
         payment_image = view?.findViewById(R.id.paymentLinear)!!
@@ -80,6 +91,8 @@ class CanteenFragment  : Fragment() {
         }
         preorder_image.setOnClickListener {
             val i = Intent(mContext, PreOrderActivity::class.java)
+            PreferenceManager.setStudentID(mContext,"")
+
             mContext.startActivity(i)
         }
         information_image.setOnClickListener {
@@ -89,6 +102,7 @@ class CanteenFragment  : Fragment() {
         payment_image.setOnClickListener {
             val i = Intent(mContext, CanteenPaymentActivity::class.java)
             i.putExtra("WALLET_TOPUP_LIMIT",walletTopUpLimit_str.toString())
+            PreferenceManager.setStudentID(mContext,"")
             mContext.startActivity(i)
         }
         staffLinear.setOnClickListener(View.OnClickListener {
@@ -99,16 +113,23 @@ class CanteenFragment  : Fragment() {
 
     fun callGetCanteenBanner()
     {
+        progress.visibility = View.VISIBLE
+
         val token = PreferenceManager.getaccesstoken(mContext)
         val call: Call<CanteenBannerResponseModel> = ApiClient.getClient.get_canteen_banner("Bearer "+token)
         call.enqueue(object : Callback<CanteenBannerResponseModel>
         {
             override fun onFailure(call: Call<CanteenBannerResponseModel>, t: Throwable) {
+                progress.visibility = View.GONE
+
                 Log.e("Failed", t.localizedMessage)
+
             }
             override fun onResponse(call: Call<CanteenBannerResponseModel>, response: Response<CanteenBannerResponseModel>) {
                 val responsedata = response.body()
                 Log.e("Response", responsedata.toString())
+                progress.visibility = View.GONE
+
                 if (responsedata!!.status==100) {
 
                     contactEmail=response.body()!!.responseArray.data.contact_email
@@ -139,9 +160,7 @@ class CanteenFragment  : Fragment() {
                             .load(banner_image)
                             .into(bannerImg)
                     } else {
-                        Glide.with(mContext)
-                            .load(R.drawable.default_banner)
-                            .into(bannerImg)
+                        bannerImg!!.setBackgroundResource(R.drawable.default_banner)
                     }
 
                 }
@@ -183,8 +202,15 @@ class CanteenFragment  : Fragment() {
 
                 } else {
                     // progressDialog.visibility = View.VISIBLE
+                    if (ConstantFunctions.internetCheck(mContext))
+                    {
+                        sendEmail(text_dialog.text.toString().trim(), text_content.text.toString().trim(), contactEmail, dialog)
+                    }
+                    else
+                    {
+                        DialogFunctions.showInternetAlertDialog(mContext)
+                    }
 
-                    sendEmail(text_dialog.text.toString().trim(), text_content.text.toString().trim(), contactEmail, dialog)
                 }
             }
         }

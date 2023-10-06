@@ -63,8 +63,16 @@ class VideoMessageActivity : AppCompatActivity(){
         id=intent.getStringExtra("id").toString()
         title=intent.getStringExtra("title").toString()
         initUI()
-        callMessageDetailAPI()
-        getSettings()
+        if (ConstantFunctions.internetCheck(mContext))
+        {
+            callMessageDetailAPI()
+        }
+        else
+        {
+            DialogFunctions.showInternetAlertDialog(mContext)
+        }
+
+      //  getSettings()
 
     }
     fun initUI() {
@@ -155,16 +163,29 @@ class VideoMessageActivity : AppCompatActivity(){
                         pushNotificationDetail=pushNotificationDetail+"<center><img src='" + url + "'width='100%', height='auto'>"
                     }
                     pushNotificationDetail=pushNotificationDetail+"</body>\n</html>"
-                    webView.webViewClient = HelloWebViewClient()
+                    //webView.webViewClient = HelloWebViewClient()
                     webView.settings.javaScriptEnabled = true
                     webView.settings.pluginState = PluginState.ON
                     webView.settings.builtInZoomControls = false
                     webView.settings.displayZoomControls = true
-                    webView.webViewClient = HelloWebViewClient()
+                   // webView.webViewClient = HelloWebViewClient()
                     textcontent.settings.javaScriptEnabled = true
                     textcontent.settings.pluginState = PluginState.ON
                     textcontent.settings.builtInZoomControls = false
                     textcontent.settings.displayZoomControls = true
+
+                    webView.webChromeClient = object : WebChromeClient() {
+                        override fun onProgressChanged(view: WebView, newProgress: Int) {
+                            proWebView.visibility = View.VISIBLE
+                            println("testing2")
+                            if (newProgress == 100)
+                            {
+                                println("testing1")
+                                proWebView.visibility = View.GONE
+
+                            }
+                        }
+                    }
                     textcontent.loadData(
                         pushNotificationDetail,
                         "text/html; charset=utf-8",

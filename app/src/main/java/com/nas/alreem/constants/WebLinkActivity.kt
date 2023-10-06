@@ -3,14 +3,13 @@ package com.nas.alreem.constants
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.webkit.WebResourceError
-import android.webkit.WebResourceRequest
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -38,7 +37,7 @@ class WebLinkActivity : AppCompatActivity() {
 
     }
     private fun getWebViewSettings() {
-        progressDialogAdd.visibility=View.VISIBLE
+       // progressDialogAdd.visibility=View.VISIBLE
         val settings = webView.settings
         settings.domStorageEnabled = true
     }
@@ -50,6 +49,8 @@ class WebLinkActivity : AppCompatActivity() {
         heading = findViewById(R.id.heading)
         backRelative = findViewById(R.id.backRelative)
         logoClickImgView = findViewById(R.id.logoClickImgView)
+        Log.e("weburl", url!!)
+
         backRelative.setOnClickListener(View.OnClickListener {
             finish()
         })
@@ -60,9 +61,33 @@ class WebLinkActivity : AppCompatActivity() {
         })
         heading.text=headingValue
         webView.settings.javaScriptEnabled = true
+        webView.settings.javaScriptCanOpenWindowsAutomatically = true
+        webView.settings.loadsImagesAutomatically = true
+        webView.setBackgroundColor(Color.TRANSPARENT)
+        webView.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null)
         webView.webViewClient = MyWebViewClient(this)
+
+
+
+            Log.e("fa","fa")
+     //   webView.getSettings().setUserAgentString("ur user agent");
         webView.loadUrl(url!!)
-        progressDialogAdd.visibility= View.GONE
+
+
+        //webView.loadUrl(url!!)
+       // progressDialogAdd.visibility= View.GONE
+
+        webView.webChromeClient = object : WebChromeClient() {
+
+            override fun onProgressChanged(view: WebView, newProgress: Int) {
+                progressDialogAdd.progress = newProgress
+                if (newProgress == 100) {
+                    progressDialogAdd.visibility = View.GONE
+                   // back.visibility = View.VISIBLE
+
+                }
+            }
+        }
     }
 
 
@@ -73,19 +98,30 @@ class WebLinkActivity : AppCompatActivity() {
         override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
             val url: String = request?.url.toString()
             view?.loadUrl(url)
-            progressDialogAdd.visibility= View.GONE
+            //progressDialogAdd.visibility= View.GONE
             return true
         }
 
         override fun shouldOverrideUrlLoading(webView: WebView, url: String): Boolean {
-            webView.loadUrl(url)
-            progressDialogAdd.visibility= View.GONE
-            return true
+            var overrideUrlLoading = false
+            if (url != null && url.contains("whatsapp")) {
+                Log.e("su","su")
+                webView.getContext().startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                overrideUrlLoading = true
+            }
+            else {
+                Log.e("fa","fa")
+                webView.loadUrl(url)
+            }
+
+           // progressDialogAdd.visibility= View.GONE
+            return overrideUrlLoading
         }
 
         override fun onReceivedError(view: WebView, request: WebResourceRequest, error: WebResourceError) {
-            progressDialogAdd.visibility= View.GONE
+            //progressDialogAdd.visibility= View.GONE
             Log.e("ERROR",error.toString())
+            System.out.println("ERROR"+error)
             //Toast.makeText(activity, "Got Error! $error", Toast.LENGTH_SHORT).show()
         }
     }
