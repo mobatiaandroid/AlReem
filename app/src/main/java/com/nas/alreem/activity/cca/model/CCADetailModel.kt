@@ -6,6 +6,7 @@ class CCADetailModel {
     var choice2: String? = null
     var ccaChoiceModel: ArrayList<CCAchoiceModel>? = null
     var choice1Id: String? = null
+    var choiceitem1Id: String? = null
     var choice2Id: String? = null
     var location: String? = null
     var location2: String? = null

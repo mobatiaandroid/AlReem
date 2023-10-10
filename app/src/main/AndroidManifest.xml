@@ -197,7 +197,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity android:name=".activity.cca.CCA_Activity"
+        <activity android:name=".activity.cca.CCA_Activity_New"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activity.cca.CCAsReviewAfterSubmissionActivity"

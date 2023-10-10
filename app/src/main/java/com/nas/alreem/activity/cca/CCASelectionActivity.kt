@@ -1,11 +1,15 @@
 package com.nas.alreem.activity.cca
 
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Html
 import android.util.Log
 import android.view.View
+import android.view.Window
 import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -15,15 +19,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.nas.alreem.R
 import com.nas.alreem.activity.cca.adapter.CCAsActivityAdapter
 import com.nas.alreem.activity.cca.adapter.CCAsWeekListAdapter
+import com.nas.alreem.activity.cca.model.CCACancelModel
 import com.nas.alreem.activity.cca.model.CCADetailModel
+import com.nas.alreem.activity.cca.model.CCASubmitResponseModel
 import com.nas.alreem.activity.cca.model.WeekListModel
 import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.appcontroller.AppController
-import com.nas.alreem.constants.ConstantFunctions
-import com.nas.alreem.constants.OnItemClickListener
-import com.nas.alreem.constants.PreferenceManager
-import com.nas.alreem.constants.addOnItemClickListener
+import com.nas.alreem.constants.*
 import com.nas.alreem.recyclermanager.ItemOffsetDecoration
+import com.nas.alreem.rest.ApiClient
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class CCASelectionActivity : AppCompatActivity() {
     lateinit var mContext: Context
@@ -56,6 +63,7 @@ class CCASelectionActivity : AppCompatActivity() {
     var weekPosition = 0
     var flag = 0
     var ccaedit = 0
+    var keyy=""
     var mCCAsWeekListAdapter: CCAsWeekListAdapter? = null
     var TVselectedForWeek: TextView? = null
     var textViewCCAaSelect: TextView? = null
@@ -79,17 +87,57 @@ class CCASelectionActivity : AppCompatActivity() {
         progress = findViewById(R.id.progress)
         extras = intent.extras
         logoclick.setOnClickListener {
-            val mIntent = Intent(mContext, HomeActivity::class.java)
-            mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
-            startActivity(mIntent)
+            if(AppController.keyy.equals("1"))
+            {
+                if(ccaedit==0)
+                {
+                    showApiLogoAlert(mContext,"Leaving this page will cancel all reserved activities for this schedule. Do you want to continue?","Confirm")
+
+                }
+                else
+                {
+                    val mIntent = Intent(mContext, HomeActivity::class.java)
+                    mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    startActivity(mIntent)
+                }
+            }
+            else
+            {
+                val mIntent = Intent(mContext, HomeActivity::class.java)
+                mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                startActivity(mIntent)
+            }
+
         }
         backRelative.setOnClickListener {
-            finish()
+            if(ccaedit==0)
+            {
+                //Log.e("keyvalue", AppController.keyy!!)
+                if(AppController.keyy.equals("1"))
+                {
+                    showApiAlert(mContext,"Leaving this page will cancel all reserved activities for this schedule. Do you want to continue?","Confirm")
+
+                }
+                else
+                {
+                    val mIntent = Intent(mContext, CCA_Activity_New::class.java)
+                    mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+
+                    startActivity(mIntent)
+                }
+            }
+            else
+            {
+                finish()
+            }
+
+
         }
         if (extras != null) {
             tab_type = extras!!.getString("tab_type")!!
             ccaedit = extras!!.getInt("ccaedit", 0)
+            // keyy=extras!!.getString("keyvalue")!!
             //            pos = extras.getInt("pos");
             CCADetailModelArrayList =
                 PreferenceManager.getDetailsArrayList(mContext)
@@ -119,10 +167,10 @@ class CCASelectionActivity : AppCompatActivity() {
             mWeekListModel.weekDayMMM=(getWeekdayMMM(i))
             if (ccaedit == 0) {
                 mWeekListModel.choiceStatus=("0")
-                mWeekListModel.choiceStatus1=("0")
+                // mWeekListModel.choiceStatus1=("0")
             } else {
                 mWeekListModel.choiceStatus=("1")
-                mWeekListModel.choiceStatus1=("1")
+                //mWeekListModel.choiceStatus1=("1")
             }
             AppController.weekList!!.add(mWeekListModel)
         }
@@ -144,10 +192,10 @@ class CCASelectionActivity : AppCompatActivity() {
         )
         messageTxt!!.startAnimation(startAnimation)
         if (PreferenceManager.getStudClassForCCA(mContext).equals("")) {
-           // textViewStudName!!.setText(PreferenceManager.getStudNameForCCA(mContext))
+            // textViewStudName!!.setText(PreferenceManager.getStudNameForCCA(mContext))
 
             textViewStudName!!.text = Html.fromHtml(PreferenceManager.getStudNameForCCA(
-                    mContext)+"<br/>Year Group : " + PreferenceManager.getStudClassForCCA( mContext))
+                mContext)+"<br/>Year Group : " + PreferenceManager.getStudClassForCCA( mContext))
         } else {
             textViewStudName!!.text = Html.fromHtml(
                 PreferenceManager.getStudNameForCCA(mContext)
@@ -159,7 +207,7 @@ class CCASelectionActivity : AppCompatActivity() {
         if (ccaedit == 0) {
             ConstantFunctions.showDialogueWithOk(
                 mContext,
-                "Please select a EAP or None for each choice and each day",
+                "Please select a Enrichment choice foreach day",
                 "Info"
             )
 
@@ -188,11 +236,17 @@ class CCASelectionActivity : AppCompatActivity() {
             if(AppController.filledFlag == 1){
 //            if (filled) {
                 val mInent = Intent(mContext, CCAsReviewActivity::class.java)
+                intent.putExtra("ccaedit",ccaedit)
+                //intent.putExtra("keyvalue", keyy)
+
+                //Log.e("ccaedit", keyy)
+
                 Log.e("size selection", CCADetailModelArrayList!!.size.toString())
                 AppController.CCADetailModelArrayList.clear()
                 for (i in CCADetailModelArrayList!!.indices){
                     AppController.CCADetailModelArrayList.add(CCADetailModelArrayList!![i])
                 }
+                //  intent.putExtra("ccaedit", ccaedit)
                 intent.putExtra("detail_array", CCADetailModelArrayList)
                 System.out.print("detailArray"+CCADetailModelArrayList)
                 startActivity(mInent)
@@ -259,7 +313,7 @@ class CCASelectionActivity : AppCompatActivity() {
 //        }
         for (i in 0 until AppController.weekList!!.size) {
             AppController.weekList!!.get(i).choiceStatus=("2")
-            AppController.weekList!!.get(i).choiceStatus1=("2")
+            // AppController.weekList!!.get(i).choiceStatus1=("2")
             AppController.weekList!!.get(i).dataInWeek=("0")
         }
 
@@ -271,10 +325,10 @@ class CCASelectionActivity : AppCompatActivity() {
                 ) {
                     if (ccaedit == 0) {
                         AppController.weekList!!.get(i).choiceStatus=("0")
-                        AppController.weekList!!.get(i).choiceStatus1=("0")
+                        //  AppController.weekList!!.get(i).choiceStatus1=("0")
                     } else {
                         AppController.weekList!!.get(i).choiceStatus=("1")
-                        AppController.weekList!!.get(i).choiceStatus1=("1")
+                        // AppController.weekList!!.get(i).choiceStatus1=("1")
                     }
                     AppController.weekList!!.get(i).dataInWeek=("1")
                     AppController.weekListWithData!!.add(i)
@@ -305,7 +359,7 @@ class CCASelectionActivity : AppCompatActivity() {
                     textViewCCAaSelect!!.visibility = View.GONE
                     TVselectedForWeek!!.visibility = View.GONE
                     AppController.weekList!!.get(0).choiceStatus=("2")
-                    AppController.weekList!!.get(0).choiceStatus1=("2")
+                    //   AppController.weekList!!.get(0).choiceStatus1=("2")
                     //                    Toast.makeText(mContext, "ECA choice not available.", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -340,7 +394,7 @@ class CCASelectionActivity : AppCompatActivity() {
                     if (AppController.weekList!!.get(position).weekDay.equals(
                             CCADetailModelArrayList!!.get(i).day)) {
                         pos = i
-                      ccaDetailpos = i
+                        ccaDetailpos = i
                         weekSelected = true
                         break
                     } else {
@@ -353,12 +407,12 @@ class CCASelectionActivity : AppCompatActivity() {
                 if (!weekSelected) {
                     textViewCCAaSelect!!.visibility = View.GONE
                     TVselectedForWeek!!.visibility = View.GONE
-                  msgRelative!!.setVisibility(View.GONE)
+                    msgRelative!!.setVisibility(View.GONE)
                     val mCCAsActivityAdapter = CCAsActivityAdapter(mContext, 0)
                     recycler_review!!.adapter = mCCAsActivityAdapter
                     mCCAsActivityAdapter.notifyDataSetChanged()
                     AppController.weekList!!.get(position).choiceStatus=("2")
-                    AppController.weekList!!.get(position).choiceStatus1=("2")
+                    //AppController.weekList!!.get(position).choiceStatus1=("2")
                     Toast.makeText(mContext, "EAP choice not available", Toast.LENGTH_SHORT)
                         .show()
                 } else {
@@ -378,8 +432,7 @@ class CCASelectionActivity : AppCompatActivity() {
                 }
                 for (j in 0 until AppController.weekList!!.size) {
                     if (AppController.weekList!!.get(j).choiceStatus
-                            .equals("0") || AppController.weekList!!.get(j)
-                            .choiceStatus1.equals("0")
+                            .equals("0")
                     ) {
                         filled = false
                         break
@@ -442,7 +495,7 @@ class CCASelectionActivity : AppCompatActivity() {
                     recycler_review!!.adapter = mCCAsActivityAdapter
                     mCCAsActivityAdapter.notifyDataSetChanged()
                     AppController.weekList!!.get(j).choiceStatus=("2")
-                    AppController.weekList!!.get(j).choiceStatus1=("2")
+                    //  AppController.weekList!!.get(j).choiceStatus1=("2")
                     Toast.makeText(mContext, "EAP choice not available", Toast.LENGTH_SHORT).show()
                 } else {
                     textViewCCAaSelect!!.visibility = View.VISIBLE
@@ -461,8 +514,7 @@ class CCASelectionActivity : AppCompatActivity() {
                 }
                 for (k in 0 until AppController.weekList!!.size) {
                     if (AppController.weekList!!.get(k).choiceStatus
-                            .equals("0") || AppController.weekList!!.get(k)
-                            .choiceStatus1.equals("0")
+                            .equals("0")
                     ) {
                         filled = false
                         msgRelative!!.setVisibility(View.VISIBLE)
@@ -577,7 +629,7 @@ class CCASelectionActivity : AppCompatActivity() {
                         recycler_review!!.adapter = mCCAsActivityAdapter
                         mCCAsActivityAdapter.notifyDataSetChanged()
                         AppController.weekList!!.get(j).choiceStatus = "2"
-                        AppController.weekList!!.get(j).choiceStatus1 = "2"
+                        //  AppController.weekList!!.get(j).choiceStatus1 = "2"
                         //                            Toast.makeText(mContext, "ECA choice not available.", Toast.LENGTH_SHORT).show();
                     } else {
                         textViewCCAaSelect!!.visibility = View.VISIBLE
@@ -595,8 +647,7 @@ class CCASelectionActivity : AppCompatActivity() {
                     }
                     for (k in 0 until AppController.weekList!!.size) {
                         if (AppController.weekList!!.get(k).choiceStatus
-                                .equals("0") || AppController.weekList!!.get(k)
-                                .choiceStatus1.equals("0",ignoreCase = true)
+                                .equals("0")
                         ) {
                             filled = false
                             msgRelative!!.setVisibility(View.VISIBLE)
@@ -638,6 +689,186 @@ class CCASelectionActivity : AppCompatActivity() {
             }
         })
     }
+    private fun showApiAlert(
+        context: Context,
+        message: String,
+        msgHead: String,
+    ){
+        val dialog = Dialog(context)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.dialog_ok_cancel)
+        val icon = dialog.findViewById(R.id.iconImageView) as ImageView
+        /* icon.setBackgroundResource(bgIcon)
+         icon.setImageResource(ico)*/
+        val text = dialog.findViewById(R.id.text_dialog) as TextView
+        val textHead = dialog.findViewById(R.id.alertHead) as TextView
+        text.text = message
+        textHead.text = msgHead
+        val dialogButton = dialog.findViewById(R.id.btn_Ok) as Button
+        dialogButton.setOnClickListener {
+            if (ConstantFunctions.internetCheck(mContext))
+            {
+                ccacancelAPI()
+            }
+            else
+            {
+                DialogFunctions.showInternetAlertDialog(mContext)
+            }
+            dialog.dismiss()
+        }
+        val dialogButtonCancel = dialog.findViewById(R.id.btn_Cancel) as Button
+        dialogButtonCancel.setOnClickListener {
+
+            dialog.dismiss() }
+        dialog.show()
+    }
+
+    private fun showApiLogoAlert(
+        context: Context,
+        message: String,
+        msgHead: String,
+    ){
+        val dialog = Dialog(context)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.dialog_ok_cancel)
+        val icon = dialog.findViewById(R.id.iconImageView) as ImageView
+        /* icon.setBackgroundResource(bgIcon)
+         icon.setImageResource(ico)*/
+        val text = dialog.findViewById(R.id.text_dialog) as TextView
+        val textHead = dialog.findViewById(R.id.alertHead) as TextView
+        text.text = message
+        textHead.text = msgHead
+        val dialogButton = dialog.findViewById(R.id.btn_Ok) as Button
+        dialogButton.setOnClickListener {
+            if (ConstantFunctions.internetCheck(mContext))
+            {
+                ccacancelLogoAPI()
+            }
+            else
+            {
+                DialogFunctions.showInternetAlertDialog(mContext)
+            }
+            dialog.dismiss()
+        }
+        val dialogButtonCancel = dialog.findViewById(R.id.btn_Cancel) as Button
+        dialogButtonCancel.setOnClickListener {
+
+            dialog.dismiss() }
+        dialog.show()
+    }
+
+    private fun ccacancelAPI() {
+
+        var model= CCACancelModel(PreferenceManager.getStudIdForCCA(mContext).toString(),
+            PreferenceManager.getCCAItemId(mContext).toString()
+        )
+        val token = PreferenceManager.getaccesstoken(mContext)
+        val call: Call<CCASubmitResponseModel> =
+            ApiClient.getClient.ccareservecancel( model,"Bearer $token")
+        progress.visibility = View.VISIBLE
+        call.enqueue(object : Callback<CCASubmitResponseModel> {
+            override fun onResponse(
+                call: Call<CCASubmitResponseModel>,
+                response: Response<CCASubmitResponseModel>
+            ) {
+                progress.visibility = View.GONE
+                if (response.isSuccessful){
+                    if (response.body() != null){
+                        if (response.body()!!.status!!.equals(100)){
+
+//                            val survey: Int = secobj.optInt("survey")
+                            val mIntent = Intent(mContext, CCA_Activity_New::class.java)
+                            mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                            startActivity(mIntent)
+
+                        }
+                        else if (response.body()!!.status!!.equals(109))
+                        {
+
+
+                        }
+                        else{
+
+                            Toast.makeText(mContext, "Failure", Toast.LENGTH_SHORT).show()
+                        }
+
+                    }else{
+
+                        ConstantFunctions.showDialogueWithOk(mContext,getString(R.string.common_error),"Alert")
+                    }
+                }else{
+
+                    ConstantFunctions.showDialogueWithOk(mContext,getString(R.string.common_error),"Alert")
+                }
+            }
+
+            override fun onFailure(call: Call<CCASubmitResponseModel>, t: Throwable) {
+                progress.visibility = View.GONE
+                ConstantFunctions.showDialogueWithOk(mContext,getString(R.string.common_error),"Alert")
+            }
+
+        })
+    }
+
+
+    private fun ccacancelLogoAPI() {
+
+        var model= CCACancelModel(PreferenceManager.getStudIdForCCA(mContext).toString(),
+            PreferenceManager.getCCAItemId(mContext).toString()
+        )
+        val token = PreferenceManager.getaccesstoken(mContext)
+        val call: Call<CCASubmitResponseModel> =
+            ApiClient.getClient.ccareservecancel( model,"Bearer $token")
+        progress.visibility = View.VISIBLE
+        call.enqueue(object : Callback<CCASubmitResponseModel> {
+            override fun onResponse(
+                call: Call<CCASubmitResponseModel>,
+                response: Response<CCASubmitResponseModel>
+            ) {
+                progress.visibility = View.GONE
+                if (response.isSuccessful){
+                    if (response.body() != null){
+                        if (response.body()!!.status!!.equals(100)){
+
+//                            val survey: Int = secobj.optInt("survey")
+                            val mIntent = Intent(mContext, HomeActivity::class.java)
+                            mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                            startActivity(mIntent)
+
+                        }
+                        else if (response.body()!!.status!!.equals(109))
+                        {
+
+
+                        }
+                        else{
+
+                            Toast.makeText(mContext, "Failure", Toast.LENGTH_SHORT).show()
+                        }
+
+                    }else{
+
+                        ConstantFunctions.showDialogueWithOk(mContext,getString(R.string.common_error),"Alert")
+                    }
+                }else{
+
+                    ConstantFunctions.showDialogueWithOk(mContext,getString(R.string.common_error),"Alert")
+                }
+            }
+
+            override fun onFailure(call: Call<CCASubmitResponseModel>, t: Throwable) {
+                progress.visibility = View.GONE
+                ConstantFunctions.showDialogueWithOk(mContext,getString(R.string.common_error),"Alert")
+            }
+
+        })
+    }
+
+
     fun getWeekday(weekDay: Int): String? {
         var day = ""
         when (weekDay) {
@@ -666,5 +897,28 @@ class CCASelectionActivity : AppCompatActivity() {
         return day
     }
 
+    override fun onBackPressed() {
+        if(ccaedit==0)
+        {
+            if(AppController.keyy.equals("1"))
+            {
+                showApiAlert(mContext,"Leaving this page will cancel all reserved activities for this schedule. Do you want to continue?","Confirm")
 
+            }
+            else
+            {
+                val mIntent = Intent(mContext, CCA_Activity_New::class.java)
+                mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+
+                startActivity(mIntent)
+            }
+            // showApiAlert(mContext,"Leaving this page will cancel all reserved activities for this schedule. Do you want to continue?","Confirm")
+        }
+        else
+        {
+            finish()
+        }
+
+
+    }
 }

@@ -68,8 +68,8 @@ class CCAsReviewAfterSubmissionActivity : AppCompatActivity() {
             startActivity(mIntent)
         }
         backRelative.setOnClickListener {
-          //  finish()
-            val mIntent = Intent(mContext, CCA_Activity::class.java)
+            //  finish()
+            val mIntent = Intent(mContext, CCA_Activity_New::class.java)
             mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(mIntent)
         }
@@ -222,7 +222,13 @@ class CCAsReviewAfterSubmissionActivity : AppCompatActivity() {
 
         })
     }
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val mIntent = Intent(mContext, CCA_Activity_New::class.java)
+        mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        startActivity(mIntent)
 
+    }
     private fun addCCAReviewlist(dataObject: CCAReviewResponseModel.Data) {
         val mCCAModel = CCAReviewAfterSubmissionModel()
         mCCAModel.day = dataObject!!.day

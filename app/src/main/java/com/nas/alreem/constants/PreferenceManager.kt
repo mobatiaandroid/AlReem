@@ -1101,7 +1101,44 @@ class PreferenceManager {
             return staffId
         }
 
+        fun setkeyvalue(context: Context, keyvalu: String?) {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            val editor = prefs.edit()
+            editor.putString("keyval", keyvalu)
+            editor.commit()
+        }
 
+        fun getkeyvalue(context: Context): String? {
+            var keyvalu = ""
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            keyvalu = prefs.getString("keyval", "").toString()
+            return keyvalu
+        }
+        fun setdetailvalue(context: Context, detailval: String?) {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            val editor = prefs.edit()
+            editor.putString("detailval", detailval)
+            editor.commit()
+        }
+
+        fun getdetailvalue(context: Context): String? {
+            var detailval = ""
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            detailval = prefs.getString("detailval", "").toString()
+            return detailval
+        }
         fun saveAboutsArrayList(context: Context, list: ArrayList<AboutusList>?) {
             val prefs = context.getSharedPreferences(
                 "ALGUBRA",

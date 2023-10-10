@@ -15,11 +15,10 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import com.nas.alreem.R
 import com.nas.alreem.activity.cca.adapter.CCAfinalReviewAdapter
-import com.nas.alreem.activity.cca.model.CCADetailModel
-import com.nas.alreem.activity.cca.model.CCASubmitResponseModel
-import com.nas.alreem.activity.cca.model.CCASumbitRequestModel
+import com.nas.alreem.activity.cca.model.*
 import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.appcontroller.AppController
 import com.nas.alreem.constants.ConstantFunctions
@@ -40,16 +39,18 @@ class CCAsReviewActivity : AppCompatActivity() {
     lateinit var progressBar: ProgressBar
     var recyclerViewLayoutManager: GridLayoutManager? = null
     var recycler_review: RecyclerView? = null
-//    var headermanager: HeaderManager? = null
+    //    var headermanager: HeaderManager? = null
     var relativeHeader: RelativeLayout? = null
     var CCADetailModelArrayList: ArrayList<CCADetailModel>? = ArrayList()
-//    var back: ImageView? = null
+    //    var back: ImageView? = null
     var submitBtn: Button? = null
     var home: ImageView? = null
     var tab_type = "ECAs"
     var extras: Bundle? = null
     var mCCADetailModelArrayList: ArrayList<CCADetailModel>? = ArrayList()
     var mCCAItemIdArray: java.util.ArrayList<String>? = null
+    var mCCAItemIdArray1: java.util.ArrayList<CCAEditModel>? = null
+
     var textViewCCAaItem: TextView? = null
     var cca_details = ""
     var cca_detailsId = "["
@@ -58,8 +59,10 @@ class CCAsReviewActivity : AppCompatActivity() {
     var currentPage = 0
     var currentPageSurvey = 0
     private val surveySize = 0
+    var ccaedit = 0
+    var keyy=""
     var pos = -1
-//    var surveyArrayList: java.util.ArrayList<SurveyModel>? = null
+    //    var surveyArrayList: java.util.ArrayList<SurveyModel>? = null
 //    var surveyQuestionArrayList: java.util.ArrayList<SurveyQuestionsModel>? = null
 //    var surveyAnswersArrayList: java.util.ArrayList<SurveyAnswersModel>? = null
 //    var mAnswerList: java.util.ArrayList<AnswerSubmitModel>? = null
@@ -77,28 +80,51 @@ class CCAsReviewActivity : AppCompatActivity() {
         progressBar = findViewById(R.id.progress)
         extras = intent.extras
         logoclick.setOnClickListener {
-            val mIntent = Intent(mContext, HomeActivity::class.java)
-            mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
-            startActivity(mIntent)
+            if(PreferenceManager.getkeyvalue(mContext).toString().equals("0"))
+            {
+                showApilogoAlert(mContext,"Leaving this page will cancel all reserved activities for this schedule. Do you want to continue?","Confirm")
+
+            }
+            else
+            {
+                val mIntent = Intent(mContext, HomeActivity::class.java)
+                mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+
+                startActivity(mIntent)
+            }
+
         }
+        // ccaedit = intent.getIntExtra("ccaedit",0)
+        //   keyy=extras!!.getString("keyvalue")!!
+
+        Log.e("cca edit", PreferenceManager.getkeyvalue(mContext).toString())
         backRelative.setOnClickListener {
-            finish()
+            if(PreferenceManager.getkeyvalue(mContext).toString().equals("0"))
+            {
+                showApiAlert(mContext,"Leaving this page will cancel all reserved activities for this schedule. Do you want to continue?","Confirm")
+
+            }
+            else
+            {
+                finish()
+            }
+
         }
         if (extras != null) {
 //            tab_type = extras!!.getString("tab_type").toString()
 
             CCADetailModelArrayList=
                 extras!!.getSerializable("detail_array") as ArrayList<CCADetailModel>?
-            Log.e("size review", CCADetailModelArrayList!!.size.toString())
+           // Log.e("size review", CCADetailModelArrayList!!.size.toString())
         }else{
-           CCADetailModelArrayList = AppController.CCADetailModelArrayList
-            Log.e("size review", CCADetailModelArrayList!!.size.toString())
+            CCADetailModelArrayList = AppController.CCADetailModelArrayList
+            //Log.e("size review", CCADetailModelArrayList!!.size.toString())
         }
 
         for (j in 0 until CCADetailModelArrayList!!.size)
-            {
-                Log.e("ccadetail model size", CCADetailModelArrayList!!.size.toString())
+        {
+           // Log.e("ccadetail model size", CCADetailModelArrayList!!.size.toString())
         }
 
         relativeHeader = findViewById<View>(R.id.relativeHeader) as RelativeLayout
@@ -111,6 +137,7 @@ class CCAsReviewActivity : AppCompatActivity() {
         recycler_review!!.layoutManager = recyclerViewLayoutManager
         mCCADetailModelArrayList = ArrayList<CCADetailModel>()
         mCCAItemIdArray = ArrayList<String>()
+        mCCAItemIdArray1 = ArrayList<CCAEditModel>()
         if (PreferenceManager.getStudClassForCCA(mContext).equals("")) {
             textViewCCAaItem!!.text = Html.fromHtml(
                 PreferenceManager.getCCATitle(mContext)
@@ -132,12 +159,14 @@ class CCAsReviewActivity : AppCompatActivity() {
                         CCADetailModelArrayList!![j].day,ignoreCase = true
                     )
                 ) {
-                    Log.e("ccadetail model size", CCADetailModelArrayList!!.size.toString())
+                   // Log.e("ccadetail model size", CCADetailModelArrayList!!.size.toString())
                     val mCCADetailModel = CCADetailModel()
                     mCCADetailModel.day = CCADetailModelArrayList!![j].day
                     mCCADetailModel.choice1 = CCADetailModelArrayList!![j].choice1
                     mCCADetailModel.choice2 = CCADetailModelArrayList!![j].choice2
                     mCCADetailModel.choice1Id = CCADetailModelArrayList!![j].choice1Id
+                    mCCADetailModel.choiceitem1Id = CCADetailModelArrayList!![j].choiceitem1Id
+
                     mCCADetailModel.choice2Id = CCADetailModelArrayList!![j].choice2Id
 
                     if(CCADetailModelArrayList!![j].location != null){
@@ -165,18 +194,18 @@ class CCAsReviewActivity : AppCompatActivity() {
                         if (CCADetailModelArrayList!![j].choice1.equals(
                                 CCADetailModelArrayList!![j].ccaChoiceModel!![k].cca_item_name
                             )
-                    ) {
-                        if (CCADetailModelArrayList!![j].ccaChoiceModel!![k].cca_item_start_time != null
-                            && CCADetailModelArrayList!![j].ccaChoiceModel!![k].cca_item_end_time != null
                         ) {
-                            mCCADetailModel.cca_item_start_timechoice1 = CCADetailModelArrayList!![j].ccaChoiceModel!![k].cca_item_start_time
-                            mCCADetailModel.cca_item_end_timechoice1 = CCADetailModelArrayList!![j].ccaChoiceModel!![k].cca_item_end_time
-                            mCCADetailModel.location = CCADetailModelArrayList!![j].ccaChoiceModel!![k].venue
-                            mCCADetailModel.description = CCADetailModelArrayList!![j].ccaChoiceModel!![k].description
+                            if (CCADetailModelArrayList!![j].ccaChoiceModel!![k].cca_item_start_time != null
+                                && CCADetailModelArrayList!![j].ccaChoiceModel!![k].cca_item_end_time != null
+                            ) {
+                                mCCADetailModel.cca_item_start_timechoice1 = CCADetailModelArrayList!![j].ccaChoiceModel!![k].cca_item_start_time
+                                mCCADetailModel.cca_item_end_timechoice1 = CCADetailModelArrayList!![j].ccaChoiceModel!![k].cca_item_end_time
+                                mCCADetailModel.location = CCADetailModelArrayList!![j].ccaChoiceModel!![k].venue
+                                mCCADetailModel.description = CCADetailModelArrayList!![j].ccaChoiceModel!![k].description
 
-                            break
+                                break
+                            }
                         }
-                    }
                     for (k in 0 until CCADetailModelArrayList!![j]
                         .ccaChoiceModel2!!.size) if (CCADetailModelArrayList!![j]
                             .choice2.equals(
@@ -196,7 +225,7 @@ class CCAsReviewActivity : AppCompatActivity() {
                         }
                     }
                     mCCADetailModelArrayList!!.add(mCCADetailModel)
-                    Log.e("detaiol",mCCADetailModel.location.toString())
+                   // Log.e("detaiol",mCCADetailModel.location.toString())
                     break
                 }
             }
@@ -205,44 +234,73 @@ class CCAsReviewActivity : AppCompatActivity() {
         val mCCAsActivityAdapter = CCAfinalReviewAdapter(mContext, mCCADetailModelArrayList!!)
         recycler_review!!.adapter = mCCAsActivityAdapter
         for (j in mCCADetailModelArrayList!!.indices) {
-            Log.e("cca", mCCADetailModelArrayList!![j].choice1.toString())
+           // Log.e("cca", mCCADetailModelArrayList!![j].choice1.toString())
             if (mCCADetailModelArrayList!!.get(j)
                     .choice1 != null && mCCADetailModelArrayList!![j].choice2 != null
             ) {
                 if (!mCCADetailModelArrayList!![j].choice1Id.equals("-541") &&
                     !mCCADetailModelArrayList!![j].choice2Id.equals("-541")
                 ) {
-                   /* Log.e("1",
-                        mCCAItemIdArray!!.add(mCCADetailModelArrayList!![j].choice1Id!!).toString()
-                    )*/
-
+                    /* Log.e("1",
+                         mCCAItemIdArray!!.add(mCCADetailModelArrayList!![j].choice1Id!!).toString()
+                     )*/
+                    var temp=CCAEditModel("","")
+                    temp.cca_day_details_id= mCCADetailModelArrayList!![j].choice1Id!!
+                    temp.update_item_id= mCCADetailModelArrayList!![j].choiceitem1Id!!
+                    mCCAItemIdArray1!!.add(temp)
+                   // Log.e("Array", mCCAItemIdArray1!!.size.toString())
                     mCCAItemIdArray!!.add(mCCADetailModelArrayList!![j].choice1Id!!)
                     mCCAItemIdArray!!.add(mCCADetailModelArrayList!![j].choice2Id!!)
+                    //mCCAItemIdArray1!!.add(mCCADetailModelArrayList!![j].choice1Id!!,mCCADetailModelArrayList!![j].choiceitem1Id!!)
                 } else if (!mCCADetailModelArrayList!![j].choice1Id.equals("-541")
                 ) {
-                   /* Log.e("2",
-                        mCCAItemIdArray!!.add(mCCADetailModelArrayList!![j].choice1Id!!).toString()
-                    )*/
+                    /* Log.e("2",
+                         mCCAItemIdArray!!.add(mCCADetailModelArrayList!![j].choice1Id!!).toString()
+                     )*/
+                    var temp=CCAEditModel("","")
+                    temp.cca_day_details_id= mCCADetailModelArrayList!![j].choice1Id!!
+                    temp.update_item_id= mCCADetailModelArrayList!![j].choiceitem1Id!!
+                    mCCAItemIdArray1!!.add(temp)
+                  //  Log.e("Array", mCCAItemIdArray1!!.size.toString())
+
                     mCCAItemIdArray!!.add(mCCADetailModelArrayList!![j].choice1Id!!)
                 } else if (!mCCADetailModelArrayList!![j].choice2Id.equals("-541")
                 ) {
-                   /* Log.e("13",
-                        mCCAItemIdArray!!.add(mCCADetailModelArrayList!![j].choice1Id!!).toString()
-                    )*/
+                    /* Log.e("13",
+                         mCCAItemIdArray!!.add(mCCADetailModelArrayList!![j].choice1Id!!).toString()
+                     )*/
+                    var temp=CCAEditModel("","")
+                    temp.cca_day_details_id= mCCADetailModelArrayList!![j].choice1Id!!
+                    temp.update_item_id= mCCADetailModelArrayList!![j].choiceitem1Id!!
+                    mCCAItemIdArray1!!.add(temp)
+                   // Log.e("Array", mCCAItemIdArray1!!.size.toString())
+
                     mCCAItemIdArray!!.add(mCCADetailModelArrayList!![j].choice2Id!!)
                 }
             } else if (mCCADetailModelArrayList!![j].choice1 != null) {
                 if (!mCCADetailModelArrayList!![j].choice1Id.equals("-541")) {
-                   /* Log.e("14",
-                        mCCAItemIdArray!!.add(mCCADetailModelArrayList!![j].choice1Id!!).toString()
-                    )*/
+                    /* Log.e("14",
+                         mCCAItemIdArray!!.add(mCCADetailModelArrayList!![j].choice1Id!!).toString()
+                     )*/
+                    var temp=CCAEditModel("","")
+                    temp.cca_day_details_id= mCCADetailModelArrayList!![j].choice1Id!!
+                    temp.update_item_id= mCCADetailModelArrayList!![j].choiceitem1Id!!
+                    mCCAItemIdArray1!!.add(temp)
+                   // Log.e("Array", mCCAItemIdArray1!!.size.toString())
+
                     mCCAItemIdArray!!.add(mCCADetailModelArrayList!![j].choice1Id!!)
                 }
             } else if (mCCADetailModelArrayList!![j].choice2 != null) {
                 if (!mCCADetailModelArrayList!![j].choice2Id.equals("-541")) {
-                   /* Log.e("15",
-                        mCCAItemIdArray!!.add(mCCADetailModelArrayList!![j].choice1Id!!).toString()
-                    )*/
+                    /* Log.e("15",
+                         mCCAItemIdArray!!.add(mCCADetailModelArrayList!![j].choice1Id!!).toString()
+                     )*/
+                    var temp=CCAEditModel("","")
+                    temp.cca_day_details_id= mCCADetailModelArrayList!![j].choice1Id!!
+                    temp.update_item_id= mCCADetailModelArrayList!![j].choiceitem1Id!!
+                    mCCAItemIdArray1!!.add(temp)
+                  //  Log.e("Array", mCCAItemIdArray1!!.size.toString())
+
                     mCCAItemIdArray!!.add(mCCADetailModelArrayList!![j].choice2Id!!)
                 }
             }
@@ -252,7 +310,7 @@ class CCAsReviewActivity : AppCompatActivity() {
             cca_detailsId += "]}"
         }
         for (i in mCCAItemIdArray!!.indices) {
-            Log.e("items", mCCAItemIdArray!![i].toString())
+           // Log.e("items", mCCAItemIdArray!![i].toString())
             if (mCCAItemIdArray!!.size - 1 == 0) {
                 cca_detailsId += "\"" + mCCAItemIdArray!![i] + "\"]}"
             } else if (i == mCCAItemIdArray!!.size - 1) {
@@ -268,22 +326,31 @@ class CCAsReviewActivity : AppCompatActivity() {
             .toString() + "\",\"users_id\":\"" + PreferenceManager.getUserCode(mContext)
             .toString() + "\",\"cca_days_details_id\":" + cca_detailsId
 
-        Log.e("cca_details",cca_details)
-        Log.e("cca_detailsId",cca_detailsId)
-
+     //   Log.e("cca_details",cca_details)
+      //  Log.e("cca_detailsId",cca_detailsId)
+        val gson = Gson()
+        val jsonString = gson.toJson(mCCAItemIdArray1)
+       // Log.e("jsonString",jsonString)
         submitBtn!!.setOnClickListener(View.OnClickListener {
             showDialogReviewSubmit(
                 mContext as Activity,
                 "Confirm",
                 "Do you want to confirm this EAP?",
                 R.drawable.exclamationicon,
-                R.drawable.round
+                R.drawable.round,jsonString
             )
         })
     }
 
 
-    private fun showDialogReviewSubmit(activity: Activity, msgHead: String, msg: String, ico: Int, bgIcon: Int) {
+    private fun showDialogReviewSubmit(
+        activity: Activity,
+        msgHead: String,
+        msg: String,
+        ico: Int,
+        bgIcon: Int,
+        jsonString: String
+    ) {
         val dialog = Dialog(activity)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -302,7 +369,15 @@ class CCAsReviewActivity : AppCompatActivity() {
 
             var internetCheck = ConstantFunctions.internetCheck(mContext)
             if (internetCheck) {
-                ccaSubmitAPI()
+
+                if(PreferenceManager.getkeyvalue(mContext).toString().equals("0"))
+                {
+                    ccaSubmitAPI()
+                }
+                else
+                {
+                    ccaeditSubmitApi(jsonString)
+                }
 
 
             } else {
@@ -318,11 +393,69 @@ class CCAsReviewActivity : AppCompatActivity() {
 
     }
 
+    private fun ccaeditSubmitApi(jsonString: String) {
+
+
+        var model= CCAEditRequestModel(PreferenceManager.getStudIdForCCA(mContext).toString(),
+            PreferenceManager.getCCAItemId(mContext).toString(),jsonString)
+        val token = PreferenceManager.getaccesstoken(mContext)
+        val call: Call<CCASubmitResponseModel> =
+            ApiClient.getClient.ccaedit( model,"Bearer $token")
+        progressBar.visibility = View.VISIBLE
+        call.enqueue(object : Callback<CCASubmitResponseModel> {
+            override fun onResponse(
+                call: Call<CCASubmitResponseModel>,
+                response: Response<CCASubmitResponseModel>
+            ) {
+                progressBar.visibility = View.GONE
+                if (response.isSuccessful){
+                    if (response.body() != null){
+                        if (response.body()!!.status!!.equals(100)){
+
+//                            val survey: Int = secobj.optInt("survey")
+                            showDialogAlert(
+                                mContext as Activity,
+                                "Success",
+                                "You are able to make changes until the closing date. After the closing date selections are final",
+                                R.drawable.tickicon,
+                                R.drawable.round,
+                            )
+
+                        }
+                        else if (response.body()!!.status!!.equals(109))
+                        {
+
+
+                        }
+                        else{
+
+                            Toast.makeText(mContext, "Failure", Toast.LENGTH_SHORT).show()
+                        }
+
+                    }else{
+
+                        ConstantFunctions.showDialogueWithOk(mContext,getString(R.string.common_error),"Alert")
+                    }
+                }else{
+
+                    ConstantFunctions.showDialogueWithOk(mContext,getString(R.string.common_error),"Alert")
+                }
+            }
+
+            override fun onFailure(call: Call<CCASubmitResponseModel>, t: Throwable) {
+                progressBar.visibility = View.GONE
+                ConstantFunctions.showDialogueWithOk(mContext,getString(R.string.common_error),"Alert")
+            }
+
+        })
+    }
+
     private fun ccaSubmitAPI() {
-        Log.e("stud", PreferenceManager.getStudIdForCCA(mContext).toString())
-        Log.e("day",PreferenceManager.getCCAItemId(mContext).toString())
-        Log.e("details",cca_detailsId)
+       // Log.e("stud", PreferenceManager.getStudIdForCCA(mContext).toString())
+       // Log.e("day",PreferenceManager.getCCAItemId(mContext).toString())
+       // Log.e("details",cca_detailsId)
         val ccaDetail: ArrayList<String> = ArrayList()
+       // Log.e("arraydata", mCCAItemIdArray.toString())
         for (i in mCCAItemIdArray!!.indices){
 //            if ( i != 0) {
             if(!mCCAItemIdArray!![i].equals("-541"))
@@ -330,7 +463,7 @@ class CCAsReviewActivity : AppCompatActivity() {
 //            }
 
         }
-        Log.e("details1",ccaDetail.toString())
+       // Log.e("details1",ccaDetail.toString())
 
         var model= CCASumbitRequestModel(PreferenceManager.getStudIdForCCA(mContext).toString(),
             PreferenceManager.getCCAItemId(mContext).toString(),ccaDetail.toString()
@@ -412,13 +545,205 @@ class CCAsReviewActivity : AppCompatActivity() {
 //            if (survey == 1) {
 //                callSurveyApi()
 //            } else {
-                val intent = Intent(mContext, CCA_Activity::class.java)
-              //  PreferenceManager.setStudIdForCCA(mContext!!, "")
+            val intent = Intent(mContext, CCA_Activity_New::class.java)
+            //  PreferenceManager.setStudIdForCCA(mContext!!, "")
 
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                startActivity(intent)
+            startActivity(intent)
 //            }
         }
         dialog.show()
+    }
+    private fun showApiAlert(
+        context: Context,
+        message: String,
+        msgHead: String,
+    ){
+        val dialog = Dialog(context)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.dialog_ok_cancel)
+        val icon = dialog.findViewById(R.id.iconImageView) as ImageView
+        /* icon.setBackgroundResource(bgIcon)
+         icon.setImageResource(ico)*/
+        val text = dialog.findViewById(R.id.text_dialog) as TextView
+        val textHead = dialog.findViewById(R.id.alertHead) as TextView
+        text.text = message
+        textHead.text = msgHead
+        val dialogButton = dialog.findViewById(R.id.btn_Ok) as Button
+        dialogButton.setOnClickListener {
+            if (ConstantFunctions.internetCheck(mContext))
+            {
+                ccacancelAPI()
+            }
+            else
+            {
+                DialogFunctions.showInternetAlertDialog(mContext)
+            }
+            dialog.dismiss()
+        }
+        val dialogButtonCancel = dialog.findViewById(R.id.btn_Cancel) as Button
+        dialogButtonCancel.setOnClickListener {
+
+            dialog.dismiss() }
+        dialog.show()
+    }
+
+    private fun ccacancelAPI() {
+
+        var model= CCACancelModel(PreferenceManager.getStudIdForCCA(mContext).toString(),
+            PreferenceManager.getCCAItemId(mContext).toString()
+        )
+        val token = PreferenceManager.getaccesstoken(mContext)
+        val call: Call<CCASubmitResponseModel> =
+            ApiClient.getClient.ccareservecancel( model,"Bearer $token")
+        progressBar.visibility = View.VISIBLE
+        call.enqueue(object : Callback<CCASubmitResponseModel> {
+            override fun onResponse(
+                call: Call<CCASubmitResponseModel>,
+                response: Response<CCASubmitResponseModel>
+            ) {
+                progressBar.visibility = View.GONE
+                if (response.isSuccessful){
+                    if (response.body() != null){
+                        if (response.body()!!.status!!.equals(100)){
+
+//                            val survey: Int = secobj.optInt("survey")
+                            val mIntent = Intent(mContext, CCA_Activity_New::class.java)
+                            mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                            startActivity(mIntent)
+
+                        }
+                        else if (response.body()!!.status!!.equals(109))
+                        {
+
+
+                        }
+                        else{
+
+                            Toast.makeText(mContext, "Failure", Toast.LENGTH_SHORT).show()
+                        }
+
+                    }else{
+
+                        ConstantFunctions.showDialogueWithOk(mContext,getString(R.string.common_error),"Alert")
+                    }
+                }else{
+
+                    ConstantFunctions.showDialogueWithOk(mContext,getString(R.string.common_error),"Alert")
+                }
+            }
+
+            override fun onFailure(call: Call<CCASubmitResponseModel>, t: Throwable) {
+                progressBar.visibility = View.GONE
+                ConstantFunctions.showDialogueWithOk(mContext,getString(R.string.common_error),"Alert")
+            }
+
+        })
+    }
+    override fun onBackPressed() {
+
+        if(PreferenceManager.getkeyvalue(mContext).toString().equals("0"))
+        {
+            showApiAlert(mContext,"Leaving this page will cancel all reserved activities for this schedule. Do you want to continue?","Confirm")
+
+        }
+        else
+        {
+            finish()
+        }
+
+    }
+
+
+
+    private fun showApilogoAlert(
+        context: Context,
+        message: String,
+        msgHead: String,
+    ){
+        val dialog = Dialog(context)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.dialog_ok_cancel)
+        val icon = dialog.findViewById(R.id.iconImageView) as ImageView
+        /* icon.setBackgroundResource(bgIcon)
+         icon.setImageResource(ico)*/
+        val text = dialog.findViewById(R.id.text_dialog) as TextView
+        val textHead = dialog.findViewById(R.id.alertHead) as TextView
+        text.text = message
+        textHead.text = msgHead
+        val dialogButton = dialog.findViewById(R.id.btn_Ok) as Button
+        dialogButton.setOnClickListener {
+            if (ConstantFunctions.internetCheck(mContext))
+            {
+                ccacancellogoAPI()
+            }
+            else
+            {
+                DialogFunctions.showInternetAlertDialog(mContext)
+            }
+            dialog.dismiss()
+        }
+        val dialogButtonCancel = dialog.findViewById(R.id.btn_Cancel) as Button
+        dialogButtonCancel.setOnClickListener {
+
+            dialog.dismiss() }
+        dialog.show()
+    }
+
+    private fun ccacancellogoAPI() {
+
+        var model= CCACancelModel(PreferenceManager.getStudIdForCCA(mContext).toString(),
+            PreferenceManager.getCCAItemId(mContext).toString()
+        )
+        val token = PreferenceManager.getaccesstoken(mContext)
+        val call: Call<CCASubmitResponseModel> =
+            ApiClient.getClient.ccareservecancel( model,"Bearer $token")
+        progressBar.visibility = View.VISIBLE
+        call.enqueue(object : Callback<CCASubmitResponseModel> {
+            override fun onResponse(
+                call: Call<CCASubmitResponseModel>,
+                response: Response<CCASubmitResponseModel>
+            ) {
+                progressBar.visibility = View.GONE
+                if (response.isSuccessful){
+                    if (response.body() != null){
+                        if (response.body()!!.status!!.equals(100)){
+
+//                            val survey: Int = secobj.optInt("survey")
+                            val mIntent = Intent(mContext, HomeActivity::class.java)
+                            mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                            startActivity(mIntent)
+
+                        }
+                        else if (response.body()!!.status!!.equals(109))
+                        {
+
+
+                        }
+                        else{
+
+                            Toast.makeText(mContext, "Failure", Toast.LENGTH_SHORT).show()
+                        }
+
+                    }else{
+
+                        ConstantFunctions.showDialogueWithOk(mContext,getString(R.string.common_error),"Alert")
+                    }
+                }else{
+
+                    ConstantFunctions.showDialogueWithOk(mContext,getString(R.string.common_error),"Alert")
+                }
+            }
+
+            override fun onFailure(call: Call<CCASubmitResponseModel>, t: Throwable) {
+                progressBar.visibility = View.GONE
+                ConstantFunctions.showDialogueWithOk(mContext,getString(R.string.common_error),"Alert")
+            }
+
+        })
     }
 }

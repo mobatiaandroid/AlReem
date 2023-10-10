@@ -130,6 +130,7 @@ class ParentsEssentialFragment : Fragment() {
             override fun onResponse(call: Call<ParentsEssentialResponseModel>, response: Response<ParentsEssentialResponseModel>) {
                 progressDialogAdd.visibility = View.GONE
                 val responsedata = response.body()
+                Log.e("response", responsedata.toString())
                 if (responsedata != null) {
                     try {
 

@@ -62,14 +62,12 @@ class CCAsWeekListAdapter : RecyclerView.Adapter<CCAsWeekListAdapter.MyViewHolde
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.listTxtView.setText(mWeekListModelArrayList[position].weekDayMMM)
         if (AppController.weekList.get(position).choiceStatus
-                .equals("0") || AppController.weekList.get(position).choiceStatus1
                 .equals("0")
         ) {
             holder.selectionCompletedView.setBackgroundResource(R.drawable.curve_filled_cca_pending)
             holder.linearBg.setBackgroundResource(R.color.white)
             holder.linearChoice.setBackgroundResource(R.color.white)
         } else if (AppController.weekList.get(position).choiceStatus
-                .equals("2") && AppController.weekList.get(position).choiceStatus1
                 .equals("2")
         ) {
             holder.selectionCompletedView.setBackgroundResource(R.drawable.curve_filled_cca_not_available)
@@ -83,13 +81,11 @@ class CCAsWeekListAdapter : RecyclerView.Adapter<CCAsWeekListAdapter.MyViewHolde
         if (weekPosition == position) {
             holder.weekSelectedImageView.visibility = View.VISIBLE
             if (AppController.weekList.get(position).choiceStatus
-                    .equals("0") || AppController.weekList.get(position)
-                    .choiceStatus1.equals("0")
+                    .equals("0")
             ) {
                 msgRelative!!.visibility = View.VISIBLE
             } else if (AppController.weekList.get(position).choiceStatus
-                    .equals("2") && AppController.weekList.get(position)
-                    .choiceStatus1.equals("2")
+                    .equals("2")
             ) {
                 msgRelative!!.visibility = View.GONE
             } else {

@@ -138,6 +138,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/messageTxt"
         android:layout_above="@+id/bannerImg"
+
         android:background="@color/cal_row_4" >
         <com.nas.alreem.commonviews.CustomTextViewRegular
             android:id="@+id/msgTxt"
@@ -146,6 +147,7 @@
             android:gravity="center"
             android:textSize="14dp"
             android:textColor="@color/white"
+            android:visibility="gone"
             android:text="Your options are submitted &amp; waiting for approval" />
     </RelativeLayout>
 

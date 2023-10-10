@@ -640,6 +640,29 @@ interface ApiInterface {
         @Header("Authorization") token: String
     ): Call<CCACancelResponseModel>
 
+    @POST("cca-edit")
+    @Headers("Content-Type: application/json")
+    fun ccaedit(
+        @Body body: CCAEditRequestModel,
+        @Header("Authorization") token: String
+    ): Call<CCASubmitResponseModel>
+
+    @POST("cca-reserve")
+    @Headers("Content-Type: application/json")
+    fun ccareserve(
+        @Body body: CCAReservetRequestModel,
+        @Header("Authorization") token: String
+    ): Call<CCASubmitResponseModel>
+
+    @POST("cca-reserve-cancel")
+    @Headers("Content-Type: application/json")
+    fun ccareservecancel(
+        @Body body: CCACancelModel,
+        @Header("Authorization") token: String
+    ): Call<CCASubmitResponseModel>
+
+
+
 
     @POST("external-providers")
     @Headers("Content-Type: application/json")
