@@ -2,6 +2,7 @@ package com.nas.alreem.activity.cca.model
 
 class CCAchoiceModel {
     var cca_details_id: String? = null
+    var cca_item_id: String? = null
     var cca_item_name: String? = null
     var status: String? = null
     var dayChoice: String? = null
@@ -15,4 +16,7 @@ class CCAchoiceModel {
     var description: String? = null
     var description2: String? = null
     var isattending: String? = null
+    var attending_status: String? = null
+    var slot_remaining_count:Int? = null
+
 }

@@ -75,8 +75,8 @@ class CCAsReviewEditAfterSubmissionActivity : AppCompatActivity() {
         if (extras != null) {
             tab_type = extras!!.getString("tab_type")!!
             submissiondateover = extras!!.getString("submissiondateover", "-1")
-        //    CCADetailModelArrayList =
-       //         extras!!.getSerializable("CCA_Detail") as ArrayList<CCADetailModel>?
+            //    CCADetailModelArrayList =
+            //         extras!!.getSerializable("CCA_Detail") as ArrayList<CCADetailModel>?
             CCADetailModelArrayList=PreferenceManager.getDetailsArrayList(mContext)
         }
         weekList = java.util.ArrayList()
@@ -108,13 +108,15 @@ class CCAsReviewEditAfterSubmissionActivity : AppCompatActivity() {
         editCcca!!.setOnClickListener {
             val intent = Intent(mContext, CCASelectionActivity::class.java)
             //intent.putExtra(
-             //   "CCA_Detail",
-             //   CCADetailModelArrayList
-           // )
+            //   "CCA_Detail",
+            //   CCADetailModelArrayList
+            // )
             intent.putExtra("tab_type", tab_type)
             intent.putExtra("ccaedit", 1)
-            Log.e("loation1", CCADetailModelArrayList!!.get(0).choice1.toString())
-            Log.e("Location2", CCADetailModelArrayList!!.get(0).location2.toString())
+            intent.putExtra("keyvalue", "key")
+            PreferenceManager.setkeyvalue(mContext,"1")
+            //  Log.e("loation1", CCADetailModelArrayList!!.get(0).choice1.toString())
+            // Log.e("Location2", CCADetailModelArrayList!!.get(0).location2.toString())
             PreferenceManager.saveDetailsArrayList(mContext, CCADetailModelArrayList)
             startActivity(intent)
         }
@@ -248,7 +250,7 @@ class CCAsReviewEditAfterSubmissionActivity : AppCompatActivity() {
             if (choice1 != null) {
                 if (choice1.cca_item_name != null) {
                     mCCAModel.choice1 = choice1.cca_item_name
-                    Log.e("Satrttime", choice1.cca_item_start_time!!)
+                  //  Log.e("Satrttime", choice1.cca_item_start_time!!)
                     mCCAModel.cca_item_start_time = choice1.cca_item_start_time
                     mCCAModel.cca_item_end_time = choice1.cca_item_end_time
                     if (choice1.cca_item_description != null){
@@ -423,7 +425,7 @@ class CCAsReviewEditAfterSubmissionActivity : AppCompatActivity() {
         mCCAModel.calendarDaysChoice1 = datestringChoice1
         mCCAModel.calendarDaysChoice2 = datestringChoice2
 
-            mCCADetailModelArrayList!!.add(mCCAModel)
+        mCCADetailModelArrayList!!.add(mCCAModel)
 
     }
 

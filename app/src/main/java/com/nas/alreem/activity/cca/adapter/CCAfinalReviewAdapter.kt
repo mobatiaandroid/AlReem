@@ -71,16 +71,16 @@ class CCAfinalReviewAdapter(
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         if (mCCADetailModelArrayList[position].location != null) {
 
-        if (mCCADetailModelArrayList[position].location
-                .equals("0") || mCCADetailModelArrayList[position].location
-                .equals("")
-        ) {
-            holder.locationTxt.visibility = View.GONE
-        } else {
-            holder.locationTxt.visibility = View.VISIBLE
-            holder.locationTxt.text =
-                "Location      : " + mCCADetailModelArrayList[position].location
-        } }
+            if (mCCADetailModelArrayList[position].location
+                    .equals("0") || mCCADetailModelArrayList[position].location
+                    .equals("")
+            ) {
+                holder.locationTxt.visibility = View.GONE
+            } else {
+                holder.locationTxt.visibility = View.VISIBLE
+                holder.locationTxt.text =
+                    "Location      : " + mCCADetailModelArrayList[position].location
+            } }
         else {
             holder.locationTxt.visibility = View.GONE
         }
@@ -88,16 +88,16 @@ class CCAfinalReviewAdapter(
 
         if (mCCADetailModelArrayList[position].location2 != null) {
 
-        if (mCCADetailModelArrayList[position].location2
-                .equals("0") || mCCADetailModelArrayList[position].location2
-                .equals("")
-        ) {
-            holder.location2Txt.visibility = View.GONE
-        } else {
-            holder.location2Txt.visibility = View.VISIBLE
-            holder.location2Txt.text =
-                "Location      : " + mCCADetailModelArrayList[position].location2
-        }
+            if (mCCADetailModelArrayList[position].location2
+                    .equals("0") || mCCADetailModelArrayList[position].location2
+                    .equals("")
+            ) {
+                holder.location2Txt.visibility = View.GONE
+            } else {
+                holder.location2Txt.visibility = View.VISIBLE
+                holder.location2Txt.text =
+                    "Location      : " + mCCADetailModelArrayList[position].location2
+            }
         }
 
         else {
@@ -106,16 +106,16 @@ class CCAfinalReviewAdapter(
 
         if (mCCADetailModelArrayList[position].description != null) {
 
-        if (mCCADetailModelArrayList[position].description
-                .equals("0") || mCCADetailModelArrayList[position].description
-                .equals("")
-        ) {
-            holder.descriptionTxt.visibility = View.GONE
-        } else {
-            holder.descriptionTxt.visibility = View.VISIBLE
-            holder.descriptionTxt.text =
-                "Description : " + mCCADetailModelArrayList[position].description
-        }
+            if (mCCADetailModelArrayList[position].description
+                    .equals("0") || mCCADetailModelArrayList[position].description
+                    .equals("")
+            ) {
+                holder.descriptionTxt.visibility = View.GONE
+            } else {
+                holder.descriptionTxt.visibility = View.VISIBLE
+                holder.descriptionTxt.text =
+                    "Description : " + mCCADetailModelArrayList[position].description
+            }
         }
         else {
             holder.descriptionTxt.visibility = View.GONE
@@ -125,16 +125,16 @@ class CCAfinalReviewAdapter(
         if (mCCADetailModelArrayList[position].description2 != null) {
 
 
-        if (mCCADetailModelArrayList[position].description2
-                .equals("0") || mCCADetailModelArrayList[position].description2
-                .equals("")
-        ) {
-            holder.description2Txt.visibility = View.GONE
-        } else {
-            holder.description2Txt.visibility = View.VISIBLE
-            holder.description2Txt.text =
-                "Description : " + mCCADetailModelArrayList[position].description2
-        }
+            if (mCCADetailModelArrayList[position].description2
+                    .equals("0") || mCCADetailModelArrayList[position].description2
+                    .equals("")
+            ) {
+                holder.description2Txt.visibility = View.GONE
+            } else {
+                holder.description2Txt.visibility = View.VISIBLE
+                holder.description2Txt.text =
+                    "Description : " + mCCADetailModelArrayList[position].description2
+            }
         }
         else {
             holder.description2Txt.visibility = View.GONE
@@ -150,7 +150,7 @@ class CCAfinalReviewAdapter(
             holder.linearChoice1.visibility = View.VISIBLE
             Log.e("date", mCCADetailModelArrayList[position].cca_item_start_timechoice1.toString())
             holder.textViewCCAChoice1.text =
-                "Choice 1 : " + mCCADetailModelArrayList[position].choice1
+                "Choice  : " + mCCADetailModelArrayList[position].choice1
             if (mCCADetailModelArrayList[position].cca_item_start_timechoice1 != null && mCCADetailModelArrayList[position].cca_item_end_timechoice1 != null) {
                 holder.textViewCCAaDateItemChoice1.visibility = View.VISIBLE
                 holder.textViewCCAaDateItemChoice1.text = "(" + convertTimeToAMPM(

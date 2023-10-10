@@ -27,16 +27,16 @@ import java.util.*
 class CCAsReviewAfterSubmissionNoDeleteActivity : Activity(){
     var recyclerViewLayoutManager: GridLayoutManager? = null
     var recycler_review: RecyclerView? = null
-   // var headermanager: HeaderManager? = null
+    // var headermanager: HeaderManager? = null
     var relativeHeader: RelativeLayout? = null
-   // var back: ImageView? = null
+    // var back: ImageView? = null
     var home: ImageView? = null
     var editCcca: RelativeLayout? = null
     var messageTxt: RelativeLayout? = null
     var msgTxt: TextView? = null
     var tab_type: String? = "CCAs"
     var extras: Bundle? = null
-   lateinit var mContext: Context
+    lateinit var mContext: Context
     var mCCADetailModelArrayList: ArrayList<CCAReviewAfterSubmissionModel>? = null
     var textViewCCAaItem: TextView? = null
     var weekList: ArrayList<String>? = null
@@ -89,11 +89,11 @@ class CCAsReviewAfterSubmissionNoDeleteActivity : Activity(){
         messageTxt!!.visibility = View.VISIBLE
         editCcca = findViewById<View>(R.id.editCcca) as RelativeLayout
         progressBar = findViewById(R.id.progress)
-       // back = findViewById(R.id.btn_left)
+        // back = findViewById(R.id.btn_left)
         backRelative = findViewById(R.id.backRelative)
         logoclick = findViewById(R.id.logoClickImgView)
         //  headermanager = HeaderManager(this@CCAsReviewAfterSubmissionNoDeleteActivity, tab_type)
-      //  headermanager.getHeader(relativeHeader, 0)
+        //  headermanager.getHeader(relativeHeader, 0)
         logoclick.setOnClickListener {
             val mIntent = Intent(mContext, HomeActivity::class.java)
             mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -116,7 +116,7 @@ class CCAsReviewAfterSubmissionNoDeleteActivity : Activity(){
             intent.putExtra("ccaedit", 1)
             startActivity(intent)*/
         }
-       // home = headermanager.getLogoButton()
+        // home = headermanager.getLogoButton()
 
         recycler_review!!.setHasFixedSize(true)
         recyclerViewLayoutManager = GridLayoutManager(mContext, 1)
@@ -135,7 +135,7 @@ class CCAsReviewAfterSubmissionNoDeleteActivity : Activity(){
                 ) + "<br/>Year Group : " + PreferenceManager.getStudClassForCCA(mContext)
             )
         }
-      //  if (AppUtils.isNetworkConnected(mContext)) {
+        //  if (AppUtils.isNetworkConnected(mContext)) {
         var internetCheck = ConstantFunctions.internetCheck(mContext)
 
         if (internetCheck) {
@@ -145,20 +145,20 @@ class CCAsReviewAfterSubmissionNoDeleteActivity : Activity(){
             DialogFunctions.showInternetAlertDialog(mContext)
         }
 
-      //  } else {
-      //      AppUtils.showDialogAlertDismiss(
+        //  } else {
+        //      AppUtils.showDialogAlertDismiss(
         //        mContext as Activity?,
         //        "Network Error",
         //        getString(R.string.no_internet),
         //        R.drawable.nonetworkicon,
         //        R.drawable.roundred
         //    )
-       // }
+        // }
     }
 
     private fun ccaReviewListAPI() {
         val body = CCAReviewRequestModel(
-            PreferenceManager.getStudentID(mContext)!!,
+            PreferenceManager.getStudIdForCCA(mContext)!!,
             PreferenceManager.getCCAItemId(mContext)!!
         )
         val token = PreferenceManager.getaccesstoken(mContext)
@@ -169,7 +169,8 @@ class CCAsReviewAfterSubmissionNoDeleteActivity : Activity(){
             override fun onResponse(
                 call: Call<CCAReviewResponseModel>,
                 response: Response<CCAReviewResponseModel>
-            ) {
+            )
+            {
                 progressBar.visibility = View.GONE
                 if (response.isSuccessful) {
                     if (response.body() != null) {

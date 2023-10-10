@@ -14,6 +14,7 @@ class AppController : Application() {
         var question_id: String? = null
         var answer_id: String? = null
         var ccdots:TextView?=null
+        var keyy:String?="0"
         var weekList: ArrayList<WeekListModel> = ArrayList()
         var weekListWithData: java.util.ArrayList<Int>? = ArrayList()
         var CCADetailModelArrayList: ArrayList<CCADetailModel> = ArrayList()

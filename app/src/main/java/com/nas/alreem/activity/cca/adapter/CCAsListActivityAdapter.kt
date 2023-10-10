@@ -68,18 +68,18 @@ class CCAsListActivityAdapter(var mContext: Context, mCCAmodelArrayList: ArrayLi
             holder.statusImageView.setImageResource(R.drawable.approve_new)
         } else if (mCCAmodelArrayList[position].isAttendee.equals("2")) {
             //pending
-            holder.statusImageView.setImageResource(R.drawable.pending)
+            holder.statusImageView.setImageResource(R.drawable.approve_new)
         }
-                if (mCCAmodelArrayList.get(position).status.equals("0")) {
+        if (mCCAmodelArrayList.get(position).status.equals("0")) {
             holder.statusLayout.setVisibility(View.VISIBLE);
             holder.status.setBackgroundResource(R.drawable.rectangle_red);
-           holder.status.setText("New");
+            holder.status.setText("New");
         } else if (mCCAmodelArrayList.get(position).status.equals("1") ||
-                    mCCAmodelArrayList.get(position).status.equals("")) {
+            mCCAmodelArrayList.get(position).status.equals("")) {
             holder.statusLayout.setVisibility(View.INVISIBLE);
 
         } else if (mCCAmodelArrayList.get(position).status.equals("2")) {
-           holder.statusLayout.setVisibility(View.VISIBLE);
+            holder.statusLayout.setVisibility(View.VISIBLE);
             holder.status.setBackgroundResource(R.drawable.rectangle_orange);
             holder.status.setText("Updated");
         }

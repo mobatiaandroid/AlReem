@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.cca
 
+import androidx.appcompat.app.AppCompatActivity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -11,7 +12,6 @@ import android.util.Log
 import android.view.View
 import android.view.Window
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
@@ -35,35 +35,31 @@ import com.nas.alreem.rest.ApiClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-
-class CCA_Activity : AppCompatActivity() {
+class CCA_Activity_New:AppCompatActivity() {
     lateinit var mContext: Context
     lateinit var titleTextView: TextView
     lateinit var back: ImageView
-
-
     lateinit var backRelative: RelativeLayout
     lateinit var logoclick: ImageView
     lateinit var progress: ProgressBar
     var studentListArrayList = ArrayList<StudentList>()
     var mCCAmodelArrayList: ArrayList<CCAModel>? = ArrayList()
-   var CCADetailModelArrayList: ArrayList<CCADetailModel>? = ArrayList()
+    var CCADetailModelArrayList: ArrayList<CCADetailModel>? = ArrayList()
     var CCAchoiceModelArrayList: ArrayList<CCAchoiceModel>? = ArrayList()
     var CCAchoiceModelArrayList2: ArrayList<CCAchoiceModel>? = ArrayList()
-   lateinit var studentName: TextView
-   lateinit var textViewYear: TextView
-   lateinit var enterTextView: TextView
+    lateinit var studentName: TextView
+    lateinit var textViewYear: TextView
+    lateinit var enterTextView: TextView
     var stud_id = ""
     var stud_class = ""
     var stud_name = ""
     var mStudentSpinner: LinearLayout? = null
     var relativeHeader: RelativeLayout? = null
-   // lateinit var student_Name: String
-   // lateinit var studentImg: String
-   // lateinit var studentClass: String
-   lateinit var studImg: ImageView
+    // lateinit var student_Name: String
+    // lateinit var studentImg: String
+    // lateinit var studentClass: String
+    lateinit var studImg: ImageView
     var stud_img = ""
-
     var tab_type = "ECA Options"
     var extras: Bundle? = null
     var recycler_review: RecyclerView? = null
@@ -74,6 +70,7 @@ class CCA_Activity : AppCompatActivity() {
         setContentView(R.layout.activity_cca)
         mContext = this
         initilaiseUI()
+        AppController.keyy="0"
         logoclick.setOnClickListener {
             val mIntent = Intent(mContext, HomeActivity::class.java)
             mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -135,7 +132,7 @@ class CCA_Activity : AppCompatActivity() {
                 stud_class = mStudentArray.get(position).studentClass.toString()
                 stud_img = mStudentArray.get(position).photo.toString()
                 textViewYear!!.text = "Class : " + mStudentArray.get(position).studentClass
-               // PreferenceManager.setStudentID(mContext,stud_id)
+                // PreferenceManager.setStudentID(mContext,stud_id)
 
                 if (stud_img != "") {
                     Glide.with(mContext) //1
@@ -174,7 +171,7 @@ class CCA_Activity : AppCompatActivity() {
         val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+token)
         call.enqueue(object : Callback<StudentListModel> {
             override fun onFailure(call: Call<StudentListModel>, t: Throwable) {
-               // Log.e("Error", t.localizedMessage)
+                // Log.e("Error", t.localizedMessage)
                 progress.visibility = View.GONE
             }
             override fun onResponse(call: Call<StudentListModel>, response: Response<StudentListModel>) {
@@ -185,16 +182,16 @@ class CCA_Activity : AppCompatActivity() {
                     studentListArrayList.addAll(response.body()!!.responseArray.studentList)
                     if (PreferenceManager.getStudIdForCCA(mContext).equals(""))
                     {
-                      //  Log.e("studentname",student_Name)
+                        //  Log.e("studentname",student_Name)
                         stud_name=studentListArrayList.get(0).name
                         stud_img=studentListArrayList.get(0).photo
                         stud_id=studentListArrayList.get(0).id
                         stud_class=studentListArrayList.get(0).section
-                       // Log.e("Student_idss",stud_id)
-                       // PreferenceManager.setStudentID(mContext,studentId)
-                      //  PreferenceManager.setStudentName(mContext,student_Name)
+                        // Log.e("Student_idss",stud_id)
+                        // PreferenceManager.setStudentID(mContext,studentId)
+                        //  PreferenceManager.setStudentName(mContext,student_Name)
                         //PreferenceManager.setStudentPhoto(mContext,studentImg)
-                      //  PreferenceManager.setStudentClass(mContext,studentClass)
+                        //  PreferenceManager.setStudentClass(mContext,studentClass)
                         studentName.text=stud_name
                         PreferenceManager.setCCAStudentIdPosition(mContext, "0")
 
@@ -221,9 +218,9 @@ class CCA_Activity : AppCompatActivity() {
                         stud_name= studentListArrayList[studentSelectPosition].name!!
                         stud_img= studentListArrayList[studentSelectPosition].photo!!
                         stud_id=  studentListArrayList!![studentSelectPosition].id.toString()
-                       // PreferenceManager.setStudentID(mContext, studentId)
-                       // PreferenceManager.setStudIdForCCA(mContext, studentId)
-                      //  Log.e("Studentid1",stud_id)
+                        // PreferenceManager.setStudentID(mContext, studentId)
+                        // PreferenceManager.setStudIdForCCA(mContext, studentId)
+                        //  Log.e("Studentid1",stud_id)
                         stud_class= studentListArrayList[studentSelectPosition].studentClass!!
                         studentName.text=stud_name
                         if(!stud_img.equals(""))
@@ -259,7 +256,7 @@ class CCA_Activity : AppCompatActivity() {
     }
 
     private fun getCCAListAPI(studId: String) {
-       // Log.e("studId",studId)
+        // Log.e("studId",studId)
         val body = CCAListRequestModel(studId)
         val token = PreferenceManager.getaccesstoken(mContext)
         val call: Call<CCAListResponseModel> =
@@ -271,41 +268,41 @@ class CCA_Activity : AppCompatActivity() {
                 response: Response<CCAListResponseModel>
             ) {
                 progress.visibility = View.GONE
-                    mCCAmodelArrayList = ArrayList()
+                mCCAmodelArrayList = ArrayList()
 
-                    if (response.body() != null) {
-                        if (response.body()!!.status!!.equals(100)) {
+                if (response.body() != null) {
+                    if (response.body()!!.status!!.equals(100)) {
 
-                            if (response.body()!!.data!!.isNotEmpty()) {
-                                for (i in response.body()!!.data!!.indices) {
-                                    enterTextView!!.visibility = View.VISIBLE
-                                    Log.e("isattentii", response.body()!!.data!![i].isAttendee.toString())
-                                    mCCAmodelArrayList!!.add(addCCAlist(response.body()!!.data!![i]))
-                                }
-                              //  Log.e("arraty", mCCAmodelArrayList!!.get(0).isAttendee.toString())
-                              //  Log.e("title", mCCAmodelArrayList!!.get(0).title.toString())
-                                if (mCCAmodelArrayList!!.size > 0) {
-                                    mCCAsActivityAdapter = CCAsListActivityAdapter(
-                                        this@CCA_Activity,
-                                        mCCAmodelArrayList!!
-                                    )
-                                    recycler_review!!.adapter = mCCAsActivityAdapter
-                                }
-                            } else {
-                                mCCAsActivityAdapter =
-                                    CCAsListActivityAdapter(this@CCA_Activity, mCCAmodelArrayList!!)
-                                recycler_review!!.adapter = mCCAsActivityAdapter
-                                enterTextView!!.visibility = View.GONE
-                                Toast.makeText(
-                                    this@CCA_Activity,
-                                    "No EAP available",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                        if (response.body()!!.data!!.isNotEmpty()) {
+                            for (i in response.body()!!.data!!.indices) {
+                                enterTextView!!.visibility = View.VISIBLE
+                                Log.e("isattentii", response.body()!!.data!![i].isAttendee.toString())
+                                mCCAmodelArrayList!!.add(addCCAlist(response.body()!!.data!![i]))
                             }
-                        }else{
-                            Toast.makeText(mContext, "Fail", Toast.LENGTH_SHORT).show()
+                            //  Log.e("arraty", mCCAmodelArrayList!!.get(0).isAttendee.toString())
+                            //  Log.e("title", mCCAmodelArrayList!!.get(0).title.toString())
+                            if (mCCAmodelArrayList!!.size > 0) {
+                                mCCAsActivityAdapter = CCAsListActivityAdapter(
+                                    this@CCA_Activity_New,
+                                    mCCAmodelArrayList!!
+                                )
+                                recycler_review!!.adapter = mCCAsActivityAdapter
+                            }
+                        } else {
+                            mCCAsActivityAdapter =
+                                CCAsListActivityAdapter(this@CCA_Activity_New, mCCAmodelArrayList!!)
+                            recycler_review!!.adapter = mCCAsActivityAdapter
+                            enterTextView!!.visibility = View.GONE
+                            Toast.makeText(
+                                this@CCA_Activity_New,
+                                "No EAP available",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
+                    }else{
+                        Toast.makeText(mContext, "Fail", Toast.LENGTH_SHORT).show()
                     }
+                }
 //                    else if (response_code.equals("500", ignoreCase = true)) {
 //                        AppUtils.showDialogAlertDismiss(
 //                            mContext as Activity,
@@ -333,9 +330,9 @@ class CCA_Activity : AppCompatActivity() {
 //                            }
 //                        })
 //                    }
-                    else {
-                        ConstantFunctions.showDialogueWithOk(mContext,getString(R.string.common_error),"Alert")
-                    }
+                else {
+                    ConstantFunctions.showDialogueWithOk(mContext,getString(R.string.common_error),"Alert")
+                }
 
             }
 
@@ -359,9 +356,9 @@ class CCA_Activity : AppCompatActivity() {
         mCCAModel.submission_dateTime = dataObject.submission_dateTime
         mCCAModel.isSubmissionDateOver = dataObject.isSubmissiondateOver
         val jsonCCADetailArray: ArrayList<CCAListResponseModel.Data.Detail>? = dataObject.details
-     //   Log.e("choice2adasda", dataObject.details!![0]!!.choice2.toString())
+        //   Log.e("choice2adasda", dataObject.details!![0]!!.choice2.toString())
 
-      //  Log.e("choice2adasda", dataObject.details!![0]!!.choice2!![0]!!.attending_status.toString())
+        //  Log.e("choice2adasda", dataObject.details!![0]!!.choice2!![0]!!.attending_status.toString())
         CCADetailModelArrayList = ArrayList<CCADetailModel>()
         if (jsonCCADetailArray!!.isNotEmpty()) {
             for (element in jsonCCADetailArray) {
@@ -371,105 +368,112 @@ class CCA_Activity : AppCompatActivity() {
 
                 val jsonCCAChoiceArray = objectCCA.choice1
                 val jsonCCAChoiceArray2 = objectCCA.choice2
-               // Log.e("choice1",objectCCA.choice1.toString())
-               // Log.e("choice2 atte", objectCCA.choice1!![0]!!.attending_status.toString())
-               // Log.e("choice2 atte", objectCCA.choice2!![0]!!.attending_status.toString())
-              //  Log.e("choice2 atte", jsonCCAChoiceArray2!![0]!!.attending_status.toString())
+                // Log.e("choice1",objectCCA.choice1.toString())
+                // Log.e("choice2 atte", objectCCA.choice1!![0]!!.attending_status.toString())
+                // Log.e("choice2 atte", objectCCA.choice2!![0]!!.attending_status.toString())
+                //  Log.e("choice2 atte", jsonCCAChoiceArray2!![0]!!.attending_status.toString())
                 CCAchoiceModelArrayList = java.util.ArrayList<CCAchoiceModel>()
                 if (jsonCCAChoiceArray!!.size > 0) {
                     var k = 0
-                    for (j in 0..jsonCCAChoiceArray.size) {
+                    for (j in jsonCCAChoiceArray.indices) {
                         val mCCADetailModelchoice = CCAchoiceModel()
-                        if (jsonCCAChoiceArray.size != j) {
-                            val objectCCAchoice = jsonCCAChoiceArray[j]
-                            mCCADetailModelchoice.cca_item_name = objectCCAchoice!!.cca_item_name
-                            mCCADetailModelchoice.cca_details_id = objectCCAchoice.cca_details_id.toString()
+                        //  if (jsonCCAChoiceArray.size != j) {
+                        val objectCCAchoice = jsonCCAChoiceArray[j]
+                        mCCADetailModelchoice.cca_item_name = objectCCAchoice!!.cca_item_name
+                        mCCADetailModelchoice.cca_details_id = objectCCAchoice.cca_details_id.toString()
+                        mCCADetailModelchoice.cca_item_id = objectCCAchoice.cca_item_id.toString()
+                        mCCADetailModelchoice.isattending = objectCCAchoice.isAttendee
+                        mCCADetailModelchoice.cca_item_start_time = objectCCAchoice.cca_item_start_time
+                        mCCADetailModelchoice.cca_item_end_time = objectCCAchoice.cca_item_end_time
+                        mCCADetailModelchoice.venue = objectCCAchoice.venue
+                        mCCADetailModelchoice.description = objectCCAchoice.description
+                        mCCADetailModelchoice.slot_remaining_count = objectCCAchoice.slot_remaining_count
+                        mCCADetailModelchoice.attending_status = objectCCAchoice.attending_status
 
-                            mCCADetailModelchoice.isattending = objectCCAchoice.isAttendee
-                            mCCADetailModelchoice.cca_item_start_time = objectCCAchoice.cca_item_start_time
-                            mCCADetailModelchoice.cca_item_end_time = objectCCAchoice.cca_item_end_time
-                            mCCADetailModelchoice.venue = objectCCAchoice.venue
-                            mCCADetailModelchoice.description = objectCCAchoice.description
-
-
-                            if (objectCCAchoice.attending_status
-                                    .equals("0", ignoreCase = true)
+                        if (objectCCAchoice.attending_status.equals("1", ignoreCase = true)
+                        ) {
+                            if (dataObject.isAttendee
+                                    .equals("1", ignoreCase = true)
                             ) {
-                                if (dataObject.isAttendee
-                                        .equals("2", ignoreCase = true)
-                                ) {
-                                    mCCADetailModelchoice.status = "1"
-                                    mCCADetailModel.choice1 = objectCCAchoice.cca_item_name
-                                    mCCADetailModel.choice1Id = objectCCAchoice.cca_details_id.toString()
-                                } else {
-                                    mCCADetailModelchoice.status = "0"
-                                }
-                                k = k + 1
+                                mCCADetailModelchoice.status = "1"
+                                mCCADetailModel.choice1 = objectCCAchoice.cca_item_name
+                                mCCADetailModel.choice1Id = objectCCAchoice.cca_details_id.toString()
+                                mCCADetailModel.choiceitem1Id = objectCCAchoice.cca_item_id.toString()
+                                Log.e("choice1Id",objectCCAchoice.cca_details_id.toString())
+                                Log.e("choice1Id2", mCCADetailModel.choice1Id!!)
+                                Log.e("choiceitem1Id",objectCCAchoice.cca_item_id.toString())
+                                Log.e("choiceitem1Id2", mCCADetailModel.choiceitem1Id!!)
+
+
                             } else {
                                 mCCADetailModelchoice.status = "0"
                             }
-                            mCCADetailModelchoice.disableCccaiem = false
-                            mCCADetailModelchoice.dayChoice = objectCCAchoice.day
+                            k = k + 1
                         } else {
-                            mCCADetailModelchoice.cca_item_name = "None"
-                            mCCADetailModelchoice.cca_details_id = "-541"
-                            mCCADetailModelchoice.venue = "0"
-                            mCCADetailModelchoice.isattending = "0"
-                            if (k == 0) {
-                                if (dataObject.isAttendee
-                                        .equals("2", ignoreCase = true)
-                                ) {
-                                    mCCADetailModelchoice.status = "1"
-                                    mCCADetailModel.choice1 = "None"
-                                    mCCADetailModel.choice1Id = "-541"
-                                } else {
-                                    mCCADetailModelchoice.status = "0"
-                                }
-                            } else {
-                                mCCADetailModelchoice.status = "0"
-                            }
-                            mCCADetailModelchoice.disableCccaiem = false
-                            mCCADetailModelchoice.dayChoice = objectCCA.day
+                            mCCADetailModelchoice.status = "0"
                         }
+                        mCCADetailModelchoice.disableCccaiem = false
+                        mCCADetailModelchoice.dayChoice = objectCCAchoice.day
+                        /* } else {
+                             mCCADetailModelchoice.cca_item_name = "None"
+                             mCCADetailModelchoice.cca_details_id = "-541"
+                             mCCADetailModelchoice.venue = "0"
+                             mCCADetailModelchoice.isattending = "0"
+                             if (k == 0) {
+                                 if (dataObject.isAttendee
+                                         .equals("2", ignoreCase = true)
+                                 ) {
+                                     mCCADetailModelchoice.status = "1"
+                                     mCCADetailModel.choice1 = "None"
+                                     mCCADetailModel.choice1Id = "-541"
+                                 } else {
+                                     mCCADetailModelchoice.status = "0"
+                                 }
+                             } else {
+                                 mCCADetailModelchoice.status = "0"
+                             }
+                             mCCADetailModelchoice.disableCccaiem = false
+                             mCCADetailModelchoice.dayChoice = objectCCA.day
+                         }*/
                         CCAchoiceModelArrayList!!.add(mCCADetailModelchoice)
                     }
                 }
                 mCCADetailModel.ccaChoiceModel = CCAchoiceModelArrayList
                 CCAchoiceModelArrayList2 = ArrayList<CCAchoiceModel>()
-                if (jsonCCAChoiceArray2!!.isNotEmpty()) {
-                    var k = 0
-                    for (j in 0..jsonCCAChoiceArray2.size) {
-                        val mCCADetailModelchoice = CCAchoiceModel()
-                        if (jsonCCAChoiceArray2.size != j) {
-                            val objectCCAchoice = jsonCCAChoiceArray2[j]
-                            mCCADetailModelchoice.cca_item_name = objectCCAchoice!!.cca_item_name
-                            mCCADetailModelchoice.cca_details_id = objectCCAchoice.cca_details_id.toString()
-                            mCCADetailModelchoice.isattending = objectCCAchoice.isAttendee
-                            mCCADetailModelchoice.cca_item_start_time = objectCCAchoice.cca_item_start_time
-                            mCCADetailModelchoice.cca_item_end_time = objectCCAchoice.cca_item_end_time
-                            mCCADetailModelchoice.venue = objectCCAchoice.venue
-                            mCCADetailModelchoice.dayChoice = objectCCAchoice.day
-                            mCCADetailModelchoice.description = objectCCAchoice.description
+                /* if (jsonCCAChoiceArray2!!.isNotEmpty()) {
+                     var k = 0
+                     for (j in jsonCCAChoiceArray2.indices) {
+                         val mCCADetailModelchoice = CCAchoiceModel()
+                       //  if (jsonCCAChoiceArray2.size != j) {
+                             val objectCCAchoice = jsonCCAChoiceArray2[j]
+                             mCCADetailModelchoice.cca_item_name = objectCCAchoice!!.cca_item_name
+                             mCCADetailModelchoice.cca_details_id = objectCCAchoice.cca_details_id.toString()
+                             mCCADetailModelchoice.isattending = objectCCAchoice.isAttendee
+                             mCCADetailModelchoice.cca_item_start_time = objectCCAchoice.cca_item_start_time
+                             mCCADetailModelchoice.cca_item_end_time = objectCCAchoice.cca_item_end_time
+                             mCCADetailModelchoice.venue = objectCCAchoice.venue
+                             mCCADetailModelchoice.dayChoice = objectCCAchoice.day
+                             mCCADetailModelchoice.description = objectCCAchoice.description
 
-                            if (objectCCAchoice.attending_status
-                                    .equals("0", ignoreCase = true)
-                            ) {
-                                if (dataObject.isAttendee
-                                        .equals("2", ignoreCase = true)
-                                ) {
-                                    mCCADetailModelchoice.status = "1"
-                                    mCCADetailModel.choice2 = objectCCAchoice.cca_item_name
-                                    mCCADetailModel.choice2Id = objectCCAchoice.cca_details_id.toString()
-                                 //   Log.e("choice2qqq",mCCADetailModel.choice2.toString())
-                                } else {
-                                    mCCADetailModelchoice.status = "0"
-                                }
-                                k += 1
-                            } else {
-                                mCCADetailModelchoice.status = "0"
-                            }
-                            mCCADetailModelchoice.disableCccaiem = false
-                        } else {
+                             if (objectCCAchoice.attending_status
+                                     .equals("0", ignoreCase = true)
+                             ) {
+                                 if (dataObject.isAttendee
+                                         .equals("2", ignoreCase = true)
+                                 ) {
+                                     mCCADetailModelchoice.status = "1"
+                                     mCCADetailModel.choice2 = objectCCAchoice.cca_item_name
+                                     mCCADetailModel.choice2Id = objectCCAchoice.cca_details_id.toString()
+                                     //   Log.e("choice2qqq",mCCADetailModel.choice2.toString())
+                                 } else {
+                                     mCCADetailModelchoice.status = "0"
+                                 }
+                                 k += 1
+                             } else {
+                                 mCCADetailModelchoice.status = "0"
+                             }
+                             mCCADetailModelchoice.disableCccaiem = false
+                        *//* } else {
                             mCCADetailModelchoice.cca_item_name = "None"
                             mCCADetailModelchoice.cca_details_id = "-541"
                             mCCADetailModelchoice.isattending = "0"
@@ -489,16 +493,16 @@ class CCA_Activity : AppCompatActivity() {
                             }
                             mCCADetailModelchoice.dayChoice = objectCCA.day
                             mCCADetailModelchoice.disableCccaiem = false
-                        }
+                        }*//*
                         CCAchoiceModelArrayList2!!.add(mCCADetailModelchoice)
                     }
-                }
+                }*/
                 mCCADetailModel.ccaChoiceModel2 = CCAchoiceModelArrayList2
                 CCADetailModelArrayList!!.add(mCCADetailModel)
             }
         }
         mCCAModel.details = CCADetailModelArrayList
-       // Log.e("mCCAModel", mCCAModel.details!!.get(0).choice1.toString())
+        // Log.e("mCCAModel", mCCAModel.details!!.get(0).choice1.toString())
         return mCCAModel
     }
 
@@ -521,11 +525,11 @@ class CCA_Activity : AppCompatActivity() {
         val divider = DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL)
         divider.setDrawable(ContextCompat.getDrawable(mContext,R.drawable.list_divider_teal)!!)
         recycler_review!!.addItemDecoration(divider)
-       // val itemDecoration = ItemOffsetDecoration(mContext, spacing)
+        // val itemDecoration = ItemOffsetDecoration(mContext, spacing)
 //        recycler_review!!.addItemDecoration(
 //            DividerItemDecoration(mContext.resources.getDrawable(R.drawable.list_divider))
 //        )
-  //      recycler_review!!.addItemDecoration(itemDecoration)
+        //      recycler_review!!.addItemDecoration(itemDecoration)
         recycler_review!!.layoutManager = recyclerViewLayoutManager
 //        headermanager = HeaderManager(this@CCA_Activity, tab_type)
 //        headermanager.getHeader(relativeHeader, 0)
@@ -553,8 +557,7 @@ class CCA_Activity : AppCompatActivity() {
         recycler_review!!.addOnItemClickListener(object :OnItemClickListener{
             override fun onItemClicked(position: Int, view: View) {
                 if (mCCAmodelArrayList!![position].status.equals("0") || mCCAmodelArrayList!![position].status.equals(
-                        "2"
-                    )
+                        "2")
                 ) {
                     callStatusChangeApi(
                         mCCAmodelArrayList!![position].cca_days_id,
@@ -566,7 +569,8 @@ class CCA_Activity : AppCompatActivity() {
                     if (mCCAmodelArrayList!![position].isSubmissionDateOver.equals(
                             "0"
                         )
-                    ) {
+                    )
+                    {
                         if (mCCAmodelArrayList!![position].details!!.size > 0) {
                             val intent = Intent(mContext, CCASelectionActivity::class.java)
                             /*intent.putExtra(
@@ -575,7 +579,8 @@ class CCA_Activity : AppCompatActivity() {
                             )*/
                             intent.putExtra("tab_type", tab_type)
                             PreferenceManager.saveDetailsArrayList(mContext, mCCAmodelArrayList!![position].details)
-                           // PreferenceManager.setStudentID(mContext, stud_id)
+                            // PreferenceManager.setStudentID(mContext, stud_id)
+                            PreferenceManager.setkeyvalue(mContext,"0")
                             PreferenceManager.setStudIdForCCA(mContext, stud_id)
                             PreferenceManager.setStudNameForCCA(mContext, stud_name)
                             PreferenceManager.setStudClassForCCA(mContext, stud_class)
@@ -593,21 +598,21 @@ class CCA_Activity : AppCompatActivity() {
                         }
                     } else {
                         ConstantFunctions.showDialogueWithOk(mContext,"EAP Sign-Up Closed","Alert")
-                        
+
                     }
-                } else if (mCCAmodelArrayList!![position].isAttendee.equals("2")) {
+                } else if (mCCAmodelArrayList!![position].isAttendee.equals("1")) {
                     if(mCCAmodelArrayList!!.get(position).isSubmissionDateOver.equals("0"))
                     {
                         val intent =
                             Intent(mContext, CCAsReviewEditAfterSubmissionActivity::class.java)
-                      //  Log.e("cca choice1s", mCCAmodelArrayList!![position].details!!.get(0).choice1!!)
-                      //  Log.e("cca choice2s", mCCAmodelArrayList!![position].details!!.get(0).choice2!!)
+                        //  Log.e("cca choice1s", mCCAmodelArrayList!![position].details!!.get(0).choice1!!)
+                        //  Log.e("cca choice2s", mCCAmodelArrayList!![position].details!!.get(0).choice2!!)
                         intent.putExtra("tab_type", tab_type)
                         // intent.putExtra("CCA_Detail", mCCAmodelArrayList!![position].details)
                         intent.putExtra("submissiondateover", mCCAmodelArrayList!![position].isSubmissionDateOver)
                         PreferenceManager.saveDetailsArrayList(mContext, mCCAmodelArrayList!![position].details)
                         //  PreferenceManager.setStudentID(mContext, stud_id)
-                      //  Log.e("id",stud_id)
+                        //  Log.e("id",stud_id)
                         PreferenceManager.setStudIdForCCA(mContext, stud_id)
                         PreferenceManager.setStudNameForCCA(mContext, stud_name)
                         PreferenceManager.setStudClassForCCA(mContext, stud_class)
@@ -616,7 +621,7 @@ class CCA_Activity : AppCompatActivity() {
                         startActivity(intent)
                     }
                     else{
-                        val intent = Intent(mContext, CCAsReviewAfterSubmissionNoDeleteActivity::class.java)
+                        val intent = Intent(mContext, CCAsReviewAfterSubmissionActivity::class.java)
                         intent.putExtra("tab_type", tab_type)
                         //intent.putExtra("CCA_Detail", mCCAmodelArrayList!![position].getDetails())
                         intent.putExtra("submissiondateover", mCCAmodelArrayList!![position].isSubmissionDateOver)
@@ -633,7 +638,7 @@ class CCA_Activity : AppCompatActivity() {
                     val intent =
                         Intent(mContext, CCAsReviewAfterSubmissionActivity::class.java)
                     intent.putExtra("tab_type", tab_type)
-                   // PreferenceManager.setStudentID(mContext, stud_id)
+                    // PreferenceManager.setStudentID(mContext, stud_id)
                     PreferenceManager.setStudIdForCCA(mContext, stud_id)
                     PreferenceManager.setStudNameForCCA(mContext, stud_name)
                     PreferenceManager.setStudClassForCCA(mContext, stud_class)
@@ -654,13 +659,13 @@ class CCA_Activity : AppCompatActivity() {
         val token = PreferenceManager.getaccesstoken(mContext)
         val call: Call<CCASubmitResponseModel> =
             ApiClient.getClient.readstatusupdate( model,"Bearer $token")
-       // progressBar.visibility = View.VISIBLE
+        // progressBar.visibility = View.VISIBLE
         call.enqueue(object : Callback<CCASubmitResponseModel> {
             override fun onResponse(
                 call: Call<CCASubmitResponseModel>,
                 response: Response<CCASubmitResponseModel>
             ) {
-               // progressBar.visibility = View.GONE
+                // progressBar.visibility = View.GONE
                 if (response.isSuccessful){
                     if (response.body() != null){
                         if (response.body()!!.status!!.equals(100)){
@@ -695,12 +700,10 @@ class CCA_Activity : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<CCASubmitResponseModel>, t: Throwable) {
-               // progressBar.visibility = View.GONE
+                // progressBar.visibility = View.GONE
                 ConstantFunctions.showDialogueWithOk(mContext,getString(R.string.common_error),"Alert")
             }
 
         })
     }
-
-
 }

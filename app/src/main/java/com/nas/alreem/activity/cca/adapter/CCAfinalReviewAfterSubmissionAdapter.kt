@@ -29,11 +29,11 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class CCAfinalReviewAfterSubmissionAdapter(
-  var  mContext: Context,
-  var  mCCADetailModelArrayList: ArrayList<CCAReviewAfterSubmissionModel>
+    var  mContext: Context,
+    var  mCCADetailModelArrayList: ArrayList<CCAReviewAfterSubmissionModel>
 ) :
     RecyclerView.Adapter<CCAfinalReviewAfterSubmissionAdapter.MyViewHolder>() {
-   // lateinit var mCCADetailModelArrayList: ArrayList<CCAReviewAfterSubmissionModel>
+    // lateinit var mCCADetailModelArrayList: ArrayList<CCAReviewAfterSubmissionModel>
     var dialog: Dialog
 
     inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -93,7 +93,6 @@ class CCAfinalReviewAfterSubmissionAdapter(
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.textViewCCADay.setText(mCCADetailModelArrayList[position].day)
-
         holder.attendanceListIcon.setOnClickListener {
             if (!mCCADetailModelArrayList[position].choice1
                     .equals("0") || !mCCADetailModelArrayList[position].choice1
@@ -525,7 +524,7 @@ class CCAfinalReviewAfterSubmissionAdapter(
     }
 
     companion object {
-      //  lateinit var mContext: Context
+        //  lateinit var mContext: Context
 
         fun showDialogAlertDelete(
             activity: Context,

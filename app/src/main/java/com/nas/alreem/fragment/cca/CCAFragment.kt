@@ -15,6 +15,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.nas.alreem.R
 import com.nas.alreem.activity.cca.CCA_Activity
+import com.nas.alreem.activity.cca.CCA_Activity_New
 import com.nas.alreem.activity.cca.ExternalProviderActivity
 import com.nas.alreem.activity.cca.InformationCCAActivity
 import com.nas.alreem.activity.login.model.SignUpResponseModel
@@ -106,7 +107,7 @@ import retrofit2.Response
                 PreferenceManager.setStudIdForCCA(mContext!!, "")
                // PreferenceManager.setStudentID(mContext!!, "")
 
-                val intent = Intent(mContext, CCA_Activity::class.java)
+                val intent = Intent(mContext, CCA_Activity_New::class.java)
                 intent.putExtra("tab_type", "ECA Options")
                 startActivity(intent)
             } else {
