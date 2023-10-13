@@ -20,6 +20,7 @@ import com.nas.alreem.activity.ProgressBarDialog
 import com.nas.alreem.activity.canteen.adapter.DateAdapter
 import com.nas.alreem.activity.canteen.adapter.ItemCategoriesAdapter
 import com.nas.alreem.activity.canteen.adapter.PreorderItemsAdapter
+import com.nas.alreem.activity.canteen.model.AllergyContentModel
 import com.nas.alreem.activity.canteen.model.DateModel
 import com.nas.alreem.activity.canteen.model.add_orders.*
 import com.nas.alreem.activity.canteen.model.canteen_cart.CanteenCartApiModel
@@ -49,7 +50,7 @@ class Addorder_Activity : AppCompatActivity() {
     lateinit var date_title: TextView
     lateinit var date_list: ArrayList<DateModel>
     lateinit var recyclerview_item: RecyclerView
-
+    lateinit var allergycontentlist:ArrayList<AllergyContentModel>
     //lateinit var selected:ImageView
    // lateinit var progress: RelativeLayout
     lateinit var title: TextView
@@ -372,10 +373,19 @@ class Addorder_Activity : AppCompatActivity() {
 
                     }
                 }
+
+                    allergycontentlist= ArrayList()
+
+                    var nmodel2= AllergyContentModel("celery","limegreen","#32CD32")
+                    allergycontentlist.add(0,nmodel2)
+                    var nmodel=AllergyContentModel("diary","yellow","#FAF9F6")
+                    allergycontentlist.add(1,nmodel)
+                    var nmodel3=AllergyContentModel("nuts","purple","#800080")
+                    allergycontentlist.add(2,nmodel3)
                     recyclerview_item.visibility=View.VISIBLE
                     recyclerview_item.layoutManager=LinearLayoutManager(nContext)
                     var itemAdapter= PreorderItemsAdapter(item_list,nContext,date_selected,cart_list,cartTotalAmount,
-                        total_items,total_price,bottomview,cart_empty,progressDialogP)
+                        total_items,total_price,bottomview,cart_empty,progressDialogP,allergycontentlist)
                     recyclerview_item.adapter=itemAdapter
                 }
                 else if (response.body()!!.status==132)
@@ -460,7 +470,7 @@ class Addorder_Activity : AppCompatActivity() {
                     recyclerview_item.visibility=View.VISIBLE
                     recyclerview_item.layoutManager=LinearLayoutManager(nContext)
                     var itemAdapter=PreorderItemsAdapter(item_list,nContext,date_selected,cart_list,cartTotalAmount,
-                        total_items,total_price,bottomview,cart_empty,progressDialogP)
+                        total_items,total_price,bottomview,cart_empty,progressDialogP,allergycontentlist)
                     recyclerview_item.adapter=itemAdapter
 
 
