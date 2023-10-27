@@ -30,5 +30,17 @@
         android:layout_toRightOf="@+id/icon"
         android:singleLine="true"
         android:layout_toEndOf="@+id/icon" />
+    <TextView
+        android:id="@+id/badge"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:text="1"
+        android:layout_toRightOf="@+id/title"
+        android:gravity="center"
+        android:textSize="8sp"
+        android:visibility="gone"
+        android:textColor="@color/white"
+        android:layout_marginRight="5dp"
+        />
 
 </RelativeLayout>

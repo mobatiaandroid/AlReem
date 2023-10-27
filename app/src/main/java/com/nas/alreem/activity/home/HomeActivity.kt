@@ -3,6 +3,7 @@ package com.nas.alreem.activity.home
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.Dialog
 import android.content.ClipData
 import android.content.Context
 import android.content.Intent
@@ -10,12 +11,14 @@ import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.content.res.TypedArray
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.view.View
+import android.view.Window
 import android.view.WindowManager
 import android.widget.*
 import androidx.activity.result.ActivityResultCallback
@@ -31,6 +34,7 @@ import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.nas.alreem.R
 import com.nas.alreem.activity.home.adapter.HomeListAdapter
@@ -53,8 +57,11 @@ import com.nas.alreem.fragment.parents_essentials.ParentsEssentialFragment
 import com.nas.alreem.fragment.payments.PaymentFragment
 import com.nas.alreem.fragment.permission_slip.PermissionSlipFragment
 import com.nas.alreem.fragment.primary.PrimaryFragment
+import com.nas.alreem.fragment.re_entrollment.model.ReEnrollSubmitModel
+import com.nas.alreem.fragment.re_entrollment.model.StudentEnrollList
 import com.nas.alreem.fragment.secondary.SecondaryFragment
 import com.nas.alreem.fragment.settings.SettingsFragment
+import com.nas.alreem.recyclermanager.RecyclerItemListener
 
 class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
 
@@ -75,6 +82,12 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
     lateinit var homelist: ListView
     var mFragment: Fragment? = null
     var sPosition: Int = 0
+    lateinit var reEnrollRecycler: RecyclerView
+    var text_content: TextView? = null
+    var text_dialog: TextView? = null
+    var studentEnrollList: java.util.ArrayList<StudentEnrollList>? = null
+    var reEnrollSaveArray: java.util.ArrayList<ReEnrollSubmitModel>? = null
+    var studentList = java.util.ArrayList<StudentEnrollList>()
     private val PERMISSION_CALLBACK_CONSTANT_CALENDAR = 1
     private val REQUEST_PERMISSION_CALENDAR = 101
     var permissionsRequiredCalendar = arrayOf(
@@ -765,5 +778,94 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                 123
             )
         }
+    }
+    private fun reEnroll(mContext: Context) {
+        Log.e("re", "en")
+        val page_count = 0
+        //int total_count=studDetailList.size-1;
+        val check = 0
+        val dialog = Dialog(mContext)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.dialogue_re_enrollment_status)
+        var mTitle: String
+        var mTabId: String
+        var mRootView: View
+        val titleTextView: TextView
+        var relMain: RelativeLayout
+        val closeImage: ImageView
+        val emailHelpImg: ImageView
+        titleTextView = dialog.findViewById(R.id.titleTextView)
+        reEnrollRecycler = dialog.findViewById<RecyclerView>(R.id.enroll_rec)
+        closeImage = dialog.findViewById(R.id.close_img)
+        emailHelpImg = dialog.findViewById(R.id.emailHelpImg)
+        emailHelpImg.setOnClickListener {
+            val dialog = Dialog(mContext)
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setContentView(R.layout.alert_send_email_dialog)
+            dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            val dialogCancelButton =
+                dialog.findViewById<View>(R.id.cancelButton) as Button
+            val submitButton =
+                dialog.findViewById<View>(R.id.submitButton) as Button
+            text_dialog =
+                dialog.findViewById<View>(R.id.text_dialog) as EditText
+            text_content =
+                dialog.findViewById<View>(R.id.text_content) as EditText
+            dialogCancelButton.setOnClickListener { dialog.dismiss() }
+            submitButton.setOnClickListener {
+               // sendEmailEnroll(URL_SEND_EMAIL_ENROLL)
+                dialog.dismiss()
+            }
+            dialog.show()
+        }
+        titleTextView.text = "Re-Enrollment"
+        studentEnrollList = ArrayList<StudentEnrollList>()
+      //  callSettingsAPI(mContext)
+        closeImage.setOnClickListener { dialog.dismiss() }
+        reEnrollRecycler.addOnItemTouchListener(
+            RecyclerItemListener(mContext, reEnrollRecycler,
+                object : RecyclerItemListener.RecyclerTouchListener {
+                    override fun onClickItem(v: View?, position: Int) {
+                        if (studentList.get(position).status.equals("")) {
+                            if (studentList.get(position).enrollment_status
+                                    .equals("1")
+                            ) {
+                               // callReEnrollAPI(studentList, position)
+                                Log.e("pos1", position.toString())
+                            } else {
+                                /*AppUtils.showDialogAlertDismiss(
+                                    mActivity, "Alert",
+                                    """
+                            Re-Enrolment is currently not enabled        
+                            
+                            Please wait for further update
+                            """.trimIndent(), R.drawable.exclamationicon, R.drawable.round
+                                )*/
+                            }
+                        } else {
+                            val dialog = Dialog(mContext)
+                            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                            dialog.setContentView(R.layout.alert_re_enroll)
+                            dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                            val name = dialog.findViewById<TextView>(R.id.nametxt)
+                            val studName = dialog.findViewById<TextView>(R.id.stud_name)
+                            val department = dialog.findViewById<TextView>(R.id.mailtxt)
+                            val role = dialog.findViewById<TextView>(R.id.statustxt)
+                            val imageView = dialog.findViewById<ImageView>(R.id.iconImageView)
+                            name.setText(studentList.get(position).parent_name)
+                            studName.setText(studentList.get(position).name)
+                            department.setText(studentList.get(position).parent_email)
+                            role.setText(studentList.get(position).status)
+                            // TODO set Staff Image
+                            dialog.show()
+                        }
+                    }
+
+                    override fun onLongClickItem(v: View?, position: Int) {}
+                })
+        )
+        dialog.show()
     }
     }

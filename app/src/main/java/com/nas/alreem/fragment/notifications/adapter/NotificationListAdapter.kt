@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.annotation.NonNull
 import androidx.recyclerview.widget.RecyclerView
@@ -15,6 +16,8 @@ class NotificationListAdapter (private var notificationArrayList: ArrayList<Noti
      inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var title: TextView = view.findViewById(R.id.title)
         var Img: ImageView = view.findViewById(R.id.Img)
+        var status :TextView= view.findViewById(R.id.status)
+        var statusLayout :RelativeLayout= view.findViewById(R.id.statusLayout)
     }
     @NonNull
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -41,6 +44,20 @@ class NotificationListAdapter (private var notificationArrayList: ArrayList<Noti
         {
             holder.Img.setImageResource(R.drawable.alerticon_audio)
         }
+        /*if (notificationArrayList.get(position).getStatus().equalsIgnoreCase("0")) {
+            holder.statusLayout.setVisibility(View.VISIBLE)
+            holder.status.setBackgroundResource(R.drawable.rectangle_red)
+            holder.status.setText("New")
+        } else if (notificationArrayList.get(position).getStatus()
+                .equalsIgnoreCase("1") || notificationArrayList.get(position).getStatus()
+                .equalsIgnoreCase("")
+        ) {
+            holder.statusLayout.setVisibility(View.GONE)
+        } else if (notificationArrayList.get(position).getStatus().equalsIgnoreCase("2")) {
+            holder.statusLayout.setVisibility(View.VISIBLE)
+            holder.status.setBackgroundResource(R.drawable.rectangle_orange)
+            holder.status.setText("Updated")
+        }*/
     }
     override fun getItemCount(): Int {
 

@@ -662,9 +662,6 @@ interface ApiInterface {
         @Header("Authorization") token: String
     ): Call<CCASubmitResponseModel>
 
-
-
-
     @POST("external-providers")
     @Headers("Content-Type: application/json")
     fun getExternalProviders(
