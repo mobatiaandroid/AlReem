@@ -18,9 +18,9 @@ import com.nas.alreem.activity.cca.CCAsReviewAfterSubmissionActivity
 import com.nas.alreem.activity.cca.model.CCACancelRequestModel
 import com.nas.alreem.activity.cca.model.CCACancelResponseModel
 import com.nas.alreem.activity.cca.model.CCAReviewAfterSubmissionModel
+import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.PreferenceManager
-import com.nas.alreem.rest.ApiClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

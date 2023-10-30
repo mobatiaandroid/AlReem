@@ -31,6 +31,7 @@ import com.nas.alreem.activity.parent_meetings.ReviewAppointmentsRecyclerViewAct
 import com.nas.alreem.activity.payments.adapter.StudentListAdapter
 import com.nas.alreem.activity.payments.model.StudentList
 import com.nas.alreem.activity.payments.model.StudentListModel
+import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.ConstantWords
 import com.nas.alreem.constants.DialogFunctions
@@ -41,7 +42,6 @@ import com.nas.alreem.fragment.parent_meetings.adapter.StaffListAdapter
 import com.nas.alreem.fragment.parent_meetings.model.ListStaffPtaApiModel
 import com.nas.alreem.fragment.parent_meetings.model.ListStaffPtaModel
 import com.nas.alreem.fragment.parent_meetings.model.StaffInfoDetail
-import com.nas.alreem.rest.ApiClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

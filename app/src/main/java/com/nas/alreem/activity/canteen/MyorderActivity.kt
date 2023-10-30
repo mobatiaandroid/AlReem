@@ -16,10 +16,10 @@ import com.nas.alreem.activity.canteen.model.myorders.PreOrdersModel
 import com.nas.alreem.activity.canteen.model.myorders.Preorderitems_list
 import com.nas.alreem.activity.canteen.model.order_history.OrderHistoryApiModel
 import com.nas.alreem.activity.home.HomeActivity
+import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.PreferenceManager
-import com.nas.alreem.rest.ApiClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

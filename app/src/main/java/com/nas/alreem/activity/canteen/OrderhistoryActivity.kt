@@ -17,10 +17,10 @@ import com.nas.alreem.activity.canteen.model.order_history.OrderHistoryApiModel
 import com.nas.alreem.activity.canteen.model.order_history.OrderHistoryDataModel
 import com.nas.alreem.activity.canteen.model.order_history.OrderHistoryResponseModel
 import com.nas.alreem.activity.home.HomeActivity
+import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.PreferenceManager
-import com.nas.alreem.rest.ApiClient
 
 import retrofit2.Call
 import retrofit2.Callback

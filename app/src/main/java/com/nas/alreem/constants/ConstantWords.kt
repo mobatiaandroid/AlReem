@@ -43,13 +43,13 @@ class ConstantWords {
         var TAB_EARLY_YEARS = "7"
         var TAB_PRIMARY = "8"
         var TAB_SECONDARY = "9"
-        var TAB_ENRICHMENT = "11"
+        var TAB_ENRICHMENT = "12"
         var TAB_PARENT_MEETINGS = "12"
-        var TAB_PERMISSION_FORMS = "10"
-        var TAB_GALLERY = "13"
-        var TAB_ABOUT_US = "15"
-        var TAB_CONTACT_US = "14"
-
+        var TAB_PERMISSION_FORMS = "11"
+        var TAB_GALLERY = "14"
+        var TAB_ABOUT_US = "16"
+        var TAB_CONTACT_US = "15"
+        var TAB_REPORTS = "10"
 
 
         /*MODULE NAME*/
@@ -78,7 +78,7 @@ class ConstantWords {
         var absence="Absence"
         var earlypickup="Early Pickup"
         var staff_directory="Staff Directory"
-
+        var reports="Reports"
 
         var surveySubmitArrayList=ArrayList<SurveySubmitDataModel>()
     }

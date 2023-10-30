@@ -30,7 +30,6 @@ import com.nas.alreem.fragment.about_us.adapter.AboutUsAdapter
 import com.nas.alreem.fragment.about_us.model.AboutUsDataModel
 import com.nas.alreem.fragment.about_us.model.AboutUsResponseModel
 import com.nas.alreem.fragment.payments.model.SendEmailApiModel
-import com.nas.alreem.rest.ApiClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

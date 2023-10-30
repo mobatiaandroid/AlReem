@@ -30,10 +30,10 @@ import com.nas.alreem.activity.payments.model.payment_submit.PaymentSubmitApiMod
 import com.nas.alreem.activity.payments.model.payment_submit.PaymentSubmitModel
 import com.nas.alreem.activity.payments.model.payment_token.PaymentTokenApiModel
 import com.nas.alreem.activity.payments.model.payment_token.PaymentTokenModel
+import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.PreferenceManager
-import com.nas.alreem.rest.ApiClient
 import payment.sdk.android.PaymentClient
 import payment.sdk.android.cardpayment.CardPaymentData
 import payment.sdk.android.cardpayment.CardPaymentRequest

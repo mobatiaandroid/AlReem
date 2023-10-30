@@ -25,7 +25,6 @@ import com.nas.alreem.fragment.payments.model.SendEmailApiModel
 import com.nas.alreem.recyclermanager.DividerItemDecoration
 import com.nas.alreem.recyclermanager.ItemOffsetDecoration
 import com.nas.alreem.recyclermanager.RecyclerItemListener
-import com.nas.alreem.rest.ApiClient
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback

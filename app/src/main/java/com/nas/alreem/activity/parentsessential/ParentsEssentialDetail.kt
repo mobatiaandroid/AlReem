@@ -31,7 +31,6 @@ import com.nas.alreem.activity.payments.model.*
 import com.nas.alreem.constants.*
 import com.nas.alreem.fragment.parents_essentials.model.ParentsEssentialSubMenuModel
 import com.nas.alreem.fragment.payments.model.SendEmailApiModel
-import com.nas.alreem.rest.ApiClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

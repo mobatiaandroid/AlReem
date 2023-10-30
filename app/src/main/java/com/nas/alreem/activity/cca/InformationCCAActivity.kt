@@ -21,7 +21,6 @@ import com.nas.alreem.activity.cca.model.CCAInfoResponseModel
 import com.nas.alreem.activity.cca.model.CCaInformationList
 import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.constants.*
-import com.nas.alreem.rest.ApiClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

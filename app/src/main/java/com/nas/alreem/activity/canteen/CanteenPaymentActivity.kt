@@ -34,7 +34,6 @@ import com.nas.alreem.activity.payments.model.payment_gateway.PaymentGatewayMode
 import com.nas.alreem.activity.payments.model.payment_token.PaymentTokenApiModel
 import com.nas.alreem.activity.payments.model.payment_token.PaymentTokenModel
 import com.nas.alreem.constants.*
-import com.nas.alreem.rest.ApiClient
 
 import payment.sdk.android.PaymentClient
 import payment.sdk.android.cardpayment.CardPaymentData

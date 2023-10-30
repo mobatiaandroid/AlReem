@@ -47,7 +47,6 @@ import com.nas.alreem.fragment.absence.adapter.PickuplistAdapter
 import com.nas.alreem.fragment.absence.model.AbsenceRequestListDetailModel
 import com.nas.alreem.fragment.absence.model.EarlyPickupListModel
 import com.nas.alreem.fragment.parent_meetings.adapter.RequestAbsenceRecyclerAdapter
-import com.nas.alreem.rest.ApiClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

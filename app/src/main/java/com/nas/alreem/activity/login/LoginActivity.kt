@@ -27,7 +27,6 @@ import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.activity.login.model.LoginResponseModel
 import com.nas.alreem.activity.login.model.SignUpResponseModel
 import com.nas.alreem.constants.*
-import com.nas.alreem.rest.ApiClient
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback

@@ -25,12 +25,12 @@ import com.nas.alreem.activity.staff_directory.model.DepartmentStaffsModel
 import com.nas.alreem.activity.staff_directory.model.ListStaffDetailApiModel
 import com.nas.alreem.activity.staff_directory.model.ListStaffDetailModel
 import com.nas.alreem.activity.staff_directory.model.StaffDeptListModel
+import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.ConstantWords
 import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.fragment.parent_meetings.adapter.RequestAbsenceRecyclerAdapter
-import com.nas.alreem.rest.ApiClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

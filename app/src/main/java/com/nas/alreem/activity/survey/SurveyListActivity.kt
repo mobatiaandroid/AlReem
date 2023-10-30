@@ -31,7 +31,6 @@ import com.nas.alreem.activity.survey.adapter.SurveyQuestionPagerAdapter
 import com.nas.alreem.activity.survey.model.*
 import com.nas.alreem.constants.*
 import com.nas.alreem.fragment.payments.model.SendEmailApiModel
-import com.nas.alreem.rest.ApiClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

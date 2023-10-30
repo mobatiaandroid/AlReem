@@ -30,6 +30,7 @@ import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.activity.login.model.SignUpResponseModel
 import com.nas.alreem.activity.survey.adapter.SurveyQuestionPagerAdapter
 import com.nas.alreem.activity.survey.model.*
+import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.ConstantWords
 import com.nas.alreem.constants.DialogFunctions
@@ -50,8 +51,8 @@ import com.nas.alreem.fragment.payments.PaymentFragment
 import com.nas.alreem.fragment.payments.model.SendEmailApiModel
 import com.nas.alreem.fragment.permission_slip.PermissionSlipFragment
 import com.nas.alreem.fragment.primary.PrimaryFragment
+import com.nas.alreem.fragment.reports.ReportsFragment
 import com.nas.alreem.fragment.secondary.SecondaryFragment
-import com.nas.alreem.rest.ApiClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -804,7 +805,9 @@ class HomeFragment : Fragment() , View.OnClickListener{
                 textdata.equals(ConstantWords.permission_forms, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_PERMISSION_FORMS
                 }
-
+                textdata.equals(ConstantWords.reports, ignoreCase = true) -> {
+                    TAB_ID = ConstantWords.TAB_REPORTS
+                }
             }
 
         }
@@ -1161,7 +1164,13 @@ class HomeFragment : Fragment() , View.OnClickListener{
 //                    DialogFunctions.commonErrorAlertDialog("Coming Soon!","This Feature will be available shortly.",mContext)
 
                 }
+                ConstantWords.TAB_REPORTS -> {
+                    PreferenceManager.setStudentID(mContext,"")
+                    mFragment = ReportsFragment()
+                    fragmentIntent(mFragment)
+//                    DialogFunctions.commonErrorAlertDialog("Coming Soon!","This Feature will be available shortly.",mContext)
 
+                }
                 ConstantWords.TAB_CONTACT_US -> {
                     if (ActivityCompat.checkSelfPermission(
                             mContext,

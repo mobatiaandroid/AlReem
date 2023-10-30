@@ -28,7 +28,6 @@ import com.nas.alreem.fragment.communication.adapter.CommunicationAdapter
 import com.nas.alreem.fragment.primary.adapter.PrimaryAdapter
 import com.nas.alreem.fragment.primary.model.PrimaryDataModel
 import com.nas.alreem.fragment.primary.model.PrimaryResponseModel
-import com.nas.alreem.rest.ApiClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

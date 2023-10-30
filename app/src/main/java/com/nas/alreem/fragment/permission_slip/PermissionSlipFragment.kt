@@ -29,7 +29,6 @@ import com.nas.alreem.fragment.permission_slip.adapter.FormslistAdapter
 import com.nas.alreem.fragment.permission_slip.model.PermissionSlipListApiModel
 import com.nas.alreem.fragment.permission_slip.model.PermissionSlipListModel
 import com.nas.alreem.fragment.permission_slip.model.PermissionSlipModel
-import com.nas.alreem.rest.ApiClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

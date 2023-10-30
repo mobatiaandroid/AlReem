@@ -1,4 +1,4 @@
-package com.nas.alreem.rest
+package com.nas.alreem.constants
 
 import com.google.gson.JsonObject
 import com.nas.alreem.activity.absence.model.AbsenceListModel
@@ -83,6 +83,8 @@ import com.nas.alreem.fragment.payments.model.SendEmailApiModel
 import com.nas.alreem.fragment.permission_slip.model.PermissionSlipListApiModel
 import com.nas.alreem.fragment.permission_slip.model.PermissionSlipModel
 import com.nas.alreem.fragment.primary.model.PrimaryResponseModel
+import com.nas.alreem.fragment.reports.model.ReportApiModel
+import com.nas.alreem.fragment.reports.model.ReportListModel
 import com.nas.alreem.fragment.settings.model.ChangePasswordApiModel
 
 import okhttp3.ResponseBody
@@ -670,4 +672,11 @@ interface ApiInterface {
         @Body body: ExternalProvidersRequestModel,
         @Header("Authorization") token: String
     ): Call<ExternalProvidersResponseModel>
+
+    @POST("progress-reports")
+    @Headers("Content-Type: application/json")
+    fun reportList(
+        @Body reportListModel: ReportApiModel,
+        @Header("Authorization") token:String
+    ): Call<ReportListModel>
 }

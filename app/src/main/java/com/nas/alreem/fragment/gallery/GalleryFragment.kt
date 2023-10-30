@@ -30,7 +30,6 @@ import com.nas.alreem.fragment.about_us.model.AboutUsResponseModel
 import com.nas.alreem.fragment.gallery.adapter.ImageThumnailAdapter
 import com.nas.alreem.fragment.gallery.model.ThumnailImageModel
 import com.nas.alreem.fragment.gallery.model.ThumnailResponseModel
-import com.nas.alreem.rest.ApiClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

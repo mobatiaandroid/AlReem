@@ -17,10 +17,10 @@ import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.activity.notifications.model.MessageDetailApiModel
 import com.nas.alreem.activity.notifications.model.MessageDetailModel
 import com.nas.alreem.activity.notifications.model.MessageDetailNotificationModel
+import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.PreferenceManager
-import com.nas.alreem.rest.ApiClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

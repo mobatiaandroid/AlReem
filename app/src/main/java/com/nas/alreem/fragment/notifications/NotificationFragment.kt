@@ -21,7 +21,6 @@ import com.nas.alreem.fragment.notifications.adapter.NotificationListAdapter
 import com.nas.alreem.fragment.notifications.model.NotificationApiModel
 import com.nas.alreem.fragment.notifications.model.NotificationModel
 import com.nas.alreem.fragment.notifications.model.NotificationResponseModel
-import com.nas.alreem.rest.ApiClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

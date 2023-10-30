@@ -19,12 +19,12 @@ import com.nas.alreem.activity.canteen.CanteenPaymentActivity
 import com.nas.alreem.activity.canteen.InformationActivity
 import com.nas.alreem.activity.canteen.PreOrderActivity
 import com.nas.alreem.activity.login.model.SignUpResponseModel
+import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.fragment.canteen.model.CanteenBannerResponseModel
 import com.nas.alreem.fragment.payments.model.SendEmailApiModel
-import com.nas.alreem.rest.ApiClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

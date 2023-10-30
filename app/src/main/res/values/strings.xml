@@ -12,6 +12,7 @@
         <item>Early Years</item>
         <item>Primary</item>
         <item>Secondary</item>
+        <item>Reports</item>
         <item>Permission Forms</item>
         <item>Enrichment</item>
         <item>Parent Meetings</item>
@@ -35,6 +36,7 @@
         <item>@drawable/earlyyears</item>
         <item>@drawable/primary</item>
         <item>@drawable/secondary</item>
+        <item>@drawable/report_side</item>
         <item>@drawable/permission_slip</item>
         <item>@drawable/ccas</item>
         <item>@drawable/parentevening</item>

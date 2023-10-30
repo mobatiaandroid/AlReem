@@ -23,6 +23,7 @@ import com.nas.alreem.activity.payments.PaymentCategoryActivity
 import com.nas.alreem.activity.payments.PaymentInformationActivity
 import com.nas.alreem.activity.primary.PrimaryActivity
 import com.nas.alreem.activity.settings.model.TermsOfServiceResponseModel
+import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.PreferenceManager
@@ -30,7 +31,6 @@ import com.nas.alreem.fragment.payments.model.PaymentResponseModel
 import com.nas.alreem.fragment.payments.model.SendEmailApiModel
 import com.nas.alreem.fragment.primary.adapter.PrimaryAdapter
 import com.nas.alreem.fragment.primary.model.PrimaryResponseModel
-import com.nas.alreem.rest.ApiClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

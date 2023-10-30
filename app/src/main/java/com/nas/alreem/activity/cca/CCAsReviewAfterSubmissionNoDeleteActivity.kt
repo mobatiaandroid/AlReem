@@ -14,10 +14,10 @@ import com.nas.alreem.R
 import com.nas.alreem.activity.cca.adapter.CCAfinalReviewEditAfterSubmissionAdapter
 import com.nas.alreem.activity.cca.model.*
 import com.nas.alreem.activity.home.HomeActivity
+import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.PreferenceManager
-import com.nas.alreem.rest.ApiClient
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback

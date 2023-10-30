@@ -53,6 +53,7 @@ import com.nas.alreem.fragment.parents_essentials.ParentsEssentialFragment
 import com.nas.alreem.fragment.payments.PaymentFragment
 import com.nas.alreem.fragment.permission_slip.PermissionSlipFragment
 import com.nas.alreem.fragment.primary.PrimaryFragment
+import com.nas.alreem.fragment.reports.ReportsFragment
 import com.nas.alreem.fragment.secondary.SecondaryFragment
 import com.nas.alreem.fragment.settings.SettingsFragment
 
@@ -521,34 +522,41 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                     }
                     10->
                     {
-                        //Secondary
+                        //Reports
                         PreferenceManager.setStudentID(context,"")
-                        mFragment = PermissionSlipFragment()
+                        mFragment = ReportsFragment()
                         replaceFragmentsSelected(position)
 
 
                     }
                     11->
                     {
-                        //About Us
-                        mFragment = CCAFragment()
+                        //Permission_form
+                        PreferenceManager.setStudentID(context,"")
+                        mFragment = PermissionSlipFragment()
                         replaceFragmentsSelected(position)
 
                     }
 
                     12->
                     {
-                        //About Us
-                        mFragment = ParentMeetingsFragment()
+                        //CCa
+                        mFragment = CCAFragment()
                         replaceFragmentsSelected(position)
                     }
                     13->
+                    {
+                        //Parents meeting
+                        mFragment = ParentMeetingsFragment()
+                        replaceFragmentsSelected(position)
+                    }
+                    14->
                     {
                         //Gallery
                         mFragment = GalleryFragment()
                         replaceFragmentsSelected(position)
                     }
-                    14->
+                    15->
                     {
                         //About Us
 
@@ -572,7 +580,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                             replaceFragmentsSelected(position)
                         }
                     }
-                    15->
+                    16->
                     {
                         // Contact Us
                         mFragment = AboutUsFragment()

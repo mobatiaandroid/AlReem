@@ -23,11 +23,11 @@ import com.nas.alreem.activity.calendar.CalendarTutorialActivity
 import com.nas.alreem.activity.calendar.TermCalendarActivity
 import com.nas.alreem.activity.login.LoginActivity
 import com.nas.alreem.activity.payments.model.payment_submit.PaymentSubmitApiModel
+import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.fragment.calendar.adapter.CustomSpinnerAdapter
-import com.nas.alreem.rest.ApiClient
 import com.nas.alreem.fragment.calendar.adapter.CalendarListAdapter
 import com.nas.alreem.fragment.calendar.model.*
 import retrofit2.Call

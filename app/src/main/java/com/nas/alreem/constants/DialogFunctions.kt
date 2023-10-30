@@ -16,7 +16,6 @@ import com.nas.alreem.activity.login.LoginActivity
 import com.nas.alreem.activity.login.model.ForgetPasswordResponseModel
 import com.nas.alreem.activity.login.model.SignUpResponseModel
 import com.nas.alreem.fragment.settings.model.ChangePasswordApiModel
-import com.nas.alreem.rest.ApiClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

@@ -31,7 +31,6 @@ import com.nas.alreem.appcontroller.AppController
 import com.nas.alreem.constants.*
 import com.nas.alreem.fragment.cca.CCAFragment
 import com.nas.alreem.fragment.home.homeActivity
-import com.nas.alreem.rest.ApiClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

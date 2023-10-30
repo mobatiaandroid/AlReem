@@ -26,11 +26,11 @@ import com.nas.alreem.activity.parent_meetings.model.PtaDatesApiModel
 import com.nas.alreem.activity.parent_meetings.model.PtaDatesModel
 import com.nas.alreem.activity.parent_meetings.model.PtaReviewListResponseModel
 import com.nas.alreem.activity.parent_meetings.model.ReviewListModel
+import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.ConstantWords
 import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.PreferenceManager
-import com.nas.alreem.rest.ApiClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

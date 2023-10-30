@@ -1,4 +1,4 @@
-package com.nas.alreem.rest
+package com.nas.alreem.constants
 
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient

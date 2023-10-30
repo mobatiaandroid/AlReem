@@ -20,10 +20,10 @@ import com.nas.alreem.activity.canteen.model.myorders.PreOrdersListModel
 import com.nas.alreem.activity.canteen.model.myorders.PreOrdersModel
 import com.nas.alreem.activity.canteen.model.order_history.OrderHistoryApiModel
 import com.nas.alreem.activity.canteen.model.preorder.CanteenPreorderModel
+import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.PreferenceManager
-import com.nas.alreem.rest.ApiClient
 
 import kotlinx.android.synthetic.main.canteen_myorder.view.*
 import retrofit2.Call

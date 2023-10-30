@@ -23,7 +23,6 @@ import com.nas.alreem.activity.parent_meetings.adapter.ParentsEveningRoomListAda
 import com.nas.alreem.activity.parent_meetings.adapter.TimeslotAdapter
 import com.nas.alreem.activity.parent_meetings.model.*
 import com.nas.alreem.constants.*
-import com.nas.alreem.rest.ApiClient
 import kotlinx.android.synthetic.main.activity_parent_meeting_detail.*
 import retrofit2.Call
 import retrofit2.Callback

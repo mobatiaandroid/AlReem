@@ -22,7 +22,6 @@ import com.nas.alreem.constants.*
 import com.nas.alreem.fragment.calendar.model.CalendarAPIModel
 import com.nas.alreem.fragment.calendar.model.TermCalendarListModel
 import com.nas.alreem.fragment.calendar.model.TermCalendarResponseModel
-import com.nas.alreem.rest.ApiClient
 import com.nas.naisak.fragment.calendar.adapter.TermCalendarListAdapter
 import retrofit2.Call
 import retrofit2.Callback

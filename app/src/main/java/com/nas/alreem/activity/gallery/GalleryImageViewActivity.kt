@@ -23,7 +23,6 @@ import com.nas.alreem.activity.gallery.adapter.PhotosAdapter
 import com.nas.alreem.activity.gallery.model.*
 import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.constants.*
-import com.nas.alreem.rest.ApiClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
