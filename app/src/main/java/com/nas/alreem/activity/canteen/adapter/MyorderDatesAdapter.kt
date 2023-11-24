@@ -156,7 +156,6 @@ class MyorderDatesAdapter (val preorders_list: ArrayList<PreOrdersListModel>, va
         val call: Call<CanteenPreorderModel> = ApiClient.getClient.cancelCanteenPreOrder(model,"Bearer "+token)
         call.enqueue(object : Callback<CanteenPreorderModel> {
             override fun onFailure(call: Call<CanteenPreorderModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
             }
             override fun onResponse(call: Call<CanteenPreorderModel>, response: Response<CanteenPreorderModel>) {
                 val responsedata = response.body()
@@ -183,11 +182,11 @@ class MyorderDatesAdapter (val preorders_list: ArrayList<PreOrdersListModel>, va
         val call: Call<PreOrdersModel> = ApiClient.getClient.canteen_myorder_history(model,"Bearer "+token)
         call.enqueue(object : Callback<PreOrdersModel> {
             override fun onFailure(call: Call<PreOrdersModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
+
             }
             override fun onResponse(call: Call<PreOrdersModel>, response: Response<PreOrdersModel>) {
                 val responsedata = response.body()
-                Log.e("Response", responsedata.toString())
+
                 if (responsedata!!.status==100) {
                     amountTxt.text=response.body()!!.responseArray.whole_total.toString()
                     dateRecyclerView.layoutManager = LinearLayoutManager(mcontext)

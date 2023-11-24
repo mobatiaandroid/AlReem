@@ -134,14 +134,11 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
         requestPermissionLauncher = registerForActivityResult(
             ActivityResultContracts.RequestPermission(),
             ActivityResultCallback<Boolean> { result ->
-                Log.e("result", result.toString())
                 if (result) {
                     // PERMISSION GRANTED
-                    Log.e("result", result.toString())
                     // Toast.makeText(mContext, String.valueOf(result), Toast.LENGTH_SHORT).show();
                 } else {
                     // PERMISSION NOT GRANTED
-                    Log.e("denied", result.toString())
                     val snackbar = Snackbar.make(
                         drawer_layout,
                         "Notification Permission Denied",

@@ -56,7 +56,6 @@ class OrderhistoryActivity : AppCompatActivity() {
     private fun initfn() {
         nContext = this
         studentID=intent.getStringExtra("StudentId").toString()
-        Log.e("StudID",studentID)
         logoClickImg=findViewById(R.id.logoclick)
         back = findViewById(R.id.back)
         title = findViewById(R.id.textViewtitle)
@@ -94,12 +93,12 @@ class OrderhistoryActivity : AppCompatActivity() {
             override fun onFailure(call: Call<OrderHistoryResponseModel>, t: Throwable) {
                 progress.visibility=View.GONE
 
-                Log.e("Failed", t.localizedMessage)
+
             }
             override fun onResponse(call: Call<OrderHistoryResponseModel>, response: Response<OrderHistoryResponseModel>) {
                 progress.visibility=View.GONE
                 val responsedata = response.body()
-                Log.e("Response", responsedata.toString())
+
                 if (responsedata!!.status==100) {
 
                     preorderhis_list=response.body()!!.responseArray.data

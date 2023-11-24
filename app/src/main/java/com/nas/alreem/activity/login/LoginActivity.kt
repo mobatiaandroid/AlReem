@@ -187,7 +187,6 @@ class LoginActivity : AppCompatActivity(),View.OnTouchListener{
         val call: Call<LoginResponseModel> = ApiClient.getClient.login(emailId,password,"2",tokenM,androidID)
         call.enqueue(object : Callback<LoginResponseModel> {
             override fun onFailure(call: Call<LoginResponseModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
                 progressDialogAdd.visibility=View.GONE
             }
             override fun onResponse(call: Call<LoginResponseModel>, response: Response<LoginResponseModel>) {

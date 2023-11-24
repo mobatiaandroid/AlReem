@@ -224,7 +224,6 @@ class Addorder_Activity : AppCompatActivity() {
         val call: Call<CatListModel> = ApiClient.getClient.get_canteen_categories("Bearer "+token)
         call.enqueue(object : Callback<CatListModel> {
             override fun onFailure(call: Call<CatListModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
             }
             override fun onResponse(call: Call<CatListModel>, response: Response<CatListModel>) {
                 val responsedata = response.body()
@@ -308,14 +307,12 @@ class Addorder_Activity : AppCompatActivity() {
         item_list= ArrayList()
         progressDialogP.show()
 
-        Log.e("dsel",date_selected)
         val token = PreferenceManager.getaccesstoken(nContext)
         var canteenItems= CanteenItemsApiModel(PreferenceManager.getStudentID(nContext).toString(),def_cat_id,
             date_selected,"0","50")
         val call: Call<ItemsListModel> = ApiClient.getClient.get_canteen_items(canteenItems,"Bearer "+token)
         call.enqueue(object : Callback<ItemsListModel> {
             override fun onFailure(call: Call<ItemsListModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
                 progressDialogP.hide()
             }
             override fun onResponse(call: Call<ItemsListModel>, response: Response<ItemsListModel>) {
@@ -403,7 +400,6 @@ class Addorder_Activity : AppCompatActivity() {
             override fun onFailure(call: Call<ItemsListModel>, t: Throwable) {
                 progressDialogP.hide()
 
-                Log.e("Failed", t.localizedMessage)
             }
             override fun onResponse(call: Call<ItemsListModel>, response: Response<ItemsListModel>) {
                 progressDialogP.hide()
@@ -489,7 +485,6 @@ class Addorder_Activity : AppCompatActivity() {
         call.enqueue(object : Callback<CanteenCartModel> {
             override fun onFailure(call: Call<CanteenCartModel>, t: Throwable) {
                 progressDialogP.hide()
-                Log.e("Failed", t.localizedMessage)
             }
             override fun onResponse(call: Call<CanteenCartModel>, response: Response<CanteenCartModel>) {
                 val responsedata = response.body()
