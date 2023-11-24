@@ -177,7 +177,6 @@ class ConstantFunctions {
             }
             format = SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH)
             strCurrentDate = format.format(newDate)
-            Log.e("Date converted",strCurrentDate)
             return strCurrentDate
         }
         fun replace(str: String): String? {

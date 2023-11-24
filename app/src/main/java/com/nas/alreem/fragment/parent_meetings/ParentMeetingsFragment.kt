@@ -84,7 +84,6 @@ class ParentMeetingsFragment:Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mContext=requireContext()
-        Log.e("frag","PM")
         initializeUI()
     }
 
@@ -113,13 +112,11 @@ class ParentMeetingsFragment:Fragment() {
         }
 
 
-        Log.e("time", PreferenceManager.getIsFirstTimeInPE(mContext).toString())
         if (PreferenceManager.getIsFirstTimeInPE(mContext)) {
             PreferenceManager.setIsFirstTimeInPE(mContext, false)
             val mintent = Intent(mContext, ParentsEveninginfoActivity::class.java)
             mintent.putExtra("type", 1)
             mContext.startActivity(mintent)
-            Log.e("timeafter",PreferenceManager.getIsFirstTimeInPE(mContext).toString())
         }
     }
     private fun onclick(){
@@ -166,7 +163,6 @@ class ParentMeetingsFragment:Fragment() {
         val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+token)
         call.enqueue(object : Callback<StudentListModel> {
             override fun onFailure(call: Call<StudentListModel>, t: Throwable) {
-                Log.e("Error", t.localizedMessage)
                 progressDialogAdd.visibility = View.GONE
             }
             override fun onResponse(call: Call<StudentListModel>, response: Response<StudentListModel>) {
@@ -272,7 +268,6 @@ class ParentMeetingsFragment:Fragment() {
         val call: Call<ListStaffPtaModel> = ApiClient.getClient.staff_list_pta(stafflist5SuccessBody,"Bearer "+token)
         call.enqueue(object : Callback<ListStaffPtaModel> {
             override fun onFailure(call: Call<ListStaffPtaModel>, t: Throwable) {
-                Log.e("Error", t.localizedMessage)
                 progressDialogAdd.visibility = View.GONE
             }
             override fun onResponse(call: Call<ListStaffPtaModel>, response: Response<ListStaffPtaModel>) {

@@ -143,7 +143,6 @@ class PermissionSlipFragment : Fragment(){
                 PreferenceManager.setStudentName(mContext,studentName)
                 PreferenceManager.setStudentPhoto(mContext,studentImg)
                 PreferenceManager.setStudentClass(mContext,studentClass)
-                Log.e("studidclick", PreferenceManager.getStudentID(mContext).toString())
                 studentNameTxt.text=studentName
                 if(!studentImg.equals(""))
                 {
@@ -169,7 +168,6 @@ class PermissionSlipFragment : Fragment(){
                     DialogFunctions.showInternetAlertDialog(mContext)
                 }
 
-                Log.e("TEST","call 2")
 
                 //  Toast.makeText(activity, mStudentList.get(position).name, Toast.LENGTH_SHORT).show()
                 dialog.dismiss()
@@ -182,13 +180,11 @@ class PermissionSlipFragment : Fragment(){
         formslist=ArrayList()
 
         val token = PreferenceManager.getaccesstoken(mContext)
-        Log.e("stid", PreferenceManager.getStudentID(mContext).toString())
         val list_permissionSlip= PermissionSlipListApiModel("0","20",PreferenceManager.getStudentID(mContext).toString())
         val call: Call<PermissionSlipModel> = ApiClient.getClient.permissnslipList(list_permissionSlip,"Bearer "+token)
         call.enqueue(object : Callback<PermissionSlipModel>{
             override fun onFailure(call: Call<PermissionSlipModel>, t: Throwable) {
                 progressDialog.visibility = View.GONE
-                Log.e("Error", t.localizedMessage)
             }
             override fun onResponse(call: Call<PermissionSlipModel>, response: Response<PermissionSlipModel>) {
                 progressDialog.visibility = View.GONE
@@ -198,12 +194,10 @@ class PermissionSlipFragment : Fragment(){
                     formslist=ArrayList()
                     formslist.addAll(response.body()!!.responseArray.request)
                     if (response.body()!!.responseArray.request.size > 0){
-                        Log.e("notempty","true")
                         forms_recycler.layoutManager=LinearLayoutManager(mContext)
                         var forms_adapter= FormslistAdapter(mContext,formslist)
                         forms_recycler.adapter=forms_adapter
                     }else{
-                        Log.e("empty","true")
                         formslist=ArrayList()
                         forms_recycler.layoutManager=LinearLayoutManager(mContext)
                         var forms_adapter= FormslistAdapter(mContext,formslist)
@@ -246,7 +240,6 @@ class PermissionSlipFragment : Fragment(){
         val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+token)
         call.enqueue(object : Callback<StudentListModel> {
             override fun onFailure(call: Call<StudentListModel>, t: Throwable) {
-                Log.e("Error", t.localizedMessage)
                 progressDialog.visibility = View.GONE
             }
             override fun onResponse(call: Call<StudentListModel>, response: Response<StudentListModel>) {
@@ -330,7 +323,6 @@ class PermissionSlipFragment : Fragment(){
     }
     override fun onResume() {
         super.onResume()
-        Log.e("TEST","call 1")
         forms_recycler.visibility=View.GONE
         var internetCheck = ConstantFunctions.internetCheck(mContext)
         if (internetCheck) {

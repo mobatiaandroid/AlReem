@@ -242,7 +242,6 @@ class DialogFunctions {
             val call: Call<SignUpResponseModel> = ApiClient.getClient.signup(email)
             call.enqueue(object : Callback<SignUpResponseModel> {
                 override fun onFailure(call: Call<SignUpResponseModel>, t: Throwable) {
-                    Log.e("Failed", t.localizedMessage)
                     progressDialogAdd.visibility=View.GONE
                 }
                 override fun onResponse(call: Call<SignUpResponseModel>, response: Response<SignUpResponseModel>) {
@@ -278,7 +277,6 @@ class DialogFunctions {
             val call: Call<ForgetPasswordResponseModel> = ApiClient.getClient.forgetPassword(email)
             call.enqueue(object : Callback<ForgetPasswordResponseModel> {
                 override fun onFailure(call: Call<ForgetPasswordResponseModel>, t: Throwable) {
-                    Log.e("Failed", t.localizedMessage)
                     progressDialogAdd.visibility=View.GONE
                 }
                 override fun onResponse(call: Call<ForgetPasswordResponseModel>, response: Response<ForgetPasswordResponseModel>) {
@@ -465,7 +463,6 @@ class DialogFunctions {
             val call: Call<ForgetPasswordResponseModel> = ApiClient.getClient.changePassword(model,"Bearer "+PreferenceManager.getaccesstoken(context))
             call.enqueue(object : Callback<ForgetPasswordResponseModel> {
                 override fun onFailure(call: Call<ForgetPasswordResponseModel>, t: Throwable) {
-                    Log.e("Failed", t.localizedMessage)
                     progressDialogAdd.visibility=View.GONE
                 }
                 override fun onResponse(call: Call<ForgetPasswordResponseModel>, response: Response<ForgetPasswordResponseModel>) {
@@ -503,7 +500,6 @@ class DialogFunctions {
             val call: Call<ForgetPasswordResponseModel> = ApiClient.getClient.deleteAccount("Bearer "+PreferenceManager.getaccesstoken(context))
             call.enqueue(object : Callback<ForgetPasswordResponseModel> {
                 override fun onFailure(call: Call<ForgetPasswordResponseModel>, t: Throwable) {
-                    Log.e("Failed", t.localizedMessage)
                     progressDialogAdd.visibility=View.GONE
                 }
                 override fun onResponse(call: Call<ForgetPasswordResponseModel>, response: Response<ForgetPasswordResponseModel>) {

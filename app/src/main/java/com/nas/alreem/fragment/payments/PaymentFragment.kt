@@ -109,7 +109,6 @@ class PaymentFragment : Fragment() {
         val call: Call<PaymentResponseModel> = ApiClient.getClient.paymentBanner("Bearer "+PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<PaymentResponseModel> {
             override fun onFailure(call: Call<PaymentResponseModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
                 progressDialogAdd.visibility=View.GONE
             }
             override fun onResponse(call: Call<PaymentResponseModel>, response: Response<PaymentResponseModel>) {
@@ -137,12 +136,10 @@ class PaymentFragment : Fragment() {
 
                             var imageBanner=response.body()!!.responseArray!!.data.image
                             if (imageBanner.isNotEmpty()) {
-                                Log.e("bann","notemp")
                                 Glide.with(mContext) //1
                                     .load(imageBanner)
                                     .into(bannerImageViewPager)
                             } else {
-                                Log.e("bann","emp")
                                 bannerImageViewPager!!.setBackgroundResource(R.drawable.default_banner)
                             }
 
@@ -215,14 +212,12 @@ class PaymentFragment : Fragment() {
         val call: Call<SignUpResponseModel> = ApiClient.getClient.sendEmailStaff(sendMailBody, "Bearer " + PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<SignUpResponseModel> {
             override fun onFailure(call: Call<SignUpResponseModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
                 //progressDialog.visibility = View.GONE
             }
 
             override fun onResponse(call: Call<SignUpResponseModel>, response: Response<SignUpResponseModel>) {
                 val responsedata = response.body()
                 //progressDialog.visibility = View.GONE
-                Log.e("Response Signup", responsedata.toString())
                 if (responsedata != null) {
                     try {
 

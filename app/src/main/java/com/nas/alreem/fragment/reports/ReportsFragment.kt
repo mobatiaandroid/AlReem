@@ -92,7 +92,6 @@ class ReportsFragment : Fragment() {
         val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<StudentListModel> {
             override fun onFailure(call: Call<StudentListModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
                // progressDialogAdd.visibility=View.GONE
                 progressBar.visibility = View.GONE
 
@@ -112,7 +111,6 @@ class ReportsFragment : Fragment() {
                             studentListArrayList.addAll(response.body()!!.responseArray.studentList)
                             if (PreferenceManager.getStudentID(mContext).equals(""))
                             {
-                                Log.e("Empty Img","Empty")
                                 studentName=studentListArrayList.get(0).name
                                 studentImg=studentListArrayList.get(0).photo
                                 studentId=studentListArrayList.get(0).id
@@ -122,7 +120,6 @@ class ReportsFragment : Fragment() {
                                 PreferenceManager.setStudentPhoto(mContext,studentImg)
                                 PreferenceManager.setStudentClass(mContext,studentClass)
                                 studentNameTxt.text=studentName
-                                Log.e("studid(0)", PreferenceManager.getStudentID(mContext).toString())
                                 if(!studentImg.equals(""))
                                 {
                                     Glide.with(mContext) //1
@@ -299,7 +296,6 @@ class ReportsFragment : Fragment() {
         call.enqueue(object : Callback<ReportListModel> {
             override fun onFailure(call: Call<ReportListModel>, t: Throwable) {
                 progressBar.visibility = View.GONE
-                Log.e("Error", t.localizedMessage)
             }
 
             override fun onResponse(
