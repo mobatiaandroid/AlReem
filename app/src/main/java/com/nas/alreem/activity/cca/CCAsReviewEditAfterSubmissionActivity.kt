@@ -268,7 +268,6 @@ class CCAsReviewEditAfterSubmissionActivity : AppCompatActivity() {
 //                        mCCAModel.venue2 = ""
                     }
 
-                    Log.e("des1",choice1.cca_item_description.toString())
                     mCCAModel.venue2 = ""
                     mCCAModel.cca_item_description_2 = ""
                     val absentDaysChoice1 = choice1.absentDays
@@ -306,11 +305,9 @@ class CCAsReviewEditAfterSubmissionActivity : AppCompatActivity() {
             if (choice2 != null) {
                 if (choice2.cca_item_name != null) {
                     mCCAModel.choice2 = choice2.cca_item_name
-                    Log.e("Satrttime2", choice2.cca_item_start_time!!)
                     mCCAModel.cca_item_start_time2 = choice2.cca_item_start_time
                     mCCAModel.cca_item_end_time2 = choice2.cca_item_end_time
                     val absentDaysChoice2 = choice2.absentDays
-                    Log.e("des",choice2.cca_item_description.toString())
                     if (choice2.cca_item_description != null){
                         mCCAModel.cca_item_description_2 = choice2.cca_item_description
 //                        mCCAModel.cca_item_description = ""

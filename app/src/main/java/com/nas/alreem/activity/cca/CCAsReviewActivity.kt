@@ -98,7 +98,6 @@ class CCAsReviewActivity : AppCompatActivity() {
         // ccaedit = intent.getIntExtra("ccaedit",0)
         //   keyy=extras!!.getString("keyvalue")!!
 
-        Log.e("cca edit", PreferenceManager.getkeyvalue(mContext).toString())
         backRelative.setOnClickListener {
             if(PreferenceManager.getkeyvalue(mContext).toString().equals("0"))
             {
@@ -153,7 +152,6 @@ class CCAsReviewActivity : AppCompatActivity() {
             )
         }
         for (i in 0 until AppController.weekList.size) {
-            Log.e("here","Here")
             for (j in 0 until CCADetailModelArrayList!!.size) {
                 if (AppController.weekList[i].weekDay.equals(
                         CCADetailModelArrayList!![j].day,ignoreCase = true

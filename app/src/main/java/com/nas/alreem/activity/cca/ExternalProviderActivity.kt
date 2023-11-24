@@ -180,7 +180,6 @@ class ExternalProviderActivity : AppCompatActivity() {
                     val intent = Intent(mContext, WebLinkActivity::class.java)
                     intent.putExtra("url", mListViewArray[position].file)
                     intent.putExtra("heading", mListViewArray[position].title)
-                    Log.e("webview_url", mListViewArray[position].file.toString())
                     mContext.startActivity(intent)
                 }
             }
