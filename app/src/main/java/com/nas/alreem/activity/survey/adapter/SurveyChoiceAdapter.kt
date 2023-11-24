@@ -43,7 +43,6 @@ class SurveyChoiceAdapter (private var surveyChoiceArrayList: ArrayList<SurveyOf
         return MyViewHolder(itemView)
     }
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        Log.e("ANS_TYPE", answerType.toString())
         if(answerType==1)
         {
             holder.choiseRelative.visibility=View.VISIBLE
@@ -93,7 +92,6 @@ class SurveyChoiceAdapter (private var surveyChoiceArrayList: ArrayList<SurveyOf
             holder.startRelative.visibility=View.GONE
             holder.numberRelative.visibility=View.GONE
             holder.smileyTxt.setText(surveyChoiceArrayList.get(position).answer)
-            Log.e("isclicked", surveyChoiceArrayList.get(position).is_clicked.toString())
             if (surveyChoiceArrayList.get(position).is_clicked)
             {
                 holder.smileyRelative.setBackgroundColor(context.getResources().getColor(R.color.list_bg))

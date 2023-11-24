@@ -172,7 +172,6 @@ class AbsenceFragment  : Fragment() {
         val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<StudentListModel> {
             override fun onFailure(call: Call<StudentListModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
                 progressDialogAdd.visibility=View.GONE
             }
             override fun onResponse(call: Call<StudentListModel>, response: Response<StudentListModel>) {
@@ -188,7 +187,6 @@ class AbsenceFragment  : Fragment() {
                             studentListArrayList.addAll(response.body()!!.responseArray.studentList)
                             if (PreferenceManager.getStudentID(mContext).equals(""))
                             {
-                                Log.e("Empty Img","Empty")
                                 studentName=studentListArrayList.get(0).name
                                 studentImg=studentListArrayList.get(0).photo
                                 studentId=studentListArrayList.get(0).id
@@ -198,7 +196,6 @@ class AbsenceFragment  : Fragment() {
                                 PreferenceManager.setStudentPhoto(mContext,studentImg)
                                 PreferenceManager.setStudentClass(mContext,studentClass)
                                 studentNameTxt.text=studentName
-                                Log.e("studid(0)", PreferenceManager.getStudentID(mContext).toString())
                                 if(!studentImg.equals(""))
                                 {
                                     Glide.with(mContext) //1
@@ -301,7 +298,7 @@ class AbsenceFragment  : Fragment() {
                 PreferenceManager.setStudentName(mContext,studentName)
                 PreferenceManager.setStudentPhoto(mContext,studentImg)
                 PreferenceManager.setStudentClass(mContext,studentClass)
-                Log.e("studidclick",PreferenceManager.getStudentID(mContext).toString())
+
                 studentNameTxt.text=studentName
                 studentAbsenceArrayList.clear()
                 pickupListSort.clear()
@@ -399,7 +396,7 @@ class AbsenceFragment  : Fragment() {
             ApiClient.getClient.absencelist(pickupSuccessBody, "Bearer " + token)
         call.enqueue(object : Callback<AbsenceListModel> {
             override fun onFailure(call: Call<AbsenceListModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
+
                 progressDialogAdd.visibility=View.GONE
                 //mProgressRelLayout.visibility=View.INVISIBLE
             }
@@ -407,7 +404,7 @@ class AbsenceFragment  : Fragment() {
             override fun onResponse(call: Call<AbsenceListModel>, response: Response<AbsenceListModel>) {
                 val responsedata = response.body()
                 //progressDialog.visibility = View.GONE
-                Log.e("Response Signup", responsedata.toString())
+
                 progressDialogAdd.visibility=View.GONE
                 if (responsedata != null) {
                     try {
@@ -464,7 +461,7 @@ class AbsenceFragment  : Fragment() {
             ApiClient.getClient.pickuplist(pickupSuccessBody, "Bearer " + token)
         call.enqueue(object : Callback<PickupListModel> {
             override fun onFailure(call: Call<PickupListModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
+
                 progressDialogAdd.visibility=View.GONE
                 //mProgressRelLayout.visibility=View.INVISIBLE
             }
@@ -472,7 +469,7 @@ class AbsenceFragment  : Fragment() {
             override fun onResponse(call: Call<PickupListModel>, response: Response<PickupListModel>) {
                 val responsedata = response.body()
                 //progressDialog.visibility = View.GONE
-                Log.e("Response Signup", responsedata.toString())
+
 
                 if (responsedata != null) {
                     try {

@@ -363,7 +363,6 @@ class ParentsEveningCalendarActivity:AppCompatActivity() {
         val call: Call<PtaDatesModel> = ApiClient.getClient.pta_allotted_dates(ptadatesSuccessBody,"Bearer "+token)
         call.enqueue(object : Callback<PtaDatesModel> {
             override fun onFailure(call: Call<PtaDatesModel>, t: Throwable) {
-                Log.e("Error", t.localizedMessage)
                 progressDialogAdd.visibility = View.GONE
             }
             override fun onResponse(call: Call<PtaDatesModel>, response: Response<PtaDatesModel>) {
@@ -379,13 +378,11 @@ class ParentsEveningCalendarActivity:AppCompatActivity() {
                             val inputDateStr = dates
                             val date: Date = inputFormat.parse(inputDateStr)
                             val outputDateStr: String = outputFormat.format(date)
-                            Log.e("dt", outputDateStr)
                             datesToPlot.add(i, outputDateStr)
                         }
                     for (i in 0..datesToPlot.size - 1) {
                         var days_s = datesToPlot[i]
 
-                        Log.e("days_s", days_s)
 
                         for (i in 0..nums_Array.size - 1) {
 
@@ -393,16 +390,14 @@ class ParentsEveningCalendarActivity:AppCompatActivity() {
                             var c_month = count_month!! + 1
                             var c_year = count_year
                             var c_date = c_day + "/" + c_month + "/" + c_year
-                            Log.e("c_date", c_date)
 
                             if (days_s.equals(c_date)) {
 
-                                Log.e("match", "match")
                                 dateTextView[i]!!.setBackgroundResource(R.drawable.roundred)
                                 dateTextView[i]!!.setTextColor(Color.WHITE)
 
                             } else {
-                                //Log.e("no_match","no_match")
+
 
                             }
                         }

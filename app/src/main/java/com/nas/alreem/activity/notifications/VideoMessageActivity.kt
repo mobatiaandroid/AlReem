@@ -109,7 +109,7 @@ class VideoMessageActivity : AppCompatActivity(){
         call.enqueue(object : Callback<MessageDetailModel> {
             override fun onFailure(call: Call<MessageDetailModel>, t: Throwable) {
 //                progressDialog.visibility = View.GONE
-                Log.e("Error", t.localizedMessage)
+
             }
             override fun onResponse(call: Call<MessageDetailModel>, response: Response<MessageDetailModel>) {
 //                progressDialog.visibility = View.GONE

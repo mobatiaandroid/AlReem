@@ -157,7 +157,6 @@ class StaffDetailActivity : AppCompatActivity() {
             ApiClient.getClient.staff_detail_list(staffDetailSuccessBody, "Bearer " + token)
         call.enqueue(object : Callback<ListStaffDetailModel> {
             override fun onFailure(call: Call<ListStaffDetailModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
                 progressDialogAdd.visibility=View.GONE
                 //mProgressRelLayout.visibility=View.INVISIBLE
             }
@@ -167,16 +166,13 @@ class StaffDetailActivity : AppCompatActivity() {
                 progressDialogAdd.visibility=View.GONE
                 staff_detail_rec.visibility=View.VISIBLE
                 //progressDialog.visibility = View.GONE
-                Log.e("Response Signup", responsedata.toString())
                 if (responsedata != null) {
                         if (response.body()!!.status==100) {
-                            Log.e("st",responsedata.responseArray.department_staffs.size.toString())
                             staffDetailList=responsedata.responseArray.department_staffs
                             //staffDetailList.addAll(responsedata.responseArray.department_staffs)
 
                             if(staffDetailList.size>0)
                             {
-                                Log.e("listsize",staffDetailList.size.toString())
                                 staff_detail_rec.layoutManager= LinearLayoutManager(mContext)
                                 var staff_detail_adapter= StaffDetailAdapter(mContext,staffDetailList)
                                 staff_detail_rec.adapter=staff_detail_adapter

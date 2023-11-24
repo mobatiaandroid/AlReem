@@ -103,7 +103,6 @@ class ReviewAppointmentsRecyclerViewActivity:AppCompatActivity() {
         val call: Call<PtaReviewListResponseModel> = ApiClient.getClient.ptaReviewList("Bearer "+token)
         call.enqueue(object : Callback<PtaReviewListResponseModel> {
             override fun onFailure(call: Call<PtaReviewListResponseModel>, t: Throwable) {
-                Log.e("Error", t.localizedMessage)
                 progressDialogAdd.visibility = View.GONE
             }
             override fun onResponse(call: Call<PtaReviewListResponseModel>, response: Response<PtaReviewListResponseModel>) {
@@ -184,7 +183,6 @@ class ReviewAppointmentsRecyclerViewActivity:AppCompatActivity() {
         val call: Call<PtaConfirmModel> = ApiClient.getClient.pta_confirm(ptaconfirmSuccessBody,"Bearer "+token)
         call.enqueue(object : Callback<PtaConfirmModel> {
             override fun onFailure(call: Call<PtaConfirmModel>, t: Throwable) {
-                Log.e("Error", t.localizedMessage)
                 progressDialogAdd.visibility = View.GONE
             }
             override fun onResponse(call: Call<PtaConfirmModel>, response: Response<PtaConfirmModel>) {

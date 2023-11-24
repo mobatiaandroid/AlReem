@@ -94,7 +94,6 @@ class ParentMeetingDetailActivity:AppCompatActivity() {
         val inputDateStr = dateString
         val date: Date = inputFormat.parse(inputDateStr)
         date_sel = outputFormat.format(date)
-        Log.e("dt",date_sel)
         date_header.text = date_sel
         confirm=findViewById(R.id.reviewConfirmTextView)
         cancel=findViewById(R.id.cancelTextView)
@@ -189,7 +188,6 @@ class ParentMeetingDetailActivity:AppCompatActivity() {
         val call: Call<PtaInsertModel> = ApiClient.getClient.pta_insert(ptaInsertSuccessBody,"Bearer "+token)
         call.enqueue(object : Callback<PtaInsertModel> {
             override fun onFailure(call: Call<PtaInsertModel>, t: Throwable) {
-                Log.e("Error", t.localizedMessage)
                 progressDialogAdd.visibility = View.GONE
             }
             override fun onResponse(call: Call<PtaInsertModel>, response: Response<PtaInsertModel>) {
@@ -279,13 +277,11 @@ class ParentMeetingDetailActivity:AppCompatActivity() {
         val inputDateStr = date_sel
         val date: Date = inputFormat.parse(inputDateStr)
         val outputDateStr: String = outputFormat.format(date)
-        Log.e("dt", outputDateStr)
         val timeslotBody = PtaListApiModel(studId, staff_id, outputDateStr)
         val call: Call<PtaListModel> =
             ApiClient.getClient.pta_list(timeslotBody, "Bearer " + token)
         call.enqueue(object : Callback<PtaListModel> {
             override fun onFailure(call: Call<PtaListModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
                 progressDialogAdd.visibility = View.GONE
             }
 
@@ -395,7 +391,6 @@ class ParentMeetingDetailActivity:AppCompatActivity() {
                                 val inputDateStr2 = timeSlotListPost[0].end_time
                                 val date2: Date = inputFormat2.parse(inputDateStr2)
                                 val formt_totime: String = outputFormat2.format(date2)
-                                Log.e("dt",formt_totime)
 
                                 showApiAlert(mContext,"Do you want to reserve your appointment on "+ date_sel +" , "+
                                         formt_fromtime+" - "+formt_totime,"Alert"
@@ -454,7 +449,6 @@ class ParentMeetingDetailActivity:AppCompatActivity() {
         llm.orientation = LinearLayoutManager.VERTICAL
         socialMediaList.layoutManager = llm
 
-        Log.e("tmsie",timeSlotList.size.toString())
         val socialMediaAdapter = ParentsEveningRoomListAdapter(mContext,timeSlotList)
         socialMediaList.adapter = socialMediaAdapter
         dialogDismiss.setOnClickListener { dialog.dismiss() }

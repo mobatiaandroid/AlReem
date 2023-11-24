@@ -122,7 +122,6 @@ class PrimaryComingUpActivity : AppCompatActivity(){
         val call: Call<ComingUpResponseModel> = ApiClient.getClient.primaryComingUp()
         call.enqueue(object : Callback<ComingUpResponseModel> {
             override fun onFailure(call: Call<ComingUpResponseModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
                 progressDialogAdd.visibility=View.GONE
             }
             override fun onResponse(call: Call<ComingUpResponseModel>, response: Response<ComingUpResponseModel>) {

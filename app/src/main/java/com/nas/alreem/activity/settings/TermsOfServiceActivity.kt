@@ -109,7 +109,6 @@ class TermsOfServiceActivity  : AppCompatActivity(){
         val call: Call<TermsOfServiceResponseModel> = ApiClient.getClient.termsOfService("Bearer "+PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<TermsOfServiceResponseModel> {
             override fun onFailure(call: Call<TermsOfServiceResponseModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
                 progressDialogAdd.visibility=View.GONE
             }
             override fun onResponse(call: Call<TermsOfServiceResponseModel>, response: Response<TermsOfServiceResponseModel>) {

@@ -167,7 +167,6 @@ class StaffDirectoryActivity:AppCompatActivity() {
         val call: Call<StaffCatListResponseModel> = ApiClient.getClient.staff_depatrtments("Bearer "+token)
         call.enqueue(object : Callback<StaffCatListResponseModel> {
             override fun onFailure(call: Call<StaffCatListResponseModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
                 progressDialogAdd.visibility=View.GONE
             }
             override fun onResponse(call: Call<StaffCatListResponseModel>, response: Response<StaffCatListResponseModel>) {

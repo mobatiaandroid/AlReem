@@ -152,7 +152,6 @@ class ParentsEssentialDetail : AppCompatActivity() {
                 else{
                     if(subMenuArray.get(position).filename.contains("chat.whatsapp.com"))
                         {
-                   Log.e("watsapp","watsap")
                                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(subMenuArray.get(position).filename))
 
                                 // Set the package name to explicitly open in WhatsApp
@@ -165,7 +164,6 @@ class ParentsEssentialDetail : AppCompatActivity() {
                            // }
                         }
                     else{
-                        Log.e("nowatsapp","nowatsap")
                         val intent = Intent(mContext, WebLinkActivity::class.java)
                         intent.putExtra("url",subMenuArray.get(position).filename)
                         intent.putExtra("heading",subMenuArray.get(position).submenu)
@@ -232,14 +230,12 @@ class ParentsEssentialDetail : AppCompatActivity() {
         val call: Call<SignUpResponseModel> = ApiClient.getClient.sendEmailStaff(sendMailBody, "Bearer " + PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<SignUpResponseModel> {
             override fun onFailure(call: Call<SignUpResponseModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
                 //progressDialog.visibility = View.GONE
             }
 
             override fun onResponse(call: Call<SignUpResponseModel>, response: Response<SignUpResponseModel>) {
                 val responsedata = response.body()
                 //progressDialog.visibility = View.GONE
-                Log.e("Response Signup", responsedata.toString())
                 if (responsedata != null) {
                     try {
 

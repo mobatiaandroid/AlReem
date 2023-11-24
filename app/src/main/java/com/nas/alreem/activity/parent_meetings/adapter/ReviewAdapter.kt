@@ -91,13 +91,11 @@ progressDialogAdd.visibility=View.GONE
             confirm_tv.visibility=View.GONE
         }
         var date_sel=review_list[position].date
-        Log.e("dt",date_sel.toString())
         val inputFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd")
         val outputFormat: DateFormat = SimpleDateFormat("dd MMM yyyy")
         val inputDateStr = date_sel
         val date: Date = inputFormat.parse(inputDateStr)
         var date_frmt = outputFormat.format(date)
-        Log.e("datefrmt",date_frmt.toString())
         var st_time=review_list[position].start_time
         val inputFormat2: DateFormat = SimpleDateFormat("hh:mm:ss")
         val outputFormat2: DateFormat = SimpleDateFormat("hh:mm aa")
@@ -118,7 +116,6 @@ progressDialogAdd.visibility=View.GONE
         var bookend_date_frmt = outputFormat4.format(date4)
 
         var st_date=date_frmt + " "+st_date_frmt+" - "+end_date_frmt
-        Log.e("dateline",st_date.toString())
         holder.start_date.text = st_date
         var en_date=bookend_date_frmt
         holder.end_date.text = "Confirm/Cancellation closes at "+ en_date
@@ -267,7 +264,6 @@ progressDialogAdd.visibility=View.GONE
         val call: Call<PtaReviewListResponseModel> = ApiClient.getClient.ptaReviewList("Bearer "+token)
         call.enqueue(object : Callback<PtaReviewListResponseModel> {
             override fun onFailure(call: Call<PtaReviewListResponseModel>, t: Throwable) {
-                Log.e("Error", t.localizedMessage)
                 progressDialogAdd.visibility = View.GONE
             }
             override fun onResponse(call: Call<PtaReviewListResponseModel>, response: Response<PtaReviewListResponseModel>) {
@@ -320,7 +316,6 @@ progressDialogAdd.visibility=View.GONE
         val call: Call<PtaInsertModel> = ApiClient.getClient.pta_insert(ptaInsertSuccessBody,"Bearer "+token)
         call.enqueue(object : Callback<PtaInsertModel> {
             override fun onFailure(call: Call<PtaInsertModel>, t: Throwable) {
-                Log.e("Error", t.localizedMessage)
                 progressDialogAdd.visibility = View.GONE
             }
             override fun onResponse(call: Call<PtaInsertModel>, response: Response<PtaInsertModel>) {
@@ -502,7 +497,6 @@ progressDialogAdd.visibility=View.GONE
         val call: Call<PtaConfirmModel> = ApiClient.getClient.pta_confirm(ptaconfirmSuccessBody,"Bearer "+token)
         call.enqueue(object : Callback<PtaConfirmModel> {
             override fun onFailure(call: Call<PtaConfirmModel>, t: Throwable) {
-                Log.e("Error", t.localizedMessage)
                 progressDialogAdd.visibility = View.GONE
             }
             override fun onResponse(call: Call<PtaConfirmModel>, response: Response<PtaConfirmModel>) {
