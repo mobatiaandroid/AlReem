@@ -140,7 +140,6 @@ class CCASelectionActivity : AppCompatActivity() {
             //            pos = extras.getInt("pos");
             CCADetailModelArrayList =
                 PreferenceManager.getDetailsArrayList(mContext)
-            Log.e("Array", CCADetailModelArrayList.toString())
         }
 
 
@@ -226,11 +225,9 @@ class CCASelectionActivity : AppCompatActivity() {
             //                  System.out.println("Choice1 "+CCADetailModelArrayList.get(i).getDay()+":"+CCADetailModelArrayList.get(i).getChoice1());
             //                  System.out.println("Choice2 "+CCADetailModelArrayList.get(i).getDay()+":"+CCADetailModelArrayList.get(i).getChoice2());
             //              }
-            Log.e("filled1",filled.toString())
 //            if (flag == 1) {
 //                filled = true
 //            }
-            Log.e("flag",AppController.filledFlag.toString())
 
             if(AppController.filledFlag == 1){
 //            if (filled) {
@@ -240,7 +237,6 @@ class CCASelectionActivity : AppCompatActivity() {
 
                 //Log.e("ccaedit", keyy)
 
-                Log.e("size selection", CCADetailModelArrayList!!.size.toString())
                 AppController.CCADetailModelArrayList.clear()
                 for (i in CCADetailModelArrayList!!.indices){
                     AppController.CCADetailModelArrayList.add(CCADetailModelArrayList!![i])
@@ -558,7 +554,6 @@ class CCASelectionActivity : AppCompatActivity() {
         }
 
         nextBtn!!.setOnClickListener(View.OnClickListener {
-            Log.e("filled next",filled.toString())
             weekPosition = weekPosition + 1
             if (AppController.weekListWithData!!.contains(weekPosition)) {
                 for (a in 0 until AppController.weekListWithData!!.size) {

@@ -92,7 +92,6 @@ class FormDetailActivity: AppCompatActivity()  {
         declrtn_txt="I hereby give my permission for "+student_name+ " of class "+student_class+" to participate in this event."
         declaration.text = declrtn_txt
 
-        Log.e("st1",status_txt.toString())
         logoClickImgView.setOnClickListener(View.OnClickListener {
             val intent = Intent(mContext, HomeActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -120,7 +119,6 @@ class FormDetailActivity: AppCompatActivity()  {
 
         }
         if (status_txt.equals("0")) {
-            Log.e("eqls0", status_txt.toString())
             linear_status.visibility = View.GONE
             linear_btn.visibility = View.VISIBLE
             linear_declrtn.visibility = View.VISIBLE
@@ -146,7 +144,6 @@ class FormDetailActivity: AppCompatActivity()  {
                                 }
 
                             }else{
-                                Log.e("else","true")
                                 //showSuccessmailAlert(mContext,"Please select the checkbox","Alert")
                             }
                         }
@@ -161,7 +158,6 @@ class FormDetailActivity: AppCompatActivity()  {
             }
         }
         else if (status_txt.equals("1")){
-            Log.e("eq1",status_txt.toString())
             linear_status.visibility = View.VISIBLE
             linear_btn.visibility = View.GONE
             linear_declrtn.visibility = View.GONE
@@ -170,7 +166,6 @@ class FormDetailActivity: AppCompatActivity()  {
 
         }
         else if (status_txt.equals("2")){
-            Log.e("eq1",status_txt.toString())
             linear_status.visibility = View.VISIBLE
             linear_btn.visibility = View.GONE
             linear_declrtn.visibility = View.GONE
@@ -185,7 +180,6 @@ class FormDetailActivity: AppCompatActivity()  {
                 + " " + Build.MODEL + " " + Build.VERSION.RELEASE
                 + " " + Build.VERSION_CODES::class.java.fields[Build.VERSION.SDK_INT]
             .name)
-        Log.e("DEVICE NAME", devicename)
         val token = PreferenceManager.getaccesstoken(mContext)
         val permsnresBody = PermissionResApiModel(
             slip_id,
@@ -195,12 +189,10 @@ class FormDetailActivity: AppCompatActivity()  {
             devicename,
             "1.0"
         )
-        Log.e("sttsapi",status_slip.toString())
         val call: Call<PermissionResponseModel> =
             ApiClient.getClient.permsnlistResponse(permsnresBody, "Bearer " + token)
         call.enqueue(object : Callback<PermissionResponseModel> {
             override fun onFailure(call: Call<PermissionResponseModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
                 progressDialog.visibility = View.GONE
             }
 
@@ -210,7 +202,6 @@ class FormDetailActivity: AppCompatActivity()  {
             ) {
                 val responsedata = response.body()
                 progressDialog.visibility = View.GONE
-                Log.e("Response Signup", responsedata.toString())
 
                 if (responsedata!!.status.toString().equals("100")) {
                     showSuccessAlert(mContext, "Successfully submitted ", "Success")
