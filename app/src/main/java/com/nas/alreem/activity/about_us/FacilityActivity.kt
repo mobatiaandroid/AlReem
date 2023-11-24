@@ -7,10 +7,13 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.Window
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.RelativeLayout
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -18,14 +21,18 @@ import com.nas.alreem.R
 import com.nas.alreem.activity.about_us.adapter.FacilityRecyclerAdapterNew
 import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.activity.login.model.SignUpResponseModel
-import com.nas.alreem.constants.*
+import com.nas.alreem.constants.ApiClient
+import com.nas.alreem.constants.ConstantFunctions
+import com.nas.alreem.constants.DialogFunctions
+import com.nas.alreem.constants.PDFViewerActivity
+import com.nas.alreem.constants.PreferenceManager
+import com.nas.alreem.constants.WebLinkActivity
 import com.nas.alreem.fragment.about_us.model.AboutUsDataModel
 import com.nas.alreem.fragment.about_us.model.AboutusList
 import com.nas.alreem.fragment.payments.model.SendEmailApiModel
 import com.nas.alreem.recyclermanager.DividerItemDecoration
 import com.nas.alreem.recyclermanager.ItemOffsetDecoration
 import com.nas.alreem.recyclermanager.RecyclerItemListener
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -262,7 +269,6 @@ class FacilityActivity : Activity(){
 
                 } else {
                     // progressDialog.visibility = View.VISIBLE
-
                     callSendEmailToStaffApi(text_dialog.text.toString().trim(), text_content.text.toString().trim(),
                         contactEmail!!, dialog)
                 }
