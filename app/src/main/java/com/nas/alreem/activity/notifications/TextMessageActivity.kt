@@ -93,7 +93,6 @@ class TextMessageActivity : AppCompatActivity(){
         call.enqueue(object : Callback<MessageDetailModel> {
             override fun onFailure(call: Call<MessageDetailModel>, t: Throwable) {
                 progressDialog.visibility = View.GONE
-                Log.e("Error", t.localizedMessage)
             }
             override fun onResponse(call: Call<MessageDetailModel>, response: Response<MessageDetailModel>) {
                 progressDialog.visibility = View.GONE
@@ -156,7 +155,6 @@ class TextMessageActivity : AppCompatActivity(){
                     }
                     pushNotificationDetail=pushNotificationDetail+"</body>\n</html>"
                     var htmlData=pushNotificationDetail
-                    Log.e("HTML DATA",htmlData)
                         //  webView.loadData(htmlData,"text/html; charset=utf-8","utf-8")
                         webView.loadDataWithBaseURL("file:///android_asset/fonts/",htmlData,"text/html; charset=utf-8", "utf-8", "about:blank")
 
