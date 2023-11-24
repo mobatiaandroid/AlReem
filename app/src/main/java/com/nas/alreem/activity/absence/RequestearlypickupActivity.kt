@@ -144,7 +144,6 @@ class RequestearlypickupActivity:AppCompatActivity() {
 
                         DialogFunctions.commonErrorAlertDialog("Alert","Please select your Pickup Time",mContext)
                     }else{
-                        Log.e("error",pickupName.text.toString())
                         if (pickupName.text.isEmpty()){
                             DialogFunctions.commonErrorAlertDialog("Alert","Please enter pickup person name",mContext)
 
@@ -160,10 +159,7 @@ class RequestearlypickupActivity:AppCompatActivity() {
                                 var time=totime
                                 var pickupname_entered=pickupName.text
                                 var reason_entered=enterMessage.text
-                                Log.e("date",date_entered.toString())
-                                Log.e("time",time.toString())
-                                Log.e("pickup",pickupname_entered.toString())
-                                Log.e("reason",reason_entered.toString())
+
                                 /*callPickupSubmitApi(date,time.toString(),pickupname_entered.toString(),
                                     reason_entered.toString()
                                 )*/
@@ -211,11 +207,11 @@ class RequestearlypickupActivity:AppCompatActivity() {
                                 hour_n="0"+hour.toString()
 
                             }
-                            Log.e("nhour",hour_n.toString())
+
                             new_time=hour_n + ":" + min + ":" + "00"
-                            Log.e("ntime",new_time.toString())
+
                             if(hour ==0) {
-                                Log.e("h","0")
+
                                 hour = 12
                                 AM_PM="AM"
                             } else if(hour<12){
@@ -226,7 +222,7 @@ class RequestearlypickupActivity:AppCompatActivity() {
                                 hour -= 12
                                 AM_PM = "PM"
                             } else if (hour == 12) {
-                                Log.e("h","12")
+
                                 hour = 12
                                 AM_PM = "PM"
                             } else
@@ -271,7 +267,6 @@ class RequestearlypickupActivity:AppCompatActivity() {
                     val inputDateStr = date_temp
                     val date: Date = inputFormat.parse(inputDateStr)
                     val outputDateStr: String = outputFormat.format(date)
-                    Log.e("dt", outputDateStr)
                     toDate = date_sel.toString()
                     enterStratDate.text = outputDateStr
 
@@ -304,14 +299,14 @@ class RequestearlypickupActivity:AppCompatActivity() {
             ApiClient.getClient.pickupRequest(pickupSuccessBody, "Bearer " + token)
         call.enqueue(object : Callback<EarlyPickupModel> {
             override fun onFailure(call: Call<EarlyPickupModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
+
                 //mProgressRelLayout.visibility=View.INVISIBLE
             }
 
             override fun onResponse(call: Call<EarlyPickupModel>, response: Response<EarlyPickupModel>) {
                 val responsedata = response.body()
                 //progressDialog.visibility = View.GONE
-                Log.e("Response Signup", responsedata.toString())
+
                 if (responsedata != null) {
                     try {
 
@@ -345,7 +340,6 @@ class RequestearlypickupActivity:AppCompatActivity() {
         val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+ PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<StudentListModel> {
             override fun onFailure(call: Call<StudentListModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
                 progressDialogAdd.visibility=View.GONE
             }
             override fun onResponse(call: Call<StudentListModel>, response: Response<StudentListModel>) {
@@ -360,7 +354,6 @@ class RequestearlypickupActivity:AppCompatActivity() {
                             studentListArrayList.addAll(response.body()!!.responseArray.studentList)
                             if (PreferenceManager.getStudentID(mContext).equals(""))
                             {
-                                Log.e("Empty Img","Empty")
                                 studentName=studentListArrayList.get(0).name
                                 studentImg=studentListArrayList.get(0).photo
                                 studentId=studentListArrayList.get(0).id
@@ -370,7 +363,6 @@ class RequestearlypickupActivity:AppCompatActivity() {
                                 PreferenceManager.setStudentPhoto(mContext,studentImg)
                                 PreferenceManager.setStudentClass(mContext,studentClass)
                                 studentNameTxt.text=studentName
-                                Log.e("studid(0)", PreferenceManager.getStudentID(mContext).toString())
                                 if(!studentImg.equals(""))
                                 {
                                     Glide.with(mContext) //1
@@ -473,7 +465,6 @@ class RequestearlypickupActivity:AppCompatActivity() {
                 PreferenceManager.setStudentName(mContext,studentName)
                 PreferenceManager.setStudentPhoto(mContext,studentImg)
                 PreferenceManager.setStudentClass(mContext,studentClass)
-                Log.e("studidclick", PreferenceManager.getStudentID(mContext).toString())
                 studentNameTxt.text=studentName
                 if(!studentImg.equals(""))
                 {

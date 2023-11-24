@@ -104,7 +104,6 @@ class CCAfinalReviewAfterSubmissionAdapter(
             }
         }
         holder.readMore.setOnClickListener {
-            Log.e("click1","Click1")
             ConstantFunctions.showDialogueWithOk(
                 mContext,
                 mCCADetailModelArrayList[position].cca_item_description_2!!,
@@ -119,7 +118,6 @@ class CCAfinalReviewAfterSubmissionAdapter(
             )
         }
         holder.readMore1.setOnClickListener {
-            Log.e("click1","Click1")
             ConstantFunctions.showDialogueWithOk(
                 mContext,
                 mCCADetailModelArrayList[position].cca_item_description!!,
@@ -434,7 +432,6 @@ class CCAfinalReviewAfterSubmissionAdapter(
     }
 
     override fun getItemCount(): Int {
-        Log.e("size edit", mCCADetailModelArrayList.size.toString())
         return mCCADetailModelArrayList.size
     }
 
@@ -502,10 +499,7 @@ class CCAfinalReviewAfterSubmissionAdapter(
             val llmrecycler_view_social_mediaChoice2 = LinearLayoutManager(mContext)
             llmrecycler_view_social_mediaChoice2.orientation = LinearLayoutManager.VERTICAL
             recycler_view_social_mediaChoice2.layoutManager = llmrecycler_view_social_mediaChoice2
-            Log.e(
-                "mCCACAcaldar",
-                java.lang.String.valueOf(mCCADetailModelArrayList[mPosition].cca_details_id)
-            )
+
             val socialMediaAdapterChoice2 = CCAAttendenceListAdapter(
                 mContext,
                 mCCADetailModelArrayList[mPosition].calendarDaysChoice2!!

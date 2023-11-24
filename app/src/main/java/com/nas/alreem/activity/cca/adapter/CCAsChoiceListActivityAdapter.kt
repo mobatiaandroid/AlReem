@@ -113,8 +113,7 @@ class CCAsChoiceListActivityAdapter :
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.confirmationImageview.visibility = View.VISIBLE
-        Log.e("detailid", mCCAmodelArrayList!![position].cca_details_id.toString())
-        Log.e("detaild1", PreferenceManager.getdetailvalue(mContext).toString())
+
 
 
         if (mCCAmodelArrayList[position].venue != null) {
@@ -135,7 +134,6 @@ class CCAsChoiceListActivityAdapter :
 //
 //        System.out.println("DESC TEST"+mCCAmodelArrayList.get(position).getDescription());
 //
-        Log.e("descptn",mCCAmodelArrayList[position].description.toString())
         if (mCCAmodelArrayList[position].description != null) {
             if (mCCAmodelArrayList[position].description
                     .equals("0") || mCCAmodelArrayList[position].description
@@ -175,14 +173,11 @@ class CCAsChoiceListActivityAdapter :
 
         if (mCCAmodelArrayList[position].slot_remaining_count==0) {
 
-            Log.e("Slot Zero","True")
             if (mCCAmodelArrayList[position].attending_status.equals("1"))
             {
 
-                Log.e("Attending Status","1111")
                 if(mCCAmodelArrayList[position].status.equals("1"))
                 {
-                    Log.e("status pos","TrueQQQq")
                     AppController.keyy="1"
                     holder.confirmationImageview.setBackgroundResource(R.drawable.participatingsmallicon_new)
                     holder.listTxtView.setTextColor(mContext.resources.getColor(R.color.black))
@@ -192,14 +187,13 @@ class CCAsChoiceListActivityAdapter :
                     ccaDetailModelArrayList!![ccaDetailpos].choiceitem1Id=(mCCAmodelArrayList[position].cca_item_id)
                 }
                 else{
-                    Log.e("status pos","FalseQQQq")
                     holder.confirmationImageview.setBackgroundResource(R.drawable.close_icon_with_white)
                     holder.listTxtView.setTextColor(mContext.resources.getColor(R.color.black))
                 }
             }
             else{
                 // AppController.keyy="0"
-                Log.e("Attending Status","0000")
+
                 holder.listTxtView.alpha = 0.5f
                 holder.confirmationImageview.setImageResource(R.drawable.disablecrossicon)
                 holder.listTxtView.setTextColor(mContext.resources.getColor(R.color.grey))

@@ -75,14 +75,12 @@ class InformationActivity : AppCompatActivity() {
         val call: Call<InfoCanteenModel> = ApiClient.getClient.getCanteenInformation("Bearer "+token)
         call.enqueue(object : Callback<InfoCanteenModel> {
             override fun onFailure(call: Call<InfoCanteenModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
                 progress.visibility = View.GONE
 
             }
             override fun onResponse(call: Call<InfoCanteenModel>, response: Response<InfoCanteenModel>) {
                 progress.visibility = View.GONE
                 val responsedata = response.body()
-                Log.e("Response", responsedata.toString())
                 if (responsedata!!.status==100) {
 
                     if(response.body()!!.responseArray.information.size>0)

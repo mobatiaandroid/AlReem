@@ -363,28 +363,12 @@ class CCAsActivityAdapter : RecyclerView.Adapter<CCAsActivityAdapter.MyViewHolde
                                             if (mCCAchoiceModel1!![pos].slot_remaining_count!!>0) {
 
 
-                                                Log.e("Condition work","Slot greatrer")
 
                                                 mCCAchoiceModel1!![i].status=("1")
                                                 selectedChoice1 = mCCAchoiceModel1!![i].cca_item_name!!
-                                                Log.e("pos",mCCAchoiceModel1!![i].cca_details_id!!)
                                                 PreferenceManager.setdetailvalue(mContext,mCCAchoiceModel1!![i].cca_details_id!!)
-                                                System.out.println("Choicere1:" + mCCAchoiceModel1!![i].cca_item_name)
 
-// if (mCCAchoiceModel1!![pos].cca_details_id.equals(mCCAchoiceModel1!![i].cca_details_id!!)) {
-//
-// Log.e("WORK","TRUE POS")
-// }
-// else
-// {
-// Log.e("Work","False POP")
-// mCCAchoiceModel1!![i].status=("1")
-// selectedChoice1 = mCCAchoiceModel1!![i].cca_item_name!!
-// Log.e("pos",mCCAchoiceModel1!![i].cca_details_id!!)
-// PreferenceManager.setdetailvalue(mContext,mCCAchoiceModel1!![i].cca_details_id!!)
-// System.out.println("Choicere1:" + mCCAchoiceModel1!![i].cca_item_name)
-//
-// }
+
                                             }
                                             else
                                             {
@@ -392,7 +376,6 @@ class CCAsActivityAdapter : RecyclerView.Adapter<CCAsActivityAdapter.MyViewHolde
                                                 {
                                                     mCCAchoiceModel1!![i].status=("1")
                                                     selectedChoice1 = mCCAchoiceModel1!![i].cca_item_name!!
-                                                    Log.e("pos",mCCAchoiceModel1!![i].cca_details_id!!)
                                                     PreferenceManager.setdetailvalue(mContext,mCCAchoiceModel1!![i].cca_details_id!!)
                                                     System.out.println("Choicere1:" + mCCAchoiceModel1!![i].cca_item_name)
                                                 }
