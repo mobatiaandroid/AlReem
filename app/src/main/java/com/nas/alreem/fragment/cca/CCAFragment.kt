@@ -177,14 +177,12 @@ import retrofit2.Response
         val call: Call<SignUpResponseModel> = ApiClient.getClient.sendEmailStaff(sendMailBody, "Bearer " + PreferenceManager.getaccesstoken(mContext!!))
         call.enqueue(object : Callback<SignUpResponseModel> {
             override fun onFailure(call: Call<SignUpResponseModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
                 //progressDialog.visibility = View.GONE
             }
 
             override fun onResponse(call: Call<SignUpResponseModel>, response: Response<SignUpResponseModel>) {
                 val responsedata = response.body()
                 //progressDialog.visibility = View.GONE
-                Log.e("Response Signup", responsedata.toString())
                 if (responsedata != null) {
                     try {
 
@@ -350,7 +348,6 @@ import retrofit2.Response
 
       override fun onResume() {
           super.onResume()
-          Log.e("TEST","call 1")
           if (ConstantFunctions.internetCheck(mContext!!))
           {
               getList()

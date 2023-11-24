@@ -61,7 +61,7 @@ class CalendarListAdapter(
         holder.eventsListView.layoutManager = linearLayoutManager
         holder.title.text = movie.date
         holder.header.setBackgroundColor(colorValue)
-        Log.e("ADAPTER SIZE", parentsEssentialArrayList.get(position).details.size.toString())
+
         val calendarAdapter = CalendarDetailListAdapter(
             mContext, parentsEssentialArrayList.get(
                 position
@@ -74,7 +74,7 @@ class CalendarListAdapter(
                         mPosition
                     ).details.get(position).status.equals("2")
                 ) {
-                    Log.e("WORKING", "111111")
+
                     parentsEssentialArrayList.get(mPosition).details.get(position).status = "1"
                     PreferenceManager.setCalendarBadge(mContext, 0)
                     PreferenceManager.setCalendarEditedBadge(mContext, 0)
@@ -202,7 +202,7 @@ class CalendarListAdapter(
             var min1 = -1
             var allDay: String? = "0"
             year = mCalendarEventModels[eventPosition].yearDate.toInt()
-            Log.e("MONTH" ,mCalendarEventModels[eventPosition].monthDate)
+
             month = getMonthDetails(mContext, mCalendarEventModels[eventPosition].monthDate)
             day = mCalendarEventModels[eventPosition].dayDate.toInt()
             if (mCalendarEventModels[eventPosition].starttime.equals("")) {
@@ -214,7 +214,7 @@ class CalendarListAdapter(
                 val dateStart = format1.parse(mCalendarEventModels[eventPosition].starttime)
                 val startTime = format2.format(dateStart)
                 timeString = startTime.split(":").toTypedArray()
-                Log.e("From Time",startTime)
+
                 hour = timeString[0].toInt()
                 min = timeString[1].toInt()
             }
@@ -229,7 +229,7 @@ class CalendarListAdapter(
                 val dateStart = format1.parse(mCalendarEventModels[eventPosition].endtime)
                 val startTime = format2.format(dateStart)
                 timeString1 = startTime.split(":").toTypedArray()
-                Log.e("From Time",startTime)
+
                 hour = timeString1[0].toInt()
                 min = timeString1[1].toInt()
 //                timeString1 = mCalendarEventModels[eventPosition].endtime.split(":").toTypedArray()
@@ -240,7 +240,7 @@ class CalendarListAdapter(
             var addToCalendar = true
             val prefData: List<String> = PreferenceManager
                 .getCalendarEventNames(mContext)!!.split(",")
-            Log.e("pref", prefData.toString())
+
             for (i in prefData.indices) {
                 if (prefData[i].equals(
                         mCalendarEventModels[eventPosition].title + mCalendarEventModels[eventPosition].title,
@@ -253,26 +253,26 @@ class CalendarListAdapter(
             }
             println("addToCalendar---$addToCalendar")
             if (addToCalendar) {
-                Log.e("Values", year.toString()+" M "+month.toString()+" D "+day.toString()+ " H "+hour.toString()+" MIN "+min.toString())
+
                 if (year != -1 && month != -1 && day != -1 && hour != -1 && min != -1) {
-                    Log.e("It Enters","First Condition")
+
                     if (hour1 == -1 && min1 == -1) {
-                        Log.e("It Enters","Second Condition")
+
                         addReminder(year, month, day, hour, min, year, month, day,hour, min,
                             mCalendarEventModels[eventPosition].title, mCalendarEventModels[eventPosition].title, 0,
                             eventPosition, allDay, mCalendarEventModels)
                     }
                     else {
-                        Log.e("It Enters","Third Condition")
+
                         addReminder(year, month, day, hour, min, year, month, day, hour1, min1,
                             mCalendarEventModels[eventPosition].title, mCalendarEventModels[eventPosition].title, 0,
                             eventPosition, allDay, mCalendarEventModels)
 
                     }
-                    Log.e("It Enters","Fourth Condition")
+
                 }
                 else {
-                    Log.e("It Enters","Fifth Condition")
+
                     Toast.makeText(
                         mContext,
                         "Not enough details to add to calendar",

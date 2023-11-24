@@ -138,7 +138,6 @@ class ContactUsFragment  : Fragment(), LocationListener,
 
                     location =
                         locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)!!
-                    Log.e("loc", location.toString())
                     if (location != null) {
                         lat = location.latitude
                         long = location.longitude
@@ -158,7 +157,6 @@ class ContactUsFragment  : Fragment(), LocationListener,
                     long = location.longitude
                     println("lat---$lat")
                     println("lat---$long")
-                    Log.e("CONTACTLATITUDE:", (lat + long).toString())
                 }
             }
         }
@@ -226,7 +224,6 @@ class ContactUsFragment  : Fragment(), LocationListener,
         val call: Call<ContactUsResponseModel> = ApiClient.getClient.contactUs()
         call.enqueue(object : Callback<ContactUsResponseModel> {
             override fun onFailure(call: Call<ContactUsResponseModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
                 progressDialogAdd.visibility=View.GONE
             }
             override fun onResponse(call: Call<ContactUsResponseModel>, response: Response<ContactUsResponseModel>) {

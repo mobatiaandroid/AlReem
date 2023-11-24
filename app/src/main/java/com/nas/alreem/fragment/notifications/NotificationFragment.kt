@@ -110,7 +110,6 @@ class NotificationFragment : Fragment() {
         val call: Call<NotificationResponseModel> = ApiClient.getClient.notificationList(model,token)
         call.enqueue(object : Callback<NotificationResponseModel> {
             override fun onFailure(call: Call<NotificationResponseModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
                 progressDialogAdd.visibility=View.GONE
             }
             override fun onResponse(call: Call<NotificationResponseModel>, response: Response<NotificationResponseModel>) {
