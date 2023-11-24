@@ -377,7 +377,6 @@ class CCAsActivityAdapter : RecyclerView.Adapter<CCAsActivityAdapter.MyViewHolde
                                                     mCCAchoiceModel1!![i].status=("1")
                                                     selectedChoice1 = mCCAchoiceModel1!![i].cca_item_name!!
                                                     PreferenceManager.setdetailvalue(mContext,mCCAchoiceModel1!![i].cca_details_id!!)
-                                                    System.out.println("Choicere1:" + mCCAchoiceModel1!![i].cca_item_name)
                                                 }
                                                 else{
                                                     Toast.makeText(mContext, "Activity fully Booked", Toast.LENGTH_SHORT).show()
@@ -418,7 +417,6 @@ class CCAsActivityAdapter : RecyclerView.Adapter<CCAsActivityAdapter.MyViewHolde
                                     } else {
                                         mCCAchoiceModel1!![i].status=("0")
                                         mCCAchoiceModel1!![i].disableCccaiem=(false)
-                                        System.out.println("Choicere1 Else:" + mCCAchoiceModel1!![i].cca_item_name)
                                         if (mCCAchoiceModel1 != null) {
                                             for (j in mCCAchoiceModel1!!.indices) {
                                                 if (mCCAchoiceModel1!![j].cca_item_name
@@ -446,7 +444,6 @@ class CCAsActivityAdapter : RecyclerView.Adapter<CCAsActivityAdapter.MyViewHolde
                                         }
                                     }
                                 }
-                                System.out.println("choicere1 text" + mCCAchoiceModel1!![pos].cca_item_name)
                                 mCCAsActivityAdapter1 = CCAsChoiceListActivityAdapter(
                                     mContext,
                                     mCCAchoiceModel1!!,

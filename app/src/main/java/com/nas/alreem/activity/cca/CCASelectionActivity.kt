@@ -243,7 +243,6 @@ class CCASelectionActivity : AppCompatActivity() {
                 }
                 //  intent.putExtra("ccaedit", ccaedit)
                 intent.putExtra("detail_array", CCADetailModelArrayList)
-                System.out.print("detailArray"+CCADetailModelArrayList)
                 startActivity(mInent)
             } else {
                 ConstantFunctions.showDialogueWithOk(mContext,"Select choice for all available days","Alert")

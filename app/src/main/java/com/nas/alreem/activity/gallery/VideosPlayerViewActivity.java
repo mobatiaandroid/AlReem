@@ -66,9 +66,7 @@ public class VideosPlayerViewActivity extends Activity {
         activity = this;
 
         if (CheckPermissions()) {
-            System.out.println("PERMISSION GRANTED");
         } else {
-            System.out.println("REQUEST PERMISSION");
 
             RequestPermissions();
         }

@@ -303,7 +303,6 @@ class CalendarFragment : Fragment() {
                     if (tempArrayList.size > 0) {
                         for (k in tempArrayList.indices) {
                             for (position in 0 until tempArrayList[k].details.size) {
-                                System.out.println("temparrayList size=" + tempArrayList[k].details.size)
                                 var year = -1
                                 var month = -1
                                 var day = -1
@@ -390,11 +389,7 @@ class CalendarFragment : Fragment() {
                     } else if (calendarDetailArrayListUse.size > 0) {
                         for (k in calendarDetailArrayListUse.indices) {
                             for (position in 0 until calendarDetailArrayListUse.get(k).details.size) {
-                                System.out.println(
-                                    "temparrayList size=" + calendarDetailArrayListUse.get(
-                                        k
-                                    ).details.size
-                                )
+
                                 var year = -1
                                 var month = -1
                                 var day = -1

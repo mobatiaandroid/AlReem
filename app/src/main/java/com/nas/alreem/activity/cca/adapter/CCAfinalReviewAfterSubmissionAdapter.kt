@@ -154,7 +154,6 @@ class CCAfinalReviewAfterSubmissionAdapter(
                 holder.locationTxt.visibility = View.VISIBLE
                 holder.locationTxt.text = "Location           : " + mCCADetailModelArrayList[position].venue
             }
-            System.out.println("DESC EDIT" + mCCADetailModelArrayList[position].cca_item_description)
             if (mCCADetailModelArrayList[position].cca_item_description
                     .equals("0") || mCCADetailModelArrayList[position].cca_item_description
                     .equals("")

@@ -130,10 +130,7 @@ class AboutUsFragment  : Fragment() {
                 mIntent.putExtra("title", aboutUsArrayList.get(position).tab_type)
                 mIntent.putExtra("banner_image", aboutUsArrayList.get(position).banner_image)
                 mContext.startActivity(mIntent)
-                System.out.println(
-                    "faci array--" + aboutUsArrayList.get(position).items
-                        .size
-                )
+
             } else if (aboutUsArrayList.get(position).tab_type
                     .equals("Accreditations & Examinations")
             ) {

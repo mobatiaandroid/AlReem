@@ -56,7 +56,6 @@ public class PaymentReceiptActivity extends Activity {
             String invoicenote="This payment was done by "+paid_by+" for "+ student_name+" via NAS ABU DHABI Mobile App";
             //fullHtml = fullHtml.replace("###amount###", current_amount);
             Date c = Calendar.getInstance().getTime();
-            System.out.println("Current time => " + c);
 
             SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
             String formattedDate = df.format(c);
