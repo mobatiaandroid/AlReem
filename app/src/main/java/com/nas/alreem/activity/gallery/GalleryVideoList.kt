@@ -93,7 +93,6 @@ class GalleryVideoList : AppCompatActivity(){
         call.enqueue(object : Callback<VideoResponseModel> {
             override fun onFailure(call: Call<VideoResponseModel>, t: Throwable) {
                 progress.visibility = View.GONE
-                Log.e("Failed", t.localizedMessage)
 
             }
             override fun onResponse(call: Call<VideoResponseModel>, response: Response<VideoResponseModel>) {

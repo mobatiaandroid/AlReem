@@ -100,7 +100,6 @@ class GalleryImageListActivity : AppCompatActivity(){
         call.enqueue(object : Callback<AlbumResponseModel> {
             override fun onFailure(call: Call<AlbumResponseModel>, t: Throwable) {
                 progress.visibility = View.GONE
-                Log.e("Failed", t.localizedMessage)
 
             }
             override fun onResponse(call: Call<AlbumResponseModel>, response: Response<AlbumResponseModel>) {
