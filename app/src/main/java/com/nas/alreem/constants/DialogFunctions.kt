@@ -5,12 +5,16 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.Window
 import android.view.inputmethod.EditorInfo
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.ProgressBar
+import android.widget.TextView
+import android.widget.Toast
 import com.nas.alreem.R
 import com.nas.alreem.activity.login.LoginActivity
 import com.nas.alreem.activity.login.model.ForgetPasswordResponseModel
@@ -344,6 +348,13 @@ class DialogFunctions {
             var text_currentnewpassword = dialog.findViewById(R.id.text_currentnewpassword) as EditText
             var text_confirmpassword = dialog.findViewById(R.id.text_confirmpassword) as EditText
             var progressDialogAdd = dialog.findViewById(R.id.progressDialogAdd) as ProgressBar
+            val PASSWORD_PATTERN = "^" +
+                    "(?=.*[@#$%^&+=])" +  // at least 1 special character
+                    "(?=\\S+$)" +  // no white spaces
+                    ".{8,}" +  // at least 8 characters
+                    "$"
+            var PASSWORD_PATTERN3="^" +
+                    ".{8,}"
             text_currentpassword.setOnTouchListener(object : View.OnTouchListener {
                 override fun onTouch(v: View, m: MotionEvent): Boolean {
                     // Perform tasks here
@@ -391,9 +402,13 @@ class DialogFunctions {
                        }
                        else
                        {
-                           if (text_currentnewpassword.text.toString().trim().equals(text_confirmpassword.text.toString().trim()))
-                           {
-                               // callChangePasswordApi()
+
+                           if (text_currentnewpassword.getText().toString().trim { it <= ' ' }
+                                   .matches(PASSWORD_PATTERN.toRegex()) && text_confirmpassword.getText()
+                                   .toString().trim { it <= ' ' }
+                                   .matches(PASSWORD_PATTERN.toRegex())
+                           ) {
+
                                if (ConstantFunctions.internetCheck(context))
                                {
                                    progressDialogAdd.visibility= View.VISIBLE
@@ -404,13 +419,68 @@ class DialogFunctions {
                                {
                                    showInternetAlertDialog(context)
                                }
+
+                           } else {
+                               if (!text_currentnewpassword.getText().toString().onlyLetters()&&
+                                   !text_confirmpassword.getText()
+                                       .toString().onlyLetters())
+                               {
+
+                                   if (!text_currentnewpassword.text.toString()
+                                           .contains(" ") &&
+                                       !text_confirmpassword.getText()
+                                           .toString()
+                                           .contains(" "))
+                                   {
+
+                                       if (text_currentnewpassword.text.toString().trim()
+                                               .matches(PASSWORD_PATTERN3.toRegex()) &&
+                                           text_confirmpassword.getText()
+                                               .toString().trim { it <= ' ' }
+                                               .matches(PASSWORD_PATTERN3.toRegex())){
+
+                                       }else{
+                                           Toast.makeText(context, "Password must contain atleast 8 characters", Toast.LENGTH_SHORT).show()
+
+                                       }
+
+                                   }else{
+                                       Toast.makeText(context, "Password must not contain white spaces", Toast.LENGTH_SHORT).show()
+
+                                   }
+
+                               }else{
+                                   Toast.makeText(context, "Password must contain atleast 1 special character", Toast.LENGTH_SHORT).show()
+
+                               }
+                           }
+                          /* if (text_currentnewpassword.text.toString().trim().equals(text_confirmpassword.text.toString().trim()))
+                           {
+                               // callChangePasswordApi()
+                               if (text_currentnewpassword.getText().toString().trim ()
+                                       .matches(PASSWORD_PATTERN.toRegex()) && text_confirmpassword.getText()
+                                       .toString().trim { it <= ' ' }
+                                       .matches(PASSWORD_PATTERN.toRegex())
+                               ) {
+                                   if (ConstantFunctions.internetCheck(context))
+                                   {
+                                       progressDialogAdd.visibility= View.VISIBLE
+                                       changePassword(text_currentpassword.text.toString().trim(),text_currentnewpassword.text.toString().trim(),text_confirmpassword.text.toString().trim(),progressDialogAdd,context,dialog)
+
+                                   }
+                                   else
+                                   {
+                                       showInternetAlertDialog(context)
+                                   }
+                               }
+
                            }
                            else
                            {
                                // New Password and Confirm Password Doesn't match
                                commonErrorAlertDialog(context.resources.getString(R.string.alert),context.resources.getString(R.string.password_not_match),context)
 
-                           }
+                           }*/
                        }
                    }
                }
@@ -423,6 +493,7 @@ class DialogFunctions {
             }
             dialog.show()
         }
+        fun String.onlyLetters() = all { it.isLetter() }
 
         fun deleteAccountDialog(context: Context)
         {

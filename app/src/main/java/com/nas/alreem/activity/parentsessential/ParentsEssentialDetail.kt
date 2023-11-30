@@ -49,7 +49,9 @@ class ParentsEssentialDetail : AppCompatActivity() {
     lateinit var description:String
     lateinit var tab_name:String
     lateinit var subMenuArray:ArrayList<ParentsEssentialSubMenuModel>
-
+    private val EMAIL_PATTERN =
+        "^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$"
+    private val pattern = "^([a-zA-Z ]*)$"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_parents_essential_detail)
@@ -196,28 +198,64 @@ class ParentsEssentialDetail : AppCompatActivity() {
         })
 
         btn_submit.setOnClickListener {
+
             if (text_dialog.text.toString().trim().equals("")) {
-                DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), resources.getString(R.string.enter_subject), mContext)
+                DialogFunctions.commonErrorAlertDialog(
+                    mContext.resources.getString(R.string.alert), resources.getString(R.string.enter_subject),
+                    mContext
+                )
 
 
             } else {
                 if (text_content.text.toString().trim().equals("")) {
-                    DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), resources.getString(R.string.enter_content), mContext)
+                    DialogFunctions.commonErrorAlertDialog(
+                        mContext.resources.getString(R.string.alert), resources.getString(R.string.enter_content),
+                        mContext
+                    )
 
+                } else if (contact_email.matches(EMAIL_PATTERN.toRegex())) {
+                    if (text_dialog.text.toString().trim ().matches(pattern.toRegex())) {
+                        if (text_content.text.toString().trim ()
+                                .matches(pattern.toRegex())) {
+
+                            if (ConstantFunctions.internetCheck(mContext))
+                            {
+                                sendEmail(text_dialog.text.toString().trim(), text_content.text.toString().trim(), contact_email, dialog)
+
+                            }
+                            else
+                            {
+                                DialogFunctions.showInternetAlertDialog(mContext)
+                            }
+
+                        } else {
+                            val toast: Toast = Toast.makeText(mContext, mContext.getResources().getString(R.string.enter_valid_contents), Toast.LENGTH_SHORT)
+                            toast.show()
+                        }
+                    } else {
+                        val toast: Toast = Toast.makeText(
+                            mContext,
+                            mContext.getResources()
+                                .getString(
+                                    R.string.enter_valid_subjects
+                                ),
+                            Toast.LENGTH_SHORT
+                        )
+                        toast.show()
+                    }
                 } else {
-                    // progressDialog.visibility = View.VISIBLE
-
-                    if (ConstantFunctions.internetCheck(mContext))
-                    {
-                        sendEmail(text_dialog.text.toString().trim(), text_content.text.toString().trim(), contact_email, dialog)
-                    }
-                    else
-                    {
-                        DialogFunctions.showInternetAlertDialog(mContext)
-                    }
-
+                    val toast: Toast = Toast.makeText(
+                        mContext,
+                        mContext.getResources()
+                            .getString(
+                                R.string.enter_valid_email
+                            ),
+                        Toast.LENGTH_SHORT
+                    )
+                    toast.show()
                 }
             }
+
         }
         dialog.show()
     }

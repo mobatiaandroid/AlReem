@@ -37,6 +37,9 @@ import retrofit2.Response
 internal class StaffDetailAdapter  (var mContext: Context, var staff_cat_list: ArrayList<DepartmentStaffsModel>) :
     RecyclerView.Adapter<StaffDetailAdapter.MyViewHolder>() {
     var staff_email:String=""
+    private val EMAIL_PATTERN =
+        "^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$"
+    private val pattern = "^([a-zA-Z ]*)$"
     internal inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         //var departmentName = view.findViewById(R.id.departmentName) as android.widget.TextView?
@@ -123,8 +126,8 @@ internal class StaffDetailAdapter  (var mContext: Context, var staff_cat_list: A
         })
 
         btn_submit.setOnClickListener {
-            if (text_dialog.text.toString().trim().equals("")) {
 
+            if (text_dialog.text.toString().trim().equals("")) {
                 DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert),  mContext.getString(R.string.enter_subject), mContext)
 
 
@@ -132,12 +135,50 @@ internal class StaffDetailAdapter  (var mContext: Context, var staff_cat_list: A
                 if (text_content.text.toString().trim().equals("")) {
                     DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), mContext.getString(R.string.enter_content), mContext)
 
-                } else {
-                    // progressDialog.visibility = View.VISIBLE
+                } else if (staff_email.matches(EMAIL_PATTERN.toRegex())) {
+                    if (text_dialog.text.toString().trim ().matches(pattern.toRegex())) {
+                        if (text_content.text.toString().trim ()
+                                .matches(pattern.toRegex())) {
 
-                    sendEmail(text_dialog.text.toString().trim(), text_content.text.toString().trim(), staff_email, dialog)
+                            if (ConstantFunctions.internetCheck(mContext))
+                            {
+                                sendEmail(text_dialog.text.toString().trim(), text_content.text.toString().trim(), staff_email, dialog)
+
+                            }
+                            else
+                            {
+                                DialogFunctions.showInternetAlertDialog(mContext)
+                            }
+
+                        } else {
+                            val toast: Toast = Toast.makeText(mContext, mContext.getResources().getString(R.string.enter_valid_contents), Toast.LENGTH_SHORT)
+                            toast.show()
+                        }
+                    } else {
+                        val toast: Toast = Toast.makeText(
+                            mContext,
+                            mContext.getResources()
+                                .getString(
+                                    R.string.enter_valid_subjects
+                                ),
+                            Toast.LENGTH_SHORT
+                        )
+                        toast.show()
+                    }
+                } else {
+                    val toast: Toast = Toast.makeText(
+                        mContext,
+                        mContext.getResources()
+                            .getString(
+                                R.string.enter_valid_email
+                            ),
+                        Toast.LENGTH_SHORT
+                    )
+                    toast.show()
                 }
             }
+
+
         }
         dialog.show()
     }

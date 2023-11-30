@@ -114,6 +114,7 @@
         android:layout_centerHorizontal="true"
         android:textColor="@color/white"
         android:background="@drawable/buttonred_new"
+        android:filterTouchesWhenObscured="true"
         android:gravity="center"
         android:textSize="16sp"
         android:layout_marginTop="5dp"

@@ -12,7 +12,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 33
         versionCode 15
-        versionName "2.5"
+        versionName "2.4"
         multiDexEnabled true
         generatedDensities = []
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -35,7 +35,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -91,6 +91,7 @@ dependencies {
     implementation 'com.github.network-international.payment-sdk-android:payment-sdk-core:3.0.1'
     implementation 'com.cepheuen.elegant-number-button:lib:1.0.2'
     implementation 'com.github.siyamed:android-shape-imageview:0.9.+@aar'
+    implementation 'com.scottyab:rootbeer-lib:0.1.0'
 
 // For card payment
     implementation 'com.github.network-international.payment-sdk-android:payment-sdk:3.0.1'
