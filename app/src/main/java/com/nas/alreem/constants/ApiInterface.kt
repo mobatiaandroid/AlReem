@@ -86,6 +86,8 @@ import com.nas.alreem.fragment.primary.model.PrimaryResponseModel
 import com.nas.alreem.fragment.reports.model.ReportApiModel
 import com.nas.alreem.fragment.reports.model.ReportListModel
 import com.nas.alreem.fragment.settings.model.ChangePasswordApiModel
+import com.nas.alreem.fragment.time_table.model.apimodel.TimeTableApiDataModel
+import com.nas.alreem.fragment.time_table.model.apimodel.TimeTableApiModel
 
 import okhttp3.ResponseBody
 import org.json.JSONObject
@@ -289,6 +291,14 @@ interface ApiInterface {
     fun studentList(
         @Header("Authorization") token:String
     ): Call<StudentListModel>
+
+    /*************TIMETABLE****************/
+    @POST("timetable")
+    @Headers("Content-Type: application/json")
+    fun timetable(
+        @Body  calendarBody: TimeTableApiModel,
+        @Header("Authorization") token:String,
+        ): Call<TimeTableApiDataModel>
 
     /*************SEND_EMAIL_TO_STAFF****************/
     @POST("send_email_to_staff ")

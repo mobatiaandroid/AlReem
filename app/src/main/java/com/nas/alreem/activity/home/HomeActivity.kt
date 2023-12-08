@@ -52,10 +52,12 @@ import com.nas.alreem.fragment.parent_meetings.ParentMeetingsFragment
 import com.nas.alreem.fragment.parents_essentials.ParentsEssentialFragment
 import com.nas.alreem.fragment.payments.PaymentFragment
 import com.nas.alreem.fragment.permission_slip.PermissionSlipFragment
+import com.nas.alreem.fragment.permission_slip.PermissionSlipFragmentNew
 import com.nas.alreem.fragment.primary.PrimaryFragment
 import com.nas.alreem.fragment.reports.ReportsFragment
 import com.nas.alreem.fragment.secondary.SecondaryFragment
 import com.nas.alreem.fragment.settings.SettingsFragment
+import com.nas.alreem.fragment.time_table.TimeTableFragment
 
 class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
 
@@ -314,7 +316,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                     1->
                     {
                         //Notification
-                        mFragment = NotificationFragment()
+                        mFragment = TimeTableFragment()
                         replaceFragmentsSelected(position)
                     }
                     2->
@@ -530,7 +532,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                     {
                         //Permission_form
                         PreferenceManager.setStudentID(context,"")
-                        mFragment = PermissionSlipFragment()
+                        mFragment = PermissionSlipFragmentNew()
                         replaceFragmentsSelected(position)
 
                     }

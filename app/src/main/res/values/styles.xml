@@ -15,7 +15,17 @@
         <item name="android:divider">@color/white</item>
         <item name="android:dividerHeight">1dp</item>
     </style>
-
+    <style name="textstyletimetablesingle" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">@color/logout_user</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+    </style>
+    <style name="textstyleblacklogout" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">@color/logout_user</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+    </style>
     <style name="calendar_style" parent="@android:style/TextAppearance.Large">
         <item name="android:textColor">@color/white</item>
         <item name="android:textStyle">bold</item>

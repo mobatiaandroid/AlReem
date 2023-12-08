@@ -50,6 +50,7 @@ import com.nas.alreem.fragment.parents_essentials.ParentsEssentialFragment
 import com.nas.alreem.fragment.payments.PaymentFragment
 import com.nas.alreem.fragment.payments.model.SendEmailApiModel
 import com.nas.alreem.fragment.permission_slip.PermissionSlipFragment
+import com.nas.alreem.fragment.permission_slip.PermissionSlipFragmentNew
 import com.nas.alreem.fragment.primary.PrimaryFragment
 import com.nas.alreem.fragment.reports.ReportsFragment
 import com.nas.alreem.fragment.secondary.SecondaryFragment
@@ -1152,7 +1153,7 @@ class HomeFragment : Fragment() , View.OnClickListener{
                 }
                 ConstantWords.TAB_PERMISSION_FORMS -> {
                     PreferenceManager.setStudentID(mContext,"")
-                    mFragment = PermissionSlipFragment()
+                    mFragment = PermissionSlipFragmentNew()
                     fragmentIntent(mFragment)
                 }
                 ConstantWords.TAB_LUNCH_BOX -> {
