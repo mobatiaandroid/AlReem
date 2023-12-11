@@ -57,6 +57,7 @@ import com.nas.alreem.fragment.primary.PrimaryFragment
 import com.nas.alreem.fragment.reports.ReportsFragment
 import com.nas.alreem.fragment.secondary.SecondaryFragment
 import com.nas.alreem.fragment.settings.SettingsFragment
+import com.nas.alreem.fragment.student_information.StudentInformationFragment
 import com.nas.alreem.fragment.time_table.TimeTableFragment
 
 class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
@@ -316,10 +317,16 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                     1->
                     {
                         //Notification
-                        mFragment = TimeTableFragment()
+                        mFragment = StudentInformationFragment()
                         replaceFragmentsSelected(position)
                     }
                     2->
+                    {
+                        //Notification
+                        mFragment = NotificationFragment()
+                        replaceFragmentsSelected(position)
+                    }
+                    3->
                     {
                         //Calendar
                         mFragment = CalendarFragment()
@@ -469,7 +476,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                             }
                         }
                     }
-                    3->
+                    4->
                     {
                         //About Us
                         mFragment = PaymentFragment()
@@ -477,13 +484,13 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
 
 
                     }
-                    4->
+                    5->
                     {
                         //payment
                         mFragment = CanteenFragment()
                         replaceFragmentsSelected(position)
                     }
-                    5->
+                    6->
                     {
 
                         mFragment = ParentsEssentialFragment()
@@ -492,7 +499,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
 //                            mContext
 //                        )
                     }
-                    6->
+                    7->
                     {
                         PreferenceManager.setStudentID(mContext,"")
                         mFragment = AbsenceFragment()
@@ -501,25 +508,25 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
 //                            mContext
 //                        )
                     }
-                    7->
+                    8->
                     {
                         //Early years
                         mFragment = EarlyYearsFragment()
                         replaceFragmentsSelected(position)
                     }
-                    8->
+                    9->
                     {
                         //Primary
                         mFragment = PrimaryFragment()
                         replaceFragmentsSelected(position)
                     }
-                    9->
+                    10->
                     {
                         //Secondary
                         mFragment = SecondaryFragment()
                         replaceFragmentsSelected(position)
                     }
-                    10->
+                    11->
                     {
                         //Reports
                         PreferenceManager.setStudentID(context,"")
@@ -528,7 +535,15 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
 
 
                     }
-                    11->
+                    12->
+                    {
+                        //Permission_form
+                        PreferenceManager.setStudentID(context,"")
+                        mFragment = TimeTableFragment()
+                        replaceFragmentsSelected(position)
+
+                    }
+                    13->
                     {
                         //Permission_form
                         PreferenceManager.setStudentID(context,"")
@@ -537,25 +552,25 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
 
                     }
 
-                    12->
+                    14->
                     {
                         //CCa
                         mFragment = CCAFragment()
                         replaceFragmentsSelected(position)
                     }
-                    13->
+                    15->
                     {
                         //Parents meeting
                         mFragment = ParentMeetingsFragment()
                         replaceFragmentsSelected(position)
                     }
-                    14->
+                    16->
                     {
                         //Gallery
                         mFragment = GalleryFragment()
                         replaceFragmentsSelected(position)
                     }
-                    15->
+                    17->
                     {
                         //About Us
 
@@ -579,7 +594,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                             replaceFragmentsSelected(position)
                         }
                     }
-                    16->
+                    18->
                     {
                         // Contact Us
                         mFragment = AboutUsFragment()

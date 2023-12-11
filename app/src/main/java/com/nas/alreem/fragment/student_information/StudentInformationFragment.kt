@@ -30,13 +30,22 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.nas.alreem.R
+import com.nas.alreem.activity.payments.adapter.StudentListAdapter
+import com.nas.alreem.activity.payments.model.StudentList
+import com.nas.alreem.activity.payments.model.StudentListModel
+import com.nas.alreem.constants.ApiClient
+import com.nas.alreem.constants.ConstantFunctions
+import com.nas.alreem.constants.DialogFunctions
+import com.nas.alreem.constants.OnItemClickListener
+import com.nas.alreem.constants.PreferenceManager
+import com.nas.alreem.constants.addOnItemClickListener
 
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class StudentInformationFragment : Fragment(){
-    lateinit var jsonConstans: JsonConstants
+
     private lateinit var linearLayoutManager: LinearLayoutManager
     lateinit var studentInfoRecycler: RecyclerView
     lateinit var studentNameTxt: TextView
@@ -45,7 +54,7 @@ class StudentInformationFragment : Fragment(){
     lateinit var studentName: String
     lateinit var studentId: String
     lateinit var studentImg: String
-    lateinit var sharedprefs: PreferenceData
+
     lateinit var progressDialog: RelativeLayout
     lateinit var imageView6: ImageView
     lateinit var imageView4: ImageView
@@ -63,21 +72,22 @@ class StudentInformationFragment : Fragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        jsonConstans = JsonConstants()
-        sharedprefs = PreferenceData()
+
         mContext = requireContext()
-        sharedprefs.setStudentID(mContext,"")
-        sharedprefs.setStudentName(mContext,"")
-        sharedprefs.setStudentPhoto(mContext,"")
+        PreferenceManager.setStudentID(mContext,"")
+        PreferenceManager.setStudentName(mContext,"")
+        PreferenceManager.setStudentPhoto(mContext,"")
         initializeUI()
-        var internetCheck = InternetCheckClass.isInternetAvailable(mContext)
-        if (internetCheck)
+
+        if (ConstantFunctions.internetCheck(mContext))
         {
             callStudentListApi()
         }
-        else{
-            InternetCheckClass.showSuccessInternetAlert(com.mobatia.bisad.fragment.home.mContext)
+        else
+        {
+            DialogFunctions.showInternetAlertDialog(mContext)
         }
+
 
 //        studImg.setOnClickListener {
 //            zoomImageFromThumb(studImg, studentImg)
@@ -143,7 +153,7 @@ class StudentInformationFragment : Fragment(){
     fun callStudentListApi()
     {
         progressDialog.visibility = View.VISIBLE
-        val token = sharedprefs.getaccesstoken(mContext)
+        val token = PreferenceManager.getaccesstoken(mContext)
         val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+token)
         call.enqueue(object : Callback<StudentListModel>{
             override fun onFailure(call: Call<StudentListModel>, t: Throwable) {
@@ -154,14 +164,14 @@ class StudentInformationFragment : Fragment(){
                 if (response.body()!!.status==100)
                 {
                     studentListArrayList.addAll(response.body()!!.responseArray.studentList)
-                    if (sharedprefs.getStudentID(mContext).equals(""))
+                    if (PreferenceManager.getStudentID(mContext).equals(""))
                     {
                         studentName=studentListArrayList.get(0).name
                         studentImg=studentListArrayList.get(0).photo
                         studentId=studentListArrayList.get(0).id
-                        sharedprefs.setStudentID(mContext,studentId)
-                        sharedprefs.setStudentName(mContext,studentName)
-                        sharedprefs.setStudentPhoto(mContext,studentImg)
+                        PreferenceManager.setStudentID(mContext,studentId)
+                        PreferenceManager.setStudentName(mContext,studentName)
+                        PreferenceManager.setStudentPhoto(mContext,studentImg)
                         studentNameTxt.text=studentName
                        if(!studentImg.equals(""))
                        {
@@ -180,9 +190,9 @@ class StudentInformationFragment : Fragment(){
 
                     }
                     else{
-                        studentName= sharedprefs.getStudentName(mContext)!!
-                        studentImg= sharedprefs.getStudentPhoto(mContext)!!
-                        studentId= sharedprefs.getStudentID(mContext)!!
+                        studentName= PreferenceManager.getStudentName(mContext)!!
+                        studentImg= PreferenceManager.getStudentPhoto(mContext)!!
+                        studentId= PreferenceManager.getStudentID(mContext)!!
                         studentNameTxt.text=studentName
                         if(!studentImg.equals(""))
                         {
@@ -199,7 +209,7 @@ class StudentInformationFragment : Fragment(){
                             studImg.setImageResource(R.drawable.student)
                         }
                     }
-                    var internetCheck = InternetCheckClass.isInternetAvailable(mContext)
+                    /*var internetCheck = InternetCheckClass.isInternetAvailable(mContext)
                     if (internetCheck)
                     {
                         if(studentListArrayList.size>0)
@@ -210,11 +220,11 @@ class StudentInformationFragment : Fragment(){
                     }
                     else{
                         InternetCheckClass.showSuccessInternetAlert(mContext)
-                    }
+                    }*/
                 }
                 else if(response.body()!!.status==116)
                 {
-                    var internetCheck = InternetCheckClass.isInternetAvailable(mContext)
+                   /* var internetCheck = InternetCheckClass.isInternetAvailable(mContext)
                     if (internetCheck)
                     {
                         AccessTokenClass.getAccessToken(mContext)
@@ -222,12 +232,13 @@ class StudentInformationFragment : Fragment(){
                     }
                     else{
                         InternetCheckClass.showSuccessInternetAlert(com.mobatia.bisad.fragment.home.mContext)
-                    }
+                    }*/
 
                 }
                 else
                 {
-                    InternetCheckClass.checkApiStatusError(response.body()!!.status,mContext)
+                    DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), mContext)
+
                 }
 
 
@@ -238,9 +249,9 @@ class StudentInformationFragment : Fragment(){
 
     fun callStudentInfoApi()
     {
-        progressDialog.visibility = View.VISIBLE
+        /*progressDialog.visibility = View.VISIBLE
         var studentInfoArrayList = ArrayList<StudentInfoDetail>()
-        val token = sharedprefs.getaccesstoken(mContext)
+        val token = PreferenceManager.getaccesstoken(mContext)
         val studentbody= StudentInfoApiModel(sharedprefs.getStudentID(mContext)!!)
         val call: Call<StudentInfoModel> = ApiClient.getClient.studentInfo(studentbody,"Bearer "+token)
         call.enqueue(object : Callback<StudentInfoModel>{
@@ -280,7 +291,7 @@ class StudentInformationFragment : Fragment(){
 
             }
 
-        })
+        })*/
     }
     fun showStudentList(context: Context ,mStudentList : ArrayList<StudentList>)
     {
@@ -323,9 +334,9 @@ class StudentInformationFragment : Fragment(){
                 studentName=studentListArrayList.get(position).name
                 studentImg=studentListArrayList.get(position).photo
                 studentId=studentListArrayList.get(position).id
-                sharedprefs.setStudentID(mContext,studentId)
-                sharedprefs.setStudentName(mContext,studentName)
-                sharedprefs.setStudentPhoto(mContext,studentImg)
+                PreferenceManager.setStudentID(mContext,studentId)
+                PreferenceManager.setStudentName(mContext,studentName)
+                PreferenceManager.setStudentPhoto(mContext,studentImg)
                 studentNameTxt.text=studentName
                 if(!studentImg.equals(""))
                 {
@@ -358,7 +369,7 @@ class StudentInformationFragment : Fragment(){
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.setCancelable(false)
-        dialog.setContentView(R.layout.alert_dialogue_ok_layout)
+        dialog.setContentView(R.layout.dialog_common_error_alert)
         var iconImageView = dialog.findViewById(R.id.iconImageView) as ImageView
         var alertHead = dialog.findViewById(R.id.alertHead) as TextView
         var text_dialog = dialog.findViewById(R.id.text_dialog) as TextView
@@ -374,7 +385,7 @@ class StudentInformationFragment : Fragment(){
         dialog.show()
     }
 
-    private fun zoomImageFromThumb(thumbView: View, imageResId: String) {
+   /* private fun zoomImageFromThumb(thumbView: View, imageResId: String) {
         // If there's an animation in progress, cancel it
         // immediately and proceed with this one.
         currentAnimator?.cancel()
@@ -511,7 +522,7 @@ class StudentInformationFragment : Fragment(){
                 }
             }
         }
-    }
+    }*/
 
 }
 

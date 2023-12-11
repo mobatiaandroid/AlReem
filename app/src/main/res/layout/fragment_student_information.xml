@@ -59,7 +59,7 @@
             android:id="@+id/imageView11"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@drawable/student_information"
+            android:background="@color/ttpop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -86,7 +86,7 @@
             app:layout_constraintGuide_begin="170dp"
             android:orientation="horizontal" />
 
-        <com.nas.alreem.commonviews.CustomFontSansProTextNoColorSemiBold
+        <com.nas.alreem.commonviews.CustomTextViewRegular
             android:id="@+id/studentName"
             android:layout_width="0dp"
             android:layout_height="45dp"

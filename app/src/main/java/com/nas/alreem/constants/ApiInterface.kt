@@ -596,7 +596,14 @@ interface ApiInterface {
         @Header("Authorization") token:String
     ): Call<PermissionResponseModel>
 
-
+    /*************General_Forms****************/
+    @POST("general-forms")
+    @Headers("Content-Type: application/json")
+    fun generalforms
+    (
+        @Body  permissionSlipListModel: PermissionSlipListApiModel,
+        @Header("Authorization") token:String
+    ): Call<PermissionSlipModel>
     @GET("cca-banner")
     @Headers("Content-Type: application/json")
     fun getBanner(

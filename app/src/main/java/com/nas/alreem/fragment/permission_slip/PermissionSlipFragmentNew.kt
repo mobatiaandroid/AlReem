@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -132,7 +133,7 @@ class PermissionSlipFragmentNew :Fragment(){
             select_val=1
             if (ConstantFunctions.internetCheck(mContext))
             {
-               // callpickuplist_api()
+               callgeneralForm()
             }
             else
             {
@@ -266,6 +267,67 @@ class PermissionSlipFragmentNew :Fragment(){
                         //showerror(mContext,"No Data Found","Alert")
                         Toast.makeText(mContext, "No Permission Forms Found", Toast.LENGTH_SHORT).show()
                     }
+
+
+                }/*else if(response.body()!!.status.equals("116"))
+                {
+                    var internetCheck = InternetCheckClass.isInternetAvailable(com.mobatia.bisad.fragment.home.mContext)
+                    if (internetCheck){
+                        AccessTokenClass.getAccessToken(com.mobatia.bisad.fragment.home.mContext)
+                        Log.e("TEST","call 3")
+
+                        formslistApi()
+                    }else{
+                        InternetCheckClass.showSuccessInternetAlert(com.mobatia.bisad.fragment.home.mContext)
+                    }
+
+                }*/
+                else {
+                    if (response.body()!!.status == 132) {
+                        formslist=ArrayList()
+                        forms_recycler.layoutManager= LinearLayoutManager(mContext)
+                        var forms_adapter= FormslistAdapter(mContext,formslist)
+                        forms_recycler.adapter=forms_adapter
+                        Toast.makeText(mContext, "No Permission Slips Found", Toast.LENGTH_SHORT).show()
+                        //validation check error
+                    }
+                }
+            }
+        })
+    }
+    fun callgeneralForm()
+    {
+        progressDialog.visibility = View.VISIBLE
+        formslist=ArrayList()
+
+        val token = PreferenceManager.getaccesstoken(mContext)
+        val list_permissionSlip= PermissionSlipListApiModel("0","20",
+            PreferenceManager.getStudentID(mContext).toString())
+        val call: Call<PermissionSlipModel> = ApiClient.getClient.generalforms(list_permissionSlip,"Bearer "+token)
+        call.enqueue(object : Callback<PermissionSlipModel> {
+            override fun onFailure(call: Call<PermissionSlipModel>, t: Throwable) {
+                progressDialog.visibility = View.GONE
+            }
+            override fun onResponse(call: Call<PermissionSlipModel>, response: Response<PermissionSlipModel>) {
+                progressDialog.visibility = View.GONE
+                if (response.body()!!.status==100)
+                {
+                    Log.e("success","success")
+                   /* forms_recycler.visibility= View.VISIBLE
+                    formslist=ArrayList()
+                    formslist.addAll(response.body()!!.responseArray.request)
+                    if (response.body()!!.responseArray.request.size > 0){
+                        forms_recycler.layoutManager= LinearLayoutManager(mContext)
+                        var forms_adapter= FormslistAdapter(mContext,formslist)
+                        forms_recycler.adapter=forms_adapter
+                    }else{
+                        formslist=ArrayList()
+                        forms_recycler.layoutManager= LinearLayoutManager(mContext)
+                        var forms_adapter= FormslistAdapter(mContext,formslist)
+                        forms_recycler.adapter=forms_adapter
+                        //showerror(mContext,"No Data Found","Alert")
+                        Toast.makeText(mContext, "No Permission Forms Found", Toast.LENGTH_SHORT).show()
+                    }*/
 
 
                 }/*else if(response.body()!!.status.equals("116"))
