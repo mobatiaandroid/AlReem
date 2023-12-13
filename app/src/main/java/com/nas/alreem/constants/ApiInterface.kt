@@ -65,7 +65,6 @@ import com.nas.alreem.activity.staff_directory.model.ListStaffDetailModel
 import com.nas.alreem.activity.staff_directory.model.StaffCatListResponseModel
 import com.nas.alreem.activity.survey.model.*
 import com.nas.alreem.fragment.about_us.model.AboutUsResponseModel
-import com.nas.alreem.fragment.calendar.model.CalendarAPIModel
 import com.nas.alreem.fragment.calendar.model.CalendarResponseModel
 import com.nas.alreem.fragment.calendar.model.TermCalendarResponseModel
 import com.nas.alreem.fragment.canteen.model.CanteenBannerResponseModel
@@ -73,6 +72,10 @@ import com.nas.alreem.fragment.cca.model.BannerResponseModelCCa
 import com.nas.alreem.fragment.contact_us.model.ContactUsResponseModel
 import com.nas.alreem.fragment.gallery.model.ThumnailResponseModel
 import com.nas.alreem.fragment.home.model.BannerResponseModel
+import com.nas.alreem.fragment.home.re_enrollment.EnrollmentFormResponseModel
+import com.nas.alreem.fragment.home.re_enrollment.EnrollmentHelpResponseModel
+import com.nas.alreem.fragment.home.re_enrollment.EnrollmentSaveResponseModel
+import com.nas.alreem.fragment.home.re_enrollment.EnrollmentStatusResponseModel
 import com.nas.alreem.fragment.notifications.model.NotificationApiModel
 import com.nas.alreem.fragment.notifications.model.NotificationResponseModel
 import com.nas.alreem.fragment.parent_meetings.model.ListStaffPtaApiModel
@@ -84,9 +87,6 @@ import com.nas.alreem.fragment.permission_slip.model.PermissionSlipListApiModel
 import com.nas.alreem.fragment.permission_slip.model.PermissionSlipModel
 import com.nas.alreem.fragment.primary.model.PrimaryResponseModel
 import com.nas.alreem.fragment.settings.model.ChangePasswordApiModel
-
-import okhttp3.ResponseBody
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -668,4 +668,28 @@ interface ApiInterface {
         @Body body: ExternalProvidersRequestModel,
         @Header("Authorization") token: String
     ): Call<ExternalProvidersResponseModel>
+
+    @GET("get_enrollment_status")
+    @Headers("Content-Type: application/json")
+    fun getenrollstatus(@Header("Authorization") token: String): Call<EnrollmentStatusResponseModel>
+
+    @POST("get_enrollment_form")
+    @Headers("Content-Type: application/json")
+    fun getenrollform(
+        @Header("Authorization") token: String,
+    ): Call<EnrollmentFormResponseModel>
+
+    @POST("save_re_enrollment")
+    @Headers("Content-Type: application/json")
+    fun getenrollsave(
+        @Header("Authorization") token: String,
+        @Body json: JsonObject
+    ): Call<EnrollmentSaveResponseModel>
+
+    @POST("re_enrollment_help")
+    @Headers("Content-Type: application/json")
+    fun getenrollhelp(
+        @Header("Authorization") token: String,
+        @Body json: JsonObject?
+    ): Call<EnrollmentHelpResponseModel>
 }

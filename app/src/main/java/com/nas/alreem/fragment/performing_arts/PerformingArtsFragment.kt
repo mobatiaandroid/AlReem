@@ -16,11 +16,14 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nas.alreem.R
+import com.nas.alreem.constants.PDFViewerActivity
+import com.nas.alreem.constants.WebLinkActivity
 import com.nas.alreem.fragment.primary.model.PrimaryDataModel
 import com.nas.alreem.recyclermanager.DividerItemDecoration
 import com.nas.alreem.recyclermanager.ItemOffsetDecoration
 import com.nas.alreem.recyclermanager.RecyclerItemListener
 
+/*
 class PerformingArtsFragment : Fragment(){
     lateinit var mTitleTextView: TextView
     lateinit var descriptionTV: TextView
@@ -95,11 +98,13 @@ class PerformingArtsFragment : Fragment(){
         }
 
 //        mNewsLetterListView.addItemDecoration(new DividerItemDecoration(getResources().getDrawable(R.drawable.list_divider)));
-        /*GridLayoutManager recyclerViewLayout= new GridLayoutManager(mContext, 4);
+        */
+/*GridLayoutManager recyclerViewLayout= new GridLayoutManager(mContext, 4);
 		int spacing = 5; // 50px
         ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(mContext,spacing);
 		mListView.addItemDecoration(itemDecoration);
-		mListView.setLayoutManager(recyclerViewLayout);*/mListView.setHasFixedSize(true)
+		mListView.setLayoutManager(recyclerViewLayout);*//*
+mListView.setHasFixedSize(true)
         val llm = LinearLayoutManager(mContext)
         llm.orientation = LinearLayoutManager.VERTICAL
         val spacing = 5 // 50px
@@ -112,17 +117,17 @@ class PerformingArtsFragment : Fragment(){
                 activity, mListView,
                 object : RecyclerItemListener.RecyclerTouchListener {
                     override fun onClickItem(v: View?, position: Int) {
-                        if (mListViewArray!![position].getmFile().endsWith(".pdf")) {
+                        if (mListViewArray!![position].file.endsWith(".pdf")) {
                             val intent = Intent(
                                 mContext,
-                                PdfReaderActivity::class.java
+                                PDFViewerActivity::class.java
                             )
                             intent.putExtra("pdf_url", mListViewArray[position].getmFile())
                             startActivity(intent)
                         } else {
                             val intent = Intent(
                                 mContext,
-                                LoadUrlWebViewActivity::class.java
+                                WebLinkActivity::class.java
                             )
                             intent.putExtra("url", mListViewArray[position].getmFile())
                             intent.putExtra("tab_type", mListViewArray[position].getmName())
@@ -138,13 +143,15 @@ class PerformingArtsFragment : Fragment(){
         if (AppUtils.checkInternet(mContext)) {
             getList()
         } else {
-            AppUtils.showDialogAlertDismiss(
+           */
+/* AppUtils.showDialogAlertDismiss(
                 mContext as Activity,
                 "Network Error",
                 getString(R.string.no_internet),
                 R.drawable.nonetworkicon,
                 R.drawable.roundred
-            )
+            )*//*
+
         }
         if (!description.equals("", ignoreCase = true)) {
             descriptionTV!!.visibility = View.VISIBLE
@@ -182,4 +189,4 @@ class PerformingArtsFragment : Fragment(){
             mContext.startActivity(intent)
         }
     }
-}
+}*/

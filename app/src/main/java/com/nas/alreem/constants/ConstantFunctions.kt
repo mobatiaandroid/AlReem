@@ -1,25 +1,24 @@
 package com.nas.alreem.constants
 
 import android.app.Dialog
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.util.Log
-import android.view.View
 import android.view.Window
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import com.nas.alreem.R
+import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 class ConstantFunctions {
     companion object{
@@ -182,6 +181,23 @@ class ConstantFunctions {
         }
         fun replace(str: String): String? {
             return str.replace(" ".toRegex(), "%20")
+        }
+        fun dateConversionddmmyyyy(inputDate: String?): String {
+            var mDate = ""
+            try {
+                val date: Date
+                val formatter: DateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+                date = formatter.parse(inputDate)
+                //Subtracting 6 hours from selected time
+                val time = date.time
+
+                //SimpleDateFormat formatterFullDate = new SimpleDateFormat("dd MMMM yyyy");
+                val formatterFullDate = SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH)
+                mDate = formatterFullDate.format(time)
+            } catch (e: Exception) {
+//			Log.d("Exception", "" + e);
+            }
+            return mDate
         }
     }
 

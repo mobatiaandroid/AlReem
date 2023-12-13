@@ -9,8 +9,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.Window
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,7 +28,6 @@ import com.nas.alreem.activity.canteen.model.canteen_cart.CartItemsListModel
 import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.constants.*
 import com.nas.alreem.rest.ApiClient
-
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -371,17 +368,22 @@ class Addorder_Activity : AppCompatActivity() {
                         item_list[i].isItemCart=false
 
 
+
                     }
+                        Log.e("student_allergy", item_list.get(i).student_allergy.toString())
+                        if(item_list.get(i).student_allergy==1)
+                        {
+                            item_list.get(i).isAllergic=true
+                        } else {
+                            item_list.get(i).isAllergic=false
+                        }
+                        allergycontentlist= ArrayList()
+                         allergycontentlist.addAll(item_list.get(i).allergy_contents)
+                        Log.e("allergycontentlist", allergycontentlist.toString())
+
                 }
 
-                    allergycontentlist= ArrayList()
 
-                    var nmodel2= AllergyContentModel("celery","limegreen","#32CD32")
-                    allergycontentlist.add(0,nmodel2)
-                    var nmodel=AllergyContentModel("diary","yellow","#FAF9F6")
-                    allergycontentlist.add(1,nmodel)
-                    var nmodel3=AllergyContentModel("nuts","purple","#800080")
-                    allergycontentlist.add(2,nmodel3)
                     recyclerview_item.visibility=View.VISIBLE
                     recyclerview_item.layoutManager=LinearLayoutManager(nContext)
                     var itemAdapter= PreorderItemsAdapter(item_list,nContext,date_selected,cart_list,cartTotalAmount,

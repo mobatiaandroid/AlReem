@@ -1,16 +1,10 @@
 package com.nas.alreem.fragment.re_entrollment
 
 import android.annotation.SuppressLint
-import android.app.Dialog
 import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -20,9 +14,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
 import com.nas.alreem.R
-import com.nas.alreem.fragment.re_entrollment.model.StudentEnrollList
 
-internal class ReEnrollAdapter (var context: Context,var stud_enroll_list:ArrayList<StudentEnrollList>
+internal class ReEnrollAdapter(
+    var context: Context,
+    var stud_enroll_list: java.util.ArrayList<com.nas.alreem.fragment.home.re_enrollment.StudentEnrollList>
 ) :
     RecyclerView.Adapter<ReEnrollAdapter.MyViewHolder>() {
     lateinit var reEnrollOptionList:ArrayList<String>
