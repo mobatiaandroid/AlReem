@@ -27,7 +27,9 @@ import com.nas.alreem.activity.canteen.model.canteen_cart.CanteenCartModel
 import com.nas.alreem.activity.canteen.model.canteen_cart.CanteenCartResModel
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.DialogFunctions
+import com.nas.alreem.constants.OnItemClickListener
 import com.nas.alreem.constants.PreferenceManager
+import com.nas.alreem.constants.addOnItemClickListener
 import com.nas.alreem.rest.ApiClient
 
 import retrofit2.Call
@@ -75,14 +77,14 @@ class PreorderItemsAdapter(
             var allergy_adapter=AllergyContentsAdapter(allergycontentlist,mcontext)
             holder.allergy_rec.adapter=allergy_adapter
 
-            /* holder.allergy_rec.addOnItemClickListener(object : OnItemClickListener {
+             holder.allergy_rec.addOnItemClickListener(object : OnItemClickListener {
                  override fun onItemClicked(position: Int, view: View) {
                      Toast.makeText(mcontext, allergycontentlist[position].name, Toast.LENGTH_SHORT).show()
 
-                     //allergy_contents_popup(mcontext)
+                   //  allergy_contents_popup(mcontext)
 
              }
-         })*/
+         })
         }
         else{
             holder.allergy_rec.visibility=View.GONE

@@ -327,8 +327,10 @@ class Addorder_Activity : AppCompatActivity() {
                     item_list= ArrayList()
                     item_list.addAll(response.body()!!.responseArray.data)
 
+                    Log.e("outside","outsideitemlist")
 
                     for (i in item_list.indices){
+                        Log.e("insideitemList","insideitemlist")
                         var jId=item_list[i].id
 
 
@@ -468,6 +470,16 @@ class Addorder_Activity : AppCompatActivity() {
 
 
                         }
+                        Log.e("student_allergy", item_list.get(i).student_allergy.toString())
+                        if(item_list.get(i).student_allergy==1)
+                        {
+                            item_list.get(i).isAllergic=true
+                        } else {
+                            item_list.get(i).isAllergic=false
+                        }
+                        allergycontentlist= ArrayList()
+                        allergycontentlist.addAll(item_list.get(i).allergy_contents)
+                        Log.e("allergycontentlist", allergycontentlist.toString())
                     }
                     recyclerview_item.visibility=View.VISIBLE
                     recyclerview_item.layoutManager=LinearLayoutManager(nContext)

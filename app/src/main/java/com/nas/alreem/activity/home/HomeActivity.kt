@@ -868,14 +868,14 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                                 callReEnrollAPI(studentList, position)
                                 Log.e("pos1", position.toString())
                             } else {
-                                /*AppUtils.showDialogAlertDismiss(
+                               ConstantFunctions. showDialogAlertDismiss(
                                     mActivity, "Alert",
                                     """
                             Re-Enrolment is currently not enabled        
                             
                             Please wait for further update
                             """.trimIndent(), R.drawable.exclamationicon, R.drawable.round
-                                )*/
+                                )
                             }
                         } else {
                             val dialog = Dialog(mContext)
@@ -918,20 +918,11 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                     val status: String = apiResponse!!.getStatus()
                     if (status == "100") {
 
-
-
                         studentList.addAll(apiResponse.responseArray.students)
                         reEnrollRecycler.layoutManager= LinearLayoutManager(context)
                         var re_enroll_adapter=
                             ReEnrollAdapter(context,studentList)
                         reEnrollRecycler.adapter=re_enroll_adapter
-
-
-
-
-
-
-
 
                     } else {
                         /*AppUtils.showDialogAlertDismiss(
