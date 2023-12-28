@@ -53,6 +53,7 @@ import com.nas.alreem.fragment.absence.AbsenceFragment
 import com.nas.alreem.fragment.calendar.CalendarFragment
 import com.nas.alreem.fragment.canteen.CanteenFragment
 import com.nas.alreem.fragment.cca.CCAFragment
+import com.nas.alreem.fragment.communication.CommunicationFragment
 import com.nas.alreem.fragment.contact_us.ContactUsFragment
 import com.nas.alreem.fragment.early_years.EarlyYearsFragment
 import com.nas.alreem.fragment.gallery.GalleryFragment
@@ -71,6 +72,7 @@ import com.nas.alreem.fragment.notifications.NotificationFragment
 import com.nas.alreem.fragment.parent_meetings.ParentMeetingsFragment
 import com.nas.alreem.fragment.parents_essentials.ParentsEssentialFragment
 import com.nas.alreem.fragment.payments.PaymentFragment
+import com.nas.alreem.fragment.performing_arts.PerformingArtsFragment
 import com.nas.alreem.fragment.permission_slip.PermissionSlipFragment
 import com.nas.alreem.fragment.primary.PrimaryFragment
 import com.nas.alreem.fragment.re_entrollment.ReEnrollAdapter
@@ -351,16 +353,19 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                     0->
                     {
                         // about us
-                        reEnroll(mContext)
+                       // reEnroll(mContext)
+                      //  replaceFragmentsSelected(position)
+                        mFragment = PerformingArtsFragment()
                         replaceFragmentsSelected(position)
-                        /*mFragment = HomeFragment()
-                        replaceFragmentsSelected(position)*/
                     }
                     1->
                     {
                         //Notification
-                        mFragment = NotificationFragment()
+                       // mFragment = NotificationFragment()
+                       // replaceFragmentsSelected(position)
+                        mFragment = CommunicationFragment()
                         replaceFragmentsSelected(position)
+
                     }
                     2->
                     {

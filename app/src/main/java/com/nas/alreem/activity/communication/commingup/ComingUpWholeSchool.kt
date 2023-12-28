@@ -23,6 +23,7 @@ import com.nas.alreem.activity.primary.adapter.ComingUpAdapter
 import com.nas.alreem.activity.primary.model.ComingUpDataModell
 import com.nas.alreem.activity.primary.model.ComingUpResponseModel
 import com.nas.alreem.constants.*
+import com.nas.alreem.fragment.communication.model.CommunicationResponseModel
 import com.nas.alreem.rest.ApiClient
 import retrofit2.Call
 import retrofit2.Callback
@@ -116,13 +117,13 @@ class ComingUpWholeSchool  : AppCompatActivity(){
     {
         progressDialogAdd.visibility= View.VISIBLE
         comingUpArrayList= ArrayList()
-        val call: Call<ComingUpResponseModel> = ApiClient.getClient.primaryComingUp()
-        call.enqueue(object : Callback<ComingUpResponseModel> {
-            override fun onFailure(call: Call<ComingUpResponseModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
+        val call: Call<CommunicationResponseModel> = ApiClient.getClient.whole_school_coming_up("Bearer "+PreferenceManager.getaccesstoken(mContext))
+        call.enqueue(object : Callback<CommunicationResponseModel> {
+            override fun onFailure(call: Call<CommunicationResponseModel>, t: Throwable) {
+
                 progressDialogAdd.visibility= View.GONE
             }
-            override fun onResponse(call: Call<ComingUpResponseModel>, response: Response<ComingUpResponseModel>) {
+            override fun onResponse(call: Call<CommunicationResponseModel>, response: Response<CommunicationResponseModel>) {
                 val responsedata = response.body()
                 progressDialogAdd.visibility= View.GONE
                 if (responsedata != null) {
@@ -130,7 +131,7 @@ class ComingUpWholeSchool  : AppCompatActivity(){
 
                         if (response.body()!!.status==100)
                         {
-                            comingUpArrayList=response.body()!!.responseArray!!.data!!
+                          //  comingUpArrayList=response.body()!!.responseArray!!.data!!
                             if (comingUpArrayList.size>0)
                             {
                                 var adapterComing= ComingUpAdapter(comingUpArrayList,mContext)

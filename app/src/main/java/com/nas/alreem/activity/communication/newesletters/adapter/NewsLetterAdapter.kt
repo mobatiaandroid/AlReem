@@ -8,9 +8,10 @@ import android.widget.TextView
 import androidx.annotation.NonNull
 import androidx.recyclerview.widget.RecyclerView
 import com.nas.alreem.R
+import com.nas.alreem.activity.communication.newesletters.NewsLetterModel
 import com.nas.alreem.fragment.communication.adapter.CommunicationAdapter
 
-class NewsLetterAdapter (private var communicationList: ArrayList<String>, var context: Context) :
+class NewsLetterAdapter (private var communicationList: ArrayList<NewsLetterModel>, var context: Context) :
     RecyclerView.Adapter<NewsLetterAdapter.MyViewHolder>() {
     inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var listTxtTitle: TextView = view.findViewById(R.id.listTxtTitle)
@@ -23,7 +24,7 @@ class NewsLetterAdapter (private var communicationList: ArrayList<String>, var c
     }
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
-        holder.listTxtTitle.text = communicationList[position].toString()
+        holder.listTxtTitle.text = communicationList[position].name
 
     }
     override fun getItemCount(): Int {

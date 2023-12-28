@@ -120,7 +120,7 @@ class EarlyYearsFragment  : Fragment() {
                             primaryArrayList=response.body()!!.responseArray!!.data!!
                             if (primaryArrayList.size>0)
                             {
-                                var primaryAdapter= PrimaryAdapter(primaryArrayList,mContext)
+                                var primaryAdapter = PrimaryAdapter(primaryArrayList,mContext)
                                 mEarlyYearsRecycler.adapter=primaryAdapter
                             }
                             else

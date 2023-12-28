@@ -31,6 +31,7 @@ import com.nas.alreem.activity.canteen.model.wallet.WalletBalanceModel
 import com.nas.alreem.activity.canteen.model.wallethistory.WalletHistoryApiModel
 import com.nas.alreem.activity.canteen.model.wallethistory.WalletHistoryModel
 import com.nas.alreem.activity.cca.model.*
+import com.nas.alreem.activity.communication.newesletters.model.NewsletterResponseModel
 import com.nas.alreem.activity.gallery.model.*
 import com.nas.alreem.activity.login.model.ForgetPasswordResponseModel
 import com.nas.alreem.activity.login.model.LoginResponseModel
@@ -69,6 +70,8 @@ import com.nas.alreem.fragment.calendar.model.CalendarResponseModel
 import com.nas.alreem.fragment.calendar.model.TermCalendarResponseModel
 import com.nas.alreem.fragment.canteen.model.CanteenBannerResponseModel
 import com.nas.alreem.fragment.cca.model.BannerResponseModelCCa
+import com.nas.alreem.fragment.communication.model.CommunicationResponseModel
+import com.nas.alreem.fragment.communication.model.SocialMediaResponseModel
 import com.nas.alreem.fragment.contact_us.model.ContactUsResponseModel
 import com.nas.alreem.fragment.gallery.model.ThumnailResponseModel
 import com.nas.alreem.fragment.home.model.BannerResponseModel
@@ -83,6 +86,7 @@ import com.nas.alreem.fragment.parent_meetings.model.ListStaffPtaModel
 import com.nas.alreem.fragment.parents_essentials.model.ParentsEssentialResponseModel
 import com.nas.alreem.fragment.payments.model.PaymentResponseModel
 import com.nas.alreem.fragment.payments.model.SendEmailApiModel
+import com.nas.alreem.fragment.performing_arts.model.PerformingResponseModel
 import com.nas.alreem.fragment.permission_slip.model.PermissionSlipListApiModel
 import com.nas.alreem.fragment.permission_slip.model.PermissionSlipModel
 import com.nas.alreem.fragment.primary.model.PrimaryResponseModel
@@ -692,4 +696,44 @@ interface ApiInterface {
         @Header("Authorization") token: String,
         @Body json: JsonObject?
     ): Call<EnrollmentHelpResponseModel>
+
+    @POST("performing_arts")
+    @Headers("Content-Type: application/json")
+    fun performing_arts(
+        @Header("Authorization") token: String
+    ): Call<PerformingResponseModel>
+
+    @POST("communication_banner_images")
+    @Headers("Content-Type: application/json")
+    fun communication_banner_images(
+        @Header("Authorization") token: String
+    ): Call<PerformingResponseModel>
+    @POST("communication_info")
+    @Headers("Content-Type: application/json")
+    fun communication_info(
+        @Header("Authorization") token: String
+    ): Call<CommunicationResponseModel>
+
+    @POST("whole_school_coming_up")
+    @Headers("Content-Type: application/json")
+    fun whole_school_coming_up(
+        @Header("Authorization") token: String
+    ): Call<CommunicationResponseModel>
+
+    @POST("newsletter_categories")
+    @Headers("Content-Type: application/json")
+    fun newsletter_categories(
+        @Header("Authorization") token: String
+    ): Call<NewsletterResponseModel>
+    @POST("newsletter")
+    @Headers("Content-Type: application/json")
+    fun newsletter(
+        @Header("Authorization") token: String,
+        @Body json: JsonObject?
+    ): Call<CommunicationResponseModel>
+    @POST("social_media")
+    @Headers("Content-Type: application/json")
+    fun social_media(
+        @Header("Authorization") token: String
+    ): Call<SocialMediaResponseModel>
 }
