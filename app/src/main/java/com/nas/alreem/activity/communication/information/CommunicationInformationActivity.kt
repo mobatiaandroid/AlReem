@@ -96,7 +96,7 @@ class CommunicationInformationActivity : AppCompatActivity() {
             {
                 if (informationlist.get(position).filename.endsWith(".pdf")) {
                     val intent = Intent(mContext, PDFViewerActivity::class.java)
-                    intent.putExtra("pdf_url", informationlist!![position].filename)
+                    intent.putExtra("Url", informationlist!![position].filename)
                     intent.putExtra("title",informationlist.get(position).submenu)
                     startActivity(intent)
                 } else {

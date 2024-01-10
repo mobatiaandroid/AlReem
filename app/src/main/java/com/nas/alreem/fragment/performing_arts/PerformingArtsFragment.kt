@@ -164,12 +164,13 @@ class PerformingArtsFragment : Fragment
                     override fun onClickItem(v: View?, position: Int) {
                         if (mListViewArray.get(position).getmFile().endsWith(".pdf")) {
                             val intent = Intent(mContext, PDFViewerActivity::class.java)
-                            intent.putExtra("pdf_url", mListViewArray!![position].getmFile())
+                            intent.putExtra("Url", mListViewArray!![position].getmFile())
+                            intent.putExtra("title", mListViewArray!![position].getmName())
                             startActivity(intent)
                         } else {
                             val intent = Intent(mContext, WebLinkActivity::class.java)
                             intent.putExtra("url", mListViewArray!![position].getmFile())
-                            intent.putExtra("tab_type", mListViewArray!![position].getmFile())
+                            intent.putExtra("heading", mListViewArray!![position].getmName())
                             mContext!!.startActivity(intent)
                         }
                     }
