@@ -65,6 +65,7 @@ import com.nas.alreem.activity.staff_directory.model.ListStaffDetailModel
 import com.nas.alreem.activity.staff_directory.model.StaffCatListResponseModel
 import com.nas.alreem.activity.survey.model.*
 import com.nas.alreem.fragment.about_us.model.AboutUsResponseModel
+import com.nas.alreem.fragment.bus_service.model.BusserviceResponseModel
 import com.nas.alreem.fragment.calendar.model.CalendarAPIModel
 import com.nas.alreem.fragment.calendar.model.CalendarResponseModel
 import com.nas.alreem.fragment.calendar.model.TermCalendarResponseModel
@@ -73,6 +74,10 @@ import com.nas.alreem.fragment.cca.model.BannerResponseModelCCa
 import com.nas.alreem.fragment.contact_us.model.ContactUsResponseModel
 import com.nas.alreem.fragment.gallery.model.ThumnailResponseModel
 import com.nas.alreem.fragment.home.model.BannerResponseModel
+import com.nas.alreem.fragment.intention.model.IntentionApiModel
+import com.nas.alreem.fragment.intention.model.IntentionApiSubmit
+import com.nas.alreem.fragment.intention.model.IntentionResponseModel
+import com.nas.alreem.fragment.intention.model.IntentionStatusResponseModel
 import com.nas.alreem.fragment.notifications.model.NotificationApiModel
 import com.nas.alreem.fragment.notifications.model.NotificationResponseModel
 import com.nas.alreem.fragment.parent_meetings.model.ListStaffPtaApiModel
@@ -86,6 +91,8 @@ import com.nas.alreem.fragment.primary.model.PrimaryResponseModel
 import com.nas.alreem.fragment.reports.model.ReportApiModel
 import com.nas.alreem.fragment.reports.model.ReportListModel
 import com.nas.alreem.fragment.settings.model.ChangePasswordApiModel
+import com.nas.alreem.fragment.student_information.model.StudentInfoApiModel
+import com.nas.alreem.fragment.student_information.model.StudentInfoModel
 import com.nas.alreem.fragment.time_table.model.apimodel.TimeTableApiDataModel
 import com.nas.alreem.fragment.time_table.model.apimodel.TimeTableApiModel
 
@@ -696,4 +703,41 @@ interface ApiInterface {
         @Body reportListModel: ReportApiModel,
         @Header("Authorization") token:String
     ): Call<ReportListModel>
+    @POST("student/info")
+    @Headers("Content-Type: application/json")
+    fun studentInfo(
+        @Body  studentbody: StudentInfoApiModel,
+        @Header("Authorization") token:String
+    ): Call<StudentInfoModel>
+
+    @POST("intension")
+    @Headers("Content-Type: application/json")
+    fun intension(
+        @Body  intentionbody: IntentionApiModel,
+        @Header("Authorization") token:String
+    ): Call<IntentionResponseModel>
+
+    @POST("intension-status")
+    @Headers("Content-Type: application/json")
+    fun intensionstatus
+    (
+        @Body  intentionbody: IntentionApiModel,
+        @Header("Authorization") token:String
+    ): Call<IntentionStatusResponseModel>
+
+    @POST("intension-status-update")
+    @Headers("Content-Type: application/json")
+    fun intensionstatusupdate
+                (
+        @Body  intentionbody: IntentionApiSubmit,
+        @Header("Authorization") token:String
+    ): Call<StudentInfoModel>
+
+    @POST("list-bus-service")
+    @Headers("Content-Type: application/json")
+    fun listbusservice
+                (
+        @Body absenceApiModel: ListAbsenceApiModel,
+        @Header("Authorization") token:String
+    ): Call<BusserviceResponseModel>
 }

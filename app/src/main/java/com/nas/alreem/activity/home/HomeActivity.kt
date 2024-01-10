@@ -39,6 +39,7 @@ import com.nas.alreem.constants.MyDragShadowBuilder
 import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.fragment.about_us.AboutUsFragment
 import com.nas.alreem.fragment.absence.AbsenceFragment
+import com.nas.alreem.fragment.bus_service.BusServiceFragment
 import com.nas.alreem.fragment.calendar.CalendarFragment
 import com.nas.alreem.fragment.canteen.CanteenFragment
 import com.nas.alreem.fragment.cca.CCAFragment
@@ -47,6 +48,7 @@ import com.nas.alreem.fragment.early_years.EarlyYearsFragment
 import com.nas.alreem.fragment.gallery.GalleryFragment
 import com.nas.alreem.fragment.home.HomeFragment
 import com.nas.alreem.fragment.home.mContext
+import com.nas.alreem.fragment.intention.Intentionfragment
 import com.nas.alreem.fragment.notifications.NotificationFragment
 import com.nas.alreem.fragment.parent_meetings.ParentMeetingsFragment
 import com.nas.alreem.fragment.parents_essentials.ParentsEssentialFragment
@@ -317,7 +319,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                     1->
                     {
                         //Notification
-                        mFragment = StudentInformationFragment()
+                        mFragment = PermissionSlipFragmentNew()
                         replaceFragmentsSelected(position)
                     }
                     2->

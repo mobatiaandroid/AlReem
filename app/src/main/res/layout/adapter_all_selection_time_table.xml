@@ -99,7 +99,7 @@
                         android:background="@color/btnBackground">
 
 
-                        <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
+                        <com.nas.alreem.commonviews.CustomFontSansProTextBlack
                             android:id="@+id/tutor1"
                             style="@style/textstyletimetablesingle"
                             android:layout_width="match_parent"
@@ -227,7 +227,7 @@
 
                         android:background="@color/btnBackground">
 
-                        <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
+                        <com.nas.alreem.commonviews.CustomFontSansProTextBlack
                             android:id="@+id/tutor4"
                             style="@style/textstyletimetablesingle"
                             android:layout_width="match_parent"
@@ -271,15 +271,13 @@
 
                         android:background="@color/btnBackground">
 
-                        <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
+                        <com.nas.alreem.commonviews.CustomFontSansProTextBlack
                             android:id="@+id/tutor5"
-
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:gravity="center"
                             android:maxLines="3"
                             android:text=""
-
                             android:textColor="@color/logout_user"
                             android:textSize="14dp" />
                         <RelativeLayout

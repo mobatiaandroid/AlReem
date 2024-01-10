@@ -71,6 +71,7 @@ class ConstantWords {
         var parentessential="Parent Essentials"
         var parentmeetings="Parent Meetings"
         var absence_earlypickup="Absence & Early Pickup"
+        var bus_service="Bus Service"
         var enrichment="Enrichment"
         var permission_forms="Permission Forms"
 

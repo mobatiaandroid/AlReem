@@ -12,14 +12,14 @@
         android:orientation="vertical"
         >
 
-        <com.nas.alreem.commonviews.CustomFontSansProTextBlack
+        <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
             android:id="@+id/dateTimeTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="12sp"
             android:padding="2dp"
             android:textColor="@color/white" />
-        <com.nas.alreem.commonviews.CustomFontSansProTextBlack
+        <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
             android:id="@+id/nameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
             android:textColor="@color/white"
             android:text=""/>
 
-        <com.nas.alreem.commonviews.CustomFontSansProTextBlack
+        <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
             android:id="@+id/subjectNameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -40,7 +40,7 @@
             />
 
     </LinearLayout>
-    <com.nas.alreem.commonviews.CustomFontSansProTextBlack
+    <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
         android:id="@+id/periodTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

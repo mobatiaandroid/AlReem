@@ -39,6 +39,10 @@ import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.OnItemClickListener
 import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.constants.addOnItemClickListener
+import com.nas.alreem.fragment.student_information.adapter.StudentInfoAdapter
+import com.nas.alreem.fragment.student_information.model.StudentInfoApiModel
+import com.nas.alreem.fragment.student_information.model.StudentInfoDetail
+import com.nas.alreem.fragment.student_information.model.StudentInfoModel
 
 import retrofit2.Call
 import retrofit2.Callback
@@ -161,6 +165,7 @@ class StudentInformationFragment : Fragment(){
             }
             override fun onResponse(call: Call<StudentListModel>, response: Response<StudentListModel>) {
              //   val arraySize :Int =response.body()!!.responseArray!!.studentList.size
+                progressDialog.visibility = View.GONE
                 if (response.body()!!.status==100)
                 {
                     studentListArrayList.addAll(response.body()!!.responseArray.studentList)
@@ -209,18 +214,18 @@ class StudentInformationFragment : Fragment(){
                             studImg.setImageResource(R.drawable.student)
                         }
                     }
-                    /*var internetCheck = InternetCheckClass.isInternetAvailable(mContext)
-                    if (internetCheck)
+                    if (ConstantFunctions.internetCheck(mContext))
                     {
                         if(studentListArrayList.size>0)
                         {
                             callStudentInfoApi()
                         }
-
                     }
-                    else{
-                        InternetCheckClass.showSuccessInternetAlert(mContext)
-                    }*/
+                    else
+                    {
+                        DialogFunctions.showInternetAlertDialog(mContext)
+                    }
+
                 }
                 else if(response.body()!!.status==116)
                 {
@@ -249,10 +254,10 @@ class StudentInformationFragment : Fragment(){
 
     fun callStudentInfoApi()
     {
-        /*progressDialog.visibility = View.VISIBLE
+        progressDialog.visibility = View.VISIBLE
         var studentInfoArrayList = ArrayList<StudentInfoDetail>()
         val token = PreferenceManager.getaccesstoken(mContext)
-        val studentbody= StudentInfoApiModel(sharedprefs.getStudentID(mContext)!!)
+        val studentbody= StudentInfoApiModel(PreferenceManager.getStudentID(mContext)!!)
         val call: Call<StudentInfoModel> = ApiClient.getClient.studentInfo(studentbody,"Bearer "+token)
         call.enqueue(object : Callback<StudentInfoModel>{
             override fun onFailure(call: Call<StudentInfoModel>, t: Throwable) {
@@ -284,14 +289,14 @@ class StudentInformationFragment : Fragment(){
                 }
                 else
                 {
-                    InternetCheckClass.checkApiStatusError(response.body()!!.status, mContext)
+                    //InternetCheckClass.checkApiStatusError(response.body()!!.status, mContext)
 
                 }
 
 
             }
 
-        })*/
+        })
     }
     fun showStudentList(context: Context ,mStudentList : ArrayList<StudentList>)
     {

@@ -313,6 +313,7 @@
     <string name="force_update">There is a newer version available for download! Please update the app by visiting the Google Play Store</string>
     <string name="appregisteredHint">App Registered Absences</string>
     <string name="regNewAbsence">Register New Absence</string>
+    <string name="regNewbusservice">Register New Bus Service</string>
     <string name="regEarlypickup">Register Early Pickup</string>
     <string name="requestHint">If you need to cancel a registered absence/early pickup please contact reception (phone or email).</string>
 
