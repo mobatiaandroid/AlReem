@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/includeRel"
+        layout="@layout/layout_activity_header" />
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/namelayout"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
+                    android:id="@+id/stName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="45"
+                    android:text="Name"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <com.nas.alreem.commonviews.CustomFontSansProTextBlack
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":"
+                    android:textColor="@color/black"
+                    />
+
+                <com.nas.alreem.commonviews.CustomTextViewRegular
+                    android:id="@+id/stnameValue"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="50"
+                    android:text="Gayathri"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/studClassLinear"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
+                    android:id="@+id/studClassTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="45"
+                    android:text="Class"
+
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <com.nas.alreem.commonviews.CustomFontSansProTextBlack
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":"
+                    android:textColor="@color/black"
+                    />
+
+                <com.nas.alreem.commonviews.CustomTextViewRegular
+                    android:id="@+id/studClassValue"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="50"
+                    android:text="X1"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/fromlayout"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
+                    android:id="@+id/leaveDateFrom"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="45"
+                    android:text="Day of Pickup"
+
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <com.nas.alreem.commonviews.CustomFontSansProTextBlack
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":"
+                    android:textColor="@color/black"
+                    />
+
+                <com.nas.alreem.commonviews.CustomTextViewRegular
+                    android:id="@+id/leaveDateFromValue"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="50"
+                    android:text="12/06/2017"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/tolayout"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
+                    android:id="@+id/leaveDateTo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="45"
+                    android:text="Time of Pickup"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <com.nas.alreem.commonviews.CustomFontSansProTextBlack
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":"
+                    android:textColor="@color/black"
+                    />
+
+                <com.nas.alreem.commonviews.CustomTextViewRegular
+                    android:id="@+id/leaveDateToValue"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="50"
+                    android:text="12/06/2017"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/pickuplayout"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
+                    android:id="@+id/pickuptitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="45"
+                    android:text="Pickup by"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <com.nas.alreem.commonviews.CustomFontSansProTextBlack
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":"
+                    android:textColor="@color/black"
+                    />
+
+                <com.nas.alreem.commonviews.CustomTextViewRegular
+                    android:id="@+id/pickupbyName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="50"
+                    android:text="12/06/2017"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/statuslayout"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
+                    android:id="@+id/statustitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="45"
+                    android:text="Status"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <com.nas.alreem.commonviews.CustomFontSansProTextBlack
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":"
+                    android:textColor="@color/black"
+                    />
+
+                <com.nas.alreem.commonviews.CustomTextViewRegular
+                    android:id="@+id/status"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="50"
+                    android:text="12/06/2017"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/reasonlayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
+                    android:id="@+id/reason"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="45"
+                    android:layout_gravity="top"
+                    android:layout_marginLeft="7dp"
+                    android:text="Reason for early pickup"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <com.nas.alreem.commonviews.CustomFontSansProTextBlack
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":"
+                    android:layout_gravity="top"
+                    android:textColor="@color/black"
+                    />
+
+            </LinearLayout>
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/border_grey">
+                <com.nas.alreem.commonviews.CustomTextViewRegular
+                    android:id="@+id/reasonValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:text="reason"
+                    android:padding="10dp"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:singleLine="false"
+                    />
+
+            </ScrollView>
+
+            <LinearLayout
+                android:id="@+id/reasonRejectlayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
+                    android:id="@+id/reasonReject"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="45"
+                    android:layout_gravity="top"
+                    android:layout_marginLeft="7dp"
+                    android:text="Reason for Rejection"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <com.nas.alreem.commonviews.CustomFontSansProTextBlack
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":"
+                    android:layout_gravity="top"
+                    android:textColor="@color/black"
+                    />
+
+            </LinearLayout>
+            <ScrollView
+                android:id="@+id/reasonRejectionScroll"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/border_grey">
+                <com.nas.alreem.commonviews.CustomTextViewRegular
+                    android:id="@+id/reasonRejectValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:text="reason"
+                    android:padding="10dp"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:singleLine="false"
+                    />
+            </ScrollView>
+
+
+
+        </LinearLayout>
+
+    </ScrollView>
+</LinearLayout>

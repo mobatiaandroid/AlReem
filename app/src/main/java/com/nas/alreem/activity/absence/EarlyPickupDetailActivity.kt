@@ -42,7 +42,7 @@ class EarlyPickupDetailActivity: AppCompatActivity() {
     var reason_for_rejection:String=""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_early_pickup_detail)
+        setContentView(R.layout.activity_bus_service_details)
 
         mContext=this
         initfn()

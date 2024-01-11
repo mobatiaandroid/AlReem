@@ -1,6 +1,5 @@
 package com.nas.alreem.constants
 
-import com.google.gson.JsonObject
 import com.nas.alreem.activity.absence.model.AbsenceListModel
 import com.nas.alreem.activity.absence.model.EarlyPickupModel
 import com.nas.alreem.activity.absence.model.ListAbsenceApiModel
@@ -66,7 +65,7 @@ import com.nas.alreem.activity.staff_directory.model.StaffCatListResponseModel
 import com.nas.alreem.activity.survey.model.*
 import com.nas.alreem.fragment.about_us.model.AboutUsResponseModel
 import com.nas.alreem.fragment.bus_service.model.BusserviceResponseModel
-import com.nas.alreem.fragment.calendar.model.CalendarAPIModel
+import com.nas.alreem.fragment.bus_service.model.RequestBusServiceModelSubmit
 import com.nas.alreem.fragment.calendar.model.CalendarResponseModel
 import com.nas.alreem.fragment.calendar.model.TermCalendarResponseModel
 import com.nas.alreem.fragment.canteen.model.CanteenBannerResponseModel
@@ -78,6 +77,7 @@ import com.nas.alreem.fragment.intention.model.IntentionApiModel
 import com.nas.alreem.fragment.intention.model.IntentionApiSubmit
 import com.nas.alreem.fragment.intention.model.IntentionResponseModel
 import com.nas.alreem.fragment.intention.model.IntentionStatusResponseModel
+
 import com.nas.alreem.fragment.notifications.model.NotificationApiModel
 import com.nas.alreem.fragment.notifications.model.NotificationResponseModel
 import com.nas.alreem.fragment.parent_meetings.model.ListStaffPtaApiModel
@@ -96,8 +96,6 @@ import com.nas.alreem.fragment.student_information.model.StudentInfoModel
 import com.nas.alreem.fragment.time_table.model.apimodel.TimeTableApiDataModel
 import com.nas.alreem.fragment.time_table.model.apimodel.TimeTableApiModel
 
-import okhttp3.ResponseBody
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -738,6 +736,13 @@ interface ApiInterface {
     fun listbusservice
                 (
         @Body absenceApiModel: ListAbsenceApiModel,
+        @Header("Authorization") token:String
+    ): Call<BusserviceResponseModel>
+
+    @POST("request-bus-service")
+    @Headers("Content-Type: application/json")
+    fun requestbusservice(
+        @Body requestBusservicemodelsubmit: RequestBusServiceModelSubmit,
         @Header("Authorization") token:String
     ): Call<BusserviceResponseModel>
 }

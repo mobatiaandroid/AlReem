@@ -92,6 +92,7 @@
                 android:layout_below="@id/line"
                 android:layout_margin="8dp"
                 android:orientation="vertical"
+                android:visibility="gone"
                 android:weightSum="1">
 
                 <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold

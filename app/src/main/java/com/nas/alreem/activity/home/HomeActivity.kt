@@ -319,7 +319,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                     1->
                     {
                         //Notification
-                        mFragment = PermissionSlipFragmentNew()
+                        mFragment =BusServiceFragment()
                         replaceFragmentsSelected(position)
                     }
                     2->

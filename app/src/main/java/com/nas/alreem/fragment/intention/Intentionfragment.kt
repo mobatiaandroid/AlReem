@@ -164,8 +164,8 @@ class Intentionfragment : Fragment(){
                     val role = dialog.findViewById<TextView>(R.id.statustxt)
                     val section = dialog.findViewById<TextView>(R.id.section)
                     val imageView = dialog.findViewById<ImageView>(R.id.iconImageView)
-                    name.setText(primaryArrayList.get(position).student)
-                    studName.setText(primaryArrayList.get(position).classs)
+                   // name.setText(primaryArrayList.get(position).student)
+                  //  studName.setText(primaryArrayList.get(position).classs)
                     department.setText(primaryArrayList.get(position).question)
                     role.setText(intentionstatusArray.get(position).selected_options)
                   //  section.setText(intentionstatusArray.get(position).selected_options)
@@ -434,6 +434,7 @@ class Intentionfragment : Fragment(){
             d.dismiss()
             dialog.dismiss()
             dialog1.dismiss()
+            getIntentionListAPI(stud_id)
         }
         d.show()
     }
