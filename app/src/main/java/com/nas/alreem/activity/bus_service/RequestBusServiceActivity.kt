@@ -41,6 +41,7 @@ import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.OnItemClickListener
 import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.constants.addOnItemClickListener
+import com.nas.alreem.fragment.bus_service.model.RequestBusServiceModelSubmit
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -290,11 +291,11 @@ class RequestBusServiceActivity : AppCompatActivity() {
         val date: Date = inputFormat.parse(inputDateStr)
         new_date = outputFormat.format(date)
         val token = PreferenceManager.getaccesstoken(mContext)
-        val pickupSuccessBody = RequestPickupApiModel(
+        val pickupSuccessBody = RequestBusServiceModelSubmit(
             PreferenceManager.getStudentID(mContext).toString(),new_date,
             time,reason,pickupby,2,devicename,"1.0")
         val call: Call<EarlyPickupModel> =
-            ApiClient.getClient.pickupRequest(pickupSuccessBody, "Bearer " + token)
+            ApiClient.getClient.requestbusservice(pickupSuccessBody, "Bearer " + token)
         call.enqueue(object : Callback<EarlyPickupModel> {
             override fun onFailure(call: Call<EarlyPickupModel>, t: Throwable) {
 

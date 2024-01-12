@@ -141,7 +141,6 @@ class RequestabsenceActivity: AppCompatActivity() {
                     if (enterMessage.text.toString().trim().equals("")){
                         DialogFunctions.commonErrorAlertDialog("Alert","Please enter reason for your absence",mContext)
 
-
                     }
                     else{
 

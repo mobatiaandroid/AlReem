@@ -316,6 +316,7 @@
     <string name="regNewbusservice">Register New Bus Service</string>
     <string name="regEarlypickup">Register Early Pickup</string>
     <string name="requestHint">If you need to cancel a registered absence/early pickup please contact reception (phone or email).</string>
+    <string name="new_card">Request for New ID Card</string>
 
 
 

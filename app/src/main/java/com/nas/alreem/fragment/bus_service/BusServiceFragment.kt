@@ -38,10 +38,13 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.nas.alreem.R
 import com.nas.alreem.activity.absence.AbsenceDetailActivity
+import com.nas.alreem.activity.absence.EarlyPickupDetailActivity
 import com.nas.alreem.activity.absence.model.AbsenceListModel
 import com.nas.alreem.activity.absence.model.AbsenceRequestListModel
 import com.nas.alreem.activity.absence.model.EarlyPickupListArray
 import com.nas.alreem.activity.absence.model.ListAbsenceApiModel
+import com.nas.alreem.activity.bus_service.BusServiceDetailActivity
+import com.nas.alreem.activity.bus_service.RequestBusServiceActivity
 import com.nas.alreem.activity.cca.adapter.CCAsListActivityAdapter
 import com.nas.alreem.activity.intentions.IntentionRegisterActivity
 import com.nas.alreem.activity.payments.adapter.StudentListAdapter
@@ -54,6 +57,8 @@ import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.OnItemClickListener
 import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.constants.addOnItemClickListener
+import com.nas.alreem.fragment.bus_service.adapter.RequestBusserviceRecyclerAdapter
+import com.nas.alreem.fragment.bus_service.model.BusServiceDetail
 import com.nas.alreem.fragment.bus_service.model.BusserviceResponseModel
 import com.nas.alreem.fragment.intention.adapter.IntentionAdapter
 import com.nas.alreem.fragment.intention.model.IntentionApiModel
@@ -89,8 +94,8 @@ class BusServiceFragment : Fragment(){
     lateinit var mPickupListView: RecyclerView
     lateinit var pickup_list:ArrayList<EarlyPickupListArray>
     lateinit var pickupListSort:ArrayList<EarlyPickupListArray>
-    lateinit var studentAbsenceCopy :ArrayList<StudentInfoDetail>
-    var studentAbsenceArrayList = ArrayList<StudentInfoDetail>()
+    lateinit var studentAbsenceCopy :ArrayList<BusServiceDetail>
+    var studentAbsenceArrayList = ArrayList<BusServiceDetail>()
 
   //  lateinit var absence_btn:TextView
    // lateinit var pickup_btn:TextView
@@ -146,16 +151,27 @@ class BusServiceFragment : Fragment(){
 
 
         }
+        mAbsenceListView.addOnItemClickListener(object: OnItemClickListener {
+            override fun onItemClicked(position: Int, view: View) {
+                // Your logic
+                val intent =Intent(activity, BusServiceDetailActivity::class.java)
+                intent.putExtra("studentName",PreferenceManager.getStudentName(mContext))
+                intent.putExtra("studentClass",PreferenceManager.getStudentClass(mContext))
+                intent.putExtra("date",studentAbsenceCopy.get(position).pickup_date)
+                intent.putExtra("time",studentAbsenceCopy.get(position).requested_time)
+                intent.putExtra("pickupby",studentAbsenceCopy.get(position).parent_name)
+                intent.putExtra("reason",studentAbsenceCopy.get(position).reason)
+                intent.putExtra("status",studentAbsenceCopy.get(position).status)
+                intent.putExtra("reason_for_rejection",studentAbsenceCopy.get(position).reason_for_rejection)
+                activity?.startActivity(intent)
+            }
+        })
         newRequestAbsence.setOnClickListener {
-            val intent = Intent(activity, IntentionRegisterActivity::class.java)
+            val intent = Intent(activity, RequestBusServiceActivity::class.java)
            // intent.putExtra("studentClass",PreferenceManager.getStudentClass(mContext))
             activity?.startActivity(intent)
         }
     }
-
-
-
-
 
 
 
@@ -234,7 +250,7 @@ class BusServiceFragment : Fragment(){
     }
     private fun getBusServiceListAPI()
     {
-        studentAbsenceCopy=ArrayList<StudentInfoDetail>()
+        studentAbsenceCopy=ArrayList<BusServiceDetail>()
         studentAbsenceArrayList.clear()
         mAbsenceListView.visibility=View.GONE
         progressDialogAdd.visibility=View.VISIBLE
@@ -265,9 +281,9 @@ class BusServiceFragment : Fragment(){
 
                             if (studentAbsenceArrayList.size>0)
                             {
-                               // mAbsenceListView.visibility=View.VISIBLE
-                              //  val studentInfoAdapter = RequestAbsenceRecyclerAdapter(studentAbsenceArrayList)
-                              //  mAbsenceListView.adapter = studentInfoAdapter
+                                mAbsenceListView.visibility=View.VISIBLE
+                                val studentInfoAdapter = RequestBusserviceRecyclerAdapter(studentAbsenceArrayList)
+                                mAbsenceListView.adapter = studentInfoAdapter
                             }
                             else{
                                 Toast.makeText(mContext, "No Registered Bus Service Found", Toast.LENGTH_SHORT).show()
@@ -361,7 +377,7 @@ class BusServiceFragment : Fragment(){
                                     studImg.setImageResource(R.drawable.student)
                                 }
                             }
-
+                            getBusServiceListAPI()
                         }
                         else
                         {

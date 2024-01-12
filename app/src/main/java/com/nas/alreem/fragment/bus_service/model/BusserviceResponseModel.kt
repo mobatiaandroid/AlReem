@@ -6,5 +6,5 @@ import com.nas.alreem.fragment.student_information.model.StudentInfoResponseArra
 
 class BusserviceResponseModel (
     @SerializedName("status") val status: Int,
-    @SerializedName("bus_services") val bus_services: List<StudentInfoDetail>
+    @SerializedName("bus_services") val bus_services: List<BusServiceDetail>
 )

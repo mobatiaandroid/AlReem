@@ -685,9 +685,6 @@ interface ApiInterface {
         @Header("Authorization") token: String
     ): Call<CCASubmitResponseModel>
 
-
-
-
     @POST("external-providers")
     @Headers("Content-Type: application/json")
     fun getExternalProviders(
@@ -744,5 +741,5 @@ interface ApiInterface {
     fun requestbusservice(
         @Body requestBusservicemodelsubmit: RequestBusServiceModelSubmit,
         @Header("Authorization") token:String
-    ): Call<BusserviceResponseModel>
+    ): Call<EarlyPickupModel>
 }
