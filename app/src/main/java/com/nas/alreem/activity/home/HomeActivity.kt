@@ -355,7 +355,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                         // about us
                        // reEnroll(mContext)
                       //  replaceFragmentsSelected(position)
-                        mFragment = PerformingArtsFragment()
+                        mFragment = HomeFragment()
                         replaceFragmentsSelected(position)
                     }
                     1->
@@ -363,7 +363,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                         //Notification
                        // mFragment = NotificationFragment()
                        // replaceFragmentsSelected(position)
-                        mFragment = CommunicationFragment()
+                        mFragment = NotificationFragment()
                         replaceFragmentsSelected(position)
 
                     }
@@ -552,19 +552,19 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                     7->
                     {
                         //Early years
-                        mFragment = EarlyYearsFragment()
+                        reEnroll(mContext)
                         replaceFragmentsSelected(position)
                     }
                     8->
                     {
                         //Primary
-                        mFragment = PrimaryFragment()
+                        mFragment = CommunicationFragment()
                         replaceFragmentsSelected(position)
                     }
                     9->
                     {
                         //Secondary
-                        mFragment = SecondaryFragment()
+                        mFragment = PerformingArtsFragment()
                         replaceFragmentsSelected(position)
                     }
                     10->
