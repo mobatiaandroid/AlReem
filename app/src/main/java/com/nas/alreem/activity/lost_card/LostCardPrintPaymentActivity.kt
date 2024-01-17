@@ -1,9 +1,6 @@
 package com.nas.alreem.activity.lost_card
 
-import android.Manifest
-import com.nas.alreem.R
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -29,10 +26,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import com.github.barteksc.pdfviewer.PDFView
-import com.nas.alreem.activity.trips.PdfPrint
-
-
+import com.nas.alreem.R
 import com.nas.alreem.activity.home.HomeActivity
+import com.nas.alreem.activity.trips.PdfPrint
+import com.nas.alreem.constants.ConstantFunctions
+import com.nas.alreem.constants.HeaderManager
 import java.io.BufferedReader
 import java.io.File
 import java.io.IOException
@@ -73,6 +71,8 @@ class LostCardPrintPaymentActivity : AppCompatActivity() {
     var anim: RotateAnimation? = null
     var printJob: PrintJob? = null
     var BackPage = true
+    lateinit var headermanager: HeaderManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.preview_print_activity)
@@ -107,6 +107,11 @@ class LostCardPrintPaymentActivity : AppCompatActivity() {
         paymentWebDummy!!.visibility = View.GONE
         mProgressRelLayout = findViewById<View>(R.id.progressDialog) as RelativeLayout
         mProgressRelLayout!!.visibility = View.GONE
+        headermanager = HeaderManager(this@LostCardPrintPaymentActivity, "Preview")
+        headermanager.getHeader(relativeHeader!!, 0)
+
+        back = headermanager.leftButton
+        home = headermanager.logoButton
 
         emailLinear = findViewById<LinearLayout>(R.id.emailLinear)
         printLinearClick = findViewById<LinearLayout>(R.id.printLinearClick)
@@ -234,7 +239,9 @@ class LostCardPrintPaymentActivity : AppCompatActivity() {
             fullHtml = fullHtml!!.replace("###amount###", amount!!)
             fullHtml = fullHtml!!.replace("###order_Id###", orderId!!)
             fullHtml = fullHtml!!.replace("###ParentName###", paidby!!)
-         //   fullHtml = fullHtml!!.replace("###Date###", AppUtils.dateParsingTodd_MMM_yyyy(paidDate))
+            fullHtml = fullHtml!!.replace("###Date###",
+                ConstantFunctions().dateParsingTodd_MMM_yyyy(paidDate)!!
+            )
             fullHtml = fullHtml!!.replace("###paidBy###", invoice!!)
             fullHtml = fullHtml!!.replace("###billing_code###", billingCode!!)
             fullHtml = fullHtml!!.replace("###trn_no###", tr_no!!)

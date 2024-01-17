@@ -15,6 +15,7 @@ import android.view.Window
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -25,21 +26,19 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
-import com.google.gson.JsonObject
 import com.nas.alreem.R
 import com.nas.alreem.activity.home.HomeActivity
+import com.nas.alreem.activity.lost_card.model.LostCardIntructionResponseModel
 import com.nas.alreem.activity.payments.adapter.StudentListAdapter
 import com.nas.alreem.activity.payments.model.StudentList
 import com.nas.alreem.activity.payments.model.StudentListModel
 import com.nas.alreem.constants.ApiClient
-import com.nas.alreem.constants.ApiInterface
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.DialogFunctions
+import com.nas.alreem.constants.HeaderManager
 import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.recyclermanager.DividerItemDecoration
 import com.nas.alreem.recyclermanager.RecyclerItemListener
-import okhttp3.ResponseBody
-import org.json.JSONObject
 import payment.sdk.android.cardpayment.CardPaymentData
 import retrofit2.Call
 import retrofit2.Callback
@@ -51,14 +50,14 @@ class LostCardMainActivity : AppCompatActivity() {
    lateinit var mContext: Context
     var tab_type: String? = null
     var relativeHeader: RelativeLayout? = null
-    //var headermanager: HeaderManager? = null
+    lateinit var headermanager: HeaderManager
     var back: ImageView? = null
     var btn_history: ImageView? = null
     var home: ImageView? = null
     var extras: Bundle? = null
     var nextBtn: ImageView? = null
     var mStudentSpinner: LinearLayout? = null
-    var stud_id: String? = null
+  //  var stud_id: String? = null
     var studClass = ""
     var orderId = ""
     var ordered_user_type = ""
@@ -105,7 +104,7 @@ class LostCardMainActivity : AppCompatActivity() {
     private val mTabId: String? = null
     private val relMain: RelativeLayout? = null
     var studentsModelArrayList : ArrayList<StudentList> = ArrayList<StudentList>()
-   // var progressBarDialog: ProgressBarDialog? = null
+    lateinit var progressDialogAdd: ProgressBar
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lost_card_main)
@@ -114,7 +113,7 @@ class LostCardMainActivity : AppCompatActivity() {
         firstVisit = true
         initialiseUI()
         if (ConstantFunctions.internetCheck(mContext)) {
-//            progressDialog.visibility= View.VISIBLE
+            progressDialogAdd.visibility=View.VISIBLE
             getStudentsListAPI()
         } else {
             DialogFunctions.showInternetAlertDialog(mContext)
@@ -123,19 +122,19 @@ class LostCardMainActivity : AppCompatActivity() {
     }
 
     override fun onRestart() {
-     //   progressBarDialog.hide()
+        progressDialogAdd.visibility=View.GONE
       //  progressBarDialog.dismiss()
         super.onRestart()
     }
 
     override fun onResume() {
-       // progressBarDialog.hide()
+        progressDialogAdd.visibility=View.GONE
        // progressBarDialog.dismiss()
         super.onResume()
     }
 
     private fun getStudentsListAPI() {
-       // progressBarDialog.show()
+        progressDialogAdd.visibility=View.VISIBLE
         studentsModelArrayList.clear()
         studentList.clear()
         val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+ PreferenceManager.getaccesstoken(mContext))
@@ -144,6 +143,8 @@ class LostCardMainActivity : AppCompatActivity() {
                 call: Call<StudentListModel?>,
                 response: Response<StudentListModel?>
             ) {
+                progressDialogAdd.visibility=View.GONE
+
                 val responsedata = response.body()
                 if (responsedata != null) {
                     try {
@@ -216,7 +217,7 @@ class LostCardMainActivity : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<StudentListModel?>, t: Throwable) {
-               // progressBarDialog.hide()
+                progressDialogAdd.visibility=View.GONE
 
             }
         })
@@ -233,12 +234,20 @@ class LostCardMainActivity : AppCompatActivity() {
             tab_type = extras!!.getString("tab_type")
         }
         relativeHeader = findViewById<View>(R.id.relativeHeader) as RelativeLayout
-      //  progressBarDialog = ProgressBarDialog(mContext, R.drawable.spinner)
+        progressDialogAdd = findViewById(R.id.progressDialogAdd)
 
-
+        headermanager = HeaderManager(this@LostCardMainActivity, "Lost ID Card")
+        headermanager!!.getHeader(relativeHeader!!, 6)
+        back = headermanager.leftButton
+        btn_history = headermanager.historyButton
+        headermanager!!.setButtonLeftSelector(
+            R.drawable.back,
+            R.drawable.back
+        )
+        btn_history = headermanager.historyButton
 
         btn_history!!.visibility = View.VISIBLE
-
+        home = headermanager.logoButton
 
         home!!.setOnClickListener {
             val `in` = Intent(
@@ -250,14 +259,21 @@ class LostCardMainActivity : AppCompatActivity() {
         }
 
         studentNameTxt = findViewById<TextView>(R.id.studentName)
-        studImg = findViewById<ImageView>(R.id.studImg)
+       // studImg = findViewById<ImageView>(R.id.imagicon)
         mStudentSpinner = findViewById<View>(R.id.studentSpinner) as LinearLayout
         studImg = findViewById<View>(R.id.imagicon) as ImageView
         instructionTxt = findViewById<View>(R.id.instructionTxt) as TextView
         requestForNewCard = findViewById<View>(R.id.addToWallet) as Button
         et_amount = findViewById<View>(R.id.et_amount) as TextView
-        btn_history!!.setOnClickListener {
+        PreferenceManager.setStudentArrayListModel(studentsModelArrayList,mContext)
 
+        btn_history!!.setOnClickListener {
+            val `in` = Intent(mContext, LostCardPaymentHistory::class.java)
+            `in`.putExtra("studentName", studentName)
+            `in`.putExtra("studentImage", studentImg)
+            `in`.putExtra("studentId", studentId)
+           // `in`.putExtra("StudentModelArray", studentsModelArrayList)
+            startActivity(`in`)
         }
         fetchInstructionsAPI()
 
@@ -286,12 +302,14 @@ class LostCardMainActivity : AppCompatActivity() {
             datePicker!!.show()
         }
         requestForNewCard!!.setOnClickListener {
-           /* val intent = Intent(
+            val intent = Intent(
                 mContext,
                 LostCardPaymentActivity::class.java
-            )*/
+            )
             intent.putExtra("fromDate", "2023-10-21")
-            intent.putExtra("studentId", stud_id)
+            intent.putExtra("studentId", studentId)
+            intent.putExtra("studentname", studentName)
+
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
             et_amount!!.text = "Lost Card Date"
             startActivity(intent)
@@ -311,7 +329,37 @@ class LostCardMainActivity : AppCompatActivity() {
 
     private fun fetchInstructionsAPI() {
 
+        val call: Call<LostCardIntructionResponseModel> = ApiClient.getClient.get_lost_card_instruction("Bearer "+ PreferenceManager.getaccesstoken(mContext))
+        call.enqueue(object : Callback<LostCardIntructionResponseModel> {
+            override fun onResponse(
+                call: Call<LostCardIntructionResponseModel?>,
+                response: Response<LostCardIntructionResponseModel?>
+            ) {
+                val responsedata = response.body()
+                if (responsedata != null) {
+                    try {
+if(responsedata.responsecode.equals("200"))
+{
+    if (responsedata.response.statuscode.equals("303"))
+    {
+        htmlInstruction = responsedata.response.instructions
+        val valueString =
+            htmlInstruction!!.replace("20AED", PreferenceManager.getLostAmount(mContext) + " AED")
+        instructionTxt!!.text = HtmlCompat.fromHtml(valueString, 0)
+    }
+}
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
 
+            override fun onFailure(call: Call<LostCardIntructionResponseModel?>, t: Throwable) {
+                // progressBarDialog.hide()
+                Log.e("error", t.toString())
+
+            }
+        })
 
     }
 
@@ -368,7 +416,7 @@ class LostCardMainActivity : AppCompatActivity() {
         val iconImageView = dialog.findViewById<View>(R.id.iconImageView) as ImageView
         iconImageView.setImageResource(R.drawable.boy)
         val socialMediaList =
-            dialog.findViewById<View>(R.id.recycler_view_social_media) as RecyclerView
+            dialog.findViewById<View>(R.id.studentListRecycler) as RecyclerView
         //if(mSocialMediaArray.get())
         val sdk = Build.VERSION.SDK_INT
         if (sdk < Build.VERSION_CODES.JELLY_BEAN) {

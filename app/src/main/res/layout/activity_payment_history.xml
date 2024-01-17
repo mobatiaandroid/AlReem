@@ -83,7 +83,7 @@
 
             </LinearLayout>
 
-            <com.mobatia.naisapp.manager.CustomFontSansProTextBlack
+            <com.nas.alreem.commonviews.CustomFontSansProTextBlack
 
                 android:id="@+id/textViewYear"
                 android:layout_width="wrap_content"
@@ -106,7 +106,7 @@
 
                 android:visibility="gone" />
 
-            <com.mobatia.naisapp.manager.CustomFontSansProTextBlack
+            <com.nas.alreem.commonviews.CustomFontSansProTextBlack
                 android:id="@+id/enterTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

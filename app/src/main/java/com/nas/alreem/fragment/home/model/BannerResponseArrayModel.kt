@@ -9,4 +9,5 @@ class BannerResponseArrayModel {
     @SerializedName("notice") val notice:String=""
     @SerializedName("banner_images") val banner_images:ArrayList<String>?=null
     @SerializedName("survey") val survey:Int=0
+    @SerializedName("lost_student_card_amount") val lost_student_card_amount:String=""
 }

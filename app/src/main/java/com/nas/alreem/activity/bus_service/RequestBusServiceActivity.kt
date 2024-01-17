@@ -11,6 +11,8 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.Window
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.DatePicker
 import android.widget.EditText
@@ -18,6 +20,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.TimePicker
 import androidx.annotation.RequiresApi
@@ -56,6 +59,7 @@ class RequestBusServiceActivity : AppCompatActivity() {
     var min:String=""
     var hour_new:String=""
     var new_time:String=""
+    lateinit var optionsArray : ArrayList<String>
     lateinit var backRelative: RelativeLayout
     lateinit var heading: TextView
     lateinit var logoClickImgView: ImageView
@@ -82,6 +86,8 @@ class RequestBusServiceActivity : AppCompatActivity() {
     lateinit var sdate: Date
     lateinit var edate: Date
     var elapsedDays:Long = 0
+    var selectedItem = ""
+
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -104,7 +110,7 @@ class RequestBusServiceActivity : AppCompatActivity() {
         progressDialogAdd=findViewById(R.id.progressDialogAdd)
         studentSpinner = findViewById(R.id.studentSpinner)
         heading=findViewById(R.id.heading)
-        heading.text= ConstantWords.earlypickup
+        heading.text= "Bus Service"
         backRelative=findViewById(R.id.backRelative)
         logoClickImgView=findViewById(R.id.logoClickImgView)
         myCalendar= Calendar.getInstance()
@@ -117,6 +123,45 @@ class RequestBusServiceActivity : AppCompatActivity() {
         enterMessage = findViewById<EditText>(R.id.enterMessage)
         submitLayout = findViewById<LinearLayout>(R.id.submitLayout)
         submitBtn = findViewById<Button>(R.id.submitBtn)
+        val spinnerList =findViewById<Spinner>(R.id.spinnerlist)
+        var dropDownList: java.util.ArrayList<String> = ArrayList<String>()
+        optionsArray=ArrayList()
+        optionsArray.add(0,"Pick Up At Morning")
+        optionsArray.add(1,"Pick Up At Evening")
+        dropDownList =ArrayList()
+        dropDownList.add(0, "Pick up At")
+        for (i in 1..optionsArray.size) {
+            dropDownList.add(optionsArray.get(i - 1).toString())
+        }
+        val sp_adapter: ArrayAdapter<*> =
+            ArrayAdapter<Any?>(mContext, R.layout.spinner_textview, dropDownList as List<Any?>)
+        spinnerList.adapter = sp_adapter
+        spinnerList.setSelection(0)
+        val finalDropDownList: java.util.ArrayList<*> = dropDownList
+        spinnerList.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View,
+                position: Int,
+                id: Long
+            ) {
+                selectedItem = parent.getItemAtPosition(position).toString()
+                val optionlistSize = finalDropDownList.size - 1
+                for (i in 1 until optionlistSize) {
+                    if (selectedItem === finalDropDownList[i].toString()) {
+                      //  reEnrollSubmit.status=(finalDropDownList[i].toString())
+                    //    reEnrollSubmit.student_id=
+                         //   PreferenceManager.getCCAStudentIdPosition(mContext).toString()
+                      //  check[0] = 1
+                    } else if (selectedItem === finalDropDownList[0]) {
+                      //  reEnrollSubmit.status=("")
+                      //  check[0] = 0
+                    }
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
         studentSpinner.setOnClickListener(){
             showStudentList(mContext,studentListArrayList)
         }

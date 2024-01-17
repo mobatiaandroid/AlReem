@@ -319,7 +319,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                     1->
                     {
                         //Notification
-                        mFragment =BusServiceFragment()
+                        mFragment =StudentInformationFragment()
                         replaceFragmentsSelected(position)
                     }
                     2->
@@ -519,13 +519,13 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                     9->
                     {
                         //Primary
-                        mFragment = PrimaryFragment()
+                        mFragment = BusServiceFragment()
                         replaceFragmentsSelected(position)
                     }
                     10->
                     {
                         //Secondary
-                        mFragment = SecondaryFragment()
+                        mFragment = Intentionfragment()
                         replaceFragmentsSelected(position)
                     }
                     11->

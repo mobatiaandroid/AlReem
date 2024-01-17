@@ -1,0 +1,8 @@
+package com.nas.alreem.activity.lost_card.model
+
+import com.google.gson.annotations.SerializedName
+
+class ResponseStudent (
+    @SerializedName("response") val response: String,
+    @SerializedName("statuscode") val statuscode: String
+)

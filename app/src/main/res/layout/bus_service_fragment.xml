@@ -200,7 +200,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="left|center_vertical"
-        android:text="@string/requestHint"
+        android:text="@string/requestHintbus"
         android:textColor="@color/rel_eight"
         android:textSize="16dp"
         android:layout_marginLeft="10dp"

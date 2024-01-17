@@ -19,6 +19,7 @@ import com.nas.alreem.activity.canteen.CanteenPaymentActivity
 import com.nas.alreem.activity.canteen.InformationActivity
 import com.nas.alreem.activity.canteen.PreOrderActivity
 import com.nas.alreem.activity.login.model.SignUpResponseModel
+import com.nas.alreem.activity.lost_card.LostCardMainActivity
 import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.DialogFunctions
@@ -37,6 +38,7 @@ class CanteenFragment  : Fragment() {
     lateinit var information_image: LinearLayout
     lateinit var payment_image: LinearLayout
     lateinit var staffLinear: LinearLayout
+    lateinit var lostcardLinear: LinearLayout
     lateinit var bannerImg:ImageView
     lateinit var title: TextView
     lateinit var description: TextView
@@ -75,7 +77,7 @@ class CanteenFragment  : Fragment() {
     //    progress.visibility=View.GONE
         email_icon = view?.findViewById(R.id.email_icon)!!
         progress = view?.findViewById(R.id.progress)!!
-
+        lostcardLinear = view?.findViewById(R.id.lostcardLinear)!!
         preorder_image = view?.findViewById(R.id.preOrderLinear)!!
         information_image = view?.findViewById(R.id.informationLinear)!!
         payment_image = view?.findViewById(R.id.paymentLinear)!!
@@ -86,6 +88,13 @@ class CanteenFragment  : Fragment() {
 
     }
     private fun onClick() {
+
+        lostcardLinear.setOnClickListener {
+            val i = Intent(mContext, LostCardMainActivity::class.java)
+            PreferenceManager.setStudentID(mContext,"")
+
+            mContext.startActivity(i)
+        }
         email_icon.setOnClickListener {
             showSendEmailDialog()
         }

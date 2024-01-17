@@ -159,7 +159,7 @@ class BusServiceFragment : Fragment(){
                 intent.putExtra("studentClass",PreferenceManager.getStudentClass(mContext))
                 intent.putExtra("date",studentAbsenceCopy.get(position).pickup_date)
                 intent.putExtra("time",studentAbsenceCopy.get(position).requested_time)
-                intent.putExtra("pickupby",studentAbsenceCopy.get(position).parent_name)
+                intent.putExtra("pickupby",studentAbsenceCopy.get(position).requested_on)
                 intent.putExtra("reason",studentAbsenceCopy.get(position).reason)
                 intent.putExtra("status",studentAbsenceCopy.get(position).status)
                 intent.putExtra("reason_for_rejection",studentAbsenceCopy.get(position).reason_for_rejection)

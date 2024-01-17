@@ -1,5 +1,6 @@
 package com.nas.alreem.constants
 
+import com.google.gson.JsonObject
 import com.nas.alreem.activity.absence.model.AbsenceListModel
 import com.nas.alreem.activity.absence.model.EarlyPickupModel
 import com.nas.alreem.activity.absence.model.ListAbsenceApiModel
@@ -34,6 +35,9 @@ import com.nas.alreem.activity.gallery.model.*
 import com.nas.alreem.activity.login.model.ForgetPasswordResponseModel
 import com.nas.alreem.activity.login.model.LoginResponseModel
 import com.nas.alreem.activity.login.model.SignUpResponseModel
+import com.nas.alreem.activity.lost_card.model.LostCardHistoryResponseModel
+import com.nas.alreem.activity.lost_card.model.LostCardIntructionResponseModel
+import com.nas.alreem.activity.lost_card.model.StudentLostCardResponseModel
 import com.nas.alreem.activity.notifications.model.MessageDetailApiModel
 import com.nas.alreem.activity.notifications.model.MessageDetailModel
 import com.nas.alreem.activity.parent_meetings.model.PtaConfirmApiModel
@@ -95,6 +99,7 @@ import com.nas.alreem.fragment.student_information.model.StudentInfoApiModel
 import com.nas.alreem.fragment.student_information.model.StudentInfoModel
 import com.nas.alreem.fragment.time_table.model.apimodel.TimeTableApiDataModel
 import com.nas.alreem.fragment.time_table.model.apimodel.TimeTableApiModel
+import okhttp3.ResponseBody
 
 import retrofit2.Call
 import retrofit2.http.*
@@ -742,4 +747,22 @@ interface ApiInterface {
         @Body requestBusservicemodelsubmit: RequestBusServiceModelSubmit,
         @Header("Authorization") token:String
     ): Call<EarlyPickupModel>
+    @POST("get_lost_card_instruction")
+    @Headers("Content-Type: application/json")
+    fun get_lost_card_instruction(
+        @Header("Authorization") token:String
+    ): Call<LostCardIntructionResponseModel>
+    @POST("student_lost_card_history")
+    @Headers("Content-Type: application/json")
+    fun student_lost_card_history(
+        @Body  studentbody: StudentInfoApiModel,
+        @Header("Authorization") token:String
+    ): Call<LostCardHistoryResponseModel>
+
+    @POST("student_lost_card")
+    @Headers("Content-Type: application/json")
+    fun student_lost_card(
+        @Header("Authorization") token: String,
+        @Body json: JsonObject
+    ): Call<StudentLostCardResponseModel>
 }

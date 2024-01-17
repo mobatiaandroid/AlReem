@@ -26,23 +26,26 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.google.gson.JsonObject
 import com.nas.alreem.R
+import com.nas.alreem.activity.shop.RegisteredShopSummaryActivity
+import com.nas.alreem.activity.shop.ShopInformationActivity
+import com.nas.alreem.activity.shop.ShopRegisterActivity
+import com.nas.alreem.constants.PreferenceManager
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 
-/*
 class ShopFragment : Fragment {
     var titleTextView: TextView? = null
     var descriptionTextView: TextView? = null
-    var registerMusicButton: ConstraintLayout? = null
-    var infoButton: ConstraintLayout? = null
-    var summaryButton: ConstraintLayout? = null
+    lateinit var registerMusicButton: ConstraintLayout
+    lateinit var infoButton: ConstraintLayout
+    lateinit var summaryButton: ConstraintLayout
     var mtitleRel: LinearLayout? = null
     var externalCCA: RelativeLayout? = null
     var informationCCA: RelativeLayout? = null
     var bannerImagePager: ImageView? = null
-    var mailImageView: ImageView? = null
+    lateinit var mailImageView: ImageView
     var ccaOption: RelativeLayout? = null
     var contactEmail = ""
     var text_content: TextView? = null
@@ -50,12 +53,12 @@ class ShopFragment : Fragment {
     private var title: String? = null
     private var tabID: String? = null
     private var rootView: View? = null
-    private var context: Context? = null
+    lateinit var mContext: Context
     private val description = ""
     private val EMAIL_PATTERN =
         "^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$"
     private val pattern = "^([a-zA-Z ]*)$"
-    var progressBarDialog: ProgressBarDialog? = null
+   // var progressBarDialog: ProgressBarDialog? = null
 
     constructor()
     constructor(title: String?, tabId: String?) {
@@ -81,9 +84,9 @@ class ShopFragment : Fragment {
             false
         )
         setHasOptionsMenu(true)
-        context = activity
+        mContext=requireContext()
         initialiseUI()
-        if (AppUtils.checkInternet(context)) {
+        /*if (AppUtils.checkInternet(context)) {
             // call music academy banner api
             callMusicAcademyBannerAPI()
         } else {
@@ -94,7 +97,7 @@ class ShopFragment : Fragment {
                 R.drawable.nonetworkicon,
                 R.drawable.roundred
             )
-        }
+        }*/
         return rootView
     }
 
@@ -117,39 +120,40 @@ class ShopFragment : Fragment {
         infoButton = rootView!!.findViewById<ConstraintLayout>(R.id.infoButton)
         mailImageView = rootView!!.findViewById<ImageView>(R.id.emailHelp)
         summaryButton = rootView!!.findViewById<ConstraintLayout>(R.id.summaryButton)
-        progressBarDialog = ProgressBarDialog(context, R.drawable.spinner)
+      //  progressBarDialog = ProgressBarDialog(context, R.drawable.spinner)
         registerMusicButton.setOnClickListener(View.OnClickListener { v: View? ->
             val `in` = Intent(
                 context,
-                RegisterMusicActivity::class.java
+                ShopRegisterActivity::class.java
             )
             startActivity(`in`)
         })
         infoButton.setOnClickListener(View.OnClickListener { v: View? ->
             val `in` = Intent(
                 context,
-                MusicAcademyInformationActivity::class.java
+                ShopInformationActivity::class.java
             )
             startActivity(`in`)
         })
         summaryButton.setOnClickListener(View.OnClickListener { v: View? ->
             val `in` = Intent(
                 context,
-                RegisteredSummaryActivity::class.java
+                RegisteredShopSummaryActivity::class.java
             )
             startActivity(`in`)
         })
         mailImageView.setOnClickListener(View.OnClickListener {
-            if (PreferenceManager.getUserId(context).equalsIgnoreCase("")) {
-                AppUtils.showDialogAlertDismiss(
+            if (PreferenceManager.getUserCode(mContext).equals("")) {
+               /* AppUtils.showDialogAlertDismiss(
                     context as Activity?,
                     context!!.getString(R.string.alert_heading),
                     context!!.getString(R.string.avail_for_registered),
                     R.drawable.exclamationicon,
                     R.drawable.round
-                )
-            } else {
-                val dialog = Dialog(context!!)
+                )*/
+            }
+            else {
+                val dialog = Dialog(requireContext())
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                 dialog.setContentView(R.layout.alert_send_email_dialog)
                 dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -157,30 +161,30 @@ class ShopFragment : Fragment {
                 val submitButton = dialog.findViewById<View>(R.id.submitButton) as Button
                 text_dialog = dialog.findViewById<View>(R.id.text_dialog) as EditText
                 text_content = dialog.findViewById<View>(R.id.text_content) as EditText
-                progressDialog = dialog.findViewById<View>(R.id.progressdialogg) as ProgressBar
+              //  progressDialog = dialog.findViewById<View>(R.id.progressdialogg) as ProgressBar
                 dialogCancelButton.setOnClickListener { dialog.dismiss() }
                 submitButton.setOnClickListener {
                     if (text_dialog!!.text.toString().trim { it <= ' ' } == "") {
-                        val toast = Toast.makeText(
-                            context, context!!.resources.getString(
+                        /*val toast = Toast.makeText(
+                            context, requireContext().resources.getString(
                                 R.string.enter_subjects
                             ), Toast.LENGTH_SHORT
-                        )
-                        toast.show()
+                        )*/
+                       // toast.show()
                     } else {
                         if (text_content!!.text.toString().trim { it <= ' ' } == "") {
-                            val toast = Toast.makeText(
-                                context, context!!.resources.getString(
+                          /*  val toast = Toast.makeText(
+                                context, requireContext().resources.getString(
                                     R.string.enter_contents
                                 ), Toast.LENGTH_SHORT
-                            )
-                            toast.show()
+                            )*/
+                           // toast.show()
                         } else if (contactEmail.matches(EMAIL_PATTERN.toRegex())) {
                             if (text_dialog!!.text.toString().trim { it <= ' ' }
                                     .matches(pattern.toRegex())) {
                                 if (text_content!!.text.toString().trim { it <= ' ' }
                                         .matches(pattern.toRegex())) {
-                                    if (AppUtils.isNetworkConnected(context)) {
+                                    /*if (AppUtils.isNetworkConnected(context)) {
                                         sendEmailToStaff(dialog)
                                     } else {
                                         AppUtils.showDialogAlertDismiss(
@@ -190,26 +194,26 @@ class ShopFragment : Fragment {
                                             R.drawable.nonetworkicon,
                                             R.drawable.roundred
                                         )
-                                    }
+                                    }*/
                                 } else {
-                                    val toast = Toast.makeText(
+                                    /*val toast = Toast.makeText(
                                         context, context!!.resources.getString(
                                             R.string.enter_valid_contents
                                         ), Toast.LENGTH_SHORT
                                     )
-                                    toast.show()
+                                    toast.show()*/
                                 }
                             } else {
-                                val toast = Toast.makeText(
+                                /*val toast = Toast.makeText(
                                     context, context!!.resources.getString(
                                         R.string.enter_valid_subjects
                                     ), Toast.LENGTH_SHORT
                                 )
-                                toast.show()
+                                toast.show()*/
                             }
                         } else {
                             val toast = Toast.makeText(
-                                context, context!!.resources.getString(
+                                context, requireContext().resources.getString(
                                     R.string.enter_valid_email
                                 ), Toast.LENGTH_SHORT
                             )
@@ -223,7 +227,6 @@ class ShopFragment : Fragment {
     }
 
     private fun sendEmailToStaff(dialog: Dialog) {
-        */
 /*val service: APIInterface = APIClient.getRetrofitInstance().create(APIInterface::class.java)
         val paramObject = JsonObject()
         paramObject.addProperty("email", contactEmail)
@@ -268,10 +271,10 @@ class ShopFragment : Fragment {
                 progressDialog!!.visibility = View.GONE
 
             }
-        })*//*
+        })*/
 
     }
     companion object {
         private var progressDialog: ProgressBar? = null
     }
-}*/
+}

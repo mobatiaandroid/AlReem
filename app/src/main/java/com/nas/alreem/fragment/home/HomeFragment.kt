@@ -192,7 +192,9 @@ class HomeFragment : Fragment() , View.OnClickListener{
                             }
                             var notice=response.body()!!.responseArray!!.notice
                             val survey: Int = response.body()!!.responseArray!!.survey
+                            val lost_student_card_amount:String = response.body()!!.responseArray!!.lost_student_card_amount
                             //										int survey=0;
+                            PreferenceManager.setLostAmount(mContext,lost_student_card_amount)
                             PreferenceManager.setSurvey(mContext, survey)
                             if(notice.equals(""))
                             {

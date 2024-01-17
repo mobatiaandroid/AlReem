@@ -23,6 +23,7 @@
     <color name="btnBackground">#e7e7e7</color>
     <color name="timetableblue">#7AE2ED</color>
     <color name="ttpop">#043255</color>
+    <color name="trip_green">#009740</color>
 
     <color name="parents_slot_color">#15395A</color>
     <color name="parents_association_titleclr">#ee2953</color>

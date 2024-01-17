@@ -215,20 +215,18 @@ class TimeTableFragment : Fragment() {
         var d = Date()
         dayOfTheWeek = sdf.format(d)
         when (dayOfTheWeek) {
-            "Sunday" -> {
+
+            "Monday" -> {
                 weekPosition = 1
             }
-            "Monday" -> {
+            "Tuesday" -> {
                 weekPosition = 2
             }
-            "Tuesday" -> {
+            "Wednesday" -> {
                 weekPosition = 3
             }
-            "Wednesday" -> {
-                weekPosition = 4
-            }
             "Thursday" -> {
-                weekPosition = 5
+                weekPosition = 4
             }
 
             else -> {

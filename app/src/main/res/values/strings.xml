@@ -11,8 +11,8 @@
         <item>Parent Essentials</item>
         <item>Absence &amp; Early Pickup</item>
         <item>Early Years</item>
-        <item>Primary</item>
-        <item>Secondary</item>
+        <item>Bus Service</item>
+        <item>Intentions</item>
         <item>Reports</item>
         <item>Timetable</item>
         <item>Permission Forms</item>
@@ -315,6 +315,8 @@
     <string name="regNewAbsence">Register New Absence</string>
     <string name="regNewbusservice">Register New Bus Service</string>
     <string name="regEarlypickup">Register Early Pickup</string>
+    <string name="requestHintbus">If you need to cancel a registered Bus service pickup please contact reception (phone or email).</string>
+
     <string name="requestHint">If you need to cancel a registered absence/early pickup please contact reception (phone or email).</string>
     <string name="new_card">Request for New ID Card</string>
 
