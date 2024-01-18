@@ -78,7 +78,7 @@ class PreOrderActivity_new :AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.canteen_preorder)
+        setContentView(R.layout.canteen_preorder_new)
         initfn()
         if (ConstantFunctions.internetCheck(nContext)) {
 //            progressDialog.visibility= View.VISIBLE

@@ -188,7 +188,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="45"
-                    android:text="Pickup by"
+                    android:text="Pickup At"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
 
@@ -263,7 +263,7 @@
                     android:layout_weight="45"
                     android:layout_gravity="top"
                     android:layout_marginLeft="7dp"
-                    android:text="Reason for early pickup"
+                    android:text="Reason for Bus pickup"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
 

@@ -187,7 +187,7 @@ class RequestBusServiceActivity : AppCompatActivity() {
 
                         DialogFunctions.commonErrorAlertDialog("Alert","Please select your Pickup Time",mContext)
                     }else{
-                        if (pickupName.text.isEmpty()){
+                        if (selectedItem.equals("")){
                             DialogFunctions.commonErrorAlertDialog("Alert","Please enter pickup person name",mContext)
 
                         }else{
@@ -206,7 +206,7 @@ class RequestBusServiceActivity : AppCompatActivity() {
                                 /*callPickupSubmitApi(date,time.toString(),pickupname_entered.toString(),
                                     reason_entered.toString()
                                 )*/
-                                callPickupSubmitApi(date,new_time,pickupname_entered.toString(),
+                                callPickupSubmitApi(date,new_time,selectedItem,
                                     reason_entered.toString()
                                 )
                             }

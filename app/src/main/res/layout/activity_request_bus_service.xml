@@ -89,7 +89,7 @@ android:scrollbars="none">
         android:imeOptions="actionDone"
         android:paddingLeft="20dp"
         android:textColor="@color/black"
-        android:visibility="visible"
+        android:visibility="gone"
         android:textColorHint="@color/dark_grey1"
         android:textSize="15sp" />
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -189,7 +189,7 @@ android:scrollbars="none">
         android:background="@drawable/edittext_greybg"
         android:focusableInTouchMode="true"
         android:gravity="top"
-        android:hint="Reason for early pickup"
+        android:hint="Reason for Bus pickup"
         android:imeOptions="actionDone"
         android:inputType="textMultiLine"
         android:lines="5"
