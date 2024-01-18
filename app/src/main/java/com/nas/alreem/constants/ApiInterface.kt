@@ -1,6 +1,5 @@
 package com.nas.alreem.constants
 
-import com.google.gson.JsonObject
 import com.nas.alreem.activity.absence.model.AbsenceListModel
 import com.nas.alreem.activity.absence.model.EarlyPickupModel
 import com.nas.alreem.activity.absence.model.ListAbsenceApiModel
@@ -65,7 +64,6 @@ import com.nas.alreem.activity.staff_directory.model.ListStaffDetailModel
 import com.nas.alreem.activity.staff_directory.model.StaffCatListResponseModel
 import com.nas.alreem.activity.survey.model.*
 import com.nas.alreem.fragment.about_us.model.AboutUsResponseModel
-import com.nas.alreem.fragment.calendar.model.CalendarAPIModel
 import com.nas.alreem.fragment.calendar.model.CalendarResponseModel
 import com.nas.alreem.fragment.calendar.model.TermCalendarResponseModel
 import com.nas.alreem.fragment.canteen.model.CanteenBannerResponseModel
@@ -87,8 +85,6 @@ import com.nas.alreem.fragment.reports.model.ReportApiModel
 import com.nas.alreem.fragment.reports.model.ReportListModel
 import com.nas.alreem.fragment.settings.model.ChangePasswordApiModel
 
-import okhttp3.ResponseBody
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -496,9 +492,9 @@ interface ApiInterface {
 
     @POST("list-early-pickup")
     @Headers("Content-Type: application/json")
-    fun pickuplist(
-        @Body  listPickupApiModel: ListPickupApiModel,
-        @Header("Authorization") token:String
+    fun pickUplist(
+        @Body listPickupApiModel: ListPickupApiModel,
+        @Header("Authorization") token: String
     ): Call<PickupListModel>
 
     @POST("request-leave")

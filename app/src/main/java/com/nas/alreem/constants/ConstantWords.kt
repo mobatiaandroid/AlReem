@@ -1,6 +1,5 @@
 package com.nas.alreem.constants
 
-import com.nas.alreem.activity.survey.model.SurveySubmitApiModel
 import com.nas.alreem.activity.survey.model.SurveySubmitDataModel
 
 class ConstantWords {
@@ -44,7 +43,7 @@ class ConstantWords {
         var TAB_PRIMARY = "8"
         var TAB_SECONDARY = "9"
         var TAB_ENRICHMENT = "12"
-        var TAB_PARENT_MEETINGS = "12"
+        var TAB_PARENT_MEETINGS = "13"
         var TAB_PERMISSION_FORMS = "11"
         var TAB_GALLERY = "14"
         var TAB_ABOUT_US = "16"
