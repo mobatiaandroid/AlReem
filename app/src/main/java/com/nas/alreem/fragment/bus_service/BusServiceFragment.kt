@@ -394,4 +394,39 @@ class BusServiceFragment : Fragment(){
 
         })
     }
+
+    override fun onResume() {
+        super.onResume()
+
+        mPickupListView.visibility = View.GONE
+        mAbsenceListView.visibility = View.GONE
+        studentNameTxt.text = PreferenceManager.getStudentName(mContext)
+        studentId = PreferenceManager.getStudentID(mContext).toString()
+        studentImg = PreferenceManager.getStudentPhoto(mContext)!!
+        if (!studentImg.equals("")) {
+            Glide.with(mContext) //1
+                .load(studentImg)
+                .placeholder(R.drawable.student)
+                .error(R.drawable.student)
+                .skipMemoryCache(true) //2
+                .diskCacheStrategy(DiskCacheStrategy.NONE) //3
+                .transform(CircleCrop()) //4
+                .into(studImg)
+        } else {
+            studImg.setImageResource(R.drawable.student)
+        }
+
+            progressDialogAdd.visibility = View.VISIBLE
+            if (ConstantFunctions.internetCheck(mContext))
+            {
+                getBusServiceListAPI()
+            }
+            else
+            {
+                DialogFunctions.showInternetAlertDialog(mContext)
+            }
+
+
+
+    }
 }

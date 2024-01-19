@@ -15,6 +15,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.nas.alreem.R
 import com.nas.alreem.activity.ProgressBarDialog
 import com.nas.alreem.activity.canteen.Myorderbasket_Activity
@@ -32,6 +35,10 @@ import com.nas.alreem.activity.canteen.model.canteen_cart.CanteenCartModel
 import com.nas.alreem.activity.canteen.model.canteen_cart.CanteenCartResModel
 import com.nas.alreem.activity.canteen.model.canteen_cart.CartItemsListModel
 import com.nas.alreem.activity.home.HomeActivity
+import com.nas.alreem.activity.payments.model.StudentList
+import com.nas.alreem.activity.payments.model.StudentListModel
+import com.nas.alreem.activity.shop_new.adapter.PreorderItemsAdapter_new
+import com.nas.alreem.activity.shop_new.model.ShopItemsApiModel
 import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.DialogFunctions
@@ -57,8 +64,9 @@ class Addorder_Activity_new : AppCompatActivity()  {
     lateinit var cart_items_list: ArrayList<CartItemsListModel>
     private var id: String? = null
     lateinit var date_title: TextView
-    lateinit var date_list: ArrayList<DateModel>
+   // lateinit var date_list: ArrayList<DateModel>
     lateinit var recyclerview_item: RecyclerView
+    var studentListArrayList = ArrayList<StudentList>()
 
     //lateinit var selected:ImageView
     // lateinit var progress: RelativeLayout
@@ -87,17 +95,18 @@ class Addorder_Activity_new : AppCompatActivity()  {
         setContentView(R.layout.shop_addorder)
         firstVisit = true
         initfn()
-        setdate()
+      //  setdate()
         //progressDialog.visibility=View.VISIBLE
         if (ConstantFunctions.internetCheck(nContext)) {
 //            progressDialog.visibility= View.VISIBLE
-            item_categories()
-            getcanteen_cart()
+            callStudentListApi()
+
         } else {
             DialogFunctions.showInternetAlertDialog(nContext)
         }
 
-
+        item_categories()
+        getcanteen_cart()
     }
 
     private fun initfn() {
@@ -119,24 +128,24 @@ class Addorder_Activity_new : AppCompatActivity()  {
         category_list = ArrayList()
         cart_list = ArrayList()
         cart_items_list = ArrayList()
-        date_list = intent.getSerializableExtra("date_list") as ArrayList<DateModel>
+       // date_list = intent.getSerializableExtra("date_list") as ArrayList<DateModel>
         //date_list=PreferenceManager().getdate_list(nContext)
-        var year = date_list[0].year
-        var strCurrentDate = ""
+     //   var year = date_list[0].year
+        /*var strCurrentDate = ""
         var format = SimpleDateFormat("MMM", Locale.ENGLISH)
         var newDate: Date? = null
         try {
-            newDate = format.parse(date_list[0].month)
+          //  newDate = format.parse(date_list[0].month)
         } catch (e: ParseException) {
             e.printStackTrace()
         }
         format = SimpleDateFormat("MM", Locale.ENGLISH)
         strCurrentDate = format.format(newDate)
-        var month=strCurrentDate
+        var month=strCurrentDate*/
         //var month = CommonMethods.dateParsingTommm(date_list[0].month)
-        var date = date_list[0].numberDate
-        date_string = date_list[0].numberDate
-        date_selected = date_string.toString()
+      //  var date = date_list[0].numberDate
+      //  date_string = date_list[0].numberDate
+       // date_selected = date_string.toString()
         total_items = findViewById(R.id.itemCount)
         total_price = findViewById(R.id.totalAmount)
         bottomview = findViewById(R.id.cartLinear)
@@ -170,7 +179,7 @@ class Addorder_Activity_new : AppCompatActivity()  {
 
     }
     private fun setdate(){
-        var one_date=date_list[0].day+","+date_list[0].date+" "+date_list[0].month+" "+date_list[0].year
+        /*var one_date=date_list[0].day+","+date_list[0].date+" "+date_list[0].month+" "+date_list[0].year
         if (date_list.size==1){
             date_title.visibility = View.VISIBLE
             date_title.text = one_date
@@ -223,7 +232,7 @@ class Addorder_Activity_new : AppCompatActivity()  {
                     //items_onclick()
                 }
             })
-        }
+        }*/
     }
 
 
@@ -232,7 +241,7 @@ class Addorder_Activity_new : AppCompatActivity()  {
         progressDialogP.show()
 
         val token = PreferenceManager.getaccesstoken(nContext)
-        val call: Call<CatListModel> = ApiClient.getClient.get_canteen_categories("Bearer "+token)
+        val call: Call<CatListModel> = ApiClient.getClient.get_shop_categories("Bearer "+token)
         call.enqueue(object : Callback<CatListModel> {
             override fun onFailure(call: Call<CatListModel>, t: Throwable) {
             }
@@ -314,15 +323,98 @@ class Addorder_Activity_new : AppCompatActivity()  {
         })
 
     }
+    fun callStudentListApi()
+    {
+       // progressDialogAdd.visibility=View.VISIBLE
+        studentListArrayList= ArrayList()
+        val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+ PreferenceManager.getaccesstoken(nContext))
+        call.enqueue(object : Callback<StudentListModel> {
+            override fun onFailure(call: Call<StudentListModel>, t: Throwable) {
+               // progressDialogAdd.visibility=View.GONE
+            }
+            override fun onResponse(call: Call<StudentListModel>, response: Response<StudentListModel>) {
+                val responsedata = response.body()
+              //  progressDialogAdd.visibility=View.GONE
+                if (responsedata != null) {
+                    try {
+
+                        if (response.body()!!.status==100)
+                        {
+                            studentListArrayList=ArrayList()
+                            studentListArrayList.addAll(response.body()!!.responseArray.studentList)
+                            if (PreferenceManager.getStudentID(nContext).equals(""))
+                            {
+                                /*studentName=studentListArrayList.get(0).name
+                                studentImg=studentListArrayList.get(0).photo
+                                studentId=studentListArrayList.get(0).id
+                                studentClass=studentListArrayList.get(0).section*/
+                                PreferenceManager.setStudentID(nContext,studentListArrayList.get(0).id)
+                               /* PreferenceManager.setStudentName(mContext,studentName)
+                                PreferenceManager.setStudentPhoto(mContext,studentImg)
+                                PreferenceManager.setStudentClass(mContext,studentClass)
+                                studentNameTxt.text=studentName*/
+                               /* if(!studentImg.equals(""))
+                                {
+                                    Glide.with(mContext) //1
+                                        .load(studentImg)
+                                        .placeholder(R.drawable.student)
+                                        .error(R.drawable.student)
+                                        .skipMemoryCache(true) //2
+                                        .diskCacheStrategy(DiskCacheStrategy.NONE) //3
+                                        .transform(CircleCrop()) //4
+                                        .into(studImg)
+                                }
+                                else{
+                                    studImg.setImageResource(R.drawable.student)
+                                }*/
+
+                            }
+                            else{
+                               /* studentName= PreferenceManager.getStudentName(mContext)!!
+                                studentImg= PreferenceManager.getStudentPhoto(mContext)!!
+                                studentId= PreferenceManager.getStudentID(mContext)!!
+                                studentClass= PreferenceManager.getStudentClass(mContext)!!
+                                studentNameTxt.text=studentName
+                                if(!studentImg.equals(""))
+                                {
+                                    Glide.with(mContext) //1
+                                        .load(studentImg)
+                                        .placeholder(R.drawable.student)
+                                        .error(R.drawable.student)
+                                        .skipMemoryCache(true) //2
+                                        .diskCacheStrategy(DiskCacheStrategy.NONE) //3
+                                        .transform(CircleCrop()) //4
+                                        .into(studImg)
+                                }
+                                else{
+                                    studImg.setImageResource(R.drawable.student)
+                                }*/
+                            }
+
+                        }
+                        else
+                        {
+
+                            DialogFunctions.commonErrorAlertDialog(nContext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), nContext)
+                        }
+
+
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+
+        })
+    }
     private fun items(){
         item_list= ArrayList()
         progressDialogP.show()
 
         val token = PreferenceManager.getaccesstoken(nContext)
-        var canteenItems= CanteenItemsApiModel(
-            PreferenceManager.getStudentID(nContext).toString(),def_cat_id,
-            date_selected,"0","50")
-        val call: Call<ItemsListModel> = ApiClient.getClient.get_canteen_items(canteenItems,"Bearer "+token)
+        var canteenItems= ShopItemsApiModel(
+            PreferenceManager.getStudentID(nContext).toString(),def_cat_id)
+        val call: Call<ItemsListModel> = ApiClient.getClient.get_shop_items(canteenItems,"Bearer "+token)
         call.enqueue(object : Callback<ItemsListModel> {
             override fun onFailure(call: Call<ItemsListModel>, t: Throwable) {
                 progressDialogP.hide()
@@ -382,7 +474,7 @@ class Addorder_Activity_new : AppCompatActivity()  {
                     }
                     recyclerview_item.visibility= View.VISIBLE
                     recyclerview_item.layoutManager= LinearLayoutManager(nContext)
-                    var itemAdapter= PreorderItemsAdapter(item_list,nContext,date_selected,cart_list,cartTotalAmount,
+                    var itemAdapter= PreorderItemsAdapter_new(item_list,nContext,date_selected,cart_list,cartTotalAmount,
                         total_items,total_price,bottomview,cart_empty,progressDialogP)
                     recyclerview_item.adapter=itemAdapter
                 }
@@ -467,7 +559,7 @@ class Addorder_Activity_new : AppCompatActivity()  {
                     }
                     recyclerview_item.visibility= View.VISIBLE
                     recyclerview_item.layoutManager= LinearLayoutManager(nContext)
-                    var itemAdapter= PreorderItemsAdapter(item_list,nContext,date_selected,cart_list,cartTotalAmount,
+                    var itemAdapter= PreorderItemsAdapter_new(item_list,nContext,date_selected,cart_list,cartTotalAmount,
                         total_items,total_price,bottomview,cart_empty,progressDialogP)
                     recyclerview_item.adapter=itemAdapter
 
@@ -494,7 +586,7 @@ class Addorder_Activity_new : AppCompatActivity()  {
         progressDialogP.show()
         val token = PreferenceManager.getaccesstoken(nContext)
         var canteenCart= CanteenCartApiModel(PreferenceManager.getStudentID(nContext).toString())
-        val call: Call<CanteenCartModel> = ApiClient.getClient.get_canteen_cart(canteenCart,"Bearer "+token)
+        val call: Call<CanteenCartModel> = ApiClient.getClient.get_shop_cart(canteenCart,"Bearer "+token)
         call.enqueue(object : Callback<CanteenCartModel> {
             override fun onFailure(call: Call<CanteenCartModel>, t: Throwable) {
                 progressDialogP.hide()

@@ -168,7 +168,7 @@ class RequestBusServiceActivity : AppCompatActivity() {
         backRelative.setOnClickListener(View.OnClickListener {
             finish()
         })
-        heading.text= ConstantWords.earlypickup
+        heading.text= ConstantWords.bus_service
         logoClickImgView.setOnClickListener(View.OnClickListener {
             val intent = Intent(mContext, HomeActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -325,6 +325,8 @@ class RequestBusServiceActivity : AppCompatActivity() {
 //}
     }
     fun callPickupSubmitApi(date:String,time:String,pickupby:String,reason:String) {
+        progressDialogAdd.visibility= View.VISIBLE
+
         var devicename:String= (Build.MANUFACTURER
                 + " " + Build.MODEL + " " + Build.VERSION.RELEASE
                 + " " + Build.VERSION_CODES::class.java.fields[Build.VERSION.SDK_INT]
@@ -344,19 +346,21 @@ class RequestBusServiceActivity : AppCompatActivity() {
         call.enqueue(object : Callback<EarlyPickupModel> {
             override fun onFailure(call: Call<EarlyPickupModel>, t: Throwable) {
 
-                //mProgressRelLayout.visibility=View.INVISIBLE
+                progressDialogAdd.visibility= View.GONE
+
             }
 
             override fun onResponse(call: Call<EarlyPickupModel>, response: Response<EarlyPickupModel>) {
                 val responsedata = response.body()
-                //progressDialog.visibility = View.GONE
+                progressDialogAdd.visibility= View.GONE
+
 
                 if (responsedata != null) {
                     try {
 
                         if (response.body()!!.status==100) {
 
-                            commonSuccessAlertDialog("Success","Successfully submitted your earlypickup request.Please wait for Approval",mContext)
+                            commonSuccessAlertDialog("Success","Successfully submitted your Bus service request.Please wait for Approval",mContext)
                             //Toast.makeText(nContext, "Transaction successfully completed", Toast.LENGTH_SHORT).show()
 
                         }else if(response.body()!!.status==136){

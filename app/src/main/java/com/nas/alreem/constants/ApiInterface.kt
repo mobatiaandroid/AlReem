@@ -63,6 +63,7 @@ import com.nas.alreem.activity.permission_slip.model.PermissionResApiModel
 import com.nas.alreem.activity.permission_slip.model.PermissionResponseModel
 import com.nas.alreem.activity.primary.model.ComingUpResponseModel
 import com.nas.alreem.activity.settings.model.TermsOfServiceResponseModel
+import com.nas.alreem.activity.shop_new.model.ShopItemsApiModel
 import com.nas.alreem.activity.staff_directory.model.ListStaffDetailApiModel
 import com.nas.alreem.activity.staff_directory.model.ListStaffDetailModel
 import com.nas.alreem.activity.staff_directory.model.StaffCatListResponseModel
@@ -89,6 +90,7 @@ import com.nas.alreem.fragment.parent_meetings.model.ListStaffPtaModel
 import com.nas.alreem.fragment.parents_essentials.model.ParentsEssentialResponseModel
 import com.nas.alreem.fragment.payments.model.PaymentResponseModel
 import com.nas.alreem.fragment.payments.model.SendEmailApiModel
+import com.nas.alreem.fragment.permission_slip.model.GeneralFormModel
 import com.nas.alreem.fragment.permission_slip.model.PermissionSlipListApiModel
 import com.nas.alreem.fragment.permission_slip.model.PermissionSlipModel
 import com.nas.alreem.fragment.primary.model.PrimaryResponseModel
@@ -613,7 +615,7 @@ interface ApiInterface {
     (
         @Body  permissionSlipListModel: PermissionSlipListApiModel,
         @Header("Authorization") token:String
-    ): Call<PermissionSlipModel>
+    ): Call<GeneralFormModel>
     @GET("cca-banner")
     @Headers("Content-Type: application/json")
     fun getBanner(
@@ -765,4 +767,52 @@ interface ApiInterface {
         @Header("Authorization") token: String,
         @Body json: JsonObject
     ): Call<StudentLostCardResponseModel>
+
+    @GET("get_shop_categories")
+    @Headers("Content-Type: application/json")
+    fun get_shop_categories(
+        //@Body  ptaConfirmationModel: PtaConfirmationApiModel,
+        @Header("Authorization") token:String
+    ): Call<CatListModel>
+
+    @POST("get_shop_items")
+    @Headers("Content-Type: application/json")
+    fun get_shop_items(
+        @Body  canteenItems: ShopItemsApiModel,
+        @Header("Authorization") token:String
+    ): Call<ItemsListModel>
+
+    @POST("add_to_shop_cart")
+    @Headers("Content-Type: application/json")
+    fun add_to_shop_cart(
+        @Body  addToCartCanteen: AddToCartCanteenApiModel,
+        @Header("Authorization") token:String
+    ): Call<AddToCartCanteenModel>
+
+    @POST("get_shop_cart")
+    @Headers("Content-Type: application/json")
+    fun get_shop_cart(
+        @Body  canteenCart: CanteenCartApiModel,
+        @Header("Authorization") token:String
+    ): Call<CanteenCartModel>
+
+    @POST("update_shop_cart")
+    @Headers("Content-Type: application/json")
+    fun update_shop_cart(
+        @Body  updatecanteenCart: CanteenCartUpdateApiModel,
+        @Header("Authorization") token:String
+    ): Call<CanteenCartUpdateModel>
+
+    @POST("remove_shop_cart")
+    @Headers("Content-Type: application/json")
+    fun remove_shop_cart(
+        @Body  removecanteenCart: CanteenCartRemoveApiModel,
+        @Header("Authorization") token:String
+    ): Call<CanteenCartRemoveModel>
+    @POST("get_shop_order")
+    @Headers("Content-Type: application/json")
+    fun get_shop_order(
+        @Body  canteenpreorder: CanteenPreorderApiModel,
+        @Header("Authorization") token:String
+    ): Call<CanteenPreorderModel>
 }

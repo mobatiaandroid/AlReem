@@ -38,6 +38,8 @@ import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.constants.addOnItemClickListener
 import com.nas.alreem.fragment.absence.adapter.PickuplistAdapter
 import com.nas.alreem.fragment.permission_slip.adapter.FormslistAdapter
+import com.nas.alreem.fragment.permission_slip.adapter.GeneralFormAdapter
+import com.nas.alreem.fragment.permission_slip.model.GeneralFormModel
 import com.nas.alreem.fragment.permission_slip.model.PermissionSlipListApiModel
 import com.nas.alreem.fragment.permission_slip.model.PermissionSlipListModel
 import com.nas.alreem.fragment.permission_slip.model.PermissionSlipModel
@@ -53,6 +55,8 @@ class PermissionSlipFragmentNew :Fragment(){
     lateinit var studentSpinner: LinearLayout
     var studentListArrayList = ArrayList<StudentList>()
     lateinit var formslist:ArrayList<PermissionSlipListModel>
+    lateinit var generallist:ArrayList<PermissionSlipListModel>
+
     lateinit var studImg: ImageView
     lateinit var studentName: String
     lateinit var studentId: String
@@ -60,6 +64,7 @@ class PermissionSlipFragmentNew :Fragment(){
     lateinit var studentClass: String
     lateinit var studentNameTxt: TextView
     lateinit var forms_recycler: RecyclerView
+    lateinit var general_rec : RecyclerView
     lateinit var absence_btn:TextView
     lateinit var heading:TextView
     var select_val:Int=0
@@ -95,6 +100,7 @@ class PermissionSlipFragmentNew :Fragment(){
         studImg = view!!.findViewById<ImageView>(R.id.studImg)
         studentNameTxt = view!!.findViewById<TextView>(R.id.studentName)
         forms_recycler=view!!.findViewById(R.id.forms_rec)
+        general_rec=view!!.findViewById(R.id.forms_rec)
         progressDialog = view!!.findViewById(R.id.progressDialog)
         absence_btn=requireView().findViewById(R.id.absenc_btn)
         heading=requireView().findViewById(R.id.appregisteredHint)
@@ -104,7 +110,6 @@ class PermissionSlipFragmentNew :Fragment(){
             AnimationUtils.loadAnimation(mContext, R.anim.linear_interpolator)
         progressDialog.startAnimation(aniRotate)
 
-        forms_recycler.visibility= View.GONE
 
         studentSpinner.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
@@ -124,7 +129,7 @@ class PermissionSlipFragmentNew :Fragment(){
             pickup_btn.setTextColor(Color.BLACK)
             heading.text = "App Permission Form"
             forms_recycler.visibility = View.VISIBLE
-           // mPickupListView.visibility = View.GONE
+            general_rec.visibility = View.GONE
 
 
         }
@@ -146,10 +151,10 @@ class PermissionSlipFragmentNew :Fragment(){
             pickup_btn.setTextColor(Color.BLACK)
             heading.text = "App General Form"
             forms_recycler.visibility = View.GONE
-            /*mPickupListView.visibility = View.VISIBLE
-            mPickupListView.layoutManager=LinearLayoutManager(mContext)
-            var pickuplistAdapter= PickuplistAdapter(mContext,pickup_list)
-            mPickupListView.adapter=pickuplistAdapter*/
+            general_rec.visibility = View.VISIBLE
+            general_rec.layoutManager=LinearLayoutManager(mContext)
+            var pickuplistAdapter= GeneralFormAdapter(mContext,generallist)
+            general_rec.adapter=pickuplistAdapter
         }
 
     }
@@ -221,14 +226,20 @@ class PermissionSlipFragmentNew :Fragment(){
                     studImg.setImageResource(R.drawable.student)
                 }
                 progressDialog.visibility = View.VISIBLE
-                var internetCheck = ConstantFunctions.internetCheck(mContext)
-                if (internetCheck) {
+                if (select_val==0){
                     formslistApi()
-
-                } else {
-                    DialogFunctions.showInternetAlertDialog(mContext)
                 }
+                else if (select_val==1) {
+                    if (ConstantFunctions.internetCheck(mContext))
+                    {
+                        callgeneralForm()
+                    }
+                    else
+                    {
+                        DialogFunctions.showInternetAlertDialog(mContext)
+                    }
 
+                }
 
                 //  Toast.makeText(activity, mStudentList.get(position).name, Toast.LENGTH_SHORT).show()
                 dialog.dismiss()
@@ -252,6 +263,7 @@ class PermissionSlipFragmentNew :Fragment(){
                 progressDialog.visibility = View.GONE
                 if (response.body()!!.status==100)
                 {
+                    general_rec.visibility= View.GONE
                     forms_recycler.visibility= View.VISIBLE
                     formslist=ArrayList()
                     formslist.addAll(response.body()!!.responseArray.request)
@@ -298,36 +310,38 @@ class PermissionSlipFragmentNew :Fragment(){
     fun callgeneralForm()
     {
         progressDialog.visibility = View.VISIBLE
-        formslist=ArrayList()
+        generallist=ArrayList()
 
         val token = PreferenceManager.getaccesstoken(mContext)
         val list_permissionSlip= PermissionSlipListApiModel("0","20",
             PreferenceManager.getStudentID(mContext).toString())
-        val call: Call<PermissionSlipModel> = ApiClient.getClient.generalforms(list_permissionSlip,"Bearer "+token)
-        call.enqueue(object : Callback<PermissionSlipModel> {
-            override fun onFailure(call: Call<PermissionSlipModel>, t: Throwable) {
+        val call: Call<GeneralFormModel> = ApiClient.getClient.generalforms(list_permissionSlip,"Bearer "+token)
+        call.enqueue(object : Callback<GeneralFormModel> {
+            override fun onFailure(call: Call<GeneralFormModel>, t: Throwable) {
                 progressDialog.visibility = View.GONE
             }
-            override fun onResponse(call: Call<PermissionSlipModel>, response: Response<PermissionSlipModel>) {
+            override fun onResponse(call: Call<GeneralFormModel>, response: Response<GeneralFormModel>) {
                 progressDialog.visibility = View.GONE
                 if (response.body()!!.status==100)
                 {
                     Log.e("success","success")
-                   /* forms_recycler.visibility= View.VISIBLE
-                    formslist=ArrayList()
-                    formslist.addAll(response.body()!!.responseArray.request)
+                    forms_recycler.visibility= View.GONE
+                    general_rec.visibility= View.VISIBLE
+
+                    generallist=ArrayList()
+                    generallist.addAll(response.body()!!.responseArray.request)
                     if (response.body()!!.responseArray.request.size > 0){
                         forms_recycler.layoutManager= LinearLayoutManager(mContext)
-                        var forms_adapter= FormslistAdapter(mContext,formslist)
+                        var forms_adapter= GeneralFormAdapter(mContext,generallist)
                         forms_recycler.adapter=forms_adapter
                     }else{
-                        formslist=ArrayList()
+                        generallist=ArrayList()
                         forms_recycler.layoutManager= LinearLayoutManager(mContext)
-                        var forms_adapter= FormslistAdapter(mContext,formslist)
+                        var forms_adapter= GeneralFormAdapter(mContext,generallist)
                         forms_recycler.adapter=forms_adapter
                         //showerror(mContext,"No Data Found","Alert")
-                        Toast.makeText(mContext, "No Permission Forms Found", Toast.LENGTH_SHORT).show()
-                    }*/
+                        Toast.makeText(mContext, "No General Forms Found", Toast.LENGTH_SHORT).show()
+                    }
 
 
                 }/*else if(response.body()!!.status.equals("116"))
@@ -345,11 +359,11 @@ class PermissionSlipFragmentNew :Fragment(){
                 }*/
                 else {
                     if (response.body()!!.status == 132) {
-                        formslist=ArrayList()
+                        generallist=ArrayList()
                         forms_recycler.layoutManager= LinearLayoutManager(mContext)
-                        var forms_adapter= FormslistAdapter(mContext,formslist)
+                        var forms_adapter= FormslistAdapter(mContext,generallist)
                         forms_recycler.adapter=forms_adapter
-                        Toast.makeText(mContext, "No Permission Slips Found", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(mContext, "No General Forms Found", Toast.LENGTH_SHORT).show()
                         //validation check error
                     }
                 }
@@ -446,14 +460,22 @@ class PermissionSlipFragmentNew :Fragment(){
     }
     override fun onResume() {
         super.onResume()
-        forms_recycler.visibility= View.GONE
-        var internetCheck = ConstantFunctions.internetCheck(mContext)
-        if (internetCheck) {
+        if (select_val == 0) {
             formslistApi()
+        } else if (select_val == 1) {
 
-        } else {
-            //DialogFunctions.showInternetAlertDialog(mContext)
+            if (ConstantFunctions.internetCheck(mContext))
+            {
+
+                callgeneralForm()
+            }
+            else
+            {
+                DialogFunctions.showInternetAlertDialog(mContext)
+            }
+
         }
+
 
         studentNameTxt.text = PreferenceManager.getStudentName(mContext)
         studentId= PreferenceManager.getStudentID(mContext).toString()

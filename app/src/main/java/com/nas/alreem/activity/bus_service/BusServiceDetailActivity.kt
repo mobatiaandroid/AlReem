@@ -50,7 +50,7 @@ class BusServiceDetailActivity : AppCompatActivity(){
     }
     private fun initfn() {
         heading=findViewById(R.id.heading)
-        heading.text= ConstantWords.earlypickup
+        heading.text= ConstantWords.bus_service
         backRelative=findViewById(R.id.backRelative)
         logoClickImgView=findViewById(R.id.logoClickImgView)
         timeofPickup=findViewById(R.id.leaveDateToValue)
@@ -113,7 +113,7 @@ class BusServiceDetailActivity : AppCompatActivity(){
         backRelative.setOnClickListener(View.OnClickListener {
             finish()
         })
-        heading.text= ConstantWords.earlypickup
+        heading.text= ConstantWords.bus_service
         logoClickImgView.setOnClickListener(View.OnClickListener {
             val intent = Intent(mContext, HomeActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)

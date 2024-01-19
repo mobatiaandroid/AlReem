@@ -557,7 +557,7 @@ class Intentionfragment : Fragment(){
                         {
                             var primaryAdapter= IntentionAdapter(primaryArrayList,mContext)
                             recycler_review.adapter=primaryAdapter
-                            Toast.makeText(mContext, "No Registered Early Pickup Found", Toast.LENGTH_SHORT).show()
+                            //Toast.makeText(mContext, "No Registered Early Pickup Found", Toast.LENGTH_SHORT).show()
 
                             DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), mContext)
                         }
