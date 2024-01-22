@@ -11,8 +11,8 @@ android {
         minSdk 19
         minSdkVersion 19
         targetSdkVersion 33
-        versionCode 15
-        versionName "2.4"
+        versionCode 18
+        versionName "2.8"
         multiDexEnabled true
         generatedDensities = []
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -26,7 +26,7 @@ android {
     lintOptions {
         checkReleaseBuilds false
     }
-// This is handled for you by the 2.0+ Gradle Plugin
+    // This is handled for you by the 2.0+ Gradle Plugin
     aaptOptions {
         additionalParameters "--no-version-vectors"
     }
@@ -35,7 +35,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
