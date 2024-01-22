@@ -51,6 +51,9 @@ class ParentsEssentialFragment : Fragment() {
     lateinit var mListView:RecyclerView
     lateinit var dataArray:ArrayList<ParentsEssentialDataModel>
     lateinit var contact_email:String
+    private val EMAIL_PATTERN =
+        "^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$"
+    private val pattern = "^([a-zA-Z ]*)$"
     lateinit var titleTextView: TextView
     lateinit var progressDialogAdd: ProgressBar
 
@@ -216,6 +219,63 @@ class ParentsEssentialFragment : Fragment() {
 
         btn_submit.setOnClickListener {
             if (text_dialog.text.toString().trim().equals("")) {
+                DialogFunctions.commonErrorAlertDialog(
+                    mContext.resources.getString(R.string.alert), resources.getString(R.string.enter_subject),
+                    mContext
+                )
+
+
+            } else {
+                if (text_content.text.toString().trim().equals("")) {
+                    DialogFunctions.commonErrorAlertDialog(
+                        mContext.resources.getString(R.string.alert), resources.getString(R.string.enter_content),
+                        mContext
+                    )
+
+                } else if (contact_email.matches(EMAIL_PATTERN.toRegex())) {
+                    if (text_dialog.text.toString().trim ().matches(pattern.toRegex())) {
+                        if (text_content.text.toString().trim ()
+                                .matches(pattern.toRegex())) {
+
+                            if (ConstantFunctions.internetCheck(mContext))
+                            {
+                                sendEmail(text_dialog.text.toString().trim(), text_content.text.toString().trim(), contact_email, dialog)
+
+                            }
+                            else
+                            {
+                                DialogFunctions.showInternetAlertDialog(mContext)
+                            }
+
+                        } else {
+                            val toast: Toast = Toast.makeText(mContext, mContext.getResources().getString(R.string.enter_valid_contents), Toast.LENGTH_SHORT)
+                            toast.show()
+                        }
+                    } else {
+                        val toast: Toast = Toast.makeText(
+                            mContext,
+                            mContext.getResources()
+                                .getString(
+                                    R.string.enter_valid_subjects
+                                ),
+                            Toast.LENGTH_SHORT
+                        )
+                        toast.show()
+                    }
+                } else {
+                    val toast: Toast = Toast.makeText(
+                        mContext,
+                        mContext.getResources()
+                            .getString(
+                                R.string.enter_valid_email
+                            ),
+                        Toast.LENGTH_SHORT
+                    )
+                    toast.show()
+                }
+            }
+
+           /* if (text_dialog.text.toString().trim().equals("")) {
                 DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), resources.getString(R.string.enter_subject), mContext)
 
 
@@ -235,7 +295,7 @@ class ParentsEssentialFragment : Fragment() {
                     }
 
                 }
-            }
+            }*/
         }
         dialog.show()
     }

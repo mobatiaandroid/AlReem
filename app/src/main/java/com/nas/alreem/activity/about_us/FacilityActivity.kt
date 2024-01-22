@@ -14,6 +14,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -68,9 +69,12 @@ class FacilityActivity : Activity(){
     var back: ImageView? = null
     var home: ImageView? = null
     var bannerUrlImageArray = ArrayList<String?>()
-    var contactEmail: String? = null
+    lateinit var contactEmail: String
     var text_dialog: EditText? = null
     var text_content: EditText? = null
+    private val EMAIL_PATTERN =
+        "^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$"
+    private val pattern = "^([a-zA-Z ]*)$"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_facility_grid)
@@ -267,10 +271,46 @@ class FacilityActivity : Activity(){
                         mContext
                     )
 
+                } else if (contactEmail.matches(EMAIL_PATTERN.toRegex())) {
+                    if (text_dialog.text.toString().trim ().matches(pattern.toRegex())) {
+                        if (text_content.text.toString().trim ()
+                                .matches(pattern.toRegex())) {
+
+                            if (ConstantFunctions.internetCheck(mContext))
+                            {
+                                callSendEmailToStaffApi(text_dialog.text.toString().trim(), text_content.text.toString().trim(),
+                                    contactEmail!!, dialog)
+                            }
+                            else
+                            {
+                                DialogFunctions.showInternetAlertDialog(mContext)
+                            }
+
+                        } else {
+                            val toast: Toast = Toast.makeText(mContext, mContext.getResources().getString(R.string.enter_valid_contents), Toast.LENGTH_SHORT)
+                            toast.show()
+                        }
+                    } else {
+                        val toast: Toast = Toast.makeText(
+                           mContext,
+                           mContext.getResources()
+                                .getString(
+                                    R.string.enter_valid_subjects
+                                ),
+                            Toast.LENGTH_SHORT
+                        )
+                        toast.show()
+                    }
                 } else {
-                    // progressDialog.visibility = View.VISIBLE
-                    callSendEmailToStaffApi(text_dialog.text.toString().trim(), text_content.text.toString().trim(),
-                        contactEmail!!, dialog)
+                    val toast: Toast = Toast.makeText(
+                        mContext,
+                       mContext.getResources()
+                            .getString(
+                                R.string.enter_valid_email
+                            ),
+                        Toast.LENGTH_SHORT
+                    )
+                    toast.show()
                 }
             }
         }

@@ -16,7 +16,6 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
-import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -34,18 +33,20 @@ import com.nas.alreem.activity.absence.RequestearlypickupActivity
 import com.nas.alreem.activity.absence.model.AbsenceListModel
 import com.nas.alreem.activity.absence.model.AbsenceRequestListModel
 import com.nas.alreem.activity.absence.model.EarlyPickupListArray
-import com.nas.alreem.activity.absence.model.EarlyPickupModel
 import com.nas.alreem.activity.absence.model.ListAbsenceApiModel
 import com.nas.alreem.activity.absence.model.ListPickupApiModel
 import com.nas.alreem.activity.absence.model.PickupListModel
-import com.nas.alreem.activity.absence.model.RequestPickupApiModel
 import com.nas.alreem.activity.payments.adapter.StudentListAdapter
 import com.nas.alreem.activity.payments.model.StudentList
 import com.nas.alreem.activity.payments.model.StudentListModel
-import com.nas.alreem.constants.*
+import com.nas.alreem.constants.ApiClient
+import com.nas.alreem.constants.ConstantFunctions
+import com.nas.alreem.constants.ConstantWords
+import com.nas.alreem.constants.DialogFunctions
+import com.nas.alreem.constants.OnItemClickListener
+import com.nas.alreem.constants.PreferenceManager
+import com.nas.alreem.constants.addOnItemClickListener
 import com.nas.alreem.fragment.absence.adapter.PickuplistAdapter
-import com.nas.alreem.fragment.absence.model.AbsenceRequestListDetailModel
-import com.nas.alreem.fragment.absence.model.EarlyPickupListModel
 import com.nas.alreem.fragment.parent_meetings.adapter.RequestAbsenceRecyclerAdapter
 import retrofit2.Call
 import retrofit2.Callback
@@ -128,7 +129,7 @@ class AbsenceFragment  : Fragment() {
         mAbsenceListView.layoutManager = linearLayoutManager
         mAbsenceListView.itemAnimator = DefaultItemAnimator()
         absence_btn.setBackgroundResource(R.drawable.event_spinnerfill)
-        studentSpinner.setOnClickListener(){
+        studentSpinner.setOnClickListener {
             showStudentList(mContext,studentListArrayList)
         }
         mAbsenceListView.addOnItemClickListener(object: OnItemClickListener {
@@ -458,7 +459,7 @@ class AbsenceFragment  : Fragment() {
         val token = PreferenceManager.getaccesstoken(mContext)
         val pickupSuccessBody = ListPickupApiModel(PreferenceManager.getStudentID(mContext).toString(),"0","20")
         val call: Call<PickupListModel> =
-            ApiClient.getClient.pickuplist(pickupSuccessBody, "Bearer " + token)
+            ApiClient.getClient.pickUplist(pickupSuccessBody, "Bearer " + token)
         call.enqueue(object : Callback<PickupListModel> {
             override fun onFailure(call: Call<PickupListModel>, t: Throwable) {
 

@@ -1,6 +1,5 @@
 package com.nas.alreem.constants
 
-import com.google.gson.JsonObject
 import com.nas.alreem.activity.absence.model.AbsenceListModel
 import com.nas.alreem.activity.absence.model.EarlyPickupModel
 import com.nas.alreem.activity.absence.model.ListAbsenceApiModel
@@ -530,9 +529,9 @@ interface ApiInterface {
 
     @POST("list-early-pickup")
     @Headers("Content-Type: application/json")
-    fun pickuplist(
-        @Body  listPickupApiModel: ListPickupApiModel,
-        @Header("Authorization") token:String
+    fun pickUplist(
+        @Body listPickupApiModel: ListPickupApiModel,
+        @Header("Authorization") token: String
     ): Call<PickupListModel>
 
     @POST("request-leave")

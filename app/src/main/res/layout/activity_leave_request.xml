@@ -150,6 +150,7 @@
                     android:id="@+id/submitBtn"
                     android:text="@string/submit"
                     android:textColor="@color/white"
+                    android:filterTouchesWhenObscured="true"
                     android:textSize="18sp"
                     android:gravity="center"
                     android:visibility="visible"

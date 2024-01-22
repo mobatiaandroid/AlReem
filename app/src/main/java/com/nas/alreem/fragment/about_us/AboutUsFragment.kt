@@ -43,7 +43,10 @@ class AboutUsFragment  : Fragment() {
     lateinit var aboutUsArrayList:ArrayList<AboutUsDataModel>
     lateinit var staff_rel:RelativeLayout
     lateinit var bannerImagePager: ImageView
-    var contactEmail: String? = null
+    lateinit var contactEmail: String
+    private val EMAIL_PATTERN =
+        "^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$"
+    private val pattern = "^([a-zA-Z ]*)$"
     private var description = ""
    lateinit var descriptionTV: TextView
     lateinit var  mtitleRel: RelativeLayout
@@ -188,6 +191,7 @@ class AboutUsFragment  : Fragment() {
         })
 
         btn_submit.setOnClickListener {
+
             if (text_dialog.text.toString().trim().equals("")) {
                 DialogFunctions.commonErrorAlertDialog(
                     mContext.resources.getString(R.string.alert), resources.getString(R.string.enter_subject),
@@ -202,13 +206,50 @@ class AboutUsFragment  : Fragment() {
                         mContext
                     )
 
-                } else {
-                    // progressDialog.visibility = View.VISIBLE
+                } else if (contactEmail.matches(EMAIL_PATTERN.toRegex())) {
+                    if (text_dialog.text.toString().trim ().matches(pattern.toRegex())) {
+                        if (text_content.text.toString().trim ()
+                                .matches(pattern.toRegex())) {
 
-                    callSendEmailToStaffApi(text_dialog.text.toString().trim(), text_content.text.toString().trim(),
-                        contactEmail!!, dialog)
+                            if (ConstantFunctions.internetCheck(mContext))
+                            {
+                                callSendEmailToStaffApi(text_dialog.text.toString().trim(), text_content.text.toString().trim(),
+                                    contactEmail!!, dialog)
+                            }
+                            else
+                            {
+                                DialogFunctions.showInternetAlertDialog(mContext)
+                            }
+
+                        } else {
+                            val toast: Toast = Toast.makeText(mContext, mContext.getResources().getString(R.string.enter_valid_contents), Toast.LENGTH_SHORT)
+                            toast.show()
+                        }
+                    } else {
+                        val toast: Toast = Toast.makeText(
+                            mContext,
+                            mContext.getResources()
+                                .getString(
+                                    R.string.enter_valid_subjects
+                                ),
+                            Toast.LENGTH_SHORT
+                        )
+                        toast.show()
+                    }
+                } else {
+                    val toast: Toast = Toast.makeText(
+                        mContext,
+                        mContext.getResources()
+                            .getString(
+                                R.string.enter_valid_email
+                            ),
+                        Toast.LENGTH_SHORT
+                    )
+                    toast.show()
                 }
             }
+
+
         }
         dialog.show()
     }

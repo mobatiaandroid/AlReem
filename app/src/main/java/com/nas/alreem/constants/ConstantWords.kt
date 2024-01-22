@@ -1,6 +1,5 @@
 package com.nas.alreem.constants
 
-import com.nas.alreem.activity.survey.model.SurveySubmitApiModel
 import com.nas.alreem.activity.survey.model.SurveySubmitDataModel
 
 class ConstantWords {

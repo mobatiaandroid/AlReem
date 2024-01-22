@@ -46,6 +46,9 @@ import retrofit2.Response
     var mailImageView: ImageView? = null
     var ccaOption: RelativeLayout? = null
     var contactEmail = ""
+      private val EMAIL_PATTERN =
+          "^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$"
+      private val pattern = "^([a-zA-Z ]*)$"
     private var description = ""
     var text_content: TextView? = null
     var text_dialog: TextView? = null
@@ -139,6 +142,7 @@ import retrofit2.Response
         })
 
         btn_submit.setOnClickListener {
+
             if (text_dialog.text.toString().trim().equals("")) {
                 DialogFunctions.commonErrorAlertDialog(
                     mContext.resources.getString(R.string.alert), resources.getString(R.string.enter_subject),
@@ -153,20 +157,51 @@ import retrofit2.Response
                         mContext
                     )
 
+                } else if (contactEmail.matches(EMAIL_PATTERN.toRegex())) {
+                    if (text_dialog.text.toString().trim ().matches(pattern.toRegex())) {
+                        if (text_content.text.toString().trim ()
+                                .matches(pattern.toRegex())) {
+
+                            if (ConstantFunctions.internetCheck(mContext))
+                            {
+                                callSendEmailToStaffApi(text_dialog.text.toString().trim(), text_content.text.toString().trim(), contactEmail, dialog)
+
+                            }
+                            else
+                            {
+                                DialogFunctions.showInternetAlertDialog(mContext)
+                            }
+
+                        } else {
+                            val toast: Toast = Toast.makeText(mContext, mContext.getResources().getString(R.string.enter_valid_contents), Toast.LENGTH_SHORT)
+                            toast.show()
+                        }
+                    } else {
+                        val toast: Toast = Toast.makeText(
+                            mContext,
+                            mContext.getResources()
+                                .getString(
+                                    R.string.enter_valid_subjects
+                                ),
+                            Toast.LENGTH_SHORT
+                        )
+                        toast.show()
+                    }
                 } else {
-                    // progressDialog.visibility = View.VISIBLE
-                    if (ConstantFunctions.internetCheck(mContext))
-                    {
-                        callSendEmailToStaffApi(text_dialog.text.toString().trim(), text_content.text.toString().trim(), contactEmail, dialog)
-                    }
-                    else
-                    {
-                        DialogFunctions.showInternetAlertDialog(mContext)
-                    }
-
-
+                    val toast: Toast = Toast.makeText(
+                        mContext,
+                        mContext.getResources()
+                            .getString(
+                                R.string.enter_valid_email
+                            ),
+                        Toast.LENGTH_SHORT
+                    )
+                    toast.show()
                 }
             }
+
+
+
         }
         dialog.show()
     }
