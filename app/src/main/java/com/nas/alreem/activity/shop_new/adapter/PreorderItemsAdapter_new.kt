@@ -2,6 +2,7 @@ package com.nas.alreem.activity.shop_new.adapter
 
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +26,11 @@ import com.nas.alreem.activity.canteen.model.add_to_cart.CanteenCartUpdateModel
 import com.nas.alreem.activity.canteen.model.canteen_cart.CanteenCartApiModel
 import com.nas.alreem.activity.canteen.model.canteen_cart.CanteenCartModel
 import com.nas.alreem.activity.canteen.model.canteen_cart.CanteenCartResModel
+import com.nas.alreem.activity.lost_card.model.GetShopCartResponseModel
+import com.nas.alreem.activity.lost_card.model.ShopCartResModel
+import com.nas.alreem.activity.shop_new.model.AddToCartShopApiModel
+import com.nas.alreem.activity.shop_new.model.ShopCartRemoveApiModel
+import com.nas.alreem.activity.shop_new.model.ShopCartUpdateApiModel
 import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.DialogFunctions
@@ -39,7 +45,7 @@ class PreorderItemsAdapter_new(
     val itemlist: ArrayList<CatItemsListModel>,
     var mcontext: Context,
     var date:String,
-    var cart_list: ArrayList<CanteenCartResModel>,
+    var cart_list: ArrayList<ShopCartResModel>,
     var cartTotalAmount:Int,
     var totalItems: TextView,
     var totalPrice: TextView,
@@ -95,26 +101,24 @@ class PreorderItemsAdapter_new(
         holder.itemCount.setOnValueChangeListener { view, oldValue, newValue ->
 
             var cartPos:Int=0;
-            for (i in 0.. cart_list.size-1)
+            for (i in  cart_list.indices)
             {
-                if (cart_list.get(i).delivery_date.equals(date))
+                if (itemlist.get(position).id.equals(cart_list.get(cartPos).item_id.toString()))
                 {
-                    cartPos=i
+                    canteen_cart_id= cart_list.get(cartPos).id.toString()
                 }
             }
-            for (i in cart_list[cartPos].items.indices)
-            {
-                if (itemlist.get(position).id.equals(cart_list.get(cartPos).items.get(i).item_id.toString()))
-                {
-                    canteen_cart_id= cart_list.get(cartPos).items.get(i).id.toString()
-                }
-            }
+
+
+
             //  canteen_cart_id = cart_list[cartPos].items.get(position).id
             quantity = newValue.toString()
             if (newValue != 0) {
                 //progressDialogP.visibility=View.VISIBLE
                 updateCart(itemlist[position].id,position,quantity)
-
+                Log.e("amout",cart_list[position].item_total.toString())
+                holder.amountTxt.text = cart_list[position].item_total.toString() + " AED"
+                Log.e("amout1",cart_list[position].item_total.toString())
             }
             else {
                 //progressDialogP.visibility=View.VISIBLE
@@ -164,14 +168,14 @@ class PreorderItemsAdapter_new(
         progressDialogP.show()
         //progressDialogP.show()
         val token = PreferenceManager.getaccesstoken(mcontext)
-        var canteenCart= CanteenCartApiModel(PreferenceManager.getStudentID(mcontext).toString())
-        val call: Call<CanteenCartModel> = ApiClient.getClient.get_shop_cart(canteenCart,"Bearer "+token)
-        call.enqueue(object : Callback<CanteenCartModel> {
-            override fun onFailure(call: Call<CanteenCartModel>, t: Throwable) {
+        var canteenCart= CanteenCartApiModel(PreferenceManager.getStudentID(mcontext)!!)
+        val call: Call<GetShopCartResponseModel> = ApiClient.getClient.get_shop_cart(canteenCart,"Bearer "+token)
+        call.enqueue(object : Callback<GetShopCartResponseModel> {
+            override fun onFailure(call: Call<GetShopCartResponseModel>, t: Throwable) {
                 progressDialogP.hide()
                 //  progressDialogP.hide()
             }
-            override fun onResponse(call: Call<CanteenCartModel>, response: Response<CanteenCartModel>) {
+            override fun onResponse(call: Call<GetShopCartResponseModel>, response: Response<GetShopCartResponseModel>) {
                 val responsedata = response.body()
                 progressDialogP.hide()
 
@@ -180,16 +184,17 @@ class PreorderItemsAdapter_new(
                     bottomView.visibility= View.VISIBLE
                     //progress.visibility = View.GONE
                     cart_list=response!!.body()!!.responseArray.data
+
+
+                        cartTotalAmount=cartTotalAmount + responsedata.responseArray.total_amount
+
+
+
                     for (i in cart_list.indices){
-                        cartTotalAmount=cartTotalAmount + cart_list[i].total_amount
-                    }
 
 
-                    for (i in cart_list.indices){
+                            cartTotalItems=cartTotalItems + cart_list[i].quantity
 
-                        for (j in cart_list[i].items.indices){
-                            cartTotalItems=cartTotalItems + cart_list[i].items[j].quantity
-                        }
                     }
 
                     totalItems.setText(cartTotalItems.toString() + "Items")
@@ -211,8 +216,8 @@ class PreorderItemsAdapter_new(
         progressDialogP.show()
         //   progressDialogP.show()
         val token = PreferenceManager.getaccesstoken(mcontext)
-        var canteenadd= AddToCartCanteenApiModel(
-            PreferenceManager.getStudentID(mcontext).toString(),id,"2023-01-18","1",price)
+        var canteenadd= AddToCartShopApiModel(
+            PreferenceManager.getStudentID(mcontext)!!,id,"1",price)
         val call: Call<AddToCartCanteenModel> = ApiClient.getClient.add_to_shop_cart(canteenadd,"Bearer "+token)
         call.enqueue(object : Callback<AddToCartCanteenModel> {
             override fun onFailure(call: Call<AddToCartCanteenModel>, t: Throwable) {
@@ -245,8 +250,8 @@ class PreorderItemsAdapter_new(
         progressDialogP.show()
         // progressDialogP.show()
         val token = PreferenceManager.getaccesstoken(mcontext)
-        var canteenadd= CanteenCartUpdateApiModel(
-            PreferenceManager.getStudentID(mcontext).toString(),date,quant,
+        var canteenadd= ShopCartUpdateApiModel(
+            PreferenceManager.getStudentID(mcontext)!!,quant,
             itemlist[position].id,canteen_cart_id)
         val call: Call<CanteenCartUpdateModel> = ApiClient.getClient.update_shop_cart(canteenadd,"Bearer "+token)
         call.enqueue(object : Callback<CanteenCartUpdateModel> {
@@ -271,7 +276,7 @@ class PreorderItemsAdapter_new(
                      mCartDetailArrayList.get(position).setCartItemId(canteen_cart_id)*/
                     //progressDialogP.visibility=View.VISIBLE
                     getcanteen_cart()
-                    notifyDataSetChanged()
+                   notifyDataSetChanged()
 
                 }else
                 {
@@ -286,8 +291,8 @@ class PreorderItemsAdapter_new(
         progressDialogP.show()
         // progressDialogP.show()
         val token = PreferenceManager.getaccesstoken(mcontext)
-        var canteenadd= CanteenCartRemoveApiModel(
-            PreferenceManager.getStudentID(mcontext).toString(),canteen_cart_id)
+        var canteenadd= ShopCartRemoveApiModel(
+            PreferenceManager.getStudentID(mcontext)!!,canteen_cart_id)
         val call: Call<CanteenCartRemoveModel> = ApiClient.getClient.remove_shop_cart(canteenadd,"Bearer "+token)
         call.enqueue(object : Callback<CanteenCartRemoveModel> {
             override fun onFailure(call: Call<CanteenCartRemoveModel>, t: Throwable) {

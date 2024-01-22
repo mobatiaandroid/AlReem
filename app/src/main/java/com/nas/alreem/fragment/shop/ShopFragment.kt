@@ -26,255 +26,273 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.google.gson.JsonObject
 import com.nas.alreem.R
+import com.nas.alreem.activity.canteen.CanteenPaymentActivity
+import com.nas.alreem.activity.canteen.InformationActivity
+import com.nas.alreem.activity.canteen.PreOrderActivity
+import com.nas.alreem.activity.login.model.SignUpResponseModel
 import com.nas.alreem.activity.shop.RegisteredShopSummaryActivity
 import com.nas.alreem.activity.shop.ShopInformationActivity
 import com.nas.alreem.activity.shop.ShopRegisterActivity
+import com.nas.alreem.activity.shop_new.Addorder_Activity_new
+import com.nas.alreem.activity.shop_new.PreOrderActivity_new
+import com.nas.alreem.constants.ApiClient
+import com.nas.alreem.constants.ConstantFunctions
+import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.PreferenceManager
+import com.nas.alreem.fragment.canteen.model.CanteenBannerResponseModel
+import com.nas.alreem.fragment.payments.model.SendEmailApiModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 
-class ShopFragment : Fragment {
-    var titleTextView: TextView? = null
-    var descriptionTextView: TextView? = null
-    lateinit var registerMusicButton: ConstraintLayout
-    lateinit var infoButton: ConstraintLayout
-    lateinit var summaryButton: ConstraintLayout
-    var mtitleRel: LinearLayout? = null
-    var externalCCA: RelativeLayout? = null
-    var informationCCA: RelativeLayout? = null
-    var bannerImagePager: ImageView? = null
-    lateinit var mailImageView: ImageView
-    var ccaOption: RelativeLayout? = null
-    var contactEmail = ""
-    var text_content: TextView? = null
-    var text_dialog: TextView? = null
-    private var title: String? = null
-    private var tabID: String? = null
-    private var rootView: View? = null
+class ShopFragment : Fragment() {
     lateinit var mContext: Context
-    private val description = ""
-    private val EMAIL_PATTERN =
-        "^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$"
-    private val pattern = "^([a-zA-Z ]*)$"
-   // var progressBarDialog: ProgressBarDialog? = null
+    //   lateinit var progress: RelativeLayout
+    lateinit var email_icon: ImageView
+    lateinit var preorder_image: LinearLayout
+    lateinit var information_image: LinearLayout
+    lateinit var payment_image: LinearLayout
+    lateinit var staffLinear: LinearLayout
+    lateinit var lostcardLinear: LinearLayout
+    lateinit var bannerImg:ImageView
+    lateinit var title: TextView
+    lateinit var description: TextView
+    lateinit var contactEmail:String
+    lateinit var progress: ProgressBar
 
-    constructor()
-    constructor(title: String?, tabId: String?) {
-        this.title = title
-        tabID = tabId
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
+    var walletTopUpLimit:Int=0
+    var walletTopUpLimit_str:String=""
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        rootView = inflater.inflate(
-            R.layout.fragment_shop_acad, container,
-            false
-        )
-        setHasOptionsMenu(true)
-        mContext=requireContext()
-        initialiseUI()
-        /*if (AppUtils.checkInternet(context)) {
-            // call music academy banner api
-            callMusicAcademyBannerAPI()
-        } else {
-            AppUtils.showDialogAlertDismiss(
-                context as Activity?,
-                context!!.getString(R.string.alert_heading),
-                getString(R.string.no_internet),
-                R.drawable.nonetworkicon,
-                R.drawable.roundred
-            )
-        }*/
-        return rootView
+        return inflater.inflate(R.layout.canteen_fragment_new, container, false)
     }
 
-    // Checking branch sanju
-    // Checking branch sajna
-    private fun callMusicAcademyBannerAPI() {
-        // Log.e("success","sucess");
-
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initFn()
+        onClick()
+        if (ConstantFunctions.internetCheck(mContext))
+        {
+            callGetCanteenBanner()
+        }
+        else
+        {
+            DialogFunctions.showInternetAlertDialog(mContext)
+        }
 
 
     }
+    private fun initFn(){
+        mContext = requireContext()
+        title=view?.findViewById(R.id.titleTextView)!!
+        title.text = "Shop"
+        //    progress = view?.findViewById(R.id.progressDialog)!!
+        //    progress.visibility=View.GONE
+        email_icon = view?.findViewById(R.id.email_icon)!!
+        progress = view?.findViewById(R.id.progress)!!
+        lostcardLinear = view?.findViewById(R.id.lostcardLinear)!!
+        preorder_image = view?.findViewById(R.id.preOrderLinear)!!
+        information_image = view?.findViewById(R.id.informationLinear)!!
+        payment_image = view?.findViewById(R.id.paymentLinear)!!
+        bannerImg = view?.findViewById(R.id.bannerimagecanteen)!!
+        description = view?.findViewById(R.id.description)!!
+        staffLinear = view?.findViewById(R.id.linearLayout5)!!
 
-    private fun initialiseUI() {
-        titleTextView = rootView!!.findViewById<View>(R.id.titleTextView) as TextView
-        descriptionTextView = rootView!!.findViewById<View>(R.id.descriptionTitle) as TextView
-        titleTextView!!.text = "Music Academy"
-        registerMusicButton = rootView!!.findViewById<ConstraintLayout>(R.id.registerMusic)
-        bannerImagePager = rootView!!.findViewById<ImageView>(R.id.bannerImage)
-        infoButton = rootView!!.findViewById<ConstraintLayout>(R.id.infoButton)
-        mailImageView = rootView!!.findViewById<ImageView>(R.id.emailHelp)
-        summaryButton = rootView!!.findViewById<ConstraintLayout>(R.id.summaryButton)
-      //  progressBarDialog = ProgressBarDialog(context, R.drawable.spinner)
-        registerMusicButton.setOnClickListener(View.OnClickListener { v: View? ->
-            val `in` = Intent(
-                context,
-                ShopRegisterActivity::class.java
-            )
-            startActivity(`in`)
+
+    }
+    private fun onClick() {
+
+        lostcardLinear.setOnClickListener {
+            val i = Intent(mContext, Addorder_Activity_new::class.java)
+            PreferenceManager.setStudentID(mContext,"")
+
+            mContext.startActivity(i)
+        }
+        email_icon.setOnClickListener {
+            showSendEmailDialog()
+        }
+        preorder_image.setOnClickListener {
+            val i = Intent(mContext, PreOrderActivity_new::class.java)
+            PreferenceManager.setStudentID(mContext,"")
+
+            mContext.startActivity(i)
+        }
+
+        staffLinear.setOnClickListener(View.OnClickListener {
+
         })
-        infoButton.setOnClickListener(View.OnClickListener { v: View? ->
-            val `in` = Intent(
-                context,
-                ShopInformationActivity::class.java
-            )
-            startActivity(`in`)
-        })
-        summaryButton.setOnClickListener(View.OnClickListener { v: View? ->
-            val `in` = Intent(
-                context,
-                RegisteredShopSummaryActivity::class.java
-            )
-            startActivity(`in`)
-        })
-        mailImageView.setOnClickListener(View.OnClickListener {
-            if (PreferenceManager.getUserCode(mContext).equals("")) {
-               /* AppUtils.showDialogAlertDismiss(
-                    context as Activity?,
-                    context!!.getString(R.string.alert_heading),
-                    context!!.getString(R.string.avail_for_registered),
-                    R.drawable.exclamationicon,
-                    R.drawable.round
-                )*/
+    }
+
+
+    fun callGetCanteenBanner()
+    {
+        progress.visibility = View.VISIBLE
+
+        val token = PreferenceManager.getaccesstoken(mContext)
+        val call: Call<CanteenBannerResponseModel> = ApiClient.getClient.get_canteen_banner("Bearer "+token)
+        call.enqueue(object : Callback<CanteenBannerResponseModel>
+        {
+            override fun onFailure(call: Call<CanteenBannerResponseModel>, t: Throwable) {
+                progress.visibility = View.GONE
+
+
             }
-            else {
-                val dialog = Dialog(requireContext())
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-                dialog.setContentView(R.layout.alert_send_email_dialog)
-                dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                val dialogCancelButton = dialog.findViewById<View>(R.id.cancelButton) as Button
-                val submitButton = dialog.findViewById<View>(R.id.submitButton) as Button
-                text_dialog = dialog.findViewById<View>(R.id.text_dialog) as EditText
-                text_content = dialog.findViewById<View>(R.id.text_content) as EditText
-              //  progressDialog = dialog.findViewById<View>(R.id.progressdialogg) as ProgressBar
-                dialogCancelButton.setOnClickListener { dialog.dismiss() }
-                submitButton.setOnClickListener {
-                    if (text_dialog!!.text.toString().trim { it <= ' ' } == "") {
-                        /*val toast = Toast.makeText(
-                            context, requireContext().resources.getString(
-                                R.string.enter_subjects
-                            ), Toast.LENGTH_SHORT
-                        )*/
-                       // toast.show()
+            override fun onResponse(call: Call<CanteenBannerResponseModel>, response: Response<CanteenBannerResponseModel>) {
+                val responsedata = response.body()
+                progress.visibility = View.GONE
+
+                if (responsedata!!.status==100) {
+
+                    contactEmail=response.body()!!.responseArray.data.contact_email
+                    walletTopUpLimit_str=response.body()!!.responseArray.data.wallet_topup_limit
+                    PreferenceManager.setTopUpLimit(mContext,response.body()!!.responseArray.data.wallet_topup_limit)
+                    walletTopUpLimit=walletTopUpLimit_str.toInt()
+                    var banner_image=response.body()!!.responseArray.data.image
+                    var trn_no=response.body()!!.responseArray.data.trn_no
+                    PreferenceManager.setTrnNo(mContext,trn_no)
+                    if (contactEmail.equals(""))
+                    {
+                        email_icon.visibility=View.GONE
+                    }
+                    else{
+                        email_icon.visibility=View.VISIBLE
+                    }
+                    if(response.body()!!.responseArray.data.description.equals(""))
+                    {
+                        description.visibility=View.GONE
+                    }
+                    else{
+                        description.visibility=View.VISIBLE
+                        description.text=response.body()!!.responseArray.data.description
+                    }
+                    if (banner_image != "") {
+
+                        Glide.with(mContext) //1
+                            .load(banner_image)
+                            .into(bannerImg)
                     } else {
-                        if (text_content!!.text.toString().trim { it <= ' ' } == "") {
-                          /*  val toast = Toast.makeText(
-                                context, requireContext().resources.getString(
-                                    R.string.enter_contents
-                                ), Toast.LENGTH_SHORT
-                            )*/
-                           // toast.show()
-                        } else if (contactEmail.matches(EMAIL_PATTERN.toRegex())) {
-                            if (text_dialog!!.text.toString().trim { it <= ' ' }
-                                    .matches(pattern.toRegex())) {
-                                if (text_content!!.text.toString().trim { it <= ' ' }
-                                        .matches(pattern.toRegex())) {
-                                    /*if (AppUtils.isNetworkConnected(context)) {
-                                        sendEmailToStaff(dialog)
-                                    } else {
-                                        AppUtils.showDialogAlertDismiss(
-                                            context as Activity?,
-                                            context!!.getString(R.string.network_error),
-                                            getString(R.string.no_internet),
-                                            R.drawable.nonetworkicon,
-                                            R.drawable.roundred
-                                        )
-                                    }*/
-                                } else {
-                                    /*val toast = Toast.makeText(
-                                        context, context!!.resources.getString(
-                                            R.string.enter_valid_contents
-                                        ), Toast.LENGTH_SHORT
-                                    )
-                                    toast.show()*/
-                                }
-                            } else {
-                                /*val toast = Toast.makeText(
-                                    context, context!!.resources.getString(
-                                        R.string.enter_valid_subjects
-                                    ), Toast.LENGTH_SHORT
-                                )
-                                toast.show()*/
-                            }
-                        } else {
-                            val toast = Toast.makeText(
-                                context, requireContext().resources.getString(
-                                    R.string.enter_valid_email
-                                ), Toast.LENGTH_SHORT
+                        bannerImg!!.setBackgroundResource(R.drawable.default_banner)
+                    }
+
+                }
+                else
+                {
+
+                    DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), mContext)
+                }
+            }
+
+        })
+
+    }
+
+    private fun showSendEmailDialog()
+    {
+        val dialog = Dialog(mContext)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(true)
+        dialog.setContentView(R.layout.dialog_send_email)
+        dialog.window!!.setBackgroundDrawableResource(android.R.color.transparent)
+        val btn_submit = dialog.findViewById<Button>(R.id.submitButton)
+        val btn_cancel = dialog.findViewById<Button>(R.id.cancelButton)
+        val text_dialog = dialog.findViewById<EditText?>(R.id.text_dialog)
+        val text_content = dialog.findViewById<EditText>(R.id.text_content)
+
+        btn_cancel.setOnClickListener(View.OnClickListener {
+            dialog.dismiss()
+        })
+
+        btn_submit.setOnClickListener {
+            if (text_dialog.text.toString().trim().equals("")) {
+                DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), resources.getString(R.string.enter_subject), mContext)
+
+
+            } else {
+                if (text_content.text.toString().trim().equals("")) {
+                    DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), resources.getString(R.string.enter_content), mContext)
+
+                } else {
+                    // progressDialog.visibility = View.VISIBLE
+                    if (ConstantFunctions.internetCheck(mContext))
+                    {
+                        sendEmail(text_dialog.text.toString().trim(), text_content.text.toString().trim(), contactEmail, dialog)
+                    }
+                    else
+                    {
+                        DialogFunctions.showInternetAlertDialog(mContext)
+                    }
+
+                }
+            }
+        }
+        dialog.show()
+    }
+
+
+    fun sendEmail(title: String, message: String,  staffEmail: String, dialog: Dialog)
+    {
+
+        val sendMailBody = SendEmailApiModel( staffEmail, title, message)
+        val call: Call<SignUpResponseModel> = ApiClient.getClient.sendEmailStaff(sendMailBody, "Bearer " + PreferenceManager.getaccesstoken(mContext))
+        call.enqueue(object : Callback<SignUpResponseModel> {
+            override fun onFailure(call: Call<SignUpResponseModel>, t: Throwable) {
+                //progressDialog.visibility = View.GONE
+            }
+
+            override fun onResponse(call: Call<SignUpResponseModel>, response: Response<SignUpResponseModel>) {
+                val responsedata = response.body()
+                //progressDialog.visibility = View.GONE
+                if (responsedata != null) {
+                    try {
+
+
+                        if (response.body()!!.status==100) {
+                            dialog.dismiss()
+                            showSuccessAlertnew(
+                                mContext,
+                                "Email sent Successfully ",
+                                "Success",
+                                dialog
                             )
-                            toast.show()
+                        }else {
+                            DialogFunctions.commonErrorAlertDialog(
+                                mContext.resources.getString(R.string.alert),
+                                ConstantFunctions.commonErrorString(response.body()!!.status),
+                                mContext
+                            )
+
                         }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
                     }
                 }
-                dialog.show()
             }
+
         })
     }
 
-    private fun sendEmailToStaff(dialog: Dialog) {
-/*val service: APIInterface = APIClient.getRetrofitInstance().create(APIInterface::class.java)
-        val paramObject = JsonObject()
-        paramObject.addProperty("email", contactEmail)
-        paramObject.addProperty("title", text_dialog!!.text.toString())
-        paramObject.addProperty("message", text_content!!.text.toString())
-        val call: Call<SendMailStaffResponseModel> = service.sendmailtostaff(
-            "Bearer " + PreferenceManager.getAccessToken(context),
-            paramObject
-        )
-        progressDialog!!.visibility = View.VISIBLE
-        call.enqueue(object : Callback<SendMailStaffResponseModel?> {
-            override fun onResponse(
-                call: Call<SendMailStaffResponseModel?>,
-                response: Response<SendMailStaffResponseModel?>
-            ) {
-                progressDialog!!.visibility = View.GONE
-                if (response.isSuccessful()) {
-                    val apiResponse: SendMailStaffResponseModel? = response.body()
-                    // Log.e("response", String.valueOf(apiResponse));
-                    // System.out.println("response" + apiResponse);
-                    val statuscode: String = apiResponse.getResponse().getStatuscode()
-                    if (statuscode == "303") {
-                        dialog.dismiss()
-                        val toast = Toast.makeText(
-                            context, context!!.resources.getString(
-                                R.string.successfully_send_email_staff
-                            ), Toast.LENGTH_SHORT
-                        )
-                        toast.show()
-                    } else {
-                        val toast = Toast.makeText(
-                            context, context!!.resources.getString(
-                                R.string.email_not_staff
-                            ), Toast.LENGTH_SHORT
-                        )
-                        toast.show()
-                    }
-                }
-            }
 
-            override fun onFailure(call: Call<SendMailStaffResponseModel?>, t: Throwable) {
-                progressDialog!!.visibility = View.GONE
-
-            }
-        })*/
-
-    }
-    companion object {
-        private var progressDialog: ProgressBar? = null
+    fun showSuccessAlertnew(context: Context, message: String, msgHead: String, mdialog: Dialog) {
+        val dialog = Dialog(context)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.dialog_common_error_alert)
+        var iconImageView = dialog.findViewById(R.id.iconImageView) as ImageView
+        var alertHead = dialog.findViewById(R.id.alertHead) as TextView
+        var text_dialog = dialog.findViewById(R.id.text_dialog) as TextView
+        var btn_Ok = dialog.findViewById(R.id.btn_Ok) as Button
+        text_dialog.text = message
+        alertHead.text = msgHead
+        iconImageView.setImageResource(R.drawable.exclamationicon)
+        btn_Ok.setOnClickListener()
+        {
+            dialog.dismiss()
+            mdialog.dismiss()
+        }
+        dialog.show()
     }
 }

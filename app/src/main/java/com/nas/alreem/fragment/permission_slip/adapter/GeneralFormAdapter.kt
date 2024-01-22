@@ -33,6 +33,7 @@ internal class GeneralFormAdapter (private var mContext: Context, var formslist:
         holder.itemName.text = formslist[position].title
 
         holder.linear.setOnClickListener {
+
             if (formslist.get(position).form_url.contains(".pdf"))
             {
                 val intent = Intent(mContext, PDFViewerActivity::class.java)

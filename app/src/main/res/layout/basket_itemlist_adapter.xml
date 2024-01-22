@@ -106,8 +106,7 @@
                         android:layout_weight="20"
                         android:textColor="@color/black"
                         android:gravity="center_vertical"
-                        android:textSize="14sp"
-                        android:text="AED 45.00" />
+                        android:textSize="14sp" />
                     <TextView
                         android:id="@+id/removeTxt"
                         android:layout_width="0dp"

@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -19,10 +20,15 @@ import com.nas.alreem.R
 import com.nas.alreem.activity.communication.commingup.ComingUpWholeSchool
 import com.nas.alreem.activity.communication.information.CommunicationInformationActivity
 import com.nas.alreem.activity.communication.newesletters.adapter.NewsLetterAdapter
+import com.nas.alreem.activity.communication.newesletters.model.NewsLetterModel
+import com.nas.alreem.activity.communication.newesletters.model.NewsletterResponseModel
 import com.nas.alreem.activity.communication.socialmedia.SocialMediaActivity
 import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.constants.*
 import com.nas.alreem.fragment.communication.adapter.CommunicationAdapter
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class NewsLetterActivity : AppCompatActivity(){
@@ -32,14 +38,21 @@ class NewsLetterActivity : AppCompatActivity(){
     lateinit var heading: TextView
     lateinit var backRelative: RelativeLayout
     lateinit var logoClickImgView: ImageView
-    lateinit var newsLetterArrayList:ArrayList<String>
+    lateinit var newsLetterArrayList:ArrayList<NewsLetterModel>
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_newsletter)
         mContext=this
         initUI()
-
+        if (ConstantFunctions.internetCheck(mContext))
+        {
+            getList()
+        }
+        else
+        {
+            DialogFunctions.showInternetAlertDialog(mContext)
+        }
     }
     fun initUI()
     {
@@ -62,9 +75,8 @@ class NewsLetterActivity : AppCompatActivity(){
             finish()
         })
         newsLetterArrayList= ArrayList()
-        newsLetterArrayList.add("NewsLetter")
-        var newsLetterAdapter= NewsLetterAdapter(newsLetterArrayList,mContext)
-        mnewsLetterListView.adapter=newsLetterAdapter
+        // newsLetterArrayList.add("NewsLetter")
+
         mnewsLetterListView.addOnItemClickListener(object : OnItemClickListener {
             @SuppressLint("SimpleDateFormat", "SetTextI18n")
             @RequiresApi(Build.VERSION_CODES.O)
@@ -73,11 +85,55 @@ class NewsLetterActivity : AppCompatActivity(){
 
                 val intent = Intent(mContext, NewsLetterListActivity::class.java)
                 intent.putExtra("heading",newsLetterArrayList.get(position).toString())
+                intent.putExtra("id",newsLetterArrayList.get(position).id)
                 startActivity(intent)
             }
 
         })
 
     }
+    private fun  getList(){
+        val token = PreferenceManager.getaccesstoken(mContext)
+        val call: Call<NewsletterResponseModel> = ApiClient.getClient.newsletter_categories("Bearer "+token)
+        call.enqueue(object : Callback<NewsletterResponseModel> {
+            override fun onFailure(call: Call<NewsletterResponseModel>, t: Throwable) {
 
+                progressDialogAdd.visibility= View.GONE
+            }
+            override fun onResponse(call: Call<NewsletterResponseModel>, response: Response<NewsletterResponseModel>) {
+                val responsedata = response.body()
+                progressDialogAdd.visibility= View.GONE
+
+                if (responsedata!!.status==100) {
+
+
+
+
+                    if (response.body()!!.responseArray!!.data!!.size > 0) {
+                        for (i in 0 until response.body()!!.responseArray!!.data!!.size) {
+
+                            newsLetterArrayList.add(response.body()!!.responseArray!!.data!!.get(i))
+                        }
+                        var newsLetterAdapter= NewsLetterAdapter(newsLetterArrayList,mContext)
+                        mnewsLetterListView.adapter=newsLetterAdapter
+                    } else {
+                        Toast.makeText(
+                            this@NewsLetterActivity,
+                            "No data found",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+
+                }
+                else {
+                    DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), mContext)
+
+                }
+            }
+
+        })
+
+
+    }
 }

@@ -1,11 +1,14 @@
 package com.nas.alreem.activity.shop_new
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.Window
 import android.widget.Button
@@ -18,25 +21,37 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
+import com.google.gson.JsonObject
+import com.nas.alreem.BuildConfig
 import com.nas.alreem.R
 import com.nas.alreem.activity.canteen.CanteenPaymentActivity
-import com.nas.alreem.activity.canteen.adapter.DatesBasketAdapter
 import com.nas.alreem.activity.canteen.model.DateModel
 import com.nas.alreem.activity.canteen.model.canteen_cart.CanteenCartApiModel
-import com.nas.alreem.activity.canteen.model.canteen_cart.CanteenCartModel
-import com.nas.alreem.activity.canteen.model.canteen_cart.CanteenCartResModel
 import com.nas.alreem.activity.canteen.model.canteen_cart.CartItemsListModel
 import com.nas.alreem.activity.canteen.model.canteen_cart.ItemsModel
-import com.nas.alreem.activity.canteen.model.canteen_cart.OrdersModel
 import com.nas.alreem.activity.canteen.model.preorder.CanteenPreorderApiModel
 import com.nas.alreem.activity.canteen.model.preorder.CanteenPreorderModel
 import com.nas.alreem.activity.canteen.model.wallet.WalletBalanceApiModel
 import com.nas.alreem.activity.canteen.model.wallet.WalletBalanceModel
 import com.nas.alreem.activity.home.HomeActivity
+import com.nas.alreem.activity.lost_card.LostCardPaymentActivity
+import com.nas.alreem.activity.lost_card.model.GetShopCartResponseModel
+import com.nas.alreem.activity.lost_card.model.ShopCartResModel
+import com.nas.alreem.activity.lost_card.model.StudentLostCardResponseModel
+import com.nas.alreem.activity.payments.model.payment_gateway.PaymentGatewayApiModel
+import com.nas.alreem.activity.payments.model.payment_gateway.PaymentGatewayModel
+import com.nas.alreem.activity.payments.model.payment_token.PaymentTokenApiModel
+import com.nas.alreem.activity.payments.model.payment_token.PaymentTokenModel
+import com.nas.alreem.activity.shop_new.adapter.BasketItemsAdapter_new
+import com.nas.alreem.activity.shop_new.adapter.DatesBasketAdapter_new
+import com.nas.alreem.activity.shop_new.model.ItemsModelShop
+import com.nas.alreem.activity.shop_new.model.OrdersModelShop
 import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.PreferenceManager
+import payment.sdk.android.PaymentClient
+import payment.sdk.android.cardpayment.CardPaymentRequest
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -53,16 +68,19 @@ class Myorderbasket_Activity_new : AppCompatActivity() {
     var cartTotalAmount = 0
     var apiCall: Int = 0
     var cartTotalItem = 0
+    lateinit var activity: Activity
+    var orderReff:String = ""
+
     lateinit var mDateArrayList: ArrayList<DateModel>
-    lateinit var cart_list: ArrayList<CanteenCartResModel>
+    lateinit var cart_list: ArrayList<ShopCartResModel>
     lateinit var cart_items_list: ArrayList<CartItemsListModel>
     lateinit var dateRecyclerView: RecyclerView
     lateinit var noItemTxt: ImageView
     lateinit var itemLinear: LinearLayout
     lateinit var amountTxt: TextView
     lateinit var itemTxt: TextView
-    lateinit var itemArray: ArrayList<ItemsModel>
-    lateinit var orderArray: ArrayList<OrdersModel?>
+    lateinit var itemArray: ArrayList<ItemsModelShop>
+    lateinit var orderArray: ArrayList<OrdersModelShop?>
     lateinit var homeBannerUrlImageArray: ArrayList<String>
     var walletAmountString = "0"
     var WalletAmount = 0
@@ -70,6 +88,8 @@ class Myorderbasket_Activity_new : AppCompatActivity() {
     var BalanceWalletAmount = 0
     var BalanceConfirmWalletAmount = 0
     var TotalOrderedAmount = 0
+    var invoice_ref:String=""
+    var payAmount = ""
 
     private lateinit var logoClickImg: ImageView
     lateinit var back: ImageView
@@ -88,6 +108,7 @@ class Myorderbasket_Activity_new : AppCompatActivity() {
     private fun initfn() {
         //date = intent.getStringExtra("date").toString()
         nContext = this
+        activity=this
         progress=findViewById(R.id.progressDialog)
         logoClickImg=findViewById(R.id.logoclick)
         back = findViewById(R.id.back)
@@ -125,7 +146,7 @@ class Myorderbasket_Activity_new : AppCompatActivity() {
         progressDialogAdd.visibility= View.VISIBLE
         if (ConstantFunctions.internetCheck(nContext)) {
 //            progressDialog.visibility= View.VISIBLE
-            wallet_details()
+          //  wallet_details()
             getcanteen_cart()
         } else {
             DialogFunctions.showInternetAlertDialog(nContext)
@@ -133,9 +154,22 @@ class Myorderbasket_Activity_new : AppCompatActivity() {
 
 
         dateRecyclerView.layoutManager = LinearLayoutManager(nContext)
-        dateRecyclerView.adapter =
-            DatesBasketAdapter(cart_list, nContext,ordered_user_type,student_id,parent_id,staff_id,
-                itemTxt,amountTxt,itemLinear,noItemTxt,dateRecyclerView,progressDialogAdd)
+       /* dateRecyclerView.adapter =
+            DatesBasketAdapter_new(
+                cart_list,
+                nContext,
+                ordered_user_type,
+                student_id,
+                parent_id,
+                staff_id,
+                itemTxt,
+                amountTxt,
+                itemLinear,
+                noItemTxt,
+                dateRecyclerView,
+                progressDialogAdd,
+                cartTotalAmount
+            )*/
         itemLinear.setOnClickListener(
             View.OnClickListener {
                 var isNoItemAvailableFound = false
@@ -143,55 +177,51 @@ class Myorderbasket_Activity_new : AppCompatActivity() {
                 var basketDetailPos = 0
 
 
-                if (WalletAmount >=cartTotalAmount) {
 
 
-                    itemArray = ArrayList()
+
+                orderArray = ArrayList()
                     for (i in cart_list.indices) {
-                        val mModel = ItemsModel()
-                        mModel.delivery_date=cart_list[i].delivery_date
 
-                        orderArray = ArrayList()
-                        for (j in 0 until cart_list.get(
-                            i
-                        ).items.size) {
-                            val nModel = OrdersModel()
-                            nModel.id=cart_list[i].items[j].id.toString()
-                            nModel.item_id=cart_list[i].items[j].item_id.toString()
-                            nModel.quantity=cart_list[i].items[j].quantity.toString()
-                            nModel.price=cart_list[i].items[j].price.toString()
 
+
+                            val nModel = OrdersModelShop()
+                            nModel.id=cart_list[i].id.toString()
                             orderArray.add(nModel)
-                        }
-                        mModel.items=orderArray
-                        // mModel.setItems(orderArray)
-                        itemArray.add(mModel)
+
+
                     }
+                Log.e("data1", orderArray.toString())
                     val gson = Gson()
-                    val Data = gson.toJson(itemArray)
+                    val Data = gson.toJson(orderArray)
+                    Log.e("data",Data)
                     val JSON =
                         "{\"student_id\":\"" + PreferenceManager.getStudentID(nContext) + "\"," +
                                 "\"orders\":" + Data + "}"
                     //get pre order
                     progressDialogAdd.visibility= View.VISIBLE
 
-                    if (ConstantFunctions.internetCheck(nContext)) {
-                        getPreOrder( JSON,itemArray)
+                val intent = Intent(
+                    nContext,
+                    ShopCardPaymentActivity::class.java
+                )
+                intent.putExtra("fromDate", "2023-10-21")
+                intent.putExtra("studentId", PreferenceManager.getStudentID(nContext))
+                intent.putExtra("studentname", PreferenceManager.getStudentName(nContext))
+                Log.e("amount", cartTotalAmount.toString())
+                intent.putExtra("amount",cartTotalAmount)
+                intent.putExtra("data",Data )
+
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+               // et_amount!!.text = "Lost Card Date"
+                startActivity(intent)
+                    /*if (ConstantFunctions.internetCheck(nContext)) {
+                        CallForPaymentToken(Data)
                     } else {
                         DialogFunctions.showInternetAlertDialog(nContext)
-                    }
+                    }*/
 
-                } else {
-                    showInsufficientBal(
-                        nContext,
-                        "Alert",
-                        "Insufficient balance please top up wallet",
-                        R.drawable.exclamationicon,
-                        R.drawable.round
-                    )
 
-                    // AppUtils.showDialogAlertDismiss((Activity) mContext, "Alert","You don't have enough balance in your wallet, Please topup your wallet.", R.drawable.exclamationicon, R.drawable.round);
-                }
 
             })
 
@@ -220,29 +250,29 @@ class Myorderbasket_Activity_new : AppCompatActivity() {
         })
     }
     private fun getcanteen_cart(){
-        cart_list= java.util.ArrayList()
+        cart_list = ArrayList()
         cartTotalAmount=0
         cartTotalItem=0
         progressDialogAdd.visibility= View.VISIBLE
         val token = PreferenceManager.getaccesstoken(nContext)
         var canteenCart= CanteenCartApiModel(PreferenceManager.getStudentID(nContext).toString())
-        val call: Call<CanteenCartModel> = ApiClient.getClient.get_canteen_cart(canteenCart,"Bearer "+token)
-        call.enqueue(object : Callback<CanteenCartModel> {
-            override fun onFailure(call: Call<CanteenCartModel>, t: Throwable) {
+        val call: Call<GetShopCartResponseModel> = ApiClient.getClient.get_shop_cart(canteenCart,"Bearer "+token)
+        call.enqueue(object : Callback<GetShopCartResponseModel> {
+            override fun onFailure(call: Call<GetShopCartResponseModel>, t: Throwable) {
 
                 progressDialogAdd.visibility= View.GONE
             }
-            override fun onResponse(call: Call<CanteenCartModel>, response: Response<CanteenCartModel>) {
+            override fun onResponse(call: Call<GetShopCartResponseModel>, response: Response<GetShopCartResponseModel>) {
                 val responsedata = response.body()
                 progressDialogAdd.visibility= View.GONE
 
                 if (responsedata!!.status==100) {
                     progress.visibility = View.GONE
                     cart_list=response!!.body()!!.responseArray.data
-                    for (i in cart_list.indices){
 
-                        cartTotalAmount=cartTotalAmount + cart_list[i].total_amount
-                    }
+
+                        cartTotalAmount=cartTotalAmount + responsedata.responseArray.total_amount
+
                     if (cartTotalAmount==0){
                         //bottomview.visibility=View.GONE
                     }else{
@@ -258,18 +288,27 @@ class Myorderbasket_Activity_new : AppCompatActivity() {
                         //bottomview.visibility=View.VISIBLE
                         for (i in cart_list.indices){
 
-                            for (j in cart_list[i].items.indices){
-                                cartTotalItem=cartTotalItem + cart_list[i].items[j].quantity
-                            }
+
+                                cartTotalItem=cartTotalItem + cart_list[i].quantity
+
                         }
                         itemTxt.setText(cartTotalItem.toString() + "Items")
                         amountTxt.setText(cartTotalAmount.toString() + "AED")
                     }
-                    dateRecyclerView.layoutManager = LinearLayoutManager(nContext)
-                    dateRecyclerView.adapter =
-                        DatesBasketAdapter(cart_list, nContext,ordered_user_type,student_id,parent_id,staff_id,
-                            itemTxt,amountTxt,itemLinear,noItemTxt,dateRecyclerView,progressDialogAdd)
+                    Log.e("gfjg", cart_list.size.toString())
 
+                    dateRecyclerView.layoutManager = LinearLayoutManager(nContext)
+                    var adptr= BasketItemsAdapter_new(cart_list,
+                        nContext, ordered_user_type,
+                        student_id,
+                        parent_id,
+                        staff_id,
+                        itemTxt,amountTxt,itemLinear,noItemTxt,dateRecyclerView,progressDialogAdd)
+                    dateRecyclerView.adapter=adptr
+                    /*dateRecyclerView.adapter =
+                        DatesBasketAdapter_new(cart_list, nContext,ordered_user_type,student_id,parent_id,staff_id,
+                            itemTxt,amountTxt,itemLinear,noItemTxt,dateRecyclerView,progressDialogAdd,cartTotalAmount)
+*/
                 }
                 else if (response.body()!!.status==132)
                 {
@@ -424,8 +463,196 @@ class Myorderbasket_Activity_new : AppCompatActivity() {
         dialog.show()
     }
 
+    private fun CallForPaymentToken(Data: String) {
+        progressDialogAdd.visibility=View.VISIBLE
+        val token = PreferenceManager.getaccesstoken(nContext)
+        val paymentTokenBody = PaymentTokenApiModel( PreferenceManager.getStudentID(nContext).toString(),"shop")
+        val call: Call<PaymentTokenModel> =
+            ApiClient.getClient.payment_token(paymentTokenBody, "Bearer " + token)
+        call.enqueue(object : Callback<PaymentTokenModel> {
+            override fun onFailure(call: Call<PaymentTokenModel>, t: Throwable) {
+                progressDialogAdd.visibility = View.GONE
+            }
+
+            override fun onResponse(call: Call<PaymentTokenModel>, response: Response<PaymentTokenModel>) {
+                val responsedata = response.body()
+                progressDialogAdd.visibility = View.GONE
+                if (responsedata != null) {
+                    try {
+
+                        if (response.body()!!.status==100) {
+                            var payment_token=responsedata.responseArray.access_token
+                            val tsLong = System.currentTimeMillis() / 1000
+                            val ts = tsLong.toString()
+                            invoice_ref="NASCANAND"
+                            var mechantorderRef=invoice_ref+"-"+ts
+
+                            val amountDouble: Double = WalletAmount.toDouble() * 100
+                            val amuntInt = amountDouble.toInt()
+                            val strDoubleAmount = amuntInt.toString()
+                            //order_id= "BISAD" + id + "S" + studentId
+                            payAmount= cartTotalAmount.toString()
+                            var amt:Int=payAmount.toInt() * 100
+                            progressDialogAdd.visibility=View.VISIBLE
+                            if (ConstantFunctions.internetCheck(nContext)) {
+                                callForPayment(payment_token,amt.toString(),Data)
+                            } else {
+                                DialogFunctions.showInternetAlertDialog(nContext)
+                            }
 
 
+
+                        }else
+                        {
+
+                            DialogFunctions.commonErrorAlertDialog(nContext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), nContext)
+                        }
+
+
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+
+        })
+
+
+    }
+    private fun callForPayment(paymentToken: String, amount: String, Data: String) {
+        progressDialogAdd.visibility=View.VISIBLE
+        val tsLong = System.currentTimeMillis() / 1000
+        val ts = tsLong.toString()
+        var mechantorderRef=invoice_ref+"-"+ts
+        val token = PreferenceManager.getaccesstoken(nContext)
+        val paymentGatewayBody = PaymentGatewayApiModel(amount,PreferenceManager.getEmailId(nContext).toString(),
+            mechantorderRef, PreferenceManager.getStudentName(nContext)!!,"","NAS","","Abu Dhabi",
+            paymentToken,"wallet_topup")
+        val call: Call<PaymentGatewayModel> =
+            ApiClient.getClient.payment_gateway(paymentGatewayBody, "Bearer " + token)
+        call.enqueue(object : Callback<PaymentGatewayModel> {
+            override fun onFailure(call: Call<PaymentGatewayModel>, t: Throwable) {
+                progressDialogAdd.visibility = View.GONE
+            }
+
+            override fun onResponse(call: Call<PaymentGatewayModel>, response: Response<PaymentGatewayModel>) {
+                val responsedata = response.body()
+                progressDialogAdd.visibility = View.GONE
+                if (responsedata != null) {
+                    try {
+
+                        if (response.body()!!.status==100) {
+                            progressDialogAdd.visibility=View.VISIBLE
+                            orderReff=responsedata.responseArray.order_reference
+                            var orderPageUrl=responsedata.responseArray.order_paypage_url
+                            var auth=responsedata.responseArray.authorization
+                            val Code: String = orderPageUrl.split("=").toTypedArray().get(1)
+
+                            progressDialogAdd.visibility = View.GONE
+                            val request: CardPaymentRequest = CardPaymentRequest.Builder().gatewayUrl(auth).code(Code).build()
+
+                            val paymentClient = PaymentClient(activity, "fdhasfd")
+                            paymentClient.launchCardPayment(request, 101)
+                            CallWalletSubmission(Data)
+
+
+                        }else
+                        {
+
+                            DialogFunctions.commonErrorAlertDialog(nContext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), nContext)
+                        }
+
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+
+        })
+    }
+    private fun CallWalletSubmission(data: String) {
+        val deviceBrand = Build.MANUFACTURER
+        val deviceModel = Build.MODEL
+        val osVersion = Build.VERSION.RELEASE
+        val devicename = "$deviceBrand $deviceModel $osVersion"
+        //  int versionCode= BuildConfig.VERSION_NAME;
+        val version: String = BuildConfig.VERSION_NAME
+        progressDialogAdd.visibility = View.VISIBLE
+        val paramObject = JsonObject()
+        paramObject.addProperty("student_id", PreferenceManager.getStudentName(nContext))
+        paramObject.addProperty("shop_cart_id",data )
+        paramObject.addProperty("total_amount",cartTotalAmount )
+        paramObject.addProperty("order_reference", orderReff)
+        paramObject.addProperty("device_type", "2")
+        paramObject.addProperty("device_name", devicename)
+        paramObject.addProperty("app_version", version)
+        val call: Call<StudentLostCardResponseModel> =
+            ApiClient.getClient.student_lost_card(
+                "Bearer " + PreferenceManager.getaccesstoken(
+                    nContext
+                ), paramObject
+            )
+        call.enqueue(object : Callback<StudentLostCardResponseModel> {
+            override fun onFailure(call: Call<StudentLostCardResponseModel>, t: Throwable) {
+                progressDialogAdd.visibility = View.GONE
+            }
+
+            override fun onResponse(
+                call: Call<StudentLostCardResponseModel>,
+                response: Response<StudentLostCardResponseModel>
+            ) {
+                val responsedata = response.body()
+                progressDialogAdd.visibility = View.GONE
+                if (responsedata != null) {
+                    try {
+
+                        if (responsedata.responsecode.equals("200")) {
+                            if (responsedata.response.statuscode.equals("303")) {
+                                showDialogAlertDismissOk(
+                                    nContext as Activity?,
+                                    "Payment Successful",
+                                    "Thank You!",
+                                    R.drawable.tick,
+                                    R.drawable.round
+                                )
+                            }
+                        }
+
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+
+        })
+    }
+    fun showDialogAlertDismissOk(
+        activity: Activity?,
+        msgHead: String?,
+        msg: String?,
+        ico: Int,
+        bgIcon: Int
+    ) {
+        val dialog = Dialog(activity!!)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.dialog_common_error_alert)
+        val icon = dialog.findViewById<View>(R.id.iconImageView) as ImageView
+        icon.setBackgroundResource(bgIcon)
+        icon.setImageResource(ico)
+        val text = dialog.findViewById<View>(R.id.messageTxt) as TextView
+        val textHead = dialog.findViewById<View>(R.id.alertHead) as TextView
+        text.text = msg
+        textHead.text = msgHead
+        val dialogButton = dialog.findViewById<View>(R.id.btn_Ok) as Button
+        dialogButton.setOnClickListener {
+            dialog.dismiss()
+            finish()
+        }
+
+        dialog.show()
+    }
     fun showSuccessAlertnew(context: Context, message: String, msgHead: String) {
         val dialog = Dialog(context)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)

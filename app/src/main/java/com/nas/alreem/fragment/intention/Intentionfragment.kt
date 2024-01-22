@@ -165,10 +165,10 @@ class Intentionfragment : Fragment(){
                     val section = dialog.findViewById<TextView>(R.id.section)
                     val imageView = dialog.findViewById<ImageView>(R.id.iconImageView)
                    // name.setText(primaryArrayList.get(position).student)
-                  //  studName.setText(primaryArrayList.get(position).classs)
+                    studName.setText(primaryArrayList.get(position).student)
                     department.setText(primaryArrayList.get(position).question)
                     role.setText(intentionstatusArray.get(position).selected_options)
-                  //  section.setText(intentionstatusArray.get(position).selected_options)
+                    section.setText(intentionstatusArray.get(position).class_id)
                     // TODO set Staff Image
                     // TODO set Staff Image
                     dialog.show()
@@ -299,15 +299,30 @@ class Intentionfragment : Fragment(){
         }
         sub_btn.setOnClickListener {
 
-            showSubmitConfirm(
-                mContext,
-                "Would you like to submit?",
-                "Alert",
-                dialog,
-                selectedItem,
-                position,
-                primaryArrayList.get(position).intension_id
-            )
+            Log.e("Intention_validation",selectedItem)
+            if (selectedItem.equals("", ignoreCase = true) || selectedItem.equals(
+                    "Please Select",
+                    ignoreCase = true
+                )
+            ) {
+                showReEnrollNoData(
+                    mContext,
+                    "You didn't enter any data of your child. Please Enter data and Submit",
+                    "Alert",
+                    dialog
+                )
+            } else {
+                showSubmitConfirm(
+                    mContext,
+                    "Would you like to submit?",
+                    "Alert",
+                    dialog,
+                    selectedItem,
+                    position,
+                    primaryArrayList.get(position).intension_id
+                )
+            }
+
            /* if (selectedItem.equals("", ignoreCase = true) || selectedItem.equals(
                     "Please Select",
                     ignoreCase = true
@@ -332,6 +347,26 @@ class Intentionfragment : Fragment(){
         }
         close_img.setOnClickListener { dialog.dismiss() }
         dialog.show()
+    }
+    private fun showReEnrollNoData(activity: Context, s: String, alert: String, dialog: Dialog) {
+        val dialog1 = Dialog(com.nas.alreem.fragment.home.mContext)
+        dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog1.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog1.setCancelable(false)
+        dialog1.setContentView(R.layout.dialog_common_error_alert)
+        val iconImageView = dialog1.findViewById<ImageView>(R.id.iconImageView)
+        iconImageView.setImageResource(R.drawable.exclamationicon)
+        val alertHead = dialog1.findViewById<TextView>(R.id.alertHead)
+        val text_dialog = dialog1.findViewById<TextView>(R.id.messageTxt)
+        val btn_Ok = dialog1.findViewById<Button>(R.id.btn_Ok)
+        // var btn_Cancel = dialog.findViewById(R.id.btn_Cancel) as Button
+        text_dialog.text = s
+        alertHead.text = alert
+        btn_Ok.setOnClickListener { dialog1.dismiss() }
+
+        /* btn_Cancel.setOnClickListener {
+              dialog.dismiss()
+          }*/dialog1.show()
     }
 
     private fun showSubmitConfirm(
@@ -435,6 +470,8 @@ class Intentionfragment : Fragment(){
             dialog.dismiss()
             dialog1.dismiss()
             getIntentionListAPI(stud_id)
+            getIntentionStatusAPI(stud_id)
+
         }
         d.show()
     }

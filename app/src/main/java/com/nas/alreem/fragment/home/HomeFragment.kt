@@ -37,6 +37,7 @@ import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.fragment.about_us.AboutUsFragment
 import com.nas.alreem.fragment.absence.AbsenceFragment
+import com.nas.alreem.fragment.bus_service.BusServiceFragment
 import com.nas.alreem.fragment.calendar.CalendarFragment
 import com.nas.alreem.fragment.canteen.CanteenFragment
 import com.nas.alreem.fragment.cca.CCAFragment
@@ -44,16 +45,21 @@ import com.nas.alreem.fragment.contact_us.ContactUsFragment
 import com.nas.alreem.fragment.early_years.EarlyYearsFragment
 import com.nas.alreem.fragment.gallery.GalleryFragment
 import com.nas.alreem.fragment.home.model.BannerResponseModel
+import com.nas.alreem.fragment.intention.Intentionfragment
 import com.nas.alreem.fragment.notifications.NotificationFragment
 import com.nas.alreem.fragment.parent_meetings.ParentMeetingsFragment
 import com.nas.alreem.fragment.parents_essentials.ParentsEssentialFragment
 import com.nas.alreem.fragment.payments.PaymentFragment
 import com.nas.alreem.fragment.payments.model.SendEmailApiModel
+import com.nas.alreem.fragment.performing_arts.PerformingArtsFragment
 import com.nas.alreem.fragment.permission_slip.PermissionSlipFragment
 import com.nas.alreem.fragment.permission_slip.PermissionSlipFragmentNew
 import com.nas.alreem.fragment.primary.PrimaryFragment
 import com.nas.alreem.fragment.reports.ReportsFragment
 import com.nas.alreem.fragment.secondary.SecondaryFragment
+import com.nas.alreem.fragment.shop.ShopFragment
+import com.nas.alreem.fragment.student_information.StudentInformationFragment
+import com.nas.alreem.fragment.time_table.TimeTableFragment
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -765,20 +771,32 @@ class HomeFragment : Fragment() , View.OnClickListener{
                 textdata.equals(ConstantWords.notification, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_NOTIFICATIONS
                 }
+                textdata.equals(ConstantWords.communications, ignoreCase = true) -> {
+                    TAB_ID = ConstantWords.TAB_COMMUNICATION
+                }
                 textdata.equals(ConstantWords.lunchbox, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_LUNCH_BOX
                 }
                 textdata.equals(ConstantWords.payments, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_PAYMENTS
                 }
-                textdata.equals(ConstantWords.early_years, ignoreCase = true) -> {
-                    TAB_ID = ConstantWords.TAB_EARLY_YEARS
+                textdata.equals(ConstantWords.busservice, ignoreCase = true) -> {
+                    TAB_ID = ConstantWords.TAB_BUS_SERVICE
                 }
-                textdata.equals(ConstantWords.primary, ignoreCase = true) -> {
-                    TAB_ID = ConstantWords.TAB_PRIMARY
+                textdata.equals(ConstantWords.intention, ignoreCase = true) -> {
+                    TAB_ID = ConstantWords.TAB_INTENTIONS
                 }
-                textdata.equals(ConstantWords.secondary, ignoreCase = true) -> {
-                    TAB_ID = ConstantWords.TAB_SECONDARY
+                textdata.equals(ConstantWords.studentinformation, ignoreCase = true) -> {
+                    TAB_ID = ConstantWords.TAB_STUDENT_INFORMATION
+                }
+                textdata.equals(ConstantWords.timetable, ignoreCase = true) -> {
+                    TAB_ID = ConstantWords.TAB_TIMETABLE
+                }
+                textdata.equals(ConstantWords.performingarts, ignoreCase = true) -> {
+                    TAB_ID = ConstantWords.TAB_PERFORMINGARTS
+                }
+                textdata.equals(ConstantWords.shop, ignoreCase = true) -> {
+                    TAB_ID = ConstantWords.TAB_SHOP
                 }
                 textdata.equals(ConstantWords.gallery, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_GALLERY
@@ -1020,18 +1038,7 @@ class HomeFragment : Fragment() , View.OnClickListener{
                     DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert),mContext.resources.getString(R.string.feature_only_for_registered_user),mContext)
 
                 }
-                ConstantWords.TAB_EARLY_YEARS -> {
-                    mFragment = EarlyYearsFragment()
-                    fragmentIntent(mFragment)
-                }
-                ConstantWords.TAB_PRIMARY -> {
-                    mFragment = PrimaryFragment()
-                    fragmentIntent(mFragment)
-                }
-                ConstantWords.TAB_SECONDARY -> {
-                    mFragment = SecondaryFragment()
-                    fragmentIntent(mFragment)
-                }
+               
                 ConstantWords.TAB_GALLERY -> {
                     DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert),mContext.resources.getString(R.string.feature_only_for_registered_user),mContext)
 
@@ -1115,16 +1122,24 @@ class HomeFragment : Fragment() , View.OnClickListener{
                     mFragment = PaymentFragment()
                     fragmentIntent(mFragment)
                 }
-                ConstantWords.TAB_EARLY_YEARS -> {
-                    mFragment = EarlyYearsFragment()
+                ConstantWords.TAB_BUS_SERVICE -> {
+                    mFragment = BusServiceFragment()
                     fragmentIntent(mFragment)
                 }
-                ConstantWords.TAB_PRIMARY -> {
-                    mFragment = PrimaryFragment()
+                ConstantWords.TAB_INTENTIONS -> {
+                    mFragment = Intentionfragment()
                     fragmentIntent(mFragment)
                 }
-                ConstantWords.TAB_SECONDARY -> {
-                    mFragment = SecondaryFragment()
+                ConstantWords.TAB_STUDENT_INFORMATION -> {
+                    mFragment = StudentInformationFragment()
+                    fragmentIntent(mFragment)
+                }
+                ConstantWords.TAB_TIMETABLE -> {
+                    mFragment = TimeTableFragment()
+                    fragmentIntent(mFragment)
+                }
+                ConstantWords.TAB_SHOP -> {
+                    mFragment = ShopFragment()
                     fragmentIntent(mFragment)
                 }
                 ConstantWords.TAB_PARENT_ESSENTIAL -> {
@@ -1138,6 +1153,10 @@ class HomeFragment : Fragment() , View.OnClickListener{
                 }
                 ConstantWords.TAB_ABOUT_US -> {
                     mFragment = AboutUsFragment()
+                    fragmentIntent(mFragment)
+                }
+                ConstantWords.TAB_PERFORMINGARTS -> {
+                    mFragment = PerformingArtsFragment()
                     fragmentIntent(mFragment)
                 }
                 ConstantWords.TAB_ABSENCE -> {

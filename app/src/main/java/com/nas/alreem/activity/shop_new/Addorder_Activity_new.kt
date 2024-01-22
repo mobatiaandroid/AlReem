@@ -35,6 +35,8 @@ import com.nas.alreem.activity.canteen.model.canteen_cart.CanteenCartModel
 import com.nas.alreem.activity.canteen.model.canteen_cart.CanteenCartResModel
 import com.nas.alreem.activity.canteen.model.canteen_cart.CartItemsListModel
 import com.nas.alreem.activity.home.HomeActivity
+import com.nas.alreem.activity.lost_card.model.GetShopCartResponseModel
+import com.nas.alreem.activity.lost_card.model.ShopCartResModel
 import com.nas.alreem.activity.payments.model.StudentList
 import com.nas.alreem.activity.payments.model.StudentListModel
 import com.nas.alreem.activity.shop_new.adapter.PreorderItemsAdapter_new
@@ -60,7 +62,7 @@ class Addorder_Activity_new : AppCompatActivity()  {
     lateinit var recyclerview_category: RecyclerView
     lateinit var recyclerview_date: RecyclerView
     lateinit var back: ImageView
-    lateinit var cart_list: ArrayList<CanteenCartResModel>
+    lateinit var cart_list: ArrayList<ShopCartResModel>
     lateinit var cart_items_list: ArrayList<CartItemsListModel>
     private var id: String? = null
     lateinit var date_title: TextView
@@ -99,7 +101,7 @@ class Addorder_Activity_new : AppCompatActivity()  {
         //progressDialog.visibility=View.VISIBLE
         if (ConstantFunctions.internetCheck(nContext)) {
 //            progressDialog.visibility= View.VISIBLE
-            callStudentListApi()
+            //callStudentListApi()
 
         } else {
             DialogFunctions.showInternetAlertDialog(nContext)
@@ -117,7 +119,7 @@ class Addorder_Activity_new : AppCompatActivity()  {
         id = PreferenceManager.getStudentID(nContext).toString()
         date_title = findViewById(R.id.date_title)
         // progress=findViewById(R.id.progressDialog)
-        title.text = "Pre-Order"
+        title.text = "Shop-Order"
         cart_empty = findViewById(R.id.item_empty)
         // progressDialog = findViewById(R.id.progressDialogM)
         progressDialogP= ProgressBarDialog(nContext)
@@ -166,13 +168,13 @@ class Addorder_Activity_new : AppCompatActivity()  {
             finish()
         }
         basketbtn.setOnClickListener {
-            val intent = Intent(nContext, Myorderbasket_Activity::class.java)
+            val intent = Intent(nContext, Myorderbasket_Activity_new::class.java)
             intent.putExtra("date", date_selected)
             nContext.startActivity(intent)
         }
 
         bottomview.setOnClickListener(View.OnClickListener {
-            val intent = Intent(nContext, Myorderbasket_Activity::class.java)
+            val intent = Intent(nContext, Myorderbasket_Activity_new::class.java)
             intent.putExtra("date", date_selected)
             nContext.startActivity(intent)
         })
@@ -275,7 +277,6 @@ class Addorder_Activity_new : AppCompatActivity()  {
             }
 
         })
-
 
         recyclerview_category.addOnItemClickListener(object : OnItemClickListener {
             override fun onItemClicked(position: Int, view: View) {
@@ -413,7 +414,7 @@ class Addorder_Activity_new : AppCompatActivity()  {
 
         val token = PreferenceManager.getaccesstoken(nContext)
         var canteenItems= ShopItemsApiModel(
-            PreferenceManager.getStudentID(nContext).toString(),def_cat_id)
+            PreferenceManager.getStudentID(nContext)!!,def_cat_id)
         val call: Call<ItemsListModel> = ApiClient.getClient.get_shop_items(canteenItems,"Bearer "+token)
         call.enqueue(object : Callback<ItemsListModel> {
             override fun onFailure(call: Call<ItemsListModel>, t: Throwable) {
@@ -439,7 +440,7 @@ class Addorder_Activity_new : AppCompatActivity()  {
                         var cartItemPos = 0
                         if (cart_list.size > 0) {
                             for (n in cart_list.indices) {
-                                if (cart_list.get(n).delivery_date.equals(date_selected))
+                               /* if (cart_list.get(n).delivery_date.equals(date_selected))
                                 {
 
                                     for (m in 0 until cart_list.get(n).items.size) {
@@ -452,14 +453,14 @@ class Addorder_Activity_new : AppCompatActivity()  {
                                             cartItemPos = m
                                         }
                                     }
-                                }
+                                }*/
                             }
                         }else{
                         }
                         if (isFound) {
 
-                            item_list[i].quantityCart=cart_list.get(cartDatePos).items.get(cartItemPos).quantity
-                            item_list[i].cartId = cart_list.get(cartDatePos).items.get(cartItemPos).id.toString()
+                            item_list[i].quantityCart=cart_list.get(cartDatePos).quantity
+                            item_list[i].cartId = cart_list.get(cartDatePos).id.toString()
                             item_list[i].isItemCart=true
 
                         } else
@@ -497,10 +498,9 @@ class Addorder_Activity_new : AppCompatActivity()  {
         item_list= ArrayList()
         progressDialogP.show()
         val token = PreferenceManager.getaccesstoken(nContext)
-        var canteenItems= CanteenItemsApiModel(
-            PreferenceManager.getStudentID(nContext).toString(),cat_selected,
-            date_selected,"0","200")
-        val call: Call<ItemsListModel> = ApiClient.getClient.get_canteen_items(canteenItems,"Bearer "+token)
+        var canteenItems= ShopItemsApiModel(
+            PreferenceManager.getStudentID(nContext).toString(),cat_selected)
+        val call: Call<ItemsListModel> = ApiClient.getClient.get_shop_items(canteenItems,"Bearer "+token)
         call.enqueue(object : Callback<ItemsListModel> {
             override fun onFailure(call: Call<ItemsListModel>, t: Throwable) {
                 progressDialogP.hide()
@@ -527,26 +527,23 @@ class Addorder_Activity_new : AppCompatActivity()  {
                         if (cart_list.size > 0) {
                             for (n in cart_list.indices) {
 
-                                if (cart_list.get(n).delivery_date.equals(date_selected))
-                                {
-                                    for (m in 0 until cart_list.get(n).items.size) {
 
 
 
-                                        if (jId.equals(cart_list.get(n).items.get(m).item_id.toString())) {
+                                        if (jId.equals(cart_list.get(n).item_id.toString())) {
                                             isFound = true
                                             cartDatePos = n
-                                            cartItemPos = m
+                                            cartItemPos = n
                                         }
-                                    }
-                                }
+
+
                             }
                         }else{
                         }
                         if (isFound) {
 
-                            item_list[i].quantityCart=cart_list.get(cartDatePos).items.get(cartItemPos).quantity
-                            item_list[i].cartId = cart_list.get(cartDatePos).items.get(cartItemPos).id.toString()
+                            item_list[i].quantityCart=cart_list.get(cartDatePos).quantity
+                            item_list[i].cartId = cart_list.get(cartDatePos).id.toString()
                             item_list[i].isItemCart=true
 
                         } else {
@@ -585,13 +582,13 @@ class Addorder_Activity_new : AppCompatActivity()  {
         cartTotalItem=0
         progressDialogP.show()
         val token = PreferenceManager.getaccesstoken(nContext)
-        var canteenCart= CanteenCartApiModel(PreferenceManager.getStudentID(nContext).toString())
-        val call: Call<CanteenCartModel> = ApiClient.getClient.get_shop_cart(canteenCart,"Bearer "+token)
-        call.enqueue(object : Callback<CanteenCartModel> {
-            override fun onFailure(call: Call<CanteenCartModel>, t: Throwable) {
+        var canteenCart= CanteenCartApiModel( PreferenceManager.getStudentID(nContext)!!)
+        val call: Call<GetShopCartResponseModel> = ApiClient.getClient.get_shop_cart(canteenCart,"Bearer "+token)
+        call.enqueue(object : Callback<GetShopCartResponseModel> {
+            override fun onFailure(call: Call<GetShopCartResponseModel>, t: Throwable) {
                 progressDialogP.hide()
             }
-            override fun onResponse(call: Call<CanteenCartModel>, response: Response<CanteenCartModel>) {
+            override fun onResponse(call: Call<GetShopCartResponseModel>, response: Response<GetShopCartResponseModel>) {
                 val responsedata = response.body()
                 progressDialogP.hide()
                 if (responsedata!!.status==100) {
@@ -599,10 +596,10 @@ class Addorder_Activity_new : AppCompatActivity()  {
 
                     cart_list=response!!.body()!!.responseArray.data
                     cartTotalAmount=0
-                    for (i in cart_list.indices){
 
-                        cartTotalAmount=cartTotalAmount + cart_list[i].total_amount
-                    }
+
+                        cartTotalAmount=cartTotalAmount + responsedata.responseArray.total_amount
+
                     if (cartTotalAmount==0){
                         bottomview.visibility= View.GONE
                     }else{
@@ -610,9 +607,9 @@ class Addorder_Activity_new : AppCompatActivity()  {
                         cartTotalItem=0
                         for (i in cart_list.indices){
 
-                            for (j in cart_list[i].items.indices){
-                                cartTotalItem=cartTotalItem + cart_list[i].items[j].quantity
-                            }
+
+                                cartTotalItem=cartTotalItem + cart_list[i].quantity
+
                         }
                         total_items.setText(cartTotalItem.toString() + "Items")
                         total_price.setText(cartTotalAmount.toString() + "AED")

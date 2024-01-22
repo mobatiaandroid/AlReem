@@ -1,6 +1,7 @@
 package com.nas.alreem.activity.lost_card.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -81,6 +82,7 @@ class LostCardAdapter(
     }
 
     override fun getItemCount(): Int {
+        Log.e("lostcardsize", mnNewsLetterModelArrayList.size.toString())
         return mnNewsLetterModelArrayList.size
     }
 

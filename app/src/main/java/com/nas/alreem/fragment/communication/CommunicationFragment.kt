@@ -25,6 +25,7 @@ import com.nas.alreem.activity.early_years.EarlyYearsComingUpActivity
 import com.nas.alreem.activity.primary.PrimaryActivity
 import com.nas.alreem.constants.*
 import com.nas.alreem.fragment.communication.adapter.CommunicationAdapter
+import com.nas.alreem.fragment.performing_arts.model.PerformingResponseModel
 import com.nas.alreem.fragment.primary.adapter.PrimaryAdapter
 import com.nas.alreem.fragment.primary.model.PrimaryDataModel
 import com.nas.alreem.fragment.primary.model.PrimaryResponseModel
@@ -42,7 +43,7 @@ class CommunicationFragment : Fragment() {
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?): View?
+                              savedInstanceState: Bundle?): View?
     {
         return inflater.inflate(R.layout.fragment_communications, container, false)
     }
@@ -51,6 +52,15 @@ class CommunicationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         mContext=requireContext()
         initializeUI()
+        //mListView.setAdapter(new CommunicationsAdapter(getActivity(), mListViewArray));
+        if (ConstantFunctions.internetCheck(mContext!!))
+        {
+            getCommunicationBanner()
+        }
+        else
+        {
+            DialogFunctions.showInternetAlertDialog(mContext!!)
+        }
 
     }
     private fun initializeUI()
@@ -103,5 +113,51 @@ class CommunicationFragment : Fragment() {
 
 
     }
+    private fun getCommunicationBanner() {
+        val service: ApiInterface = ApiClient.getClient
+        val call: Call<PerformingResponseModel> = service.communication_banner_images(
+            "Bearer " + PreferenceManager.getaccesstoken(mContext)
+        )
+        call.enqueue(object : Callback<PerformingResponseModel> {
+            override fun onResponse(
+                call: Call<PerformingResponseModel>,
+                response: Response<PerformingResponseModel>
+            ) {
+                // progressBarDialog.hide()
+                if (response.isSuccessful()) {
+                    if (response.body()!!.getResponsecode().equals("100")) {
 
+
+                    } else {
+                        /*AppUtils.showDialogAlertDismiss(
+                            mContext as Activity?,
+                            "Alert",
+                            mContext!!.getString(R.string.common_error),
+                            R.drawable.exclamationicon,
+                            R.drawable.round
+                        )*/
+                    }
+                } else {
+                    /*AppUtils.showDialogAlertDismiss(
+                        mContext as Activity?,
+                        "Alert",
+                        mContext!!.getString(R.string.common_error),
+                        R.drawable.exclamationicon,
+                        R.drawable.round
+                    )*/
+                }
+            }
+
+            override fun onFailure(call: Call<PerformingResponseModel>, t: Throwable) {
+                // progressBarDialog.hide()
+                /* AppUtils.showDialogAlertDismiss(
+                     mContext as Activity?,
+                     "Alert",
+                     mContext!!.getString(R.string.common_error),
+                     R.drawable.exclamationicon,
+                     R.drawable.round
+                 )*/
+            }
+        })
+    }
 }

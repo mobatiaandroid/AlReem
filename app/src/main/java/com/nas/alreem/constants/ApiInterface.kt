@@ -31,10 +31,12 @@ import com.nas.alreem.activity.canteen.model.wallet.WalletBalanceModel
 import com.nas.alreem.activity.canteen.model.wallethistory.WalletHistoryApiModel
 import com.nas.alreem.activity.canteen.model.wallethistory.WalletHistoryModel
 import com.nas.alreem.activity.cca.model.*
+import com.nas.alreem.activity.communication.newesletters.model.NewsletterResponseModel
 import com.nas.alreem.activity.gallery.model.*
 import com.nas.alreem.activity.login.model.ForgetPasswordResponseModel
 import com.nas.alreem.activity.login.model.LoginResponseModel
 import com.nas.alreem.activity.login.model.SignUpResponseModel
+import com.nas.alreem.activity.lost_card.model.GetShopCartResponseModel
 import com.nas.alreem.activity.lost_card.model.LostCardHistoryResponseModel
 import com.nas.alreem.activity.lost_card.model.LostCardIntructionResponseModel
 import com.nas.alreem.activity.lost_card.model.StudentLostCardResponseModel
@@ -63,6 +65,9 @@ import com.nas.alreem.activity.permission_slip.model.PermissionResApiModel
 import com.nas.alreem.activity.permission_slip.model.PermissionResponseModel
 import com.nas.alreem.activity.primary.model.ComingUpResponseModel
 import com.nas.alreem.activity.settings.model.TermsOfServiceResponseModel
+import com.nas.alreem.activity.shop_new.model.AddToCartShopApiModel
+import com.nas.alreem.activity.shop_new.model.ShopCartRemoveApiModel
+import com.nas.alreem.activity.shop_new.model.ShopCartUpdateApiModel
 import com.nas.alreem.activity.shop_new.model.ShopItemsApiModel
 import com.nas.alreem.activity.staff_directory.model.ListStaffDetailApiModel
 import com.nas.alreem.activity.staff_directory.model.ListStaffDetailModel
@@ -75,9 +80,15 @@ import com.nas.alreem.fragment.calendar.model.CalendarResponseModel
 import com.nas.alreem.fragment.calendar.model.TermCalendarResponseModel
 import com.nas.alreem.fragment.canteen.model.CanteenBannerResponseModel
 import com.nas.alreem.fragment.cca.model.BannerResponseModelCCa
+import com.nas.alreem.fragment.communication.model.CommunicationResponseModel
+import com.nas.alreem.fragment.communication.model.SocialMediaResponseModel
 import com.nas.alreem.fragment.contact_us.model.ContactUsResponseModel
 import com.nas.alreem.fragment.gallery.model.ThumnailResponseModel
 import com.nas.alreem.fragment.home.model.BannerResponseModel
+import com.nas.alreem.fragment.home.re_enrollment.EnrollmentFormResponseModel
+import com.nas.alreem.fragment.home.re_enrollment.EnrollmentHelpResponseModel
+import com.nas.alreem.fragment.home.re_enrollment.EnrollmentSaveResponseModel
+import com.nas.alreem.fragment.home.re_enrollment.EnrollmentStatusResponseModel
 import com.nas.alreem.fragment.intention.model.IntentionApiModel
 import com.nas.alreem.fragment.intention.model.IntentionApiSubmit
 import com.nas.alreem.fragment.intention.model.IntentionResponseModel
@@ -90,6 +101,7 @@ import com.nas.alreem.fragment.parent_meetings.model.ListStaffPtaModel
 import com.nas.alreem.fragment.parents_essentials.model.ParentsEssentialResponseModel
 import com.nas.alreem.fragment.payments.model.PaymentResponseModel
 import com.nas.alreem.fragment.payments.model.SendEmailApiModel
+import com.nas.alreem.fragment.performing_arts.model.PerformingResponseModel
 import com.nas.alreem.fragment.permission_slip.model.GeneralFormModel
 import com.nas.alreem.fragment.permission_slip.model.PermissionSlipListApiModel
 import com.nas.alreem.fragment.permission_slip.model.PermissionSlipModel
@@ -785,7 +797,7 @@ interface ApiInterface {
     @POST("add_to_shop_cart")
     @Headers("Content-Type: application/json")
     fun add_to_shop_cart(
-        @Body  addToCartCanteen: AddToCartCanteenApiModel,
+        @Body  addToCartCanteen: AddToCartShopApiModel,
         @Header("Authorization") token:String
     ): Call<AddToCartCanteenModel>
 
@@ -794,19 +806,19 @@ interface ApiInterface {
     fun get_shop_cart(
         @Body  canteenCart: CanteenCartApiModel,
         @Header("Authorization") token:String
-    ): Call<CanteenCartModel>
+    ): Call<GetShopCartResponseModel>
 
     @POST("update_shop_cart")
     @Headers("Content-Type: application/json")
     fun update_shop_cart(
-        @Body  updatecanteenCart: CanteenCartUpdateApiModel,
+        @Body  updatecanteenCart: ShopCartUpdateApiModel,
         @Header("Authorization") token:String
     ): Call<CanteenCartUpdateModel>
 
     @POST("remove_shop_cart")
     @Headers("Content-Type: application/json")
     fun remove_shop_cart(
-        @Body  removecanteenCart: CanteenCartRemoveApiModel,
+        @Body  removecanteenCart: ShopCartRemoveApiModel,
         @Header("Authorization") token:String
     ): Call<CanteenCartRemoveModel>
     @POST("get_shop_order")
@@ -815,4 +827,77 @@ interface ApiInterface {
         @Body  canteenpreorder: CanteenPreorderApiModel,
         @Header("Authorization") token:String
     ): Call<CanteenPreorderModel>
+
+
+    @GET("get_enrollment_status")
+    @Headers("Content-Type: application/json")
+    fun getenrollstatus(@Header("Authorization") token: String): Call<EnrollmentStatusResponseModel>
+
+    @POST("get_enrollment_form")
+    @Headers("Content-Type: application/json")
+    fun getenrollform(
+        @Header("Authorization") token: String,
+    ): Call<EnrollmentFormResponseModel>
+
+    @POST("save_re_enrollment")
+    @Headers("Content-Type: application/json")
+    fun getenrollsave(
+        @Header("Authorization") token: String,
+        @Body json: JsonObject
+    ): Call<EnrollmentSaveResponseModel>
+
+    @POST("re_enrollment_help")
+    @Headers("Content-Type: application/json")
+    fun getenrollhelp(
+        @Header("Authorization") token: String,
+        @Body json: JsonObject?
+    ): Call<EnrollmentHelpResponseModel>
+
+    @POST("performing_arts")
+    @Headers("Content-Type: application/json")
+    fun performing_arts(
+        @Header("Authorization") token: String
+    ): Call<PerformingResponseModel>
+
+    @POST("communication_banner_images")
+    @Headers("Content-Type: application/json")
+    fun communication_banner_images(
+        @Header("Authorization") token: String
+    ): Call<PerformingResponseModel>
+    @POST("communication_info")
+    @Headers("Content-Type: application/json")
+    fun communication_info(
+        @Header("Authorization") token: String
+    ): Call<CommunicationResponseModel>
+
+    @POST("whole_school_coming_up")
+    @Headers("Content-Type: application/json")
+    fun whole_school_coming_up(
+        @Header("Authorization") token: String
+    ): Call<CommunicationResponseModel>
+
+    @POST("newsletter_categories")
+    @Headers("Content-Type: application/json")
+    fun newsletter_categories(
+        @Header("Authorization") token: String
+    ): Call<NewsletterResponseModel>
+    @POST("newsletter")
+    @Headers("Content-Type: application/json")
+    fun newsletter(
+        @Header("Authorization") token: String,
+        @Body json: JsonObject?
+    ): Call<CommunicationResponseModel>
+    @POST("social_media")
+    @Headers("Content-Type: application/json")
+    fun social_media(
+        @Header("Authorization") token: String
+    ): Call<SocialMediaResponseModel>
+
+    @POST("shop-order-submit")
+    @Headers("Content-Type: application/json")
+    fun shop_order_submit
+    (
+        @Header("Authorization") token: String,
+        @Body json: JsonObject
+    ): Call<StudentLostCardResponseModel>
 }

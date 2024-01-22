@@ -202,7 +202,7 @@
         android:layout_below="@+id/addOrderRelative"
         android:orientation="horizontal"
         android:weightSum="100"
-        android:visibility="gone"
+        android:visibility="visible"
         android:id="@+id/buttonLinear"
         app:layout_constraintTop_toBottomOf="@+id/addOrderRelative">
 
@@ -214,6 +214,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="2dp"
             android:layout_weight="50"
+            android:visibility="gone"
             android:background="@drawable/sportsbtnorange"
             android:gravity="center">
 
@@ -238,10 +239,10 @@
             android:id="@+id/orderHistoryRelative"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="2dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:layout_weight="50"
+            android:layout_marginTop="5dp"
+            android:layout_weight="100"
             android:background="@drawable/sportsbtnblue"
             android:gravity="center">
 

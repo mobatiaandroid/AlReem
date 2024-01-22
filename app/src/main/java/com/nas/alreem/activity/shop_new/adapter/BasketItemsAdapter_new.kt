@@ -2,6 +2,7 @@ package com.nas.alreem.activity.shop_new.adapter
 
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,6 +25,10 @@ import com.nas.alreem.activity.canteen.model.canteen_cart.CanteenCartApiModel
 import com.nas.alreem.activity.canteen.model.canteen_cart.CanteenCartModel
 import com.nas.alreem.activity.canteen.model.canteen_cart.CanteenCartResModel
 import com.nas.alreem.activity.canteen.model.canteen_cart.CartItemsListModel
+import com.nas.alreem.activity.lost_card.model.GetShopCartResponseModel
+import com.nas.alreem.activity.lost_card.model.ShopCartResModel
+import com.nas.alreem.activity.shop_new.model.ShopCartRemoveApiModel
+import com.nas.alreem.activity.shop_new.model.ShopCartUpdateApiModel
 import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.DialogFunctions
@@ -34,17 +39,16 @@ import retrofit2.Response
 
 
 class BasketItemsAdapter_new (
-    var items_list: ArrayList<CartItemsListModel>, var mcontext: Context, var ordered_user_type:String,
+    var items_list: ArrayList<ShopCartResModel>, var mcontext: Context, var ordered_user_type:String,
     var student_id:String,
     var parent_id:String,
     var staff_id:String,
-    var delivery_date:String,
     var itemtxt: TextView, var amnttxt: TextView, var itemLinear: LinearLayout, var noItemTxt: ImageView,
     var dateRec: RecyclerView, var progress: ProgressBar
 ) :
 
     RecyclerView.Adapter<BasketItemsAdapter_new.ViewHolder>() {
-    lateinit var cart_list: ArrayList<CanteenCartResModel>
+    lateinit var cart_list: ArrayList<ShopCartResModel>
     var cartTotalAmount:Int=0
     var cartTotalItems:Int=0
     var quantity = ""
@@ -60,9 +64,10 @@ class BasketItemsAdapter_new (
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        Log.e("array", items_list.toString())
         holder.itemNameTxt.text = items_list[position].item_name
         holder.itemDescription.text = items_list[position].description
-        holder.amountTxt.text = items_list[position].price.toString() + "AED"
+       // holder.amountTxt.text = items_list[position].price.toString() + "AED"
         holder.notAvailableTxt.visibility = View.GONE
         holder.removeTxt.visibility = View.GONE
         holder.multiLinear.visibility = View.VISIBLE
@@ -171,6 +176,7 @@ class BasketItemsAdapter_new (
 
 
     override fun getItemCount(): Int {
+        Log.e("size", items_list.size.toString())
         return items_list.size
     }
 
@@ -210,14 +216,14 @@ class BasketItemsAdapter_new (
         progress.visibility= View.VISIBLE
         val token = PreferenceManager.getaccesstoken(mcontext)
         var canteenCart= CanteenCartApiModel(PreferenceManager.getStudentID(mcontext).toString())
-        val call: Call<CanteenCartModel> = ApiClient.getClient.get_canteen_cart(canteenCart,"Bearer "+token)
-        call.enqueue(object : Callback<CanteenCartModel> {
-            override fun onFailure(call: Call<CanteenCartModel>, t: Throwable) {
+        val call: Call<GetShopCartResponseModel> = ApiClient.getClient.get_shop_cart(canteenCart,"Bearer "+token)
+        call.enqueue(object : Callback<GetShopCartResponseModel> {
+            override fun onFailure(call: Call<GetShopCartResponseModel>, t: Throwable) {
 
                 progress.visibility= View.GONE
                 // progress.hide()
             }
-            override fun onResponse(call: Call<CanteenCartModel>, response: Response<CanteenCartModel>) {
+            override fun onResponse(call: Call<GetShopCartResponseModel>, response: Response<GetShopCartResponseModel>) {
                 val responsedata = response.body()
                 progress.visibility= View.GONE
 //                progress.hide()
@@ -225,19 +231,19 @@ class BasketItemsAdapter_new (
                     //progress.visibility = View.GONE
                     itemLinear.visibility= View.VISIBLE
                     cart_list=response!!.body()!!.responseArray.data
-                    for (i in cart_list.indices){
 
-                        cartTotalAmount=cartTotalAmount + cart_list[i].total_amount
-                    }
+
+                        cartTotalAmount=cartTotalAmount + responsedata.responseArray.total_amount
+
                     if (cartTotalAmount==0){
                         //bottomView.visibility=View.GONE
                     }else{
                         //bottomView.visibility=View.VISIBLE
                         for (i in cart_list.indices){
 
-                            for (j in cart_list[i].items.indices){
-                                cartTotalItems=cartTotalItems + cart_list[i].items[j].quantity
-                            }
+
+                                cartTotalItems=cartTotalItems + cart_list[i].quantity
+
                         }
 
                         itemtxt.setText(cartTotalItems.toString() + "Items")
@@ -245,10 +251,10 @@ class BasketItemsAdapter_new (
                     }
                     dateRec.visibility= View.VISIBLE
                     dateRec.layoutManager = LinearLayoutManager(mcontext)
-                    dateRec.adapter =
-                        DatesBasketAdapter(cart_list, mcontext,ordered_user_type,student_id,parent_id,staff_id,
-                            itemtxt,amnttxt,itemLinear,noItemTxt,dateRec,progress)
-                    notifyDataSetChanged()
+                    /*dateRec.adapter =
+                        DatesBasketAdapter_new(cart_list, mcontext,ordered_user_type,student_id,parent_id,staff_id,
+                            itemtxt,amnttxt,itemLinear,noItemTxt,dateRec,progress,cartTotalAmount)
+                    notifyDataSetChanged()*/
                 }
                 else if (response.body()!!.status==132)
                 {
@@ -270,10 +276,10 @@ class BasketItemsAdapter_new (
         progress.visibility= View.VISIBLE
         // progress.show()
         val token = PreferenceManager.getaccesstoken(mcontext)
-        var canteenadd= CanteenCartUpdateApiModel(
-            PreferenceManager.getStudentID(mcontext).toString(),delivery_date,quant,
+        var canteenadd= ShopCartUpdateApiModel(
+            PreferenceManager.getStudentID(mcontext).toString(),quant,
             items_list[position].item_id.toString(),items_list[position].id.toString())
-        val call: Call<CanteenCartUpdateModel> = ApiClient.getClient.update_canteen_cart(canteenadd,"Bearer "+token)
+        val call: Call<CanteenCartUpdateModel> = ApiClient.getClient.update_shop_cart(canteenadd,"Bearer "+token)
         call.enqueue(object : Callback<CanteenCartUpdateModel> {
             override fun onFailure(call: Call<CanteenCartUpdateModel>, t: Throwable) {
 
@@ -310,9 +316,9 @@ class BasketItemsAdapter_new (
         progress.visibility= View.VISIBLE
         //  progress.show()
         val token = PreferenceManager.getaccesstoken(mcontext)
-        var canteenadd= CanteenCartRemoveApiModel(
+        var canteenadd= ShopCartRemoveApiModel(
             PreferenceManager.getStudentID(mcontext).toString(),items_list[position].id.toString())
-        val call: Call<CanteenCartRemoveModel> = ApiClient.getClient.remove_canteen_cart(canteenadd,"Bearer "+token)
+        val call: Call<CanteenCartRemoveModel> = ApiClient.getClient.remove_shop_cart(canteenadd,"Bearer "+token)
         call.enqueue(object : Callback<CanteenCartRemoveModel> {
             override fun onFailure(call: Call<CanteenCartRemoveModel>, t: Throwable) {
 

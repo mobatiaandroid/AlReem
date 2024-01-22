@@ -13,6 +13,7 @@ public class PaymentWalletHistoryModel implements Serializable {
     String status;
     String keycode;
     String bill_no;
+    @SerializedName("invoice_note")
     String invoice;
     String trn_no;
     String payment_type;

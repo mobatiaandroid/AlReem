@@ -13,6 +13,7 @@ import android.view.Window
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -22,13 +23,16 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.nas.alreem.R
+import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.activity.lost_card.adapter.LostCardAdapter
 import com.nas.alreem.activity.lost_card.model.LostCardHistoryResponseModel
-import com.nas.alreem.activity.lost_card.model.LostCardIntructionResponseModel
 import com.nas.alreem.activity.payment_history.PaymentWalletHistoryModel
 import com.nas.alreem.activity.payments.adapter.StudentListAdapter
 import com.nas.alreem.activity.payments.model.StudentList
+import com.nas.alreem.activity.payments.model.StudentListModel
 import com.nas.alreem.constants.ApiClient
+import com.nas.alreem.constants.ConstantFunctions
+import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.HeaderManager
 import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.fragment.student_information.model.StudentInfoApiModel
@@ -62,27 +66,37 @@ class LostCardPaymentHistory : AppCompatActivity(){
     var mStudentSpinner: LinearLayout? = null
     var newsLetterModelArrayList: ArrayList<PaymentWalletHistoryModel> =
         ArrayList<PaymentWalletHistoryModel>()
-    var studentsModelArrayList: ArrayList<StudentList>? = ArrayList<StudentList>()
+    var studentsModelArrayList : ArrayList<StudentList> = ArrayList<StudentList>()
     lateinit var mNewsLetterListView: RecyclerView
-   // var progressBarDialog: ProgressBarDialog? = null
+    lateinit var progress: ProgressBar
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_payment_history)
         mContext = this
         initUI()
+        if (ConstantFunctions.internetCheck(mContext))
+        {
+            getStudentsListAPI()
+        }
+        else
+        {
+            DialogFunctions.showInternetAlertDialog(mContext)
+        }
+
     }
 
     private fun initUI() {
-        studentsModelArrayList = ArrayList()
+       // studentsModelArrayList = ArrayList()
         extras = intent.extras
         if (extras != null) {
             studentNameStr = extras!!.getString("studentName")
             studentIdStr = extras!!.getString("studentId").toString()
-           studentsModelArrayList = PreferenceManager.getStudentArrayList(mContext)
+           //studentsModelArrayList = PreferenceManager.getStudentArrayList(mContext)!!
             Log.e("studentsModelArrayList", studentsModelArrayList.toString())
             stud_img = extras!!.getString("studentImage")
         }
-       // progressBarDialog = ProgressBarDialog(mContext, R.drawable.spinner)
+        progress = findViewById(R.id.progressDialogAdd)
         relativeHeader = findViewById<View>(R.id.relativeHeader) as RelativeLayout
         mStudentSpinner = findViewById<View>(R.id.studentSpinner) as LinearLayout
         studentNameTxt = findViewById<View>(R.id.studentName) as TextView
@@ -100,13 +114,29 @@ class LostCardPaymentHistory : AppCompatActivity(){
         back = headermanager.leftButton
 
         home = headermanager.logoButton
+        home!!.setOnClickListener {
+            val `in` = Intent(
+                mContext,
+                HomeActivity::class.java
+            )
+            `in`.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(`in`)
+        }
         headermanager.setButtonLeftSelector(
             R.drawable.back,
             R.drawable.back
         )
         back!!.setOnClickListener { finish() }
 
+        if (ConstantFunctions.internetCheck(mContext))
+        {
             getEventsListApi(studentIdStr)
+        }
+        else
+        {
+            DialogFunctions.showInternetAlertDialog(mContext)
+        }
+
 
         mStudentSpinner!!.setOnClickListener {
             if (studentsModelArrayList!!.size > 0) {
@@ -131,11 +161,13 @@ class LostCardPaymentHistory : AppCompatActivity(){
                             mContext,
                             LostCardPrintPaymentActivity::class.java
                         )
+
                         intent.putExtra("title", "LOST ID CARD RECEIPT")
-                        intent.putExtra("orderId", newsLetterModelArrayList[position].getKeycode())
-                        intent.putExtra("invoice", newsLetterModelArrayList[position].getInvoice())
+                        intent.putExtra("order_reference", newsLetterModelArrayList[position].getKeycode())
+                        intent.putExtra("invoice_note", newsLetterModelArrayList[position].getInvoice())
                         intent.putExtra("amount", newsLetterModelArrayList[position].getAmount())
                         intent.putExtra("paidby", newsLetterModelArrayList[position].getName())
+                        intent.putExtra("created_on", newsLetterModelArrayList[position].date_time)
                         intent.putExtra(
                             "paidDate",
                             newsLetterModelArrayList[position].getDate_time()
@@ -162,7 +194,50 @@ class LostCardPaymentHistory : AppCompatActivity(){
                 })
         )
     }
+    private fun getStudentsListAPI() {
+        progress.visibility = View.VISIBLE
+        studentsModelArrayList .clear()
+        val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+ PreferenceManager.getaccesstoken(mContext))
+        call.enqueue(object : Callback<StudentListModel> {
+            override fun onResponse(
+                call: Call<StudentListModel?>,
+                response: Response<StudentListModel?>
+            ) {
+                progress.visibility = View.GONE
 
+                val responsedata = response.body()
+                if (responsedata != null) {
+                    try {
+
+                        if (response.body()!!.status==100)
+                        {
+                            studentsModelArrayList=ArrayList()
+                            studentsModelArrayList.addAll(response.body()!!.responseArray.studentList)
+
+
+                        }
+                        else
+                        {
+
+                            DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), mContext)
+                        }
+
+
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<StudentListModel?>, t: Throwable) {
+                progress.visibility = View.GONE
+
+            }
+        })
+
+
+
+    }
     fun showSocialmediaList(mStudentArray: ArrayList<StudentList>) {
         val dialog = Dialog(mContext!!)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -172,7 +247,7 @@ class LostCardPaymentHistory : AppCompatActivity(){
         val iconImageView = dialog.findViewById<View>(R.id.iconImageView) as ImageView
         iconImageView.setImageResource(R.drawable.boy)
         val socialMediaList =
-            dialog.findViewById<View>(R.id.recycler_view_social_media) as RecyclerView
+            dialog.findViewById<View>(R.id.studentListRecycler) as RecyclerView
         //if(mSocialMediaArray.get())
         val sdk = Build.VERSION.SDK_INT
         if (sdk < Build.VERSION_CODES.JELLY_BEAN) {
@@ -217,6 +292,15 @@ class LostCardPaymentHistory : AppCompatActivity(){
                         {
                             studImg.setImageResource(R.drawable.student)
                         }
+                        if (ConstantFunctions.internetCheck(mContext))
+                        {
+                            getEventsListApi(studentId)
+                        }
+                        else
+                        {
+                            DialogFunctions.showInternetAlertDialog(mContext)
+                        }
+
                     }
 
                     override fun onLongClickItem(v: View?, position: Int) {
@@ -228,7 +312,8 @@ class LostCardPaymentHistory : AppCompatActivity(){
     }
 
     private fun getEventsListApi(stud_id: String) {
-        Log.e("id",stud_id)
+        newsLetterModelArrayList = ArrayList()
+        progress.visibility = View.VISIBLE
         val studentbody= StudentInfoApiModel(stud_id)
 
         val call: Call<LostCardHistoryResponseModel> = ApiClient.getClient.student_lost_card_history(studentbody,"Bearer "+ PreferenceManager.getaccesstoken(mContext))
@@ -237,6 +322,8 @@ class LostCardPaymentHistory : AppCompatActivity(){
                 call: Call<LostCardHistoryResponseModel?>,
                 response: Response<LostCardHistoryResponseModel?>
             ) {
+                progress.visibility = View.GONE
+
                 val responsedata = response.body()
                 if (responsedata != null) {
                     try {
@@ -244,12 +331,10 @@ class LostCardPaymentHistory : AppCompatActivity(){
                         {
                             if (responsedata.response.statuscode.equals("303"))
                             {
+                                Log.e("size", response.body()!!.response.data.size.toString())
                                 if (response.body()!!.response.data.size > 0) {
                                     newsLetterModelArrayList.clear()
-                                    for (i in 0 until response.body()!!.response.data.size) {
-
                                         newsLetterModelArrayList.addAll(response.body()!!.response.data)
-                                    }
                                     mNewsLetterListView!!.visibility = View.VISIBLE
                                     val newsLetterAdapter =
                                         LostCardAdapter(mContext, newsLetterModelArrayList)
@@ -260,12 +345,8 @@ class LostCardPaymentHistory : AppCompatActivity(){
                                     val newsLetterAdapter =
                                         LostCardAdapter(mContext, newsLetterModelArrayList)
                                     mNewsLetterListView!!.adapter = newsLetterAdapter
-                                    /*AppUtils.showDialogAlertDismiss(
-                                        mContext as Activity?,
-                                        "Alert",
-                                        "No data available",
-                                        R.drawable.exclamationicon,
-                                        R.drawable.round*/
+                                    DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert),"No Data Found", mContext)
+
 
                                 }
                         }
@@ -277,121 +358,13 @@ class LostCardPaymentHistory : AppCompatActivity(){
             }
 
             override fun onFailure(call: Call<LostCardHistoryResponseModel?>, t: Throwable) {
-                // progressBarDialog.hide()
-                Log.e("error", t.toString())
+                progress.visibility = View.GONE
+
+
 
             }
         })
-        /*rogressBarDialog.show()
-        val service: APIInterface = APIClient.getRetrofitInstance().create(APIInterface::class.java)
-        val paramObject = JsonObject()
-        paramObject.addProperty("student_id", stud_id)
 
-        //  paramObject.addProperty("lost_card_date", fromDate);
-        val call: Call<ResponseBody> = service.student_lost_card_history(
-            "Bearer " + PreferenceManager.getAccessToken(mContext),
-            paramObject
-        )
-        call.enqueue(object : Callback<ResponseBody> {
-            override fun onResponse(
-                call: Call<ResponseBody>,
-                response: Response<ResponseBody>
-            ) {
-                progressBarDialog.hide()
-                try {
-                    val responseString = response.body()!!.string()
-                    val obj = JSONObject(responseString)
-                    val response_code = obj.getString(JTAG_RESPONSECODE)
-                    if (response_code.equals("200", ignoreCase = true)) {
-                        val secobj = obj.getJSONObject(JTAG_RESPONSE)
-                        val status_code = secobj.getString(JTAG_STATUSCODE)
-                        if (status_code.equals("303", ignoreCase = true)) {
-                            val data = secobj.getJSONArray("data")
-                            if (data.length() > 0) {
-                                newsLetterModelArrayList.clear()
-                                for (i in 0 until data.length()) {
-                                    val dataObject = data.optJSONObject(i)
-                                    newsLetterModelArrayList.add(addEventsDetails(dataObject))
-                                }
-                                mNewsLetterListView!!.visibility = View.VISIBLE
-                                val newsLetterAdapter =
-                                    LostCardAdapter(mContext, newsLetterModelArrayList)
-                                mNewsLetterListView!!.adapter = newsLetterAdapter
-                            } else {
-                                newsLetterModelArrayList.clear()
-                                mNewsLetterListView!!.visibility = View.GONE
-                                val newsLetterAdapter =
-                                    LostCardAdapter(mContext, newsLetterModelArrayList)
-                                mNewsLetterListView!!.adapter = newsLetterAdapter
-                                AppUtils.showDialogAlertDismiss(
-                                    mContext as Activity?,
-                                    "Alert",
-                                    "No data available",
-                                    R.drawable.exclamationicon,
-                                    R.drawable.round
-                                )
-                            }
-                        } else {
-                            mNewsLetterListView!!.visibility = View.GONE
-                            AppUtils.showDialogAlertDismiss(
-                                mContext as Activity?,
-                                "Alert",
-                                getString(R.string.common_error),
-                                R.drawable.exclamationicon,
-                                R.drawable.round
-                            )
-                        }
-                    } else if (response_code.equals("500", ignoreCase = true)) {
-                        AppUtils.showDialogAlertDismiss(
-                            mContext as Activity?,
-                            "Alert",
-                            getString(R.string.common_error),
-                            R.drawable.exclamationicon,
-                            R.drawable.round
-                        )
-                    } else if (response_code.equals("400", ignoreCase = true)) {
-                        AppUtils.getToken(mContext, object : GetTokenSuccess() {
-                            fun tokenrenewed() {}
-                        })
-                        getEventsListApi(stud_id)
-                    } else if (response_code.equals("401", ignoreCase = true)) {
-                        AppUtils.getToken(mContext, object : GetTokenSuccess() {
-                            fun tokenrenewed() {}
-                        })
-                        getEventsListApi(stud_id)
-                    } else if (response_code.equals("402", ignoreCase = true)) {
-                        AppUtils.getToken(mContext, object : GetTokenSuccess() {
-                            fun tokenrenewed() {}
-                        })
-                        getEventsListApi(stud_id)
-                    } else {
-                        *//*CustomDialog dialog = new CustomDialog(mContext, getResources().getString(R.string.common_error)
-								, getResources().getString(R.string.ok));
-						dialog.show();*//*
-                        AppUtils.showDialogAlertDismiss(
-                            mContext as Activity?,
-                            "Alert",
-                            getString(R.string.common_error),
-                            R.drawable.exclamationicon,
-                            R.drawable.round
-                        )
-                    }
-                } catch (ex: Exception) {
-                    println("The Exception in edit profile is$ex")
-                }
-            }
-
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                progressBarDialog.hide()
-                AppUtils.showDialogAlertDismiss(
-                    mContext as Activity?,
-                    "Alert",
-                    mContext!!.getString(R.string.common_error),
-                    R.drawable.exclamationicon,
-                    R.drawable.round
-                )
-            }
-        })*/
 
     }
 

@@ -21,6 +21,7 @@ import com.nas.alreem.activity.canteen.PreOrderActivity
 import com.nas.alreem.activity.login.model.SignUpResponseModel
 import com.nas.alreem.activity.lost_card.LostCardMainActivity
 import com.nas.alreem.activity.shop_new.Addorder_Activity_new
+import com.nas.alreem.activity.shop_new.PreOrderActivity_new
 import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.DialogFunctions
@@ -91,7 +92,7 @@ class CanteenFragment  : Fragment() {
     private fun onClick() {
 
         lostcardLinear.setOnClickListener {
-            val i = Intent(mContext, Addorder_Activity_new::class.java)
+            val i = Intent(mContext, LostCardMainActivity::class.java)
             PreferenceManager.setStudentID(mContext,"")
 
             mContext.startActivity(i)

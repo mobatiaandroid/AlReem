@@ -263,7 +263,7 @@
                     android:layout_weight="45"
                     android:layout_gravity="top"
                     android:layout_marginLeft="7dp"
-                    android:text="Reason for Bus pickup"
+                    android:text="Reason for not using the bus"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
 

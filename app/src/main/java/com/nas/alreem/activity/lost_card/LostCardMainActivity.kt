@@ -51,7 +51,7 @@ class LostCardMainActivity : AppCompatActivity() {
     var tab_type: String? = null
     var relativeHeader: RelativeLayout? = null
     lateinit var headermanager: HeaderManager
-    var back: ImageView? = null
+    lateinit var back: ImageView
     var btn_history: ImageView? = null
     var home: ImageView? = null
     var extras: Bundle? = null
@@ -238,7 +238,10 @@ class LostCardMainActivity : AppCompatActivity() {
 
         headermanager = HeaderManager(this@LostCardMainActivity, "Lost ID Card")
         headermanager!!.getHeader(relativeHeader!!, 6)
-        back = headermanager.leftButton
+        back = headermanager.leftButton!!
+        back.setOnClickListener {
+            finish()
+        }
         btn_history = headermanager.historyButton
         headermanager!!.setButtonLeftSelector(
             R.drawable.back,

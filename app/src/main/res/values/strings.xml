@@ -6,16 +6,19 @@
         <item>Student Information</item>
         <item>Notifications</item>
         <item>Calendar</item>
+        <item>Communication</item>
         <item>Payments</item>
+        <item>Re-Enrollment</item>
         <item>Lunch Box</item>
+        <item>Shop</item>
         <item>Parent Essentials</item>
         <item>Absence &amp; Early Pickup</item>
-        <item>Early Years</item>
+        <item>Performing Arts</item>
         <item>Bus Service</item>
         <item>Intentions</item>
         <item>Reports</item>
         <item>Timetable</item>
-        <item>Permission Forms</item>
+        <item>Forms</item>
         <item>Enrichment</item>
         <item>Parent Meetings</item>
         <item>Gallery</item>
@@ -32,13 +35,16 @@
         <item>@drawable/sidebar_student_information</item>
         <item>@drawable/notif</item>
         <item>@drawable/calendar</item>
+        <item>@drawable/communication</item>
         <item>@drawable/payment</item>
+        <item>@drawable/re_enrollment</item>
         <item>@drawable/lunchbox_icon</item>
+        <item>@drawable/store32</item>
         <item>@drawable/parent</item>
         <item>@drawable/absence</item>
-        <item>@drawable/earlyyears</item>
-        <item>@drawable/primary</item>
-        <item>@drawable/secondary</item>
+        <item>@drawable/arts</item>
+        <item>@drawable/bussttop</item>
+        <item>@drawable/yesorno32</item>
         <item>@drawable/report_side</item>
         <item>@drawable/time_table_side</item>
         <item>@drawable/permission_slip</item>
@@ -320,6 +326,12 @@
     <string name="requestHint">If you need to cancel a registered absence/early pickup please contact reception (phone or email).</string>
     <string name="new_card">Request for New ID Card</string>
 
-
+    <string name="personal_info">Please check to confirm you have read and acknowledged the Nord Anglia
+        Education Personal Information Collection Statement</string>
+    <string name="agree">I have agreed to the terms and conditions.</string>
+    <string name="agree_info">I confirm I have read and acknowledged the Nord Anglia Education Personal
+        Information Collection Statement as outlined in the above link.</string>
+    <string name="terms_conditions">Please click and sign here to let us know you have understood the
+         NAE Terms and Conditions.</string>
 
 </resources>

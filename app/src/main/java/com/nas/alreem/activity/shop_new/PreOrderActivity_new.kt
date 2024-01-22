@@ -106,7 +106,7 @@ class PreOrderActivity_new :AppCompatActivity() {
         order_history = findViewById(R.id.orderHistoryRelative)
         buttonLinear = findViewById(R.id.buttonLinear)
         title = findViewById(R.id.textViewtitle)
-        title.text = "Pre-Order"
+        title.text = "Shop-Order"
         back.setOnClickListener {
             finish()
         }
@@ -129,14 +129,11 @@ class PreOrderActivity_new :AppCompatActivity() {
     }
     private fun onclick() {
         add_order.setOnClickListener {
-            progressDialogAdd.visibility= View.VISIBLE
-            if (ConstantFunctions.internetCheck(nContext)) {
-//            progressDialog.visibility= View.VISIBLE
-                time_exeed()
-            } else {
-                DialogFunctions.showInternetAlertDialog(nContext)
-            }
+          //  progressDialogAdd.visibility= View.VISIBLE
 
+            val intent = Intent(nContext, Addorder_Activity_new::class.java)
+            intent.putExtra("date_list",mDateArrayList)
+            startActivity(intent)
 
         }
         my_orders.setOnClickListener {
@@ -145,9 +142,9 @@ class PreOrderActivity_new :AppCompatActivity() {
             nContext.startActivity(intent)
         }
         order_history.setOnClickListener {
-            val intent = Intent(nContext, OrderhistoryActivity::class.java)
+            /*val intent = Intent(nContext, OrderhistoryActivity::class.java)
             intent.putExtra("StudentId",studentId)
-            nContext.startActivity(intent)
+            nContext.startActivity(intent)*/
         }
     }
     fun showStudentList(context: Context, mStudentList : ArrayList<StudentList>)

@@ -187,10 +187,12 @@ class RequestBusServiceActivity : AppCompatActivity() {
 
                         DialogFunctions.commonErrorAlertDialog("Alert","Please select your Pickup Time",mContext)
                     }else{
-                        if (selectedItem.equals("")){
-                            DialogFunctions.commonErrorAlertDialog("Alert","Please enter pickup person name",mContext)
+                        if (selectedItem.equals("") || selectedItem.equals("Please Select")
+                        ) {
+                            DialogFunctions.commonErrorAlertDialog("Alert","You didn't enter any data of your child. Please Enter data and Submit",mContext)
 
-                        }else{
+                        }
+                        else{
 
                             if (enterMessage.text.isEmpty()){
                                 DialogFunctions.commonErrorAlertDialog("Alert","Please enter reason for early pickup",mContext)

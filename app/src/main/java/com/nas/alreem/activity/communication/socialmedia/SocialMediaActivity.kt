@@ -21,6 +21,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.nas.alreem.R
+import com.nas.alreem.activity.communication.socialmedia.model.SocialMediaModel
 import com.nas.alreem.activity.early_years.ComingUpDetailActivity
 import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.activity.payments.adapter.StudentListAdapter
@@ -28,6 +29,7 @@ import com.nas.alreem.activity.primary.adapter.ComingUpAdapter
 import com.nas.alreem.activity.primary.model.ComingUpDataModell
 import com.nas.alreem.activity.primary.model.ComingUpResponseModel
 import com.nas.alreem.constants.*
+import com.nas.alreem.fragment.communication.model.SocialMediaResponseModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -40,7 +42,14 @@ class SocialMediaActivity : AppCompatActivity(){
     lateinit var facebookButton: ImageView
     lateinit var twitterButton: ImageView
     lateinit var instagramButton: ImageView
-    lateinit var faceBookArrayList:ArrayList<String>
+    lateinit var bannerImagePager: ImageView
+    var bannner_img: String? = null
+    private val mSocialMediaArraylistFacebook: java.util.ArrayList<SocialMediaModel> =
+        java.util.ArrayList<SocialMediaModel>()
+    private val mSocialMediaArraylistTwitter: java.util.ArrayList<SocialMediaModel> =
+        java.util.ArrayList<SocialMediaModel>()
+    private val mSocialMediaArraylistInstagram: java.util.ArrayList<SocialMediaModel> =
+        java.util.ArrayList<SocialMediaModel>()
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
@@ -48,10 +57,90 @@ class SocialMediaActivity : AppCompatActivity(){
         mContext=this
         initUI()
 
+        if (ConstantFunctions.internetCheck(mContext))
+        {
+            SocialMediaApi()
+        }
+        else
+        {
+            DialogFunctions.showInternetAlertDialog(mContext)
+        }
+
     }
+
+    private fun SocialMediaApi() {
+        val token = PreferenceManager.getaccesstoken(mContext)
+        val call: Call<SocialMediaResponseModel> = ApiClient.getClient.social_media("Bearer "+token)
+        call.enqueue(object : Callback<SocialMediaResponseModel> {
+            override fun onFailure(call: Call<SocialMediaResponseModel>, t: Throwable) {
+
+                // progressDialogAdd.visibility= View.GONE
+            }
+            override fun onResponse(call: Call<SocialMediaResponseModel>, response: Response<SocialMediaResponseModel
+
+                    >) {
+                val responsedata = response.body()
+                // progressDialogAdd.visibility= View.GONE
+
+                if (responsedata!!.status==100) {
+
+
+                    bannner_img = responsedata!!.responseArray!!.banner_image
+
+                    if (!bannner_img.equals("", ignoreCase = true)) {
+                        Glide.with(mContext).load(ConstantFunctions.replace(bannner_img!!)).centerCrop()
+                            .into(bannerImagePager)
+
+//								bannerUrlImageArray = new ArrayList<>();
+//								bannerUrlImageArray.add(bannerImage);
+//								bannerImagePager.setAdapter(new ImagePagerDrawableAdapter(bannerUrlImageArray,mContext));
+                    } else {
+                        bannerImagePager.setBackgroundResource(R.drawable.socialbanner)
+                    }
+                    var data :ArrayList<SocialMediaModel>? =ArrayList<SocialMediaModel>()
+                    data= response.body()!!.responseArray!!.data;
+                    mSocialMediaArraylistInstagram.clear()
+                    mSocialMediaArraylistFacebook.clear()
+                    mSocialMediaArraylistTwitter.clear()
+                    if (data!!.size > 0) {
+                        for (i in 0 until data.size) {
+                            val dataObject = data.get(i)
+                            val socialMediaModel = SocialMediaModel()
+                            socialMediaModel.id=(dataObject.id)
+                            socialMediaModel.url=(dataObject.tab_type)
+                            socialMediaModel.tab_type=(dataObject.url)
+                            socialMediaModel.image=(dataObject.image)
+                            if (dataObject.tab_type.contains("Facebook")) {
+                                mSocialMediaArraylistFacebook.add(socialMediaModel)
+                            } else if (dataObject.tab_type.contains("Twitter")) {
+                                mSocialMediaArraylistTwitter.add(socialMediaModel)
+                                //mSocialMediaArray=mSocialMediaArraylistTwitter;
+                            } else if (dataObject.tab_type.contains("Instagram")) {
+                                mSocialMediaArraylistInstagram.add(socialMediaModel)
+                                //mSocialMediaArray=mSocialMediaArraylistInstagram;
+                            }
+                        }
+
+                        //mSocialMediaArray=mSocialMediaArraylistFacebook;
+                    } else {
+                        Toast.makeText(mContext, "No data found", Toast.LENGTH_SHORT).show()
+                    }
+
+
+
+                }
+                else {
+                    DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), mContext)
+
+                }
+            }
+
+        })
+    }
+
     fun initUI()
     {
-
+        bannerImagePager = findViewById<View>(R.id.bannerImageViewPager) as ImageView
         heading=findViewById(R.id.heading)
         backRelative=findViewById(R.id.backRelative)
         logoClickImgView=findViewById(R.id.logoClickImgView)
@@ -69,47 +158,43 @@ class SocialMediaActivity : AppCompatActivity(){
         })
 
         facebookButton.setOnClickListener(View.OnClickListener {
-            faceBookArrayList= ArrayList()
-            faceBookArrayList.add("www.facebook.com/NordAngliaInternationalSchoolAbuDhabi/")
-            if(faceBookArrayList.size>1)
+
+            if(mSocialMediaArraylistFacebook.size>1)
             {
-                showSocialMedialPopup(faceBookArrayList,"facebook",mContext)
+                showSocialMedialPopup(mSocialMediaArraylistFacebook,"facebook",mContext)
             }
             else{
                 val intent = Intent(mContext, WebLinkActivity::class.java)
-                intent.putExtra("url",faceBookArrayList.get(0).toString())
+                intent.putExtra("url",mSocialMediaArraylistFacebook.get(0).toString())
                 intent.putExtra("heading","FaceBook")
                 startActivity(intent)
             }
 
         })
         twitterButton.setOnClickListener(View.OnClickListener {
-            faceBookArrayList=ArrayList()
-            faceBookArrayList.add("https://www.linkedin.com/company/nord-anglia-international-school-abu-dhabi")
 
-            if(faceBookArrayList.size>1)
+
+            if(mSocialMediaArraylistTwitter.size>1)
             {
-                showSocialMedialPopup(faceBookArrayList,"twitter",mContext)
+                showSocialMedialPopup(mSocialMediaArraylistTwitter,"twitter",mContext)
             }
             else{
                 val intent = Intent(mContext, WebLinkActivity::class.java)
-                intent.putExtra("url",faceBookArrayList.get(0).toString())
+                intent.putExtra("url",mSocialMediaArraylistTwitter.get(0).toString())
                 intent.putExtra("heading","Twitter")
                 startActivity(intent)
             }
         })
         instagramButton.setOnClickListener(View.OnClickListener {
-            faceBookArrayList=ArrayList()
-            faceBookArrayList.add("https://www.linkedin.com/company/nord-anglia-international-school-abu-dhabi")
-            faceBookArrayList.add("https://www.instagram.com/nasabudhabischool/")
 
-            if(faceBookArrayList.size>1)
+
+            if(mSocialMediaArraylistInstagram.size>1)
             {
-                showSocialMedialPopup(faceBookArrayList,"instagram",mContext)
+                showSocialMedialPopup(mSocialMediaArraylistInstagram,"instagram",mContext)
             }
             else{
                 val intent = Intent(mContext, WebLinkActivity::class.java)
-                intent.putExtra("url",faceBookArrayList.get(0).toString())
+                intent.putExtra("url",mSocialMediaArraylistInstagram.get(0).toString())
                 intent.putExtra("heading","Instagram")
                 startActivity(intent)
             }
@@ -118,7 +203,9 @@ class SocialMediaActivity : AppCompatActivity(){
 
     }
 
-    private fun showSocialMedialPopup( list:ArrayList<String>,type:String,context:Context)
+    private fun showSocialMedialPopup(list: java.util.ArrayList<SocialMediaModel>,
+                                      type:String,
+                                      context:Context)
     {
         val dialog = Dialog(context)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
