@@ -440,20 +440,14 @@ class Addorder_Activity_new : AppCompatActivity()  {
                         var cartItemPos = 0
                         if (cart_list.size > 0) {
                             for (n in cart_list.indices) {
-                               /* if (cart_list.get(n).delivery_date.equals(date_selected))
-                                {
-
-                                    for (m in 0 until cart_list.get(n).items.size) {
 
 
-
-                                        if (jId.equals(cart_list.get(n).items.get(m).item_id.toString())) {
+                                        if (jId.equals(cart_list.get(n).item_id.toString())) {
                                             isFound = true
                                             cartDatePos = n
-                                            cartItemPos = m
-                                        }
-                                    }
-                                }*/
+                                            cartItemPos = n
+
+                                }
                             }
                         }else{
                         }

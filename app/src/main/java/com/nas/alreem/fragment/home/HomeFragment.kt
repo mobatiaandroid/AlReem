@@ -28,6 +28,8 @@ import com.nas.alreem.BuildConfig
 import com.nas.alreem.R
 import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.activity.login.model.SignUpResponseModel
+import com.nas.alreem.activity.shop_new.Addorder_Activity_new
+import com.nas.alreem.activity.shop_new.PreOrderActivity_new
 import com.nas.alreem.activity.survey.adapter.SurveyQuestionPagerAdapter
 import com.nas.alreem.activity.survey.model.*
 import com.nas.alreem.constants.ApiClient
@@ -1142,8 +1144,11 @@ class HomeFragment : Fragment() , View.OnClickListener{
                     fragmentIntent(mFragment)
                 }
                 ConstantWords.TAB_SHOP -> {
-                    mFragment = ShopFragment()
-                    fragmentIntent(mFragment)
+                    val intent = Intent(mContext, PreOrderActivity_new::class.java)
+                    //  intent.putExtra("date_list",mDateArrayList)
+                    startActivity(intent)
+                  //  mFragment = ShopFragment()
+                  //  fragmentIntent(mFragment)
                 }
                 ConstantWords.TAB_PARENT_ESSENTIAL -> {
                     mFragment = ParentsEssentialFragment()

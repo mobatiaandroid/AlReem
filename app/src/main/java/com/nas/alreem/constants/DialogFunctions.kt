@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.Window
@@ -19,6 +20,7 @@ import com.nas.alreem.R
 import com.nas.alreem.activity.login.LoginActivity
 import com.nas.alreem.activity.login.model.ForgetPasswordResponseModel
 import com.nas.alreem.activity.login.model.SignUpResponseModel
+import com.nas.alreem.fragment.settings.SettingsFragment
 import com.nas.alreem.fragment.settings.model.ChangePasswordApiModel
 import retrofit2.Call
 import retrofit2.Callback
@@ -354,7 +356,10 @@ class DialogFunctions {
                     ".{8,}" +  // at least 8 characters
                     "$"
             var PASSWORD_PATTERN3="^" +
-                    ".{8,}"
+                    ".{8,}"+
+                    "(?=.*[@#$%^&+=])"+  // at least 1 special character
+                    "(?=\\S+$)"
+            var  PASSWORD_PATTERN4 = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#\$%^&+=])(?=\\\\S+\$).{8,}\$"
             text_currentpassword.setOnTouchListener(object : View.OnTouchListener {
                 override fun onTouch(v: View, m: MotionEvent): Boolean {
                     // Perform tasks here
@@ -403,12 +408,17 @@ class DialogFunctions {
                        else
                        {
 
-                           if (text_currentnewpassword.getText().toString().trim { it <= ' ' }
+                           /*if (text_currentnewpassword.getText().toString().trim { it <= ' ' }
                                    .matches(PASSWORD_PATTERN.toRegex()) && text_confirmpassword.getText()
                                    .toString().trim { it <= ' ' }
-                                   .matches(PASSWORD_PATTERN.toRegex())
-                           ) {
-
+                                   .matches(PASSWORD_PATTERN.toRegex()))*/
+                           if (text_currentnewpassword.getText().toString().trim { it <= ' ' }
+                                   .matches(PASSWORD_PATTERN4.toRegex()) && text_confirmpassword.getText()
+                                   .toString().trim { it <= ' ' }
+                                   .matches(PASSWORD_PATTERN4.toRegex())
+                           )
+                           {
+                               Log.e("SUCCESS","SUCCESS")
                                if (ConstantFunctions.internetCheck(context))
                                {
                                    progressDialogAdd.visibility= View.VISIBLE
@@ -421,6 +431,7 @@ class DialogFunctions {
                                }
 
                            } else {
+                               Log.e("Failed","Failed")
                                if (!text_currentnewpassword.getText().toString().onlyLetters()&&
                                    !text_confirmpassword.getText()
                                        .toString().onlyLetters())

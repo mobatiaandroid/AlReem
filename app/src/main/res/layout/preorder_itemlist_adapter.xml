@@ -145,6 +145,30 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/soldout"
+                        android:layout_width="0dp"
+                        android:layout_height="45dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_weight="10"
+                        android:layout_margin="8dp"
+                        android:background="@drawable/add_item_bg_sold_out"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <com.nas.alreem.commonviews.button.CustomFontButtonRegularNoColor
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="Item Out Of Stock"
+                            android:padding="5dp"
+                            android:textColor="@color/white"
+                            android:textSize="16sp" />
+
+
+
+                    </LinearLayout>
+                    <LinearLayout
                         android:id="@+id/multiLinear"
                         android:layout_width="0dp"
                         android:layout_height="35dp"

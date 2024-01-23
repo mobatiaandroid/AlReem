@@ -103,9 +103,13 @@ class PreorderItemsAdapter_new(
             var cartPos:Int=0;
             for (i in  cart_list.indices)
             {
-                if (itemlist.get(position).id.equals(cart_list.get(cartPos).item_id.toString()))
+                Log.e("itemlistd",itemlist.get(position).id)
+                Log.e("cartlistidd", cart_list.get(i).item_id.toString())
+
+                if (itemlist.get(position).id.equals(cart_list.get(i).item_id.toString()))
                 {
-                    canteen_cart_id= cart_list.get(cartPos).id.toString()
+                    canteen_cart_id= cart_list.get(i).id.toString()
+                    Log.e("cart_id_store",canteen_cart_id)
                 }
             }
 
@@ -116,9 +120,9 @@ class PreorderItemsAdapter_new(
             if (newValue != 0) {
                 //progressDialogP.visibility=View.VISIBLE
                 updateCart(itemlist[position].id,position,quantity)
-                Log.e("amout",cart_list[position].item_total.toString())
-                holder.amountTxt.text = cart_list[position].item_total.toString() + " AED"
-                Log.e("amout1",cart_list[position].item_total.toString())
+             //  Log.e("amout",cart_list[position].item_total.toString())
+            //   holder.amountTxt.text = cart_list[position].item_total.toString() + " AED"
+             //   Log.e("amout1",cart_list[position].item_total.toString())
             }
             else {
                 //progressDialogP.visibility=View.VISIBLE
@@ -249,6 +253,7 @@ class PreorderItemsAdapter_new(
     private fun updateCart(id:String,position: Int,quant:String){
         progressDialogP.show()
         // progressDialogP.show()
+        Log.e("Cart_id",id)
         val token = PreferenceManager.getaccesstoken(mcontext)
         var canteenadd= ShopCartUpdateApiModel(
             PreferenceManager.getStudentID(mcontext)!!,quant,

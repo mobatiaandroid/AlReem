@@ -43,6 +43,8 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.nas.alreem.R
 import com.nas.alreem.activity.home.adapter.HomeListAdapter
+import com.nas.alreem.activity.shop_new.Addorder_Activity_new
+import com.nas.alreem.activity.shop_new.PreOrderActivity_new
 import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ApiInterface
 import com.nas.alreem.constants.ConstantFunctions
@@ -550,9 +552,12 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                     }
                     8->
                     {
+                        val intent = Intent(mContext, PreOrderActivity_new::class.java)
+                      //  intent.putExtra("date_list",mDateArrayList)
+                        startActivity(intent)
                         //Early years
-                        mFragment = ShopFragment()
-                        replaceFragmentsSelected(position)
+                      //  mFragment = ShopFragment()
+                      //  replaceFragmentsSelected(position)
                     }
                     9->
                     {
@@ -912,11 +917,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                             } else {
                                 ConstantFunctions(). showDialogAlertDismiss(
                                     mActivity, "Alert",
-                                    """
-                            Re-Enrolment is currently not enabled        
-                            
-                            Please wait for further update
-                            """.trimIndent(), R.drawable.exclamationicon, R.drawable.round
+                                    " Re-Enrolment is currently not enabled. Please wait for further.", R.drawable.exclamationicon, R.drawable.round
                                 )
                             }
                         } else {
@@ -928,12 +929,13 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                             val studName = dialog.findViewById<TextView>(R.id.stud_name)
                             val department = dialog.findViewById<TextView>(R.id.mailtxt)
                             val role = dialog.findViewById<TextView>(R.id.statustxt)
+                            val section = dialog.findViewById<TextView>(R.id.section)
                             val imageView = dialog.findViewById<ImageView>(R.id.iconImageView)
                             name.setText(studentList.get(position).parent_name)
                             studName.setText(studentList.get(position).name)
                             department.setText(studentList.get(position).parent_email)
                             role.setText(studentList.get(position).status)
-                            // TODO set Staff Image
+                            section.setText(studentList.get(position).section)                           // TODO set Staff Image
                             dialog.show()
                         }
                     }

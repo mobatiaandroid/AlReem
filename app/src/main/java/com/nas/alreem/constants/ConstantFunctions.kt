@@ -246,7 +246,7 @@ class ConstantFunctions {
         val icon = dialog.findViewById<View>(R.id.iconImageView) as ImageView
         icon.setBackgroundResource(bgIcon)
         icon.setImageResource(ico)
-        val text = dialog.findViewById<View>(R.id.btn_Ok) as TextView
+        val text = dialog.findViewById<View>(R.id.messageTxt) as TextView
         val textHead = dialog.findViewById<View>(R.id.alertHead) as TextView
         text.text = msg
         textHead.text = msgHead
