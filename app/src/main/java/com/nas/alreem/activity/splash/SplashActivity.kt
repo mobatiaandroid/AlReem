@@ -47,6 +47,7 @@ class SplashActivity : AppCompatActivity() {
                     {
                         PreferenceManager.setNoticeFirtTime(mContext,"")
                         PreferenceManager.setIsSurveyHomeVisible(mContext, false)
+                        PreferenceManager.setIsEnrollmentHomeVisible(mContext, false)
                         startActivity(Intent(this, LoginActivity::class.java))
                         finish()
 
@@ -55,6 +56,7 @@ class SplashActivity : AppCompatActivity() {
                     {
                         PreferenceManager.setNoticeFirtTime(mContext,"")
                         PreferenceManager.setIsSurveyHomeVisible(mContext, false)
+                        PreferenceManager.setIsEnrollmentHomeVisible(mContext, false)
                         startActivity(Intent(this, HomeActivity::class.java))
                         finish()
 

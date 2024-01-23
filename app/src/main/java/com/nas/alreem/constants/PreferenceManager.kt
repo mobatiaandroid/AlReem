@@ -48,6 +48,7 @@ class PreferenceManager {
             )
             return prefs.getString("first", "")
         }
+
         fun setNoticeFirtTime(context: Context, id: String?) {
             val prefs = context.getSharedPreferences(
                 PREFSNAME, Context.MODE_PRIVATE
@@ -57,6 +58,24 @@ class PreferenceManager {
             editor.apply()
         }
 
+        fun getIsEnrollmentHomeVisible(context: Context): Boolean {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            return prefs.getBoolean("is_enrollment_visible", false)
+        }
+
+        fun setIsEnrollmentHomeVisible(context: Context, result: Boolean) {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            val editor = prefs.edit()
+            editor.putBoolean("is_enrollment_visible", result)
+            editor.commit()
+        }
+
         fun getNoticeFirstTime(context: Context): String? {
             val prefs = context.getSharedPreferences(
                 PREFSNAME,
@@ -64,6 +83,7 @@ class PreferenceManager {
             )
             return prefs.getString("notice_first", "")
         }
+
         fun setEmailId(context: Context, id: String?) {
             val prefs = context.getSharedPreferences(
                 PREFSNAME, Context.MODE_PRIVATE

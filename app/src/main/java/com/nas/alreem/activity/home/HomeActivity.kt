@@ -43,7 +43,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.nas.alreem.R
 import com.nas.alreem.activity.home.adapter.HomeListAdapter
-import com.nas.alreem.activity.shop_new.Addorder_Activity_new
+import com.nas.alreem.activity.home.model.ReEnrollSubmitAPIModel
 import com.nas.alreem.activity.shop_new.PreOrderActivity_new
 import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ApiInterface
@@ -65,11 +65,11 @@ import com.nas.alreem.fragment.gallery.GalleryFragment
 import com.nas.alreem.fragment.home.HomeFragment
 import com.nas.alreem.fragment.home.adapter.ReEnrollAdapter
 import com.nas.alreem.fragment.home.mContext
-import com.nas.alreem.fragment.home.re_enrollment.EnrollmentFormResponseModel
 import com.nas.alreem.fragment.home.re_enrollment.EnrollmentSaveResponseModel
-import com.nas.alreem.fragment.home.re_enrollment.EnrollmentStatusResponseModel
 import com.nas.alreem.fragment.home.re_enrollment.ReEnrollSubmitModel
+import com.nas.alreem.fragment.home.re_enrollment.ReEnrollmentFormResponseModel
 import com.nas.alreem.fragment.home.re_enrollment.ReEnrollmentFormStudentModel
+import com.nas.alreem.fragment.home.re_enrollment.ReEnrollmentStatusResponseModel
 import com.nas.alreem.fragment.home.re_enrollment.StudentEnrollList
 import com.nas.alreem.fragment.intention.Intentionfragment
 import com.nas.alreem.fragment.notifications.NotificationFragment
@@ -82,7 +82,6 @@ import com.nas.alreem.fragment.primary.PrimaryFragment
 import com.nas.alreem.fragment.reports.ReportsFragment
 import com.nas.alreem.fragment.secondary.SecondaryFragment
 import com.nas.alreem.fragment.settings.SettingsFragment
-import com.nas.alreem.fragment.shop.ShopFragment
 import com.nas.alreem.fragment.student_information.StudentInformationFragment
 import com.nas.alreem.fragment.time_table.TimeTableFragment
 import com.nas.alreem.recyclermanager.RecyclerItemListener
@@ -949,25 +948,29 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
     private fun callSettingsAPI(mContext: Context) {
         //  progressDialogP.show()
         studentList= ArrayList()
-        val call: Call<EnrollmentStatusResponseModel> =
-            ApiClient.getClient.getenrollstatus("Bearer " + PreferenceManager.getaccesstoken(mContext))
+        val call: Call<ReEnrollmentStatusResponseModel> =
+            ApiClient.getClient.getenrollstatus(
+                "Bearer " + PreferenceManager.getaccesstoken(
+                    mContext
+                )
+            )
 
-        call.enqueue(object : Callback<EnrollmentStatusResponseModel?> {
+        call.enqueue(object : Callback<ReEnrollmentStatusResponseModel?> {
             override fun onResponse(
-                call: Call<EnrollmentStatusResponseModel?>,
-                response: Response<EnrollmentStatusResponseModel?>
+                call: Call<ReEnrollmentStatusResponseModel?>,
+                response: Response<ReEnrollmentStatusResponseModel?>
             ) {
                 // progressDialogP.hide()
                 if (response.body() != null) {
-                    val apiResponse: EnrollmentStatusResponseModel? = response.body()
-                    val status: String = apiResponse!!.getStatus()
+                    val apiResponse: ReEnrollmentStatusResponseModel? = response.body()
+                    val status: String = apiResponse!!.status
                     if (status == "100") {
 
                         studentList.addAll(apiResponse.responseArray.students)
-                        reEnrollRecycler.layoutManager= LinearLayoutManager(context)
-                        var re_enroll_adapter=
-                            ReEnrollAdapter(context,studentList)
-                        reEnrollRecycler.adapter=re_enroll_adapter
+                        reEnrollRecycler.layoutManager = LinearLayoutManager(context)
+                        var re_enroll_adapter =
+                            ReEnrollAdapter(context, studentList)
+                        reEnrollRecycler.adapter = re_enroll_adapter
 
                     } else {
                         /*AppUtils.showDialogAlertDismiss(
@@ -989,7 +992,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                 }
             }
 
-            override fun onFailure(call: Call<EnrollmentStatusResponseModel?>, t: Throwable) {
+            override fun onFailure(call: Call<ReEnrollmentStatusResponseModel?>, t: Throwable) {
                 /* progressDialogP.hide()
                  AppUtils.showDialogAlertDismiss(
                      mContext as Activity,
@@ -1005,53 +1008,50 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
         // progressDialogP.show()
         val service: ApiInterface = ApiClient.getClient
 
-        val call: Call<EnrollmentFormResponseModel> =
-            service.getenrollform("Bearer " +  PreferenceManager.getaccesstoken(mContext))
-        call.enqueue(object : Callback<EnrollmentFormResponseModel?> {
+        val call: Call<ReEnrollmentFormResponseModel> =
+            service.getenrollform("Bearer " + PreferenceManager.getaccesstoken(mContext))
+        call.enqueue(object : Callback<ReEnrollmentFormResponseModel?> {
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onResponse(
-                call: Call<EnrollmentFormResponseModel?>,
-                response: Response<EnrollmentFormResponseModel?>
+                call: Call<ReEnrollmentFormResponseModel?>,
+                response: Response<ReEnrollmentFormResponseModel?>
             ) {
                 if (response.body() != null) {
-                    val apiResponse: EnrollmentFormResponseModel? = response.body()
-                    val responseCode: String = apiResponse!!.getResponsecode()
-                    if (responseCode == "200") {
-                        val statuscode: String = apiResponse!!.getResponse().getStatuscode()
-                        val responseData: EnrollmentFormResponseModel.ResponseData = apiResponse!!.getResponse()
-                        if (statuscode == "303") {
-                            // progressDialogP.hide()
-                            val responseArrayObject: EnrollmentFormResponseModel.ResponseData.ResponseArray =
-                                responseData.getResponseArray()
-                            val settingsObject: EnrollmentFormResponseModel.ResponseData.ResponseArray.Settings =
-                                responseArrayObject.getSettings()
-                            val headingString: String = settingsObject.getHeading()
-                            val question: String = settingsObject.getQuestion()
-                            val descriptionString: String = settingsObject.getDescription()
-                            val tAndCString: String = settingsObject.getT_and_c()
-                            val optionsArray: java.util.ArrayList<String> = settingsObject.getOptions()
-                            val userObject: EnrollmentFormResponseModel.ResponseData.ResponseArray.User =
-                                responseArrayObject.getUser()
-                            val userNameString: String = userObject.getFirstname()
-                            val emailString: String = userObject.getEmail()
-                            val studentArray: java.util.ArrayList<ReEnrollmentFormStudentModel> =
-                                responseArrayObject.getStudents()
-                            val studentList: java.util.ArrayList<ReEnrollmentFormStudentModel> =
-                                java.util.ArrayList()
-                            val temp = ReEnrollmentFormStudentModel()
-                            for (i in studentArray.indices) {
-                                val item: ReEnrollmentFormStudentModel =
-                                    apiResponse.getResponse().getResponseArray().getStudents().get(i)
-                                val gson = Gson()
-                                val eventJson = gson.toJson(item)
-                                try {
-                                    val jsonObject = JSONObject(eventJson)
-                                    studentList.add(
-                                        addStudentReEnrollDetails(
-                                            jsonObject
-                                        )
+                    val apiResponse: ReEnrollmentFormResponseModel? = response.body()
+                    val status: String = apiResponse!!.status
+                    if (status == "100") {
+
+                        val responseArrayObject: ReEnrollmentFormResponseModel.SecondResponseArray =
+                            apiResponse.responseArray
+                        val settingsObject: ReEnrollmentFormResponseModel.Settings =
+                            responseArrayObject.settings
+                        val headingString: String = settingsObject.heading
+                        val question: String = settingsObject.question
+                        val descriptionString: String = settingsObject.description
+                        val tAndCString: String = settingsObject.tAndC
+                        val optionsArray: java.util.ArrayList<String> = settingsObject.options
+                        val userObject: ReEnrollmentFormResponseModel.User =
+                            responseArrayObject.user
+                        val userNameString: String = userObject.name
+                        val emailString: String = userObject.email
+                        val studentArray: ArrayList<StudentEnrollList> =
+                            responseArrayObject.students
+                        val studentList: java.util.ArrayList<ReEnrollmentFormStudentModel> =
+                            java.util.ArrayList()
+                        val temp = ReEnrollmentFormStudentModel()
+                        for (i in studentArray.indices) {
+                            val item: StudentEnrollList =
+                                responseArrayObject.students[i]
+                            val gson = Gson()
+                            val eventJson = gson.toJson(item)
+                            try {
+                                val jsonObject = JSONObject(eventJson)
+                                studentList.add(
+                                    addStudentReEnrollDetails(
+                                        jsonObject
                                     )
-                                    //  Log.e("array", String.valueOf(mCCAmodelArrayList));
+                                )
+                                //  Log.e("array", String.valueOf(mCCAmodelArrayList));
                                 } catch (e: JSONException) {
                                     e.printStackTrace()
                                 }
@@ -1069,8 +1069,8 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                                 studentEnrollList,
                                 question
                             )
-                        }
-                    } else if (responseCode.equals("500", ignoreCase = true)) {
+
+                    } else if (status.equals("500", ignoreCase = true)) {
                         /*AppUtils.showDialogAlertDismiss(
                             mContext as Activity,
                             "Alert",
@@ -1078,13 +1078,13 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                             R.drawable.exclamationicon,
                             R.drawable.round
                         )*/
-                    } else if (responseCode.equals("400", ignoreCase = true)) {
+                    } else if (status.equals("400", ignoreCase = true)) {
 
                         //						getStudentsListAPI(URLHEAD);
-                    } else if (responseCode.equals("401", ignoreCase = true)) {
+                    } else if (status.equals("401", ignoreCase = true)) {
 
                         //						getStudentsListAPI(URLHEAD);
-                    } else if (responseCode.equals("402", ignoreCase = true)) {
+                    } else if (status.equals("402", ignoreCase = true)) {
 
                         //						getStudentsListAPI(URLHEAD);
                     } else {
@@ -1098,44 +1098,30 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                          )*/
                     }
                 } else {
-                    /* AppUtils.showDialogAlertDismiss(
-                         mContext as Activity,
-                         "Alert",
-                         getString(R.string.common_error),
-                         R.drawable.exclamationicon,
-                         R.drawable.round
-                     )*/
+
                 }
             }
 
-            override fun onFailure(call: Call<EnrollmentFormResponseModel?>, t: Throwable) {
-                /* progressDialogP.hide()
-                 AppUtils.showDialogAlertDismiss(
-                     mContext as Activity,
-                     "Alert",
-                     mContext.getString(R.string.common_error),
-                     R.drawable.exclamationicon,
-                     R.drawable.round
-                 )*/
+            override fun onFailure(call: Call<ReEnrollmentFormResponseModel?>, t: Throwable) {
+
             }
         })
     }
 
     private fun saveReEnrollApi(
-        reEnrollSaveArray: java.util.ArrayList<com.nas.alreem.fragment.home.re_enrollment.ReEnrollSubmitModel>,
+        reEnrollSaveArray: java.util.ArrayList<ReEnrollSubmitModel>,
         dialog1: Dialog,
         dialog: Dialog,
         position: Int
     ) {
-        // selected item studentlist positio
-        // progressDialogP.show()
         val service: ApiInterface = ApiClient.getClient
         val paramObject = JsonObject()
         paramObject.addProperty("status", selectedItem)
         paramObject.addProperty("student_id", studentList[position].id)
+        val save_reenroll = ReEnrollSubmitAPIModel(reEnrollSaveArray)
         val call: Call<EnrollmentSaveResponseModel> = service.getenrollsave(
             "Bearer " + PreferenceManager.getaccesstoken(mContext),
-            paramObject
+            save_reenroll
         )
         call.enqueue(object : Callback<EnrollmentSaveResponseModel?> {
             override fun onResponse(
@@ -1150,7 +1136,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                         if (selectedItem.equals("Returning", ignoreCase = true)) {
                             showSuccessReEnrollAlert(
                                 mContext,
-                                " Thank you         \n" +
+                                "Thank you\n" +
                                         "\n" +
                                         "Once this form is submitted, please find the invoice under Payments on this App",
                                 "Success",
@@ -1160,9 +1146,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                         } else if (selectedItem.equals("Unsure", ignoreCase = true)) {
                             showSuccessReEnrollAlert(
                                 mContext,
-                                ("Thank you\n" +
-                                        "\n" +
-                                        "Once this form is submitted, please find the invoice under Payments on this App (this will be used to hold your child’s place)  "),
+                                ("Thank you\n" + "\n" + "Once this form is submitted, please find the invoice under Payments on this App (this will be used to hold your child’s place)  "),
                                 "Success",
                                 dialog1,
                                 dialog
@@ -1336,10 +1320,10 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
         parent_email.setText(emailString)
         parent_name.setText(userNameString)
         questionTxt.text = question
-        val reEnrollSubmit: java.util.ArrayList<com.nas.alreem.fragment.home.re_enrollment.ReEnrollSubmitModel> =
-            java.util.ArrayList<com.nas.alreem.fragment.home.re_enrollment.ReEnrollSubmitModel>()
+        val reEnrollSubmit: java.util.ArrayList<ReEnrollSubmitModel> =
+            java.util.ArrayList<ReEnrollSubmitModel>()
         for (i in studentList.indices) {
-            val temp = com.nas.alreem.fragment.home.re_enrollment.ReEnrollSubmitModel("", "")
+            val temp = ReEnrollSubmitModel("", "")
             reEnrollSubmit.add(i, temp)
         }
         date = ConstantFunctions().dateConversionddmmyyyy(currentDate)

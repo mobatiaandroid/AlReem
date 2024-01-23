@@ -12,31 +12,36 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.view.*
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.nas.alreem.BuildConfig
 import com.nas.alreem.R
 import com.nas.alreem.activity.home.HomeActivity
+import com.nas.alreem.activity.home.model.ReEnrollSubmitAPIModel
 import com.nas.alreem.activity.login.model.SignUpResponseModel
-import com.nas.alreem.activity.shop_new.Addorder_Activity_new
 import com.nas.alreem.activity.shop_new.PreOrderActivity_new
 import com.nas.alreem.activity.survey.adapter.SurveyQuestionPagerAdapter
 import com.nas.alreem.activity.survey.model.*
 import com.nas.alreem.constants.ApiClient
+import com.nas.alreem.constants.ApiInterface
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.ConstantWords
 import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.PreferenceManager
+import com.nas.alreem.constants.WebLinkActivity
 import com.nas.alreem.fragment.about_us.AboutUsFragment
 import com.nas.alreem.fragment.absence.AbsenceFragment
 import com.nas.alreem.fragment.bus_service.BusServiceFragment
@@ -44,9 +49,15 @@ import com.nas.alreem.fragment.calendar.CalendarFragment
 import com.nas.alreem.fragment.canteen.CanteenFragment
 import com.nas.alreem.fragment.cca.CCAFragment
 import com.nas.alreem.fragment.contact_us.ContactUsFragment
-import com.nas.alreem.fragment.early_years.EarlyYearsFragment
 import com.nas.alreem.fragment.gallery.GalleryFragment
 import com.nas.alreem.fragment.home.model.BannerResponseModel
+import com.nas.alreem.fragment.home.re_enrollment.EnrollmentFormResponseModel
+import com.nas.alreem.fragment.home.re_enrollment.EnrollmentSaveResponseModel
+import com.nas.alreem.fragment.home.re_enrollment.ReEnrollSubmitModel
+import com.nas.alreem.fragment.home.re_enrollment.ReEnrollmentFormResponseModel
+import com.nas.alreem.fragment.home.re_enrollment.ReEnrollmentFormStudentModel
+import com.nas.alreem.fragment.home.re_enrollment.ReEnrollmentStatusResponseModel
+import com.nas.alreem.fragment.home.re_enrollment.StudentEnrollList
 import com.nas.alreem.fragment.intention.Intentionfragment
 import com.nas.alreem.fragment.notifications.NotificationFragment
 import com.nas.alreem.fragment.parent_meetings.ParentMeetingsFragment
@@ -54,18 +65,17 @@ import com.nas.alreem.fragment.parents_essentials.ParentsEssentialFragment
 import com.nas.alreem.fragment.payments.PaymentFragment
 import com.nas.alreem.fragment.payments.model.SendEmailApiModel
 import com.nas.alreem.fragment.performing_arts.PerformingArtsFragment
-import com.nas.alreem.fragment.permission_slip.PermissionSlipFragment
 import com.nas.alreem.fragment.permission_slip.PermissionSlipFragmentNew
-import com.nas.alreem.fragment.primary.PrimaryFragment
 import com.nas.alreem.fragment.reports.ReportsFragment
-import com.nas.alreem.fragment.secondary.SecondaryFragment
-import com.nas.alreem.fragment.shop.ShopFragment
 import com.nas.alreem.fragment.student_information.StudentInformationFragment
 import com.nas.alreem.fragment.time_table.TimeTableFragment
+import org.json.JSONException
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
+import kotlin.collections.ArrayList
 
 lateinit var relone: RelativeLayout
 lateinit var reltwo: RelativeLayout
@@ -117,20 +127,20 @@ private var usertype: String = ""
 private var USERDATA: String = ""
 private var previousTriggerType: Int = 0
 
-var studentName: String=""
-var studentId: String=""
-var studentImg: String=""
-var studentClass: String=""
-var studntCount: Int=0
+var studentName: String = ""
+var studentId: String = ""
+var studentImg: String = ""
+var studentClass: String = ""
+var studntCount: Int = 0
 
 
 lateinit var pager: ViewPager
 var isDraggable: Boolean = false
 var bannerarray = ArrayList<String>()
 lateinit var mContext: Context
-lateinit var current_date:String
+lateinit var current_date: String
 var currentPage: Int = 0
-private val NOTICE_TIME_OUT:Long = 5000
+private val NOTICE_TIME_OUT: Long = 5000
 var currentPageSurvey = 0
 var survey_satisfation_status = 0
 private var surveyEmail = ""
@@ -145,11 +155,14 @@ lateinit var surveyQuestionArrayList: ArrayList<SurveyQuestionsModel>
 lateinit var surveyAnswersArrayList: ArrayList<SurveyOfferedAnswersModel>
 lateinit var mAnswerList: ArrayList<SurveySubmitDataModel>
 
-class HomeFragment : Fragment() , View.OnClickListener{
+class HomeFragment : Fragment(), View.OnClickListener {
+    lateinit var studentList: ArrayList<StudentEnrollList>
+    lateinit var studentEnrollList: ArrayList<StudentEnrollList>
+    lateinit var notice: String
+
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
 
         return inflater.inflate(R.layout.fragment_home_screen, container, false)
@@ -159,7 +172,7 @@ class HomeFragment : Fragment() , View.OnClickListener{
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        homeActivity =  activity as HomeActivity
+        homeActivity = activity as HomeActivity
         mContext = requireContext()
         CLICKED = homeActivity.sPosition.toString()
         listitems = resources.getStringArray(R.array.navigation_item_names)
@@ -173,80 +186,77 @@ class HomeFragment : Fragment() , View.OnClickListener{
 
     }
 
-    fun getbannerimages()
-    {
+    fun getbannerimages() {
         val call: Call<BannerResponseModel> = ApiClient.getClient.bannerImages()
         call.enqueue(object : Callback<BannerResponseModel> {
             override fun onFailure(call: Call<BannerResponseModel>, t: Throwable) {
             }
-            override fun onResponse(call: Call<BannerResponseModel>, response: Response<BannerResponseModel>) {
+
+            override fun onResponse(
+                call: Call<BannerResponseModel>, response: Response<BannerResponseModel>
+            ) {
                 val responsedata = response.body()
                 if (responsedata != null) {
                     try {
 
-                        if (response.body()!!.status==100)
-                        {
+                        if (response.body()!!.status == 100) {
                             bannerarray.addAll(response.body()!!.responseArray!!.banner_images!!)
-                            var version=response.body()!!.responseArray!!.android_app_version.toString()
-                            var appVersion= BuildConfig.VERSION_NAME.toString()
-                            if(!version.equals(appVersion))
-                            {
+                            var version =
+                                response.body()!!.responseArray!!.android_app_version.toString()
+                            var appVersion = BuildConfig.VERSION_NAME.toString()
+                            if (!version.equals(appVersion)) {
                                 showforceupdate(mContext)
                             }
 
-                            if (bannerarray.size>0)
-                            {
+                            if (bannerarray.size > 0) {
                                 pager.adapter = activity?.let { PageView(it, bannerarray) }
-                            }
-                            else {
+                            } else {
                                 pager.setBackgroundResource(R.drawable.default_banner)
                             }
-                            var notice=response.body()!!.responseArray!!.notice
+                            notice = response.body()!!.responseArray!!.notice
                             val survey: Int = response.body()!!.responseArray!!.survey
-                            val lost_student_card_amount:String = response.body()!!.responseArray!!.lost_student_card_amount
-                            //										int survey=0;
-                            PreferenceManager.setLostAmount(mContext,lost_student_card_amount)
+                            val lost_student_card_amount: String =
+                                response.body()!!.responseArray!!.lost_student_card_amount
+                            val enrollmentStatus =
+                                response.body()!!.responseArray!!.enrollmentStatus
+                            PreferenceManager.setLostAmount(mContext, lost_student_card_amount)
                             PreferenceManager.setSurvey(mContext, survey)
-                            if(notice.equals(""))
-                            {
-                                if (PreferenceManager.getSurvey(mContext) === 1) {
-                                    if (PreferenceManager.getIsSurveyHomeVisible(mContext))
-                                    {
-                                    }
-                                    else
-                                    {
-                                        if (ConstantFunctions.internetCheck(mContext))
-                                        {
-                                            callSurveyApi()
+                            if (enrollmentStatus.equals("0") || enrollmentStatus.equals("")) {
+                                if (notice.equals("")) {
+                                    if (PreferenceManager.getSurvey(mContext) === 1) {
+                                        if (PreferenceManager.getIsSurveyHomeVisible(mContext)) {
+                                        } else {
+                                            if (ConstantFunctions.internetCheck(mContext)) {
+                                                callSurveyApi()
+                                            } else {
+                                                DialogFunctions.showInternetAlertDialog(mContext)
+                                            }
                                         }
-                                        else
-                                        {
-                                            DialogFunctions.showInternetAlertDialog(mContext)
-                                        }
-
+                                    } else {
                                     }
-                                } else
-                                {
+                                } else {
+                                    if (PreferenceManager.getNoticeFirstTime(mContext).equals("")) {
+                                        PreferenceManager.setNoticeFirtTime(mContext, "djhdhhf")
+                                        showPopUpImage(notice, mContext)
+                                    } else {
+                                    }
+                                }
+                            } else {
+                                if (PreferenceManager.getIsEnrollmentHomeVisible(mContext)) {
 
+                                } else {
+                                    getReEnrollmentStatus()
                                 }
                             }
-                            else{
-                                if (PreferenceManager.getNoticeFirstTime(mContext).equals(""))
-                                {
-                                    PreferenceManager.setNoticeFirtTime(mContext,"djhdhhf")
-                                    showPopUpImage(notice,mContext)
-                                }
-                                else{
 
-                                }
 
-                            }
+                        } else {
 
-                        }
-                        else
-                        {
-
-                            DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), mContext)
+                            DialogFunctions.commonErrorAlertDialog(
+                                mContext.resources.getString(R.string.alert),
+                                ConstantFunctions.commonErrorString(response.body()!!.status),
+                                mContext
+                            )
                         }
 
 
@@ -257,6 +267,991 @@ class HomeFragment : Fragment() , View.OnClickListener{
             }
 
         })
+    }
+
+    private fun getReEnrollmentStatus() {
+        val call: Call<ReEnrollmentStatusResponseModel> = ApiClient.getClient.getenrollstatus(
+            "Bearer " + PreferenceManager.getaccesstoken(mContext)
+        )
+
+        call.enqueue(object : Callback<ReEnrollmentStatusResponseModel?> {
+            override fun onResponse(
+                call: Call<ReEnrollmentStatusResponseModel?>,
+                response: Response<ReEnrollmentStatusResponseModel?>
+            ) {
+                if (response.body() != null) {
+                    val apiResponse: ReEnrollmentStatusResponseModel? = response.body()
+                    val status: String = apiResponse!!.status
+                    if (status == "100") {
+                        studentList = ArrayList()
+                        studentList.addAll(apiResponse.responseArray.students)
+                        val responseArrayObject = response.body()!!.responseArray
+
+                        val studentsArray: ArrayList<StudentEnrollList>? =
+                            responseArrayObject.students
+
+                        var isAtLeastOneStatusEmpty = false
+
+                        for (student in studentsArray!!) {
+                            if ("1" == student.enrollment_status && (student.status == null || student.status.isEmpty())) {
+                                isAtLeastOneStatusEmpty = true
+                                break
+                            }
+                        }
+
+                        studentEnrollList = ArrayList()
+
+                        val studentsWithEmptyStatus: ArrayList<StudentEnrollList> =
+                            ArrayList<StudentEnrollList>()
+
+                        for (student in studentsArray) {
+                            if ("1" == student.enrollment_status && (student.status == null || student.status.isEmpty())) {
+                                studentsWithEmptyStatus.add(student)
+                            }
+                        }
+                        studentEnrollList = studentsWithEmptyStatus
+
+                        if (isAtLeastOneStatusEmpty) {
+                            showReEnrollmentPopUp()
+                        } else {
+                            if (notice == "") {
+                                if (PreferenceManager.getSurvey(mContext) === 1) {
+                                    if (PreferenceManager.getIsSurveyHomeVisible(mContext)) {
+                                    } else {
+                                        if (ConstantFunctions.internetCheck(mContext)) {
+                                            callSurveyApi()
+                                        } else {
+                                            DialogFunctions.showInternetAlertDialog(mContext)
+                                        }
+                                    }
+                                } else {
+                                }
+                            } else {
+                                if (PreferenceManager.getNoticeFirstTime(mContext).equals("")) {
+                                    PreferenceManager.setNoticeFirtTime(mContext, "djhdhhf")
+                                    showPopUpImage(notice, mContext)
+                                } else {
+                                }
+                            }
+                        }
+
+                    } else {
+
+                    }
+                } else {
+
+                }
+            }
+
+            override fun onFailure(call: Call<ReEnrollmentStatusResponseModel?>, t: Throwable) {
+
+            }
+        })
+    }
+
+    private fun showReEnrollmentPopUp() {
+        val service: ApiInterface = ApiClient.getClient
+
+        val call: Call<ReEnrollmentFormResponseModel> =
+            service.getenrollform("Bearer " + PreferenceManager.getaccesstoken(mContext))
+        call.enqueue(object : Callback<ReEnrollmentFormResponseModel?> {
+            @RequiresApi(Build.VERSION_CODES.O)
+            override fun onResponse(
+                call: Call<ReEnrollmentFormResponseModel?>,
+                response: Response<ReEnrollmentFormResponseModel?>
+            ) {
+                if (response.body() != null) {
+                    val apiResponse: ReEnrollmentFormResponseModel? = response.body()
+                    val status: String = apiResponse!!.status
+                    if (status == "100") {
+                        val responseData: ReEnrollmentFormResponseModel.SecondResponseArray =
+                            apiResponse.responseArray
+
+                        val settingsObject: ReEnrollmentFormResponseModel.Settings =
+                            apiResponse.responseArray.settings
+                        val headingString: String = settingsObject.heading
+                        val question: String = settingsObject.question
+                        val descriptionString: String = settingsObject.description
+                        val tAndCString: String = settingsObject.tAndC
+                        val optionsArray: ArrayList<String> = settingsObject.options
+                        val userObject: ReEnrollmentFormResponseModel.User =
+                            apiResponse.responseArray.user
+                        val userNameString: String = userObject.name
+                        val emailString: String = userObject.email
+                        val studentArray: ArrayList<StudentEnrollList> =
+                            apiResponse.responseArray.students
+                        val studentList: ArrayList<ReEnrollmentFormStudentModel> =
+                            ArrayList()
+                        val temp = ReEnrollmentFormStudentModel()
+                        for (i in studentArray.indices) {
+                            val item: StudentEnrollList =
+                                apiResponse.responseArray.students[i]
+                            val gson = Gson()
+                            val eventJson = gson.toJson(item)
+                            try {
+                                val jsonObject = JSONObject(eventJson)
+                                studentList.add(
+                                    addStudentReEnrollDetails(
+                                        jsonObject
+                                    )
+                                )
+                            } catch (e: JSONException) {
+                                e.printStackTrace()
+                            }
+                        }
+                        re_enroll_popup(
+                            mContext,
+                            headingString,
+                            descriptionString,
+                            tAndCString,
+                            optionsArray,
+                            userNameString,
+                            emailString,
+                            studentEnrollList,
+                            question
+                        )
+
+                    } else {
+
+                    }
+                } else {
+
+                }
+            }
+
+            override fun onFailure(call: Call<ReEnrollmentFormResponseModel?>, t: Throwable) {
+
+            }
+        })
+    }
+
+    @SuppressLint("WrongConstant")
+    private fun re_enroll_popup(
+        mContext: Context,
+        headingString: String,
+        descriptionString: String,
+        tAndCString: String,
+        optionsArray: ArrayList<String>,
+        userNameString: String,
+        emailString: String,
+        studentEnrollList: ArrayList<StudentEnrollList>,  //                                  ArrayList<StudentEnrollList> studentEnrollList,
+        question: String
+    ) {
+        val d = Dialog(mContext)
+        d.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        d.window!!.setBackgroundDrawable(ColorDrawable(Color.WHITE))
+        d.setCancelable(false)
+        d.setContentView(R.layout.dialog_re_enrollment_swipe_page)
+        val total_count = studentEnrollList.size - 1
+        removeStudentsWithEnrollmentStatusZero(studentEnrollList)
+        val page_count = intArrayOf(0)
+        val check = intArrayOf(0)
+        val questionTextView = d.findViewById<TextView>(R.id.questionTxt)
+        val scrollView = d.findViewById<ScrollView>(R.id.scrollView)
+        val close_img = d.findViewById<ImageView>(R.id.close_img)
+        val header = d.findViewById<TextView>(R.id.header)
+        val mailIcon = d.findViewById<LinearLayout>(R.id.linear_mail)
+        val prev_btn = d.findViewById<LinearLayout>(R.id.prev_linear)
+        val nxt_btn = d.findViewById<LinearLayout>(R.id.nxt_linear)
+        val sub_btn = d.findViewById<Button>(R.id.sub_btn)
+        val terms_and_condtns = d.findViewById<Button>(R.id.terms_conditions)
+        val personal_info = d.findViewById<Button>(R.id.personal_info)
+        val save = d.findViewById<TextView>(R.id.save)
+        val image_view = d.findViewById<ImageView>(R.id.image_view)
+        val stud_img = d.findViewById<ImageView>(R.id.stud_img)
+        val stud_name = d.findViewById<TextView>(R.id.stud_name)
+        val stud_class = d.findViewById<TextView>(R.id.stud_class)
+        val date_field = d.findViewById<EditText>(R.id.textField_date)
+        val descrcrptn = d.findViewById<TextView>(R.id.descrptn_txt)
+        val parent_name = d.findViewById<EditText>(R.id.textField_parentName)
+        val parent_email = d.findViewById<EditText>(R.id.textField_parentEmail)
+        val spinnerList = d.findViewById<Spinner>(R.id.spinnerlist)
+        val option_txt = d.findViewById<TextView>(R.id.option_txt)
+        val clear = d.findViewById<TextView>(R.id.clear)
+        val dropdown_btn = d.findViewById<ImageView>(R.id.dropdown_btn)
+        val sign_btn = d.findViewById<Button>(R.id.signature_btn)
+        val dropdownList: ArrayList<String>
+        val calendar = Calendar.getInstance()
+        val year = calendar[Calendar.YEAR]
+        val month = calendar[Calendar.MONTH]
+        val day = calendar[Calendar.DAY_OF_MONTH]
+        val currentDate = day.toString() + "/" + (month + 1) + "/" + year
+        val header_txt = "$year Re-enrolment and NAE Terms & Conditions"
+        val reEnrollsave: ArrayList<ReEnrollSubmitModel> = ArrayList<ReEnrollSubmitModel>()
+        val reEnrollsubmit: ArrayList<ReEnrollSubmitModel> = ArrayList<ReEnrollSubmitModel>()
+        mailIcon.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View) {
+                val dialog = Dialog(mContext)
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                dialog.setContentView(R.layout.alert_send_email_dialog)
+                dialog.window!!.setBackgroundDrawable(
+                    ColorDrawable(
+                        Color.TRANSPARENT
+                    )
+                )
+                val dialogCancelButton = dialog.findViewById<Button>(R.id.cancelButton)
+                val submitButton = dialog.findViewById<Button>(R.id.submitButton)
+                val textDialog = dialog.findViewById<EditText>(R.id.text_dialog)
+                val textContent = dialog.findViewById<EditText>(R.id.text_content)
+                submitButton.setOnClickListener(object : View.OnClickListener {
+                    override fun onClick(v: View) {
+                        if ((textDialog.text.toString().trim { it <= ' ' } == "")) {
+                            ConstantFunctions.showDialogueWithOk(
+                                mContext,
+                                "Please enter your subject",
+                                "Alert"
+                            )
+                        } else {
+                            if ((textContent.text.toString().trim { it <= ' ' } == "")) {
+                                ConstantFunctions.showDialogueWithOk(
+                                    mContext,
+                                    "Please enter your content",
+                                    "Alert"
+                                )
+                            } else {
+                                if (ConstantFunctions.internetCheck(mContext)) {
+                                    // TODO ReEnrollment Help
+//                                    sendEmailEnroll(textDialog.text.toString().trim { it <= ' ' },
+//                                        textContent.text.toString().trim { it <= ' ' }, dialog)
+                                } else {
+                                    ConstantFunctions.showDialogueWithOk(
+                                        mContext,
+                                        "No Network.",
+                                        "Alert"
+                                    )
+                                }
+                            }
+                        }
+                    }
+                })
+                dialogCancelButton.setOnClickListener(object : View.OnClickListener {
+                    override fun onClick(v: View) {
+                        dialog.dismiss()
+                    }
+                })
+                dialog.show()
+            }
+        })
+        for (i in studentEnrollList.indices) {
+            val m1 = ReEnrollSubmitModel("", "")
+            reEnrollsave.add(i, m1)
+        }
+        if (page_count[0] == total_count) {
+            nxt_btn.visibility = View.GONE
+            prev_btn.visibility = View.GONE
+            sub_btn.visibility = View.VISIBLE
+        }
+        header.text = headingString
+        descrcrptn.text = descriptionString
+        val dateFor = currentDate.replace("-", "/")
+        date_field.setText(dateFor)
+        dropdownList = ArrayList<String>()
+        // studDetailList= new ArrayList<>();
+        stud_name.text = studentEnrollList.get(0).name
+        stud_class.text = studentEnrollList.get(0).section
+        val stud_photo = studentEnrollList[0].photo
+        val stud_id = studentEnrollList[0].id
+        dropdownList.add(0, "Please Select")
+        for (i in 1..optionsArray.size) {
+            dropdownList.add(i, optionsArray[i - 1])
+        }
+        val sp_adapter = ArrayAdapter<String>(
+            mContext, R.layout.spinner_textview, dropdownList
+        )
+        spinnerList.adapter = sp_adapter
+        spinnerList.setSelection(0)
+        spinnerList.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View,
+                    position: Int,
+                    id: Long
+                ) {
+                    val selectedItem: String = parent.getItemAtPosition(position).toString()
+                    val optionlistSize: Int = dropdownList.size - 1
+                    for (i in 1..optionlistSize) {
+                        Log.e("opt", dropdownList.get(i))
+                        if ((selectedItem == dropdownList.get(i))) {
+                            Log.e("setcheck", "1")
+                            reEnrollsave.get(page_count.get(0)).status = dropdownList.get(i)
+                            check[0] = 1
+                        } else if ((selectedItem == dropdownList.get(0))) {
+                            Log.e("setcheck", "0")
+                            check[0] = 0
+                            reEnrollsave.get(page_count.get(0)).status = ""
+                        }
+                    }
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+            }
+        if (stud_photo != "") {
+            Glide.with(mContext).load(stud_photo).placeholder(R.drawable.student)
+                .error(R.drawable.student).skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.NONE) //                    .transform(new CircleCrop())
+                .into(stud_img)
+        } else {
+            stud_img.setImageResource(R.drawable.student)
+        }
+        if (userNameString != "") {
+            parent_name.setText(userNameString)
+        }
+        if (emailString != "") {
+            parent_email.setText(emailString)
+        }
+        if (!question.isEmpty()) {
+            questionTextView.text = question
+        }
+        option_txt.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View) {
+                option_txt.visibility = View.GONE
+                spinnerList.visibility = View.VISIBLE
+            }
+        })
+        terms_and_condtns.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View) {
+                val intent = Intent(mContext, WebLinkActivity::class.java)
+                intent.putExtra("Url", tAndCString)
+                startActivity(intent)
+            }
+        })
+        sub_btn.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View) {
+                if (check[0] == 0) {
+                    Log.e("check", "plsselct")
+                    for (i in studentEnrollList.indices) {
+                        if (!reEnrollsave[i].status.isEmpty()) {
+                            reEnrollsave[i].student_id = studentEnrollList[i].id
+                        }
+                    }
+                    for (i in reEnrollsave.indices) {
+                        if (!reEnrollsave[i].student_id
+                                .isEmpty() && !reEnrollsave[i].status.isEmpty()
+                        ) {
+                            if (reEnrollsubmit.size == 0) {
+                                val r1 = ReEnrollSubmitModel(
+                                    reEnrollsave[i].student_id,
+                                    reEnrollsave[i].status
+                                )
+                                reEnrollsubmit.add(0, r1)
+                            } else {
+                                for (j in 1..reEnrollsubmit.size) {
+                                    Log.e("save", reEnrollsave.size.toString())
+                                    Log.e("sub", reEnrollsubmit.size.toString())
+                                    if (!reEnrollsave[i].student_id
+                                            .equals(reEnrollsubmit[j - 1].student_id)
+                                    ) {
+                                        val r1 = ReEnrollSubmitModel(
+                                            reEnrollsave[i].student_id,
+                                            reEnrollsave[i].status
+                                        )
+                                        reEnrollsubmit.add(j, r1)
+                                    } else {
+                                        Log.e("new", "stud")
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (reEnrollsubmit.size > 0) {
+                        showConfirmationPopUp(
+                            mContext,
+                            "Do you want to Submit?",
+                            "",
+                            reEnrollsubmit,
+                            d
+                        )
+                    } else {
+                        ConstantFunctions.showDialogueWithOk(
+                            mContext,
+                            "You didn't enter any data of your child. Please Enter data and Submit",
+                            "Alert"
+                        )
+                    }
+                } else {
+                    for (i in studentEnrollList.indices) {
+                        if (!reEnrollsave[i].status.isEmpty()) {
+                            reEnrollsave[i].student_id = studentEnrollList[i].id
+                        }
+                    }
+                    for (i in reEnrollsave.indices) {
+                        if (!reEnrollsave[i].student_id
+                                .isEmpty() && !reEnrollsave[i].status.isEmpty()
+                        ) {
+                            if (reEnrollsubmit.size == 0) {
+                                val r1 = ReEnrollSubmitModel(
+                                    reEnrollsave[i].student_id,
+                                    reEnrollsave[i].status
+                                )
+                                reEnrollsubmit.add(0, r1)
+                            } else {
+                                for (j in 1..reEnrollsubmit.size) {
+                                    Log.e("save", reEnrollsave.size.toString())
+                                    Log.e("sub", reEnrollsubmit.size.toString())
+                                    if (!reEnrollsave[i].student_id
+                                            .equals(reEnrollsubmit[j - 1].student_id)
+                                    ) {
+                                        val r1 = ReEnrollSubmitModel(
+                                            reEnrollsave[i].student_id,
+                                            reEnrollsave[i].status
+                                        )
+                                        reEnrollsubmit.add(j, r1)
+                                    } else {
+                                        Log.e("new", "stud")
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    showConfirmationPopUp(mContext, "Do you want to Submit?", "", reEnrollsubmit, d)
+                }
+            }
+        })
+        nxt_btn.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View) {
+                Log.e("check", check[0].toString())
+                if (check[0] == 0) {
+                    Log.e("checknxt", "plsselct")
+                    page_count[0] = page_count[0] + 1
+                    Log.e("nxt_pg", page_count[0].toString())
+                    Log.e("studnt_count", studentEnrollList.size.toString())
+                    if (page_count[0] == studentEnrollList.size - 1) {
+                        nxt_btn.visibility = View.GONE
+                        sub_btn.visibility = View.VISIBLE
+                        prev_btn.visibility = View.VISIBLE
+                    } else {
+                        nxt_btn.visibility = View.VISIBLE
+                        prev_btn.visibility = View.VISIBLE
+                        sub_btn.visibility = View.GONE
+                    }
+                    Log.e("stsnxt", reEnrollsave[page_count[0]].status)
+                    if (reEnrollsave[page_count[0]].status.equals("")) {
+                        spinnerList.setSelection(0)
+                    } else {
+                        for (i in dropdownList.indices) {
+                            if (reEnrollsave[page_count[0]].status.equals(dropdownList[i])) {
+                                spinnerList.setSelection(i)
+                            }
+                        }
+                    }
+                    stud_name.text = studentEnrollList.get(page_count.get(0)).name
+                    stud_class.text = studentEnrollList.get(page_count.get(0)).section
+                    val stud_photo = studentEnrollList[page_count[0]].photo
+                    if (stud_photo != "") {
+                        Glide.with(mContext).load(stud_photo).placeholder(R.drawable.student)
+                            .error(R.drawable.student).skipMemoryCache(true)
+                            .diskCacheStrategy(DiskCacheStrategy.NONE) //                                .transform(new CircleCrop())
+                            .into(stud_img)
+                    }
+                } else {
+                    Log.e("check", "checked")
+                    page_count[0] = page_count[0] + 1
+                    Log.e("nxt_pg", page_count[0].toString())
+                    Log.e("studnt_count", studentEnrollList.size.toString())
+                    if (page_count[0] == studentEnrollList.size - 1) {
+                        nxt_btn.visibility = View.GONE
+                        sub_btn.visibility = View.VISIBLE
+                        prev_btn.visibility = View.VISIBLE
+                    } else {
+                        nxt_btn.visibility = View.VISIBLE
+                        prev_btn.visibility = View.VISIBLE
+                        sub_btn.visibility = View.GONE
+                    }
+                    if (reEnrollsave[page_count[0]].status.equals("")) {
+                        spinnerList.setSelection(0)
+                    } else {
+                        for (i in dropdownList.indices) {
+                            if (reEnrollsave[page_count[0]].status.equals(dropdownList[i])) {
+                                spinnerList.setSelection(i)
+                            }
+                        }
+                    }
+                    stud_name.text = studentEnrollList.get(page_count.get(0)).name
+                    stud_class.text = studentEnrollList.get(page_count.get(0)).section
+                    val stud_photo = studentEnrollList[page_count[0]].photo
+                    if (stud_photo != "") {
+                        Glide.with(mContext).load(stud_photo).placeholder(R.drawable.student)
+                            .error(R.drawable.student).skipMemoryCache(true)
+                            .diskCacheStrategy(DiskCacheStrategy.NONE) //                                        .transform(new CircleCrop())
+                            .into(stud_img)
+                    }
+                }
+                scrollView.post(object : Runnable {
+                    override fun run() {
+                        // X, Y are scroll positions until where you want to scroll up
+                        val X = 0
+                        val Y = 0
+                        scrollView.scrollTo(X, Y)
+                    }
+                })
+            }
+        })
+        prev_btn.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View) {
+                Log.e("checkpre", check[0].toString())
+                if (check[0] == 0) {
+                    Log.e("check", "plsselct")
+                    page_count[0] = page_count[0] - 1
+                    Log.e("studnt_count", studentEnrollList.size.toString())
+                    if (page_count[0] == 0) {
+                        nxt_btn.visibility = View.VISIBLE
+                        prev_btn.visibility = View.GONE
+                        sub_btn.visibility = View.GONE
+                    } else if (page_count[0] < studentEnrollList.size - 1) {
+                        if (page_count[0] == studentEnrollList.size - 1) {
+                            nxt_btn.visibility = View.GONE
+                            sub_btn.visibility = View.VISIBLE
+                            prev_btn.visibility = View.VISIBLE
+                        } else {
+                            nxt_btn.visibility = View.VISIBLE
+                            prev_btn.visibility = View.VISIBLE
+                            sub_btn.visibility = View.GONE
+                        }
+                    }
+                    Log.e("sts", reEnrollsave[page_count[0]].status)
+                    if (reEnrollsave[page_count[0]].status.equals("")) {
+                        spinnerList.setSelection(0)
+                    } else {
+                        for (i in dropdownList.indices) {
+                            if (reEnrollsave[page_count[0]].status.equals(dropdownList[i])) {
+                                spinnerList.setSelection(i)
+                            }
+                        }
+                    }
+                    stud_name.text = studentEnrollList.get(page_count.get(0)).name
+                    stud_class.text = studentEnrollList.get(page_count.get(0)).section
+                    val stud_photo = studentEnrollList[page_count[0]].photo
+                    if (stud_photo != "") {
+                        Glide.with(mContext).load(stud_photo).placeholder(R.drawable.student)
+                            .error(R.drawable.student).skipMemoryCache(true)
+                            .diskCacheStrategy(DiskCacheStrategy.NONE) //                                .transform(new CircleCrop())
+                            .into(stud_img)
+                    }
+                } else {
+                    Log.e("check", "checked")
+                    page_count[0] = page_count[0] - 1
+                    Log.e("pg", page_count.get(0).toString())
+                    Log.e("studnt_count", studentEnrollList.size.toString())
+                    if (page_count.get(0) == 0) {
+                        nxt_btn.visibility = View.VISIBLE
+                        prev_btn.visibility = View.GONE
+                        sub_btn.visibility = View.GONE
+                    } else if (page_count.get(0) < studentEnrollList.size - 1) {
+                        if (page_count.get(0) == studentEnrollList.size - 1) {
+                            nxt_btn.visibility = View.GONE
+                            sub_btn.visibility = View.VISIBLE
+                            prev_btn.visibility = View.VISIBLE
+                        } else {
+                            nxt_btn.visibility = View.VISIBLE
+                            prev_btn.visibility = View.VISIBLE
+                            sub_btn.visibility = View.GONE
+                        }
+                    }
+                    if (reEnrollsave.get(page_count.get(0)).status.equals("")) {
+                        spinnerList.setSelection(0)
+                    } else {
+                        for (i in dropdownList.indices) {
+                            if (reEnrollsave.get(page_count.get(0)).status
+                                    .equals(dropdownList.get(i))
+                            ) {
+                                spinnerList.setSelection(i)
+                            }
+                        }
+                    }
+                    stud_name.text = studentEnrollList.get(page_count.get(0)).name
+                    stud_class.text = studentEnrollList.get(page_count.get(0)).section
+                    val stud_photo = studentEnrollList.get(page_count.get(0)).photo
+                    if (stud_photo != "") {
+                        Glide.with(mContext).load(stud_photo).placeholder(R.drawable.student)
+                            .error(R.drawable.student).skipMemoryCache(true)
+                            .diskCacheStrategy(DiskCacheStrategy.NONE) //                                    .transform(new CircleCrop())
+                            .into(stud_img)
+                    }
+                }
+                scrollView.post(object : Runnable {
+                    override fun run() {
+                        // X, Y are scroll positions until where you want to scroll up
+                        val X = 0
+                        val Y = 0
+                        scrollView.scrollTo(X, Y)
+                    }
+                })
+            }
+        })
+        close_img.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View) {
+                PreferenceManager.setIsEnrollmentHomeVisible(mContext, true)
+                if (notice.equals("")) {
+                    if (PreferenceManager.getSurvey(mContext) === 1) {
+                        if (PreferenceManager.getIsSurveyHomeVisible(mContext)) {
+                        } else {
+                            if (ConstantFunctions.internetCheck(mContext)) {
+                                callSurveyApi()
+                            } else {
+                                DialogFunctions.showInternetAlertDialog(mContext)
+                            }
+                        }
+                    } else {
+                    }
+                } else {
+                    if (PreferenceManager.getNoticeFirstTime(mContext).equals("")) {
+                        PreferenceManager.setNoticeFirtTime(mContext, "djhdhhf")
+                        showPopUpImage(notice, mContext)
+                    } else {
+                    }
+                }
+                d.dismiss()
+            }
+        })
+        d.show()
+    }
+
+    //    private void reEnroll(Context mContext) {
+    //        int page_count = 0;
+    //        //int total_count=studDetailList.size-1;
+    //        int check = 0;
+    //
+    //
+    //        final Dialog dialog = new Dialog(mContext);
+    //        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+    //        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+    //        dialog.setCancelable(false);
+    //        dialog.setContentView(R.layout.dialogue_re_enrollment_status);
+    //
+    //        String mTitle;
+    //        String mTabId;
+    //        View mRootView;
+    //        TextView titleTextView;
+    //        RelativeLayout relMain;
+    //        ImageView closeImage, emailHelpImg;
+    //
+    //
+    //        titleTextView = dialog.findViewById(R.id.titleTextView);
+    //        reEnrollRecycler = dialog.findViewById(R.id.enroll_rec);
+    //        closeImage = dialog.findViewById(R.id.close_img);
+    //        emailHelpImg = dialog.findViewById(R.id.emailHelpImg);
+    //
+    //        emailHelpImg.setOnClickListener(new View.OnClickListener() {
+    //            @Override
+    //            public void onClick(View v) {
+    //                final Dialog dialog = new Dialog(mContext);
+    //                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+    //                dialog.setContentView(R.layout.alert_send_email_dialog);
+    //                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+    //                Button dialogCancelButton = (Button) dialog.findViewById(R.id.cancelButton);
+    //                Button submitButton = (Button) dialog.findViewById(R.id.submitButton);
+    //                text_dialog = (EditText) dialog.findViewById(R.id.text_dialog);
+    //                text_content = (EditText) dialog.findViewById(R.id.text_content);
+    //
+    //
+    //                dialogCancelButton.setOnClickListener(new View.OnClickListener() {
+    //
+    //                    @Override
+    //
+    //                    public void onClick(View v) {
+    //
+    //                        dialog.dismiss();
+    //
+    //                    }
+    //
+    //                });
+    //
+    //                submitButton.setOnClickListener(new View.OnClickListener() {
+    //                    @Override
+    //                    public void onClick(View v) {
+    //                        sendEmailEnroll(URL_SEND_EMAIL_ENROLL);
+    //                        dialog.dismiss();
+    //                    }
+    //                });
+    //
+    //
+    //                dialog.show();
+    //
+    //
+    //            }
+    //        });
+    //
+    //        titleTextView.setText("Re-Enrolment");
+    //        studentEnrollList = new ArrayList<>();
+    //        callSettingsAPI(mContext);
+    //
+    //        closeImage.setOnClickListener(new OnClickListener() {
+    //            @Override
+    //            public void onClick(View v) {
+    //                dialog.dismiss();
+    //            }
+    //        });
+    //        reEnrollRecycler.addOnItemTouchListener(new RecyclerItemListener(mContext, reEnrollRecycler,
+    //                new RecyclerItemListener.RecyclerTouchListener() {
+    //                    @Override
+    //                    public void onClickItem(View v, int position) {
+    //                        if (studentReEnrollList.get(position).getStatus().equalsIgnoreCase("")) {
+    //                            if (studentReEnrollList.get(position).getEnrollment_status().equalsIgnoreCase("1")) {
+    //                                callReEnrollAPI(studentReEnrollList, position);
+    //                            } else {
+    //                                AppUtils.showDialogAlertDismiss(getActivity(), "Alert", "Re-Enrolment is currently not enabled        \n" +
+    //
+    //                                        "Please wait for further update", R.drawable.exclamationicon, R.drawable.round);
+    //                            }
+    //                        } else {
+    //                            Dialog dialog = new Dialog(mContext);
+    //                            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+    //                            dialog.setContentView(R.layout.alert_re_enroll);
+    //                            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+    //                            TextView name = dialog.findViewById(R.id.nametxt);
+    //                            TextView studName = dialog.findViewById(R.id.stud_name);
+    //                            TextView department = dialog.findViewById(R.id.mailtxt);
+    //                            TextView role = dialog.findViewById(R.id.statustxt);
+    //                            ImageView imageView = dialog.findViewById(R.id.iconImageView);
+    //                            name.setText(studentReEnrollList.get(position).getParent_name());
+    //                            studName.setText(studentReEnrollList.get(position).getName());
+    //                            department.setText(studentReEnrollList.get(position).getParent_email());
+    //                            role.setText(studentReEnrollList.get(position).getStatus());
+    //                            // TODO set Staff Image
+    //                            dialog.show();
+    //                        }
+    //                    }
+    //
+    //                    @Override
+    //                    public void onLongClickItem(View v, int position) {
+    //
+    //
+    //                    }
+    //                }));
+    //
+    //        dialog.show();
+    //    }
+    //    private void callReEnrollAPI(ArrayList<StudentEnrollList> studentEnrollList, int position) {
+    //        progressDialogP.show();
+    //        APIInterface service = APIClient.getRetrofitInstance().create(APIInterface.class);
+    //        JsonObject paramObject = new JsonObject();
+    //
+    //        paramObject.addProperty("users_id", PreferenceManager.getUserId(mContext));
+    //        Call<EnrollmentFormResponseModel> call = service.getenrollform("Bearer " + PreferenceManager.getAccessToken(mContext), paramObject);
+    //        call.enqueue(new Callback<EnrollmentFormResponseModel>() {
+    //            @Override
+    //            public void onResponse(Call<EnrollmentFormResponseModel> call, Response<EnrollmentFormResponseModel> response) {
+    //
+    //                if (response.body() != null) {
+    //
+    //                    EnrollmentFormResponseModel apiResponse = response.body();
+    //
+    //                    String responseCode = apiResponse.getResponsecode();
+    //                    if (responseCode.equals("200")) {
+    //                        String statuscode = apiResponse.getResponse().getStatuscode();
+    //                        EnrollmentFormResponseModel.ResponseData responseData = apiResponse.getResponse();
+    //                        if (statuscode.equals("303")) {
+    //                            progressDialogP.hide();
+    //                            EnrollmentFormResponseModel.ResponseData.ResponseArray responseArrayObject = responseData.getResponseArray();
+    //
+    //                            EnrollmentFormResponseModel.ResponseData.ResponseArray.Settings settingsObject = responseArrayObject.getSettings();
+    //                            String headingString = settingsObject.getHeading();
+    //                            String question = settingsObject.getQuestion();
+    //                            String descriptionString = settingsObject.getDescription();
+    //                            String tAndCString = settingsObject.getT_and_c();
+    //                            ArrayList<String> optionsArray = settingsObject.getOptions();
+    //
+    //                            EnrollmentFormResponseModel.ResponseData.ResponseArray.User userObject = responseArrayObject.getUser();
+    //                            String userNameString = userObject.getFirstname();
+    //                            String emailString = userObject.getEmail();
+    //
+    //                            ArrayList<ReEnrollmentFormStudentModel> studentArray = responseArrayObject.getStudents();
+    //                            ArrayList<ReEnrollmentFormStudentModel> studentList = new ArrayList();
+    //                            ReEnrollmentFormStudentModel temp = new ReEnrollmentFormStudentModel();
+    //                            for (int i = 0; i < studentArray.size(); i++) {
+    //                                ReEnrollmentFormStudentModel item = apiResponse.getResponse().getResponseArray().getStudents().get(i);
+    //                                Gson gson = new Gson();
+    //                                String eventJson = gson.toJson(item);
+    //                                try {
+    //                                    JSONObject jsonObject = new JSONObject(eventJson);
+    //                                    studentList.add(addStudentReEnrollDetails(jsonObject));
+    //                                    //  Log.e("array", String.valueOf(mCCAmodelArrayList));
+    //                                } catch (JSONException e) {
+    //                                    e.printStackTrace();
+    //                                }
+    //                            }
+    //                            showReEnrollmentPopUp(mContext, headingString, descriptionString, tAndCString, optionsArray, userNameString, emailString, studentList, position, studentEnrollList, question);
+    //
+    //
+    //                        }
+    //                    } else if (responseCode.equalsIgnoreCase("500")) {
+    //                        AppUtils.showDialogAlertDismiss((Activity) mContext, "Alert", "Cannot continue. Please try again later", R.drawable.exclamationicon, R.drawable.round);
+    //
+    //                    } else if (responseCode.equalsIgnoreCase("400")) {
+    //                        AppUtils.getToken(mContext, new AppUtils.GetTokenSuccess() {
+    //                            @Override
+    //                            public void tokenrenewed() {
+    //                            }
+    //                        });
+    ////						getStudentsListAPI(URLHEAD);
+    //
+    //                    } else if (responseCode.equalsIgnoreCase("401")) {
+    //                        AppUtils.getToken(mContext, new AppUtils.GetTokenSuccess() {
+    //                            @Override
+    //                            public void tokenrenewed() {
+    //                            }
+    //                        });
+    ////						getStudentsListAPI(URLHEAD);
+    //
+    //                    } else if (responseCode.equalsIgnoreCase("402")) {
+    //                        AppUtils.getToken(mContext, new AppUtils.GetTokenSuccess() {
+    //                            @Override
+    //                            public void tokenrenewed() {
+    //                            }
+    //                        });
+    ////						getStudentsListAPI(URLHEAD);
+    //
+    //                    } else {
+    //                        progressDialogP.hide();
+    //                        AppUtils.showDialogAlertDismiss((Activity) mContext, "Alert", "Cannot continue. Please try again later", R.drawable.exclamationicon, R.drawable.round);
+    //
+    //                    }
+    //                } else {
+    //                    AppUtils.showDialogAlertDismiss((Activity) mContext, "Alert", getString(R.string.common_error), R.drawable.exclamationicon, R.drawable.round);
+    //                }
+    //
+    //            }
+    //
+    //            @Override
+    //            public void onFailure(Call<EnrollmentFormResponseModel> call, Throwable t) {
+    //                progressDialogP.hide();
+    //                AppUtils.showDialogAlertDismiss((Activity) mContext, "Alert", mContext.getString(R.string.common_error), R.drawable.exclamationicon, R.drawable.round);
+    //
+    //            }
+    //        });
+    //
+    //
+    //    }
+    fun removeStudentsWithEnrollmentStatusZero(studentEnrollList: ArrayList<StudentEnrollList>) {
+        val iterator = studentEnrollList.iterator()
+        while (iterator.hasNext()) {
+            val student = iterator.next()
+            if ("0" == student.enrollment_status) {
+                iterator.remove()
+            }
+        }
+    }
+
+    private fun showConfirmationPopUp(
+        context: Context,
+        message: String,
+        msgHead: String,
+        reEnrollsubmit: ArrayList<ReEnrollSubmitModel>,
+        d: Dialog
+    ) {
+        val dialog = Dialog(context)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.dialog_yes_no_alert)
+        val iconImageView = dialog.findViewById<ImageView>(R.id.iconImageView)
+        val alertHead = dialog.findViewById<TextView>(R.id.alertHead)
+        val text_dialog = dialog.findViewById<TextView>(R.id.messageTxt)
+        val btn_Ok = dialog.findViewById<Button>(R.id.btn_Ok)
+        val btn_Cancel = dialog.findViewById<Button>(R.id.btn_cancel)
+        text_dialog.text = message
+        alertHead.text = msgHead
+        btn_Ok.setOnClickListener {
+            saveReEnrollApi(reEnrollsubmit, dialog, d)
+            dialog.dismiss()
+        }
+        btn_Cancel.setOnClickListener { dialog.dismiss() }
+        dialog.show()
+    }
+
+    private fun showSuccessReenrollAlert(
+        context: Context, message: String, msgHead: String, dlg: Dialog, d: Dialog
+    ) {
+        val dialog = Dialog(context)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.dialog_yes_no_alert)
+        val iconImageView = dialog.findViewById<ImageView>(R.id.iconImageView)
+        val alertHead = dialog.findViewById<TextView>(R.id.alertHead)
+        val text_dialog = dialog.findViewById<TextView>(R.id.text_dialog)
+        val btn_Ok = dialog.findViewById<Button>(R.id.btn_Ok)
+        text_dialog.text = message
+        alertHead.text = msgHead
+        iconImageView.setImageResource(R.drawable.tick)
+        btn_Ok.setOnClickListener {
+            dialog.dismiss()
+            dlg.dismiss()
+            d.dismiss()
+            if (notice.equals("")) {
+                if (PreferenceManager.getSurvey(mContext) === 1) {
+                    if (PreferenceManager.getIsSurveyHomeVisible(mContext)) {
+                    } else {
+                        if (ConstantFunctions.internetCheck(mContext)) {
+                            callSurveyApi()
+                        } else {
+                            DialogFunctions.showInternetAlertDialog(mContext)
+                        }
+                    }
+                } else {
+                }
+            } else {
+                if (PreferenceManager.getNoticeFirstTime(mContext).equals("")) {
+                    PreferenceManager.setNoticeFirtTime(mContext, "djhdhhf")
+                    showPopUpImage(notice, mContext)
+                } else {
+                }
+            }
+        }
+        dialog.show()
+    }
+
+
+    private fun saveReEnrollApi(
+        reEnrollsubmit: ArrayList<ReEnrollSubmitModel>,
+        dialog: Dialog,
+        d: Dialog
+    ) {
+        val service: ApiInterface = ApiClient.getClient
+
+        val save_reenroll = ReEnrollSubmitAPIModel(reEnrollsubmit)
+        val call: Call<EnrollmentSaveResponseModel> = service.getenrollsave(
+            "Bearer " + PreferenceManager.getaccesstoken(mContext), save_reenroll
+        )
+        call.enqueue(object : Callback<EnrollmentSaveResponseModel?> {
+            override fun onResponse(
+                call: Call<EnrollmentSaveResponseModel?>,
+                response: Response<EnrollmentSaveResponseModel?>
+            ) {
+                // progressDialogP.hide()
+                if (response.body() != null) {
+                    val apiResponse: EnrollmentSaveResponseModel? = response.body()
+                    val status: String = apiResponse!!.status
+                    if (status == "100") {
+                        showSuccessReenrollAlert(
+                            mContext, "Success", "", dialog, d
+                        )
+                    } else {
+
+                    }
+                } else {
+
+                }
+            }
+
+            override fun onFailure(call: Call<EnrollmentSaveResponseModel?>, t: Throwable) {
+
+            }
+        })
+    }
+
+
+    private fun addStudentReEnrollDetails(dataObject: JSONObject): ReEnrollmentFormStudentModel {
+        val studentModel = ReEnrollmentFormStudentModel()
+        studentModel.id = dataObject.optString("id")
+        studentModel.unique_id = dataObject.optString("unique_id")
+        studentModel.name = dataObject.optString("name")
+        studentModel.class_name = dataObject.optString("class_name")
+        studentModel.section = dataObject.optString("section")
+        studentModel.house = dataObject.optString("house")
+        studentModel.photo = dataObject.optString("photo")
+        return studentModel
     }
 
     private fun setListeners() {
@@ -322,178 +1317,162 @@ class HomeFragment : Fragment() , View.OnClickListener{
 
     private fun getButtonBgAndTextImages() {
 
-        if (PreferenceManager
-                .getbuttononetextimage(mContext)!!.toInt() != 0
-        ) {
+        if (PreferenceManager.getbuttononetextimage(mContext)!!.toInt() != 0) {
             relImgone.setImageDrawable(
                 mListImgArrays.getDrawable(
-                    PreferenceManager
-                        .getbuttononetextimage(mContext)!!.toInt()
+                    PreferenceManager.getbuttononetextimage(mContext)!!.toInt()
                 )
             )
             var relTwoStr: String? = ""
             relTwoStr =
-                listitems[PreferenceManager
-                    .getbuttononetextimage(mContext)!!.toInt()].uppercase(Locale.getDefault())
+                listitems[PreferenceManager.getbuttononetextimage(mContext)!!.toInt()].uppercase(
+                    Locale.getDefault()
+                )
             relTxtone.text = relTwoStr
             relTxtone.setTextColor(ContextCompat.getColor(mContext, R.color.white))
             relone.setBackgroundColor(
                 PreferenceManager.getButtonOneGuestBg(mContext)
             )
         }
-        if (PreferenceManager.getbuttontwotextimage(mContext)!!.toInt() != 0
-        ) {
+        if (PreferenceManager.getbuttontwotextimage(mContext)!!.toInt() != 0) {
             relImgtwo.setImageDrawable(
                 mListImgArrays.getDrawable(
-                    PreferenceManager
-                        .getbuttontwotextimage(mContext)!!.toInt()
+                    PreferenceManager.getbuttontwotextimage(mContext)!!.toInt()
                 )
             )
             var relTwoStr: String? = ""
             relTwoStr =
-                listitems[PreferenceManager
-                    .getbuttontwotextimage(mContext)!!.toInt()].uppercase(Locale.getDefault())
+                listitems[PreferenceManager.getbuttontwotextimage(mContext)!!.toInt()].uppercase(
+                    Locale.getDefault()
+                )
 
             relTxttwo.text = relTwoStr
             relTxttwo.setTextColor(ContextCompat.getColor(mContext, R.color.white))
             reltwo.setBackgroundColor(
-                PreferenceManager
-                    .getButtontwoGuestBg(mContext)
+                PreferenceManager.getButtontwoGuestBg(mContext)
             )
         }
-        if (PreferenceManager
-                .getbuttonthreetextimage(mContext)!!.toInt() != 0
-        ) {
+        if (PreferenceManager.getbuttonthreetextimage(mContext)!!.toInt() != 0) {
             relImgthree.setImageDrawable(
                 mListImgArrays.getDrawable(
-                    PreferenceManager
-                        .getbuttonthreetextimage(mContext)!!.toInt()
+                    PreferenceManager.getbuttonthreetextimage(mContext)!!.toInt()
                 )
             )
             var relTwoStr: String? = ""
-            relTwoStr =  listitems[PreferenceManager
-                .getbuttonthreetextimage(mContext)!!.toInt()].uppercase(Locale.getDefault())
+            relTwoStr =
+                listitems[PreferenceManager.getbuttonthreetextimage(mContext)!!.toInt()].uppercase(
+                    Locale.getDefault()
+                )
             relTxtthree.text = relTwoStr
             relTxtthree.setTextColor(ContextCompat.getColor(mContext, R.color.white))
             relthree.setBackgroundColor(
-                PreferenceManager
-                    .getButtonthreeGuestBg(mContext)
+                PreferenceManager.getButtonthreeGuestBg(mContext)
             )
         }
 
 
-        if (PreferenceManager
-                .getbuttonfourtextimage(mContext)!!.toInt() != 0
-        ) {
+        if (PreferenceManager.getbuttonfourtextimage(mContext)!!.toInt() != 0) {
             relImgfour.setImageDrawable(
                 mListImgArrays.getDrawable(
-                    PreferenceManager
-                        .getbuttonfourtextimage(mContext)!!.toInt()
+                    PreferenceManager.getbuttonfourtextimage(mContext)!!.toInt()
                 )
             )
             var relTwoStr: String? = ""
-            relTwoStr = listitems[PreferenceManager
-                .getbuttonfourtextimage(mContext)!!.toInt()].uppercase(Locale.getDefault())
+            relTwoStr =
+                listitems[PreferenceManager.getbuttonfourtextimage(mContext)!!.toInt()].uppercase(
+                    Locale.getDefault()
+                )
             relTxtfour.text = relTwoStr
             relTxtfour.setTextColor(ContextCompat.getColor(mContext, R.color.white))
             relfour.setBackgroundColor(
-                PreferenceManager
-                    .getButtonfourGuestBg(mContext)
+                PreferenceManager.getButtonfourGuestBg(mContext)
             )
         }
 
 
-        if (PreferenceManager
-                .getbuttonfivetextimage(mContext)!!.toInt() != 0
-        ) {
+        if (PreferenceManager.getbuttonfivetextimage(mContext)!!.toInt() != 0) {
             relImgfive.setImageDrawable(
                 mListImgArrays.getDrawable(
-                    PreferenceManager
-                        .getbuttonfivetextimage(mContext)!!.toInt()
+                    PreferenceManager.getbuttonfivetextimage(mContext)!!.toInt()
                 )
             )
             var relTwoStr: String? = ""
-            relTwoStr = listitems[PreferenceManager
-                .getbuttonfivetextimage(mContext)!!.toInt()].uppercase(Locale.getDefault())
+            relTwoStr =
+                listitems[PreferenceManager.getbuttonfivetextimage(mContext)!!.toInt()].uppercase(
+                    Locale.getDefault()
+                )
             relTxtfive.text = relTwoStr
             relTxtfive.setTextColor(ContextCompat.getColor(mContext, R.color.white))
             relfive.setBackgroundColor(
-                PreferenceManager
-                    .getButtonfiveGuestBg(mContext)
+                PreferenceManager.getButtonfiveGuestBg(mContext)
             )
         }
         if (PreferenceManager.getbuttonsixtextimage(mContext)!!.toInt() != 0) {
             relImgsix.setImageDrawable(
                 mListImgArrays.getDrawable(
-                    PreferenceManager
-                        .getbuttonsixtextimage(mContext)!!.toInt()
+                    PreferenceManager.getbuttonsixtextimage(mContext)!!.toInt()
                 )
             )
             var relTwoStr: String? = ""
-            relTwoStr =  listitems[PreferenceManager
-                .getbuttonsixtextimage(mContext)!!.toInt()].uppercase(Locale.ROOT)
+            relTwoStr =
+                listitems[PreferenceManager.getbuttonsixtextimage(mContext)!!.toInt()].uppercase(
+                    Locale.ROOT
+                )
             relTxtsix.text = relTwoStr
             relTxtsix.setTextColor(ContextCompat.getColor(mContext, R.color.white))
             relsix.setBackgroundColor(
-                PreferenceManager
-                    .getButtonsixGuestBg(mContext)
+                PreferenceManager.getButtonsixGuestBg(mContext)
             )
         }
-        if (PreferenceManager
-                .getbuttonseventextimage(mContext)!!.toInt() != 0
-        ) {
+        if (PreferenceManager.getbuttonseventextimage(mContext)!!.toInt() != 0) {
             relImgseven.setImageDrawable(
                 mListImgArrays.getDrawable(
-                    PreferenceManager
-                        .getbuttonseventextimage(mContext)!!.toInt()
+                    PreferenceManager.getbuttonseventextimage(mContext)!!.toInt()
                 )
             )
             var relTwoStr: String? = ""
-            relTwoStr = listitems[PreferenceManager
-                .getbuttonseventextimage(mContext)!!.toInt()].uppercase(Locale.getDefault())
+            relTwoStr =
+                listitems[PreferenceManager.getbuttonseventextimage(mContext)!!.toInt()].uppercase(
+                    Locale.getDefault()
+                )
             relTxtseven.text = relTwoStr
             relTxtseven.setTextColor(ContextCompat.getColor(mContext, R.color.white))
             relseven.setBackgroundColor(
-                PreferenceManager
-                    .getButtonsevenGuestBg(mContext)
+                PreferenceManager.getButtonsevenGuestBg(mContext)
             )
         }
-        if (PreferenceManager
-                .getbuttoneighttextimage(mContext)!!.toInt() != 0
-        ) {
+        if (PreferenceManager.getbuttoneighttextimage(mContext)!!.toInt() != 0) {
             relImgeight.setImageDrawable(
                 mListImgArrays.getDrawable(
-                    PreferenceManager
-                        .getbuttoneighttextimage(mContext)!!.toInt()
+                    PreferenceManager.getbuttoneighttextimage(mContext)!!.toInt()
                 )
             )
             var relTwoStr: String? = ""
-            relTwoStr =  listitems[PreferenceManager
-                .getbuttoneighttextimage(mContext)!!.toInt()].uppercase(Locale.getDefault())
+            relTwoStr =
+                listitems[PreferenceManager.getbuttoneighttextimage(mContext)!!.toInt()].uppercase(
+                    Locale.getDefault()
+                )
             relTxteight.text = relTwoStr
             relTxteight.setTextColor(ContextCompat.getColor(mContext, R.color.white))
             releight.setBackgroundColor(
-                PreferenceManager
-                    .getButtoneightGuestBg(mContext)
+                PreferenceManager.getButtoneightGuestBg(mContext)
             )
         }
-        if (PreferenceManager
-                .getbuttonninetextimage(mContext)!!.toInt() != 0
-        ) {
+        if (PreferenceManager.getbuttonninetextimage(mContext)!!.toInt() != 0) {
             relImgnine.setImageDrawable(
                 mListImgArrays.getDrawable(
-                    PreferenceManager
-                        .getbuttonninetextimage(mContext)!!.toInt()
+                    PreferenceManager.getbuttonninetextimage(mContext)!!.toInt()
                 )
             )
             var relTwoStr: String? = ""
-            relTwoStr =   listitems[PreferenceManager
-                .getbuttonninetextimage(mContext)!!.toInt()].uppercase(Locale.ROOT)
+            relTwoStr =
+                listitems[PreferenceManager.getbuttonninetextimage(mContext)!!.toInt()].uppercase(
+                    Locale.ROOT
+                )
             reltxtnine.text = relTwoStr
             reltxtnine.setTextColor(ContextCompat.getColor(mContext, R.color.white))
             relnine.setBackgroundColor(
-                PreferenceManager
-                    .getButtonnineGuestBg(mContext)
+                PreferenceManager.getButtonnineGuestBg(mContext)
             )
         }
 
@@ -540,8 +1519,7 @@ class HomeFragment : Fragment() , View.OnClickListener{
                     for (i in mSectionText.indices) {
                         isDraggable = true
                         if (mSectionText[i].equals(
-                                listitems[homeActivity.sPosition],
-                                ignoreCase = true
+                                listitems[homeActivity.sPosition], ignoreCase = true
                             )
                         ) {
                             isDraggable = false
@@ -558,6 +1536,7 @@ class HomeFragment : Fragment() , View.OnClickListener{
                     }
 
                 }
+
                 DragEvent.ACTION_DRAG_ENDED -> Log.d("DRAG", "END")
 
 
@@ -773,39 +1752,51 @@ class HomeFragment : Fragment() , View.OnClickListener{
                     TAB_ID = ConstantWords.TAB_CALENDAR
 
                 }
+
                 textdata.equals(ConstantWords.notification, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_NOTIFICATIONS
                 }
+
                 textdata.equals(ConstantWords.communications, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_COMMUNICATION
                 }
+
                 textdata.equals(ConstantWords.lunchbox, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_LUNCH_BOX
                 }
+
                 textdata.equals(ConstantWords.payments, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_PAYMENTS
                 }
+
                 textdata.equals(ConstantWords.busservice, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_BUS_SERVICE
                 }
+
                 textdata.equals(ConstantWords.intention, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_INTENTIONS
                 }
+
                 textdata.equals(ConstantWords.studentinformation, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_STUDENT_INFORMATION
                 }
+
                 textdata.equals(ConstantWords.timetable, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_TIMETABLE
                 }
+
                 textdata.equals(ConstantWords.performingarts, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_PERFORMINGARTS
                 }
+
                 textdata.equals(ConstantWords.shop, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_SHOP
                 }
+
                 textdata.equals(ConstantWords.gallery, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_GALLERY
                 }
+
                 textdata.equals(ConstantWords.about_us, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_ABOUT_US
                 }
@@ -813,22 +1804,29 @@ class HomeFragment : Fragment() , View.OnClickListener{
                 textdata.equals(ConstantWords.contact_us, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_CONTACT_US
 
-                } textdata.equals(ConstantWords.parentessential, ignoreCase = true) -> {
+                }
+
+                textdata.equals(ConstantWords.parentessential, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_PARENT_ESSENTIAL
 
                 }
+
                 textdata.equals(ConstantWords.absence_earlypickup, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_ABSENCE
                 }
+
                 textdata.equals(ConstantWords.enrichment, ignoreCase = true) -> {
-                TAB_ID = ConstantWords.TAB_ENRICHMENT
-            }
+                    TAB_ID = ConstantWords.TAB_ENRICHMENT
+                }
+
                 textdata.equals(ConstantWords.parentmeetings, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_PARENT_MEETINGS
                 }
+
                 textdata.equals(ConstantWords.permission_forms, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_PERMISSION_FORMS
                 }
+
                 textdata.equals(ConstantWords.reports, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_REPORTS
                 }
@@ -958,7 +1956,7 @@ class HomeFragment : Fragment() , View.OnClickListener{
         relImgnine = view!!.findViewById(R.id.relImgNine) as ImageView
         mSectionText = arrayOfNulls(9)
 
-        pager_rel=view!!.findViewById(R.id.pager_rel)
+        pager_rel = view!!.findViewById(R.id.pager_rel)
         updatedata()
 
 
@@ -968,14 +1966,12 @@ class HomeFragment : Fragment() , View.OnClickListener{
             }
 
             override fun onPageScrolled(
-                position: Int,
-                positionOffset: Float,
-                positionOffsetPixels: Int
+                position: Int, positionOffset: Float, positionOffsetPixels: Int
             ) {
             }
 
             override fun onPageSelected(position: Int) {
-                  currentPage = position
+                currentPage = position
             }
 
         })
@@ -990,12 +1986,10 @@ class HomeFragment : Fragment() , View.OnClickListener{
             if (currentPage == bannerarray.size) {
                 currentPage = 0
                 pager.setCurrentItem(
-                    currentPage,
-                    true
+                    currentPage, true
                 )
             } else {
-                pager
-                    .setCurrentItem(currentPage++, true)
+                pager.setCurrentItem(currentPage++, true)
             }
         }
         val swipetimer = Timer()
@@ -1015,47 +2009,95 @@ class HomeFragment : Fragment() , View.OnClickListener{
         if (PreferenceManager.getaccesstoken(mContext).equals("")) {
             when (intentTabId) {
                 ConstantWords.TAB_NOTIFICATIONS -> {
-                    DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert),mContext.resources.getString(R.string.feature_only_for_registered_user),mContext)
+                    DialogFunctions.commonErrorAlertDialog(
+                        mContext.resources.getString(R.string.alert),
+                        mContext.resources.getString(R.string.feature_only_for_registered_user),
+                        mContext
+                    )
 
                 }
+
                 ConstantWords.TAB_CALENDAR -> {
-                    DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert),mContext.resources.getString(R.string.feature_only_for_registered_user),mContext)
+                    DialogFunctions.commonErrorAlertDialog(
+                        mContext.resources.getString(R.string.alert),
+                        mContext.resources.getString(R.string.feature_only_for_registered_user),
+                        mContext
+                    )
 
                 }
 
                 ConstantWords.TAB_PAYMENTS -> {
-                    DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert),mContext.resources.getString(R.string.feature_only_for_registered_user),mContext)
+                    DialogFunctions.commonErrorAlertDialog(
+                        mContext.resources.getString(R.string.alert),
+                        mContext.resources.getString(R.string.feature_only_for_registered_user),
+                        mContext
+                    )
 
                 }
+
                 ConstantWords.TAB_ABSENCE -> {
-                    DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert),mContext.resources.getString(R.string.feature_only_for_registered_user),mContext)
+                    DialogFunctions.commonErrorAlertDialog(
+                        mContext.resources.getString(R.string.alert),
+                        mContext.resources.getString(R.string.feature_only_for_registered_user),
+                        mContext
+                    )
 
                 }
+
                 ConstantWords.TAB_ENRICHMENT -> {
-                    DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert),mContext.resources.getString(R.string.feature_only_for_registered_user),mContext)
+                    DialogFunctions.commonErrorAlertDialog(
+                        mContext.resources.getString(R.string.alert),
+                        mContext.resources.getString(R.string.feature_only_for_registered_user),
+                        mContext
+                    )
 
                 }
+
                 ConstantWords.TAB_PARENT_MEETINGS -> {
-                    DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert),mContext.resources.getString(R.string.feature_only_for_registered_user),mContext)
+                    DialogFunctions.commonErrorAlertDialog(
+                        mContext.resources.getString(R.string.alert),
+                        mContext.resources.getString(R.string.feature_only_for_registered_user),
+                        mContext
+                    )
 
                 }
+
                 ConstantWords.TAB_PERMISSION_FORMS -> {
-                    DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert),mContext.resources.getString(R.string.feature_only_for_registered_user),mContext)
+                    DialogFunctions.commonErrorAlertDialog(
+                        mContext.resources.getString(R.string.alert),
+                        mContext.resources.getString(R.string.feature_only_for_registered_user),
+                        mContext
+                    )
 
                 }
-               
+
                 ConstantWords.TAB_GALLERY -> {
-                    DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert),mContext.resources.getString(R.string.feature_only_for_registered_user),mContext)
+                    DialogFunctions.commonErrorAlertDialog(
+                        mContext.resources.getString(R.string.alert),
+                        mContext.resources.getString(R.string.feature_only_for_registered_user),
+                        mContext
+                    )
 
                 }
+
                 ConstantWords.TAB_LUNCH_BOX -> {
-                    DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert),mContext.resources.getString(R.string.feature_only_for_registered_user),mContext)
+                    DialogFunctions.commonErrorAlertDialog(
+                        mContext.resources.getString(R.string.alert),
+                        mContext.resources.getString(R.string.feature_only_for_registered_user),
+                        mContext
+                    )
 
                 }
+
                 ConstantWords.TAB_PARENT_ESSENTIAL -> {
-                    DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert),mContext.resources.getString(R.string.feature_only_for_registered_user),mContext)
+                    DialogFunctions.commonErrorAlertDialog(
+                        mContext.resources.getString(R.string.alert),
+                        mContext.resources.getString(R.string.feature_only_for_registered_user),
+                        mContext
+                    )
 
                 }
+
                 ConstantWords.TAB_ABOUT_US -> {
                     mFragment = AboutUsFragment()
                     fragmentIntent(mFragment)
@@ -1064,14 +2106,11 @@ class HomeFragment : Fragment() , View.OnClickListener{
 
                 ConstantWords.TAB_CONTACT_US -> {
                     if (ActivityCompat.checkSelfPermission(
-                            mContext,
-                            Manifest.permission.ACCESS_FINE_LOCATION
+                            mContext, Manifest.permission.ACCESS_FINE_LOCATION
                         ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                            mContext,
-                            Manifest.permission.ACCESS_COARSE_LOCATION
+                            mContext, Manifest.permission.ACCESS_COARSE_LOCATION
                         ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                            mContext,
-                            Manifest.permission.CALL_PHONE
+                            mContext, Manifest.permission.CALL_PHONE
                         ) != PackageManager.PERMISSION_GRANTED
                     ) {
                         checkpermission()
@@ -1082,15 +2121,16 @@ class HomeFragment : Fragment() , View.OnClickListener{
                         fragmentIntent(mFragment)
                     }
                 }
+
                 ConstantWords.TAB_LUNCH_BOX -> {
 //                    mFragment = CanteenFragment()
 //                    fragmentIntent(mFragment)
 
-                 DialogFunctions.commonErrorAlertDialog("Coming Soon!","This Feature will be available shortly",
-                     mContext)
+                    DialogFunctions.commonErrorAlertDialog(
+                        "Coming Soon!", "This Feature will be available shortly", mContext
+                    )
 
                 }
-
 
 
             }
@@ -1101,22 +2141,22 @@ class HomeFragment : Fragment() , View.OnClickListener{
                     mFragment = NotificationFragment()
                     fragmentIntent(mFragment)
                 }
+
                 ConstantWords.TAB_CALENDAR -> {
 
-                    if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_CALENDAR)
-                        != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                            mContext, Manifest.permission.WRITE_CALENDAR)
-                        != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                            mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                        && ActivityCompat.checkSelfPermission(
-                            mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                    )
-                    {
+                    if (ActivityCompat.checkSelfPermission(
+                            mContext, Manifest.permission.READ_CALENDAR
+                        ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                            mContext, Manifest.permission.WRITE_CALENDAR
+                        ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                            mContext, Manifest.permission.READ_EXTERNAL_STORAGE
+                        ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                            mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
                         checkpermissionCal()
 
-                    }
-                    else
-                    {
+                    } else {
                         mFragment = CalendarFragment()
                         fragmentIntent(mFragment)
                     }
@@ -1127,64 +2167,78 @@ class HomeFragment : Fragment() , View.OnClickListener{
                     mFragment = PaymentFragment()
                     fragmentIntent(mFragment)
                 }
+
                 ConstantWords.TAB_BUS_SERVICE -> {
                     mFragment = BusServiceFragment()
                     fragmentIntent(mFragment)
                 }
+
                 ConstantWords.TAB_INTENTIONS -> {
                     mFragment = Intentionfragment()
                     fragmentIntent(mFragment)
                 }
+
                 ConstantWords.TAB_STUDENT_INFORMATION -> {
                     mFragment = StudentInformationFragment()
                     fragmentIntent(mFragment)
                 }
+
                 ConstantWords.TAB_TIMETABLE -> {
                     mFragment = TimeTableFragment()
                     fragmentIntent(mFragment)
                 }
+
                 ConstantWords.TAB_SHOP -> {
                     val intent = Intent(mContext, PreOrderActivity_new::class.java)
                     //  intent.putExtra("date_list",mDateArrayList)
                     startActivity(intent)
-                  //  mFragment = ShopFragment()
-                  //  fragmentIntent(mFragment)
+                    //  mFragment = ShopFragment()
+                    //  fragmentIntent(mFragment)
                 }
+
                 ConstantWords.TAB_PARENT_ESSENTIAL -> {
                     mFragment = ParentsEssentialFragment()
                     fragmentIntent(mFragment)
                 }
+
                 ConstantWords.TAB_GALLERY -> {
 //                    DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert),mContext.resources.getString(R.string.feature_only_for_registered_user),context)
                     mFragment = GalleryFragment()
                     fragmentIntent(mFragment)
                 }
+
                 ConstantWords.TAB_ABOUT_US -> {
                     mFragment = AboutUsFragment()
                     fragmentIntent(mFragment)
                 }
+
                 ConstantWords.TAB_PERFORMINGARTS -> {
                     mFragment = PerformingArtsFragment()
                     fragmentIntent(mFragment)
                 }
+
                 ConstantWords.TAB_ABSENCE -> {
-                    PreferenceManager.setStudentID(mContext,"")
+                    PreferenceManager.setStudentID(mContext, "")
                     mFragment = AbsenceFragment()
                     fragmentIntent(mFragment)
                 }
+
                 ConstantWords.TAB_ENRICHMENT -> {
                     mFragment = CCAFragment()
                     fragmentIntent(mFragment)
                 }
+
                 ConstantWords.TAB_PARENT_MEETINGS -> {
                     mFragment = ParentMeetingsFragment()
                     fragmentIntent(mFragment)
                 }
+
                 ConstantWords.TAB_PERMISSION_FORMS -> {
-                    PreferenceManager.setStudentID(mContext,"")
+                    PreferenceManager.setStudentID(mContext, "")
                     mFragment = PermissionSlipFragmentNew()
                     fragmentIntent(mFragment)
                 }
+
                 ConstantWords.TAB_LUNCH_BOX -> {
 
                     mFragment = CanteenFragment()
@@ -1192,23 +2246,22 @@ class HomeFragment : Fragment() , View.OnClickListener{
 //                    DialogFunctions.commonErrorAlertDialog("Coming Soon!","This Feature will be available shortly.",mContext)
 
                 }
+
                 ConstantWords.TAB_REPORTS -> {
-                    PreferenceManager.setStudentID(mContext,"")
+                    PreferenceManager.setStudentID(mContext, "")
                     mFragment = ReportsFragment()
                     fragmentIntent(mFragment)
 //                    DialogFunctions.commonErrorAlertDialog("Coming Soon!","This Feature will be available shortly.",mContext)
 
                 }
+
                 ConstantWords.TAB_CONTACT_US -> {
                     if (ActivityCompat.checkSelfPermission(
-                            mContext,
-                            Manifest.permission.ACCESS_FINE_LOCATION
+                            mContext, Manifest.permission.ACCESS_FINE_LOCATION
                         ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                            mContext,
-                            Manifest.permission.ACCESS_COARSE_LOCATION
+                            mContext, Manifest.permission.ACCESS_COARSE_LOCATION
                         ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                            mContext,
-                            Manifest.permission.CALL_PHONE
+                            mContext, Manifest.permission.CALL_PHONE
                         ) != PackageManager.PERMISSION_GRANTED
                     ) {
                         checkpermission()
@@ -1225,12 +2278,9 @@ class HomeFragment : Fragment() , View.OnClickListener{
     }
 
 
-
-
 }
 
-private fun showPopUpImage(notice:String,context: Context)
-{
+private fun showPopUpImage(notice: String, context: Context) {
     val dialog = Dialog(context)
     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
     dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -1239,29 +2289,19 @@ private fun showPopUpImage(notice:String,context: Context)
     var bannerImg = dialog.findViewById(R.id.bannerImg) as ImageView
     var closeImg = dialog.findViewById(R.id.closeImg) as ImageView
     Glide.with(context).load(notice).centerCrop().into(bannerImg)
-    closeImg.setOnClickListener()
-    {
+    closeImg.setOnClickListener {
 
-        if (PreferenceManager.getSurvey(mContext) === 1)
-        {
-            if (PreferenceManager.getIsSurveyHomeVisible(mContext))
-            {
+        if (PreferenceManager.getSurvey(mContext) === 1) {
+            if (PreferenceManager.getIsSurveyHomeVisible(mContext)) {
 
-            }
-            else
-            {
-                if (ConstantFunctions.internetCheck(mContext))
-                {
+            } else {
+                if (ConstantFunctions.internetCheck(mContext)) {
                     callSurveyApi()
-                }
-                else
-                {
+                } else {
                     DialogFunctions.showInternetAlertDialog(mContext)
                 }
             }
-        }
-        else
-        {
+        } else {
 
         }
         dialog.dismiss()
@@ -1271,27 +2311,19 @@ private fun showPopUpImage(notice:String,context: Context)
 
     Handler().postDelayed({
         if (PreferenceManager.getSurvey(mContext) === 1) {
-            if (PreferenceManager.getIsSurveyHomeVisible(mContext))
-            {
+            if (PreferenceManager.getIsSurveyHomeVisible(mContext)) {
 
-            }
-            else
-            {
-                if (ConstantFunctions.internetCheck(mContext))
-                {
+            } else {
+                if (ConstantFunctions.internetCheck(mContext)) {
                     callSurveyApi()
-                }
-                else
-                {
+                } else {
                     DialogFunctions.showInternetAlertDialog(mContext)
                 }
             }
-        }
-        else
-        {
+        } else {
 
         }
-      dialog.dismiss()
+        dialog.dismiss()
 
     }, NOTICE_TIME_OUT)
 
@@ -1301,78 +2333,113 @@ private fun showPopUpImage(notice:String,context: Context)
 
 fun callSurveyApi() {
     surveyArrayList = ArrayList()
-    var model= SurveyApiModel("16")
+    var model = SurveyApiModel("16")
 
-    val call: Call<SurveyResponseModel> = ApiClient.getClient.survey(model,"Bearer "+ PreferenceManager.getaccesstoken(mContext))
+    val call: Call<SurveyResponseModel> =
+        ApiClient.getClient.survey(model, "Bearer " + PreferenceManager.getaccesstoken(mContext))
     call.enqueue(object : Callback<SurveyResponseModel> {
         override fun onFailure(call: Call<SurveyResponseModel>, t: Throwable) {
 
         }
-        override fun onResponse(call: Call<SurveyResponseModel>, response: Response<SurveyResponseModel>) {
+
+        override fun onResponse(
+            call: Call<SurveyResponseModel>, response: Response<SurveyResponseModel>
+        ) {
             val responsedata = response.body()
 
             if (responsedata != null) {
                 try {
 
-                    if (response.body()!!.status==100)
-                    {
+                    if (response.body()!!.status == 100) {
                         PreferenceManager.setIsSurveyHomeVisible(mContext, true)
 
                         if (response.body()!!.responseArray!!.data!!.size > 0) {
                             surveySize = response.body()!!.responseArray!!.data!!.size
                             for (i in response.body()!!.responseArray!!.data!!.indices) {
-                               // val dataObject = dataArray.getJSONObject(i)
-                                surveyEmail = response.body()!!.responseArray!!.data!!.get(i).contact_email
+                                // val dataObject = dataArray.getJSONObject(i)
+                                surveyEmail =
+                                    response.body()!!.responseArray!!.data!!.get(i).contact_email
                                 val model = SurveyDetailDataModel()
-                                model.id=(response.body()!!.responseArray!!.data!!.get(i).id)
-                                model.survey_name=(response.body()!!.responseArray!!.data!!.get(i).survey_name)
-                                model.image=(response.body()!!.responseArray!!.data!!.get(i).image)
-                                model.title=(response.body()!!.responseArray!!.data!!.get(i).title)
-                                model.description=(response.body()!!.responseArray!!.data!!.get(i).description)
-                                model.created_at=(response.body()!!.responseArray!!.data!!.get(i).created_at)
-                                model.updated_at=(response.body()!!.responseArray!!.data!!.get(i).updated_at)
+                                model.id = (response.body()!!.responseArray!!.data!!.get(i).id)
+                                model.survey_name =
+                                    (response.body()!!.responseArray!!.data!!.get(i).survey_name)
+                                model.image =
+                                    (response.body()!!.responseArray!!.data!!.get(i).image)
+                                model.title =
+                                    (response.body()!!.responseArray!!.data!!.get(i).title)
+                                model.description =
+                                    (response.body()!!.responseArray!!.data!!.get(i).description)
+                                model.created_at =
+                                    (response.body()!!.responseArray!!.data!!.get(i).created_at)
+                                model.updated_at =
+                                    (response.body()!!.responseArray!!.data!!.get(i).updated_at)
 
                                 surveyQuestionArrayList = ArrayList()
-                               // val questionsArray = dataObject.getJSONArray("questions")
+                                // val questionsArray = dataObject.getJSONArray("questions")
                                 if (response.body()!!.responseArray!!.data!!.get(i).questions!!.size > 0) {
-                                    for (j in  response.body()!!.responseArray!!.data!!.get(i).questions!!.indices) {
-                                       // val questionsObject = questionsArray.getJSONObject(j)
+                                    for (j in response.body()!!.responseArray!!.data!!.get(i).questions!!.indices) {
+                                        // val questionsObject = questionsArray.getJSONObject(j)
                                         val mModel = SurveyQuestionsModel()
-                                        mModel.id=(response.body()!!.responseArray!!.data!!.get(i).questions!!.get(j).id)
-                                        mModel.question=(response.body()!!.responseArray!!.data!!.get(i).questions!!.get(j).question)
-                                        mModel.answer_type=(response.body()!!.responseArray!!.data!!.get(i).questions!!.get(j).answer_type)
-                                        mModel.answer=("")
+                                        mModel.id =
+                                            (response.body()!!.responseArray!!.data!!.get(i).questions!!.get(
+                                                j
+                                            ).id)
+                                        mModel.question =
+                                            (response.body()!!.responseArray!!.data!!.get(i).questions!!.get(
+                                                j
+                                            ).question)
+                                        mModel.answer_type =
+                                            (response.body()!!.responseArray!!.data!!.get(i).questions!!.get(
+                                                j
+                                            ).answer_type)
+                                        mModel.answer = ("")
                                         surveyAnswersArrayList = ArrayList()
 
-                                        if (response.body()!!.responseArray!!.data!!.get(i).questions!!.get(j).offered_answers!!.size>0) {
-                                            for (k in response.body()!!.responseArray!!.data!!.get(i).questions!!.get(j).offered_answers!!.indices) {
+                                        if (response.body()!!.responseArray!!.data!!.get(i).questions!!.get(
+                                                j
+                                            ).offered_answers!!.size > 0
+                                        ) {
+                                            for (k in response.body()!!.responseArray!!.data!!.get(i).questions!!.get(
+                                                j
+                                            ).offered_answers!!.indices) {
 
                                                 val nModel = SurveyOfferedAnswersModel()
-                                                nModel.id=(response.body()!!.responseArray!!.data!!.get(i).questions!!.get(j).offered_answers!!.get(k).id)
-                                                nModel.answer=(response.body()!!.responseArray!!.data!!.get(i).questions!!.get(j).offered_answers!!.get(k).answer)
-                                                nModel.label=(response.body()!!.responseArray!!.data!!.get(i).questions!!.get(j).offered_answers!!.get(k).label)
-                                                nModel.is_clicked=(false)
-                                                nModel.is_clicked0=(false)
+                                                nModel.id =
+                                                    (response.body()!!.responseArray!!.data!!.get(i).questions!!.get(
+                                                        j
+                                                    ).offered_answers!!.get(k).id)
+                                                nModel.answer =
+                                                    (response.body()!!.responseArray!!.data!!.get(i).questions!!.get(
+                                                        j
+                                                    ).offered_answers!!.get(k).answer)
+                                                nModel.label =
+                                                    (response.body()!!.responseArray!!.data!!.get(i).questions!!.get(
+                                                        j
+                                                    ).offered_answers!!.get(k).label)
+                                                nModel.is_clicked = (false)
+                                                nModel.is_clicked0 = (false)
                                                 surveyAnswersArrayList.add(nModel)
                                             }
                                         }
-                                        mModel.offered_answers=(surveyAnswersArrayList)
+                                        mModel.offered_answers = (surveyAnswersArrayList)
                                         surveyQuestionArrayList.add(mModel)
 
 
                                     }
                                 }
-                                model.questions=(surveyQuestionArrayList)
+                                model.questions = (surveyQuestionArrayList)
                                 surveyArrayList.add(model)
                             }
                             //showSurvey(getActivity(),surveyArrayList);
                             showSurveyWelcomeDialogue(mContext, surveyArrayList, false)
                         }
-                    }
-                    else
-                    {
+                    } else {
 
-                        DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), mContext)
+                        DialogFunctions.commonErrorAlertDialog(
+                            mContext.resources.getString(R.string.alert),
+                            ConstantFunctions.commonErrorString(response.body()!!.status),
+                            mContext
+                        )
                     }
 
 
@@ -1384,15 +2451,14 @@ fun callSurveyApi() {
 
     })
 }
+
 fun showSurveyWelcomeDialogue(
-    activity: Context,
-    surveyArrayList: ArrayList<SurveyDetailDataModel>,
-    isThankyou: Boolean?
+    activity: Context, surveyArrayList: ArrayList<SurveyDetailDataModel>, isThankyou: Boolean?
 
 ) {
 //        final Dialog dialog = new Dialog(activity,android.R.style.Theme_Black_NoTitleBar_Fullscreen);
 //        dialog.requestWindowFeature(R.style.full_screen_dialog);
-    val dialog = Dialog(activity!!)
+    val dialog = Dialog(activity)
     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
     dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     dialog.setCancelable(false)
@@ -1412,8 +2478,8 @@ fun showSurveyWelcomeDialogue(
 //		}
 
 
-    headingTxt.setText(surveyArrayList[pos + 1].title)
-    descriptionTxt.setText(surveyArrayList[pos + 1].description)
+    headingTxt.text = surveyArrayList[pos + 1].title
+    descriptionTxt.text = surveyArrayList[pos + 1].description
     val bannerImg = dialog.findViewById<View>(R.id.bannerImg) as ImageView
     if (!surveyArrayList[pos + 1].image.equals("")) {
         Glide.with(mContext).load(surveyArrayList[pos + 1].image).centerCrop().into(bannerImg)
@@ -1427,19 +2493,22 @@ fun showSurveyWelcomeDialogue(
         if (surveyArrayList.size > 0) {
             pos = pos + 1
             if (pos < surveyArrayList.size) {
-                if(surveyArrayList[pos].questions!!.size>0)
-                {
+                if (surveyArrayList[pos].questions!!.size > 0) {
                     showSurveyQuestionAnswerDialog(
                         activity,
                         surveyArrayList[pos].questions!!,
                         surveyArrayList[pos].survey_name,
                         surveyArrayList[pos].id.toString(),
-                        surveyArrayList[pos].contact_email,isThankyou
+                        surveyArrayList[pos].contact_email,
+                        isThankyou
                     )
                     dialog.dismiss()
-                }
-                else{
-                    DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), "No Survey Questions Available.", mContext)
+                } else {
+                    DialogFunctions.commonErrorAlertDialog(
+                        mContext.resources.getString(R.string.alert),
+                        "No Survey Questions Available.",
+                        mContext
+                    )
                     dialog.dismiss()
                 }
 
@@ -1447,23 +2516,22 @@ fun showSurveyWelcomeDialogue(
         }
     }
     imgClose.setOnClickListener {
-        showCloseSurveyDialog(dialog,isThankyou)
+        showCloseSurveyDialog(dialog, isThankyou)
     }
     val skipBtn = dialog.findViewById<View>(R.id.skipBtn) as Button
     skipBtn.setOnClickListener {
-       // dialog.dismiss()
+        // dialog.dismiss()
         surveySize = surveySize - 1
 
         if (surveySize <= 0) {
-            showCloseSurveyDialog(dialog,false)
-        }
-        else
-        {
-            showCloseSurveyDialog(dialog,true)
+            showCloseSurveyDialog(dialog, false)
+        } else {
+            showCloseSurveyDialog(dialog, true)
         }
     }
     dialog.show()
 }
+
 fun showSurveyQuestionAnswerDialog(
     activity: Context,
     surveyQuestionArrayList: ArrayList<SurveyQuestionsModel>,
@@ -1472,7 +2540,7 @@ fun showSurveyQuestionAnswerDialog(
     contactEmail: String?,
     isThankyou: Boolean?
 ) {
-    val dialog = Dialog(activity!!)
+    val dialog = Dialog(activity)
     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
     dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     dialog.setCancelable(false)
@@ -1490,19 +2558,16 @@ fun showSurveyQuestionAnswerDialog(
 
     progressBar.max = surveyQuestionArrayList.size
     progressBar.progressDrawable.setColorFilter(
-        mContext.resources.getColor(R.color.rel_one),
-        PorterDuff.Mode.SRC_IN
+        mContext.resources.getColor(R.color.rel_one), PorterDuff.Mode.SRC_IN
     )
     closeImg.setOnClickListener {
         surveySize = surveySize - 1
         if (surveySize <= 0) {
-            showCloseSurveyDialog(dialog,false)
+            showCloseSurveyDialog(dialog, false)
+        } else {
+            showCloseSurveyDialog(dialog, true)
         }
-        else
-        {
-            showCloseSurveyDialog(dialog,true)
-        }
-       // showCloseSurveyDialog(dialog,true)
+        // showCloseSurveyDialog(dialog,true)
     }
     if (surveyQuestionArrayList.size > 9) {
         currentQntTxt.text = "01"
@@ -1513,12 +2578,10 @@ fun showSurveyQuestionAnswerDialog(
     }
     surveyName.text = surveyname
 
-    if (surveyEmail.equals(""))
-    {
-        emailImg.visibility=View.GONE
-    }
-    else{
-        emailImg.visibility=View.VISIBLE
+    if (surveyEmail.equals("")) {
+        emailImg.visibility = View.GONE
+    } else {
+        emailImg.visibility = View.VISIBLE
     }
 
     emailImg.setOnClickListener {
@@ -1571,7 +2634,7 @@ fun showSurveyQuestionAnswerDialog(
                 currentQntTxt.text = "0$currentPageSurvey"
                 questionCount.text = "/" + surveyQuestionArrayList.size.toString()
             } else {
-                currentQntTxt.setText(currentPageSurvey.toString())
+                currentQntTxt.text = currentPageSurvey.toString()
                 questionCount.text = "/" + surveyQuestionArrayList.size.toString()
             }
         } else {
@@ -1579,7 +2642,7 @@ fun showSurveyQuestionAnswerDialog(
                 currentQntTxt.text = "0$currentPageSurvey"
                 questionCount.text = "/" + "0" + surveyQuestionArrayList.size.toString()
             } else {
-                currentQntTxt.setText(currentPageSurvey.toString())
+                currentQntTxt.text = currentPageSurvey.toString()
                 questionCount.text = "/" + "0" + surveyQuestionArrayList.size.toString()
             }
         }
@@ -1618,7 +2681,7 @@ fun showSurveyQuestionAnswerDialog(
                 currentQntTxt.text = "0$currentPageSurvey"
                 questionCount.text = "/" + surveyQuestionArrayList.size.toString()
             } else {
-                currentQntTxt.setText(currentPageSurvey.toString())
+                currentQntTxt.text = currentPageSurvey.toString()
                 questionCount.text = "/" + surveyQuestionArrayList.size.toString()
             }
         } else {
@@ -1626,7 +2689,7 @@ fun showSurveyQuestionAnswerDialog(
                 currentQntTxt.text = "0$currentPageSurvey"
                 questionCount.text = "/" + "0" + surveyQuestionArrayList.size.toString()
             } else {
-                currentQntTxt.setText(currentPageSurvey.toString())
+                currentQntTxt.text = currentPageSurvey.toString()
                 questionCount.text = "/" + "0" + surveyQuestionArrayList.size.toString()
             }
         }
@@ -1648,16 +2711,16 @@ fun showSurveyQuestionAnswerDialog(
             mAnswerList = ArrayList()
             for (k in surveyQuestionArrayList.indices) {
                 val model = SurveySubmitDataModel()
-                model.question_id=(surveyQuestionArrayList[k].id.toString())
-                model.answer_id=(surveyQuestionArrayList[k].answer)
+                model.question_id = (surveyQuestionArrayList[k].id.toString())
+                model.answer_id = (surveyQuestionArrayList[k].answer)
                 mAnswerList.add(model)
             }
             val gson = Gson()
             val PassportArray = ArrayList<String>()
             for (i in mAnswerList.indices) {
                 val nmodel = SurveySubmitDataModel()
-                nmodel.answer_id=(mAnswerList.get(i).answer_id)
-                nmodel.question_id=(mAnswerList.get(i).question_id)
+                nmodel.answer_id = (mAnswerList.get(i).answer_id)
+                nmodel.question_id = (mAnswerList.get(i).question_id)
                 val json = gson.toJson(nmodel)
                 PassportArray.add(i, json)
             }
@@ -1706,33 +2769,28 @@ fun showSurveyQuestionAnswerDialog(
             if (surveySize <= 0) {
                 mAnswerList = ArrayList()
                 for (k in surveyQuestionArrayList.indices) {
-                    val model =SurveySubmitDataModel()
-                    model.question_id=(surveyQuestionArrayList[k].id.toString())
-                    model.answer_id=(surveyQuestionArrayList[k].answer)
+                    val model = SurveySubmitDataModel()
+                    model.question_id = (surveyQuestionArrayList[k].id.toString())
+                    model.answer_id = (surveyQuestionArrayList[k].answer)
                     mAnswerList.add(model)
                 }
                 val gson = Gson()
                 val PassportArray = ArrayList<String>()
                 for (i in mAnswerList.indices) {
                     val nmodel = SurveySubmitDataModel()
-                    nmodel.answer_id=(mAnswerList.get(i).answer_id)
-                    nmodel.question_id=(mAnswerList.get(i).question_id)
+                    nmodel.answer_id = (mAnswerList.get(i).answer_id)
+                    nmodel.question_id = (mAnswerList.get(i).question_id)
                     val json = gson.toJson(nmodel)
                     PassportArray.add(i, json)
                 }
                 val JSON_STRING = "" + PassportArray + ""
                 dialog.dismiss()
 
-                if (ConstantFunctions.internetCheck(mContext))
-                {
+                if (ConstantFunctions.internetCheck(mContext)) {
                     callSurveySubmitApi(
-                        surveyID!!,
-                        JSON_STRING,
-                        false,
-                        1,mAnswerList,surveyArrayList)
-                }
-                else
-                {
+                        surveyID!!, JSON_STRING, false, 1, mAnswerList, surveyArrayList
+                    )
+                } else {
                     DialogFunctions.showInternetAlertDialog(mContext)
                 }
 
@@ -1740,33 +2798,27 @@ fun showSurveyQuestionAnswerDialog(
                 mAnswerList = ArrayList()
                 for (k in surveyQuestionArrayList.indices) {
                     val model = SurveySubmitDataModel()
-                    model.question_id=(surveyQuestionArrayList[k].id.toString())
-                    model.answer_id=(surveyQuestionArrayList[k].answer)
+                    model.question_id = (surveyQuestionArrayList[k].id.toString())
+                    model.answer_id = (surveyQuestionArrayList[k].answer)
                     mAnswerList.add(model)
                 }
                 val gson = Gson()
                 val PassportArray = ArrayList<String>()
                 for (i in mAnswerList.indices) {
-                    val nmodel =SurveySubmitDataModel()
-                    nmodel.answer_id=(mAnswerList.get(i).answer_id)
-                    nmodel.question_id=(mAnswerList.get(i).question_id)
+                    val nmodel = SurveySubmitDataModel()
+                    nmodel.answer_id = (mAnswerList.get(i).answer_id)
+                    nmodel.question_id = (mAnswerList.get(i).question_id)
                     val json = gson.toJson(nmodel)
                     PassportArray.add(i, json)
                 }
                 val JSON_STRING = "" + PassportArray + ""
                 dialog.dismiss()
 
-                if (ConstantFunctions.internetCheck(mContext))
-                {
+                if (ConstantFunctions.internetCheck(mContext)) {
                     callSurveySubmitApi(
-                        surveyID!!,
-                        JSON_STRING,
-                        true,
-                        1, mAnswerList, surveyArrayList
+                        surveyID!!, JSON_STRING, true, 1, mAnswerList, surveyArrayList
                     )
-                }
-                else
-                {
+                } else {
                     DialogFunctions.showInternetAlertDialog(mContext)
                 }
 
@@ -1783,41 +2835,46 @@ fun callSurveySubmitApi(
     status: Int,
     mAnswerList: ArrayList<SurveySubmitDataModel>,
     surveyArrayList: ArrayList<SurveyDetailDataModel>
-)
-{
+) {
     //surveyDetailQuestionsArrayList= ArrayList()
-    currentPageSurvey=0
+    currentPageSurvey = 0
 
     val paramObject = JsonObject().apply {
         addProperty("data", JSON_STRING)
-        addProperty("survey_id",survey_ID)
-        addProperty("survey_satisfaction_status",status)
+        addProperty("survey_id", survey_ID)
+        addProperty("survey_satisfaction_status", status)
 
     }
 
-    var model=SurveySubmitApiModel(survey_ID.toString(), status.toString(),mAnswerList)
+    var model = SurveySubmitApiModel(survey_ID.toString(), status.toString(), mAnswerList)
 
 
-    val call: Call<SurveySubmitResponseModel> = ApiClient.getClient.surveysubmit(model,"Bearer "+ PreferenceManager.getaccesstoken(mContext))
+    val call: Call<SurveySubmitResponseModel> = ApiClient.getClient.surveysubmit(
+        model, "Bearer " + PreferenceManager.getaccesstoken(mContext)
+    )
     call.enqueue(object : Callback<SurveySubmitResponseModel> {
         override fun onFailure(call: Call<SurveySubmitResponseModel>, t: Throwable) {
-           // progressDialogAdd.visibility= View.GONE
+            // progressDialogAdd.visibility= View.GONE
         }
-        override fun onResponse(call: Call<SurveySubmitResponseModel>, response: Response<SurveySubmitResponseModel>) {
+
+        override fun onResponse(
+            call: Call<SurveySubmitResponseModel>, response: Response<SurveySubmitResponseModel>
+        ) {
             val responsedata = response.body()
-           // progressDialogAdd.visibility= View.GONE
+            // progressDialogAdd.visibility= View.GONE
             if (responsedata != null) {
                 try {
 
-                    if (response.body()!!.status==100)
-                    {
+                    if (response.body()!!.status == 100) {
 
-                        showSurveyThankYouDialog(mContext as Activity, isThankyou,surveyArrayList)
-                    }
-                    else
-                    {
+                        showSurveyThankYouDialog(mContext as Activity, isThankyou, surveyArrayList)
+                    } else {
 
-                        DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), mContext)
+                        DialogFunctions.commonErrorAlertDialog(
+                            mContext.resources.getString(R.string.alert),
+                            ConstantFunctions.commonErrorString(response.body()!!.status),
+                            mContext
+                        )
                     }
 
 
@@ -1833,8 +2890,7 @@ fun callSurveySubmitApi(
 fun showSurveyThankYouDialog(
     activity: Activity?,
     //  surveyArrayList: ArrayList<SurveyModel?>?,
-    isThankyou: Boolean,
-    surveyArrayList: ArrayList<SurveyDetailDataModel>
+    isThankyou: Boolean, surveyArrayList: ArrayList<SurveyDetailDataModel>
 ) {
     val dialog = Dialog(activity!!)
     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -1846,7 +2902,7 @@ fun showSurveyThankYouDialog(
     val btn_Ok = dialog.findViewById<View>(R.id.btn_Ok) as Button
     btn_Ok.setOnClickListener {
         if (isThankyou) {
-            poss=poss+1
+            poss = poss + 1
             showSurveyWelcomeDialogue(mContext, surveyArrayList, false)
         } else {
         }
@@ -1863,8 +2919,8 @@ fun showSurveyThankYouDialog(
     }
     dialog.show()
 }
-private fun showSendEmailDialog()
-{
+
+private fun showSendEmailDialog() {
     val dialog = Dialog(mContext)
     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
     dialog.setCancelable(true)
@@ -1881,90 +2937,95 @@ private fun showSendEmailDialog()
 
     btn_submit.setOnClickListener {
         if (text_dialog.text.toString().trim().equals("")) {
-            DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), mContext.resources.getString(R.string.enter_subject), mContext)
-
+            DialogFunctions.commonErrorAlertDialog(
+                mContext.resources.getString(R.string.alert),
+                mContext.resources.getString(R.string.enter_subject),
+                mContext
+            )
 
 
         } else {
             if (text_content.text.toString().trim().equals("")) {
-                DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), mContext.resources.getString(R.string.enter_content), mContext)
+                DialogFunctions.commonErrorAlertDialog(
+                    mContext.resources.getString(R.string.alert),
+                    mContext.resources.getString(R.string.enter_content),
+                    mContext
+                )
 
 
             } else if (surveyEmail.matches(EMAIL_PATTERN.toRegex())) {
-                if (text_dialog.text.toString().trim ().matches(pattern.toRegex())) {
-                    if (text_content.text.toString().trim ()
-                            .matches(pattern.toRegex())) {
+                if (text_dialog.text.toString().trim().matches(pattern.toRegex())) {
+                    if (text_content.text.toString().trim().matches(pattern.toRegex())) {
 
-                        if (ConstantFunctions.internetCheck(mContext))
-                        {
-                            sendEmail(text_dialog.text.toString().trim(), text_content.text.toString().trim(), surveyEmail, dialog)
+                        if (ConstantFunctions.internetCheck(mContext)) {
+                            sendEmail(
+                                text_dialog.text.toString().trim(),
+                                text_content.text.toString().trim(),
+                                surveyEmail,
+                                dialog
+                            )
 
-                        }
-                        else
-                        {
+                        } else {
                             DialogFunctions.showInternetAlertDialog(mContext)
                         }
 
                     } else {
-                        val toast: Toast = Toast.makeText(mContext, mContext.getResources().getString(R.string.enter_valid_contents), Toast.LENGTH_SHORT)
+                        val toast: Toast = Toast.makeText(
+                            mContext,
+                            mContext.resources.getString(R.string.enter_valid_contents),
+                            Toast.LENGTH_SHORT
+                        )
                         toast.show()
                     }
                 } else {
                     val toast: Toast = Toast.makeText(
-                        mContext,
-                        mContext.getResources()
-                            .getString(
-                                R.string.enter_valid_subjects
-                            ),
-                        Toast.LENGTH_SHORT
+                        mContext, mContext.resources.getString(
+                            R.string.enter_valid_subjects
+                        ), Toast.LENGTH_SHORT
                     )
                     toast.show()
                 }
             } else {
                 val toast: Toast = Toast.makeText(
-                    mContext,
-                    mContext.getResources()
-                        .getString(
-                            R.string.enter_valid_email
-                        ),
-                    Toast.LENGTH_SHORT
+                    mContext, mContext.resources.getString(
+                        R.string.enter_valid_email
+                    ), Toast.LENGTH_SHORT
                 )
                 toast.show()
             }
         }
 
 
-
     }
     dialog.show()
 }
 
-fun sendEmail(title: String, message: String,  staffEmail: String, dialog: Dialog)
-{
-   // progressDialog.visibility = View.VISIBLE
-    val sendMailBody = SendEmailApiModel( staffEmail, title, message)
-    val call: Call<SignUpResponseModel> = ApiClient.getClient.sendEmailStaff(sendMailBody, "Bearer " + PreferenceManager.getaccesstoken(mContext))
+fun sendEmail(title: String, message: String, staffEmail: String, dialog: Dialog) {
+    // progressDialog.visibility = View.VISIBLE
+    val sendMailBody = SendEmailApiModel(staffEmail, title, message)
+    val call: Call<SignUpResponseModel> = ApiClient.getClient.sendEmailStaff(
+        sendMailBody, "Bearer " + PreferenceManager.getaccesstoken(mContext)
+    )
     call.enqueue(object : Callback<SignUpResponseModel> {
         override fun onFailure(call: Call<SignUpResponseModel>, t: Throwable) {
-         //   progressDialog.visibility = View.GONE
+            //   progressDialog.visibility = View.GONE
         }
 
-        override fun onResponse(call: Call<SignUpResponseModel>, response: Response<SignUpResponseModel>) {
+        override fun onResponse(
+            call: Call<SignUpResponseModel>, response: Response<SignUpResponseModel>
+        ) {
             val responsedata = response.body()
-         //   progressDialog.visibility = View.GONE
+            //   progressDialog.visibility = View.GONE
             if (responsedata != null) {
                 try {
 
 
-                    if (response.body()!!.status==100) {
+                    if (response.body()!!.status == 100) {
                         dialog.dismiss()
                         showSuccessAlert(
-                            mContext,
-                            "Email sent Successfully ",
-                            "Success",
-                            dialog
+                            mContext, "Email sent Successfully ", "Success", dialog
                         )
-                    }else {
+                    } else {
                         DialogFunctions.commonErrorAlertDialog(
                             mContext.resources.getString(R.string.alert),
                             ConstantFunctions.commonErrorString(response.body()!!.status),
@@ -1980,8 +3041,8 @@ fun sendEmail(title: String, message: String,  staffEmail: String, dialog: Dialo
 
     })
 }
-fun showCloseSurveyDialog(dialogW: Dialog, isThankyou: Boolean?)
-{
+
+fun showCloseSurveyDialog(dialogW: Dialog, isThankyou: Boolean?) {
     val dialog = Dialog(mContext)
     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
     dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -1990,10 +3051,9 @@ fun showCloseSurveyDialog(dialogW: Dialog, isThankyou: Boolean?)
     var text_dialog = dialog.findViewById(R.id.text_dialog) as TextView
     var btn_Ok = dialog.findViewById(R.id.btn_Ok) as Button
     var btn_Cancel = dialog.findViewById(R.id.btn_Cancel) as Button
-    text_dialog.text="Are you sure you want to close this survey."
+    text_dialog.text = "Are you sure you want to close this survey."
 
-    btn_Ok.setOnClickListener()
-    {
+    btn_Ok.setOnClickListener {
         if (isThankyou!!) {
             poss = poss + 1
             showSurveyWelcomeDialogueclose(mContext, surveyArrayList, false)
@@ -2004,17 +3064,18 @@ fun showCloseSurveyDialog(dialogW: Dialog, isThankyou: Boolean?)
     }
 
 
-    btn_Cancel.setOnClickListener()
-    {
+    btn_Cancel.setOnClickListener {
         dialog.dismiss()
     }
     dialog.show()
 }
 
-fun showSurveyWelcomeDialogueclose(mContext: Context, surveyArrayList: ArrayList<SurveyDetailDataModel>, isThankyou: Boolean) {
-  //  final Dialog dialog = new Dialog(activity,android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+fun showSurveyWelcomeDialogueclose(
+    mContext: Context, surveyArrayList: ArrayList<SurveyDetailDataModel>, isThankyou: Boolean
+) {
+    //  final Dialog dialog = new Dialog(activity,android.R.style.Theme_Black_NoTitleBar_Fullscreen);
 //        dialog.requestWindowFeature(R.style.full_screen_dialog);
-    val dialog = Dialog(mContext!!)
+    val dialog = Dialog(mContext)
     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
     dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     dialog.setCancelable(false)
@@ -2033,8 +3094,8 @@ fun showSurveyWelcomeDialogueclose(mContext: Context, surveyArrayList: ArrayList
 //			thankyouTxt.setVisibility(View.GONE);
 //		}
 
-    headingTxt.setText(surveyArrayList[poss ].title)
-    descriptionTxt.setText(surveyArrayList[poss ].description)
+    headingTxt.text = surveyArrayList[poss].title
+    descriptionTxt.text = surveyArrayList[poss].description
     val bannerImg = dialog.findViewById<View>(R.id.bannerImg) as ImageView
     if (!surveyArrayList[poss].image.equals("")) {
         Glide.with(mContext).load(surveyArrayList[poss].image).centerCrop().into(bannerImg)
@@ -2046,21 +3107,24 @@ fun showSurveyWelcomeDialogueclose(mContext: Context, surveyArrayList: ArrayList
         dialog.dismiss()
 
         if (surveyArrayList.size > 0) {
-           // poss = poss + 1
+            // poss = poss + 1
             if (poss < surveyArrayList.size) {
-                if(surveyArrayList[poss].questions!!.size>0)
-                {
+                if (surveyArrayList[poss].questions!!.size > 0) {
                     showSurveyQuestionAnswerDialog(
                         mContext,
                         surveyArrayList[poss].questions!!,
                         surveyArrayList[poss].survey_name,
                         surveyArrayList[poss].id.toString(),
-                        surveyArrayList[poss].contact_email,isThankyou
+                        surveyArrayList[poss].contact_email,
+                        isThankyou
                     )
                     dialog.dismiss()
-                }
-                else{
-                    DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), "No Survey Questions Available.", mContext)
+                } else {
+                    DialogFunctions.commonErrorAlertDialog(
+                        mContext.resources.getString(R.string.alert),
+                        "No Survey Questions Available.",
+                        mContext
+                    )
                     dialog.dismiss()
                 }
 
@@ -2068,18 +3132,16 @@ fun showSurveyWelcomeDialogueclose(mContext: Context, surveyArrayList: ArrayList
         }
     }
     imgClose.setOnClickListener {
-        showCloseSurveyDialog(dialog,isThankyou)
+        showCloseSurveyDialog(dialog, isThankyou)
     }
     val skipBtn = dialog.findViewById<View>(R.id.skipBtn) as Button
     skipBtn.setOnClickListener {
         // dialog.dismiss()
         surveySize = surveySize - 1
         if (surveySize <= 0) {
-            showCloseSurveyDialog(dialog,false)
-        }
-        else
-        {
-            showCloseSurveyDialog(dialog,true)
+            showCloseSurveyDialog(dialog, false)
+        } else {
+            showCloseSurveyDialog(dialog, true)
         }
     }
     dialog.show()
@@ -2102,7 +3164,7 @@ fun showSurveyContinueDialog(
     nDialog: Dialog,
     isEmpty: Boolean
 ) {
-    val dialog = Dialog(activity!!)
+    val dialog = Dialog(activity)
     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
     dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     dialog.setCancelable(false)
@@ -2128,30 +3190,21 @@ fun showSurveyContinueDialog(
             surveySize = surveySize - 1
             if (surveySize <= 0) {
 
-                if (ConstantFunctions.internetCheck(mContext))
-                {
+                if (ConstantFunctions.internetCheck(mContext)) {
                     callSurveySubmitApi(
-                        surveyID!!,
-                        JSON_STRING!!,
-                        false,
-                        1,
-                        mAnswerList,
-                        surveyArrayList
+                        surveyID, JSON_STRING!!, false, 1, mAnswerList, surveyArrayList
                     )
-                }
-                else
-                {
+                } else {
                     DialogFunctions.showInternetAlertDialog(mContext)
                 }
 
             } else {
 
-                if (ConstantFunctions.internetCheck(mContext))
-                {
-                    callSurveySubmitApi(surveyID!!, JSON_STRING!!, true, 1, mAnswerList, surveyArrayList)
-                }
-                else
-                {
+                if (ConstantFunctions.internetCheck(mContext)) {
+                    callSurveySubmitApi(
+                        surveyID, JSON_STRING!!, true, 1, mAnswerList, surveyArrayList
+                    )
+                } else {
                     DialogFunctions.showInternetAlertDialog(mContext)
                 }
 
@@ -2197,7 +3250,7 @@ fun showSurveyContinueDialog(
                 currentQntTxt.text = "0$currentPageSurvey"
                 questionCount.text = "/" + surveyQuestionArrayList.size.toString()
             } else {
-                currentQntTxt.setText(currentPageSurvey.toString())
+                currentQntTxt.text = currentPageSurvey.toString()
                 questionCount.text = "/" + surveyQuestionArrayList.size.toString()
             }
         } else {
@@ -2205,7 +3258,7 @@ fun showSurveyContinueDialog(
                 currentQntTxt.text = "0$currentPageSurvey"
                 questionCount.text = "/" + "0" + surveyQuestionArrayList.size.toString()
             } else {
-                currentQntTxt.setText(currentPageSurvey.toString())
+                currentQntTxt.text = currentPageSurvey.toString()
                 questionCount.text = "/" + "0" + surveyQuestionArrayList.size.toString()
             }
         }
@@ -2213,6 +3266,7 @@ fun showSurveyContinueDialog(
     }
     dialog.show()
 }
+
 fun showSuccessAlert(context: Context, message: String, msgHead: String, mdialog: Dialog) {
     val dialog = Dialog(context)
     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -2226,19 +3280,18 @@ fun showSuccessAlert(context: Context, message: String, msgHead: String, mdialog
     text_dialog.text = message
     alertHead.text = msgHead
     iconImageView.setImageResource(R.drawable.tick)
-    btn_Ok.setOnClickListener()
-    {
+    btn_Ok.setOnClickListener {
         dialog.dismiss()
         mdialog.dismiss()
     }
     dialog.show()
 }
+
 fun fragmentIntent(mFragment: Fragment?) {
     if (mFragment != null) {
 
         val fragmentManager = homeActivity.supportFragmentManager
-        fragmentManager.beginTransaction()
-            .add(R.id.fragment_holder, mFragment, "")
+        fragmentManager.beginTransaction().add(R.id.fragment_holder, mFragment, "")
             .addToBackStack("").commitAllowingStateLoss() //commit
         //.commit()
     }
@@ -2247,24 +3300,19 @@ fun fragmentIntent(mFragment: Fragment?) {
 
 private fun checkpermission() {
     if (ContextCompat.checkSelfPermission(
-            mContext,
-            Manifest.permission.ACCESS_FINE_LOCATION
+            mContext, Manifest.permission.ACCESS_FINE_LOCATION
         ) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(
-            mContext,
-            Manifest.permission.ACCESS_COARSE_LOCATION
+            mContext, Manifest.permission.ACCESS_COARSE_LOCATION
         ) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(
-            mContext,
-            Manifest.permission.CALL_PHONE
+            mContext, Manifest.permission.CALL_PHONE
         ) != PackageManager.PERMISSION_GRANTED
     ) {
         ActivityCompat.requestPermissions(
-            homeActivity,
-            arrayOf(
+            homeActivity, arrayOf(
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.CALL_PHONE
-            ),
-            123
+            ), 123
         )
     }
 }
@@ -2275,18 +3323,15 @@ fun showforceupdate(mContext: Context) {
     dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     dialog.setCancelable(false)
     dialog.setContentView(R.layout.dialog_updateversion)
-    val btnUpdate =
-        dialog.findViewById<View>(R.id.btnUpdate) as Button
+    val btnUpdate = dialog.findViewById<View>(R.id.btnUpdate) as Button
 
     btnUpdate.setOnClickListener {
         dialog.dismiss()
-        val appPackageName =
-            mContext.packageName
+        val appPackageName = mContext.packageName
         try {
             mContext.startActivity(
                 Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse("market://details?id=$appPackageName")
+                    Intent.ACTION_VIEW, Uri.parse("market://details?id=$appPackageName")
                 )
             )
 
@@ -2305,32 +3350,24 @@ fun showforceupdate(mContext: Context) {
 
 private fun checkpermissionCal() {
     if (ContextCompat.checkSelfPermission(
-            mContext,
-            Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(
-            mContext,
-            Manifest.permission.WRITE_CALENDAR
+            mContext, Manifest.permission.READ_CALENDAR
         ) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(
-            mContext,
-            Manifest.permission.READ_EXTERNAL_STORAGE
+            mContext, Manifest.permission.WRITE_CALENDAR
         ) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(
-            mContext,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
+            mContext, Manifest.permission.READ_EXTERNAL_STORAGE
+        ) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(
+            mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE
         ) != PackageManager.PERMISSION_GRANTED
-    )
-    {
+    ) {
         ActivityCompat.requestPermissions(
-            homeActivity,
-            arrayOf(
+            homeActivity, arrayOf(
                 Manifest.permission.READ_CALENDAR,
                 Manifest.permission.WRITE_CALENDAR,
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ),
-            123
+            ), 123
         )
     }
-
-
 
 
 }

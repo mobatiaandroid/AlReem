@@ -33,6 +33,7 @@ import com.nas.alreem.activity.canteen.model.wallethistory.WalletHistoryModel
 import com.nas.alreem.activity.cca.model.*
 import com.nas.alreem.activity.communication.newesletters.model.NewsletterResponseModel
 import com.nas.alreem.activity.gallery.model.*
+import com.nas.alreem.activity.home.model.ReEnrollSubmitAPIModel
 import com.nas.alreem.activity.login.model.ForgetPasswordResponseModel
 import com.nas.alreem.activity.login.model.LoginResponseModel
 import com.nas.alreem.activity.login.model.SignUpResponseModel
@@ -89,6 +90,8 @@ import com.nas.alreem.fragment.home.re_enrollment.EnrollmentFormResponseModel
 import com.nas.alreem.fragment.home.re_enrollment.EnrollmentHelpResponseModel
 import com.nas.alreem.fragment.home.re_enrollment.EnrollmentSaveResponseModel
 import com.nas.alreem.fragment.home.re_enrollment.EnrollmentStatusResponseModel
+import com.nas.alreem.fragment.home.re_enrollment.ReEnrollmentFormResponseModel
+import com.nas.alreem.fragment.home.re_enrollment.ReEnrollmentStatusResponseModel
 import com.nas.alreem.fragment.intention.model.IntentionApiModel
 import com.nas.alreem.fragment.intention.model.IntentionApiSubmit
 import com.nas.alreem.fragment.intention.model.IntentionResponseModel
@@ -831,19 +834,19 @@ interface ApiInterface {
 
     @GET("get_enrollment_status")
     @Headers("Content-Type: application/json")
-    fun getenrollstatus(@Header("Authorization") token: String): Call<EnrollmentStatusResponseModel>
+    fun getenrollstatus(@Header("Authorization") token: String): Call<ReEnrollmentStatusResponseModel>
 
     @POST("get_enrollment_form")
     @Headers("Content-Type: application/json")
     fun getenrollform(
         @Header("Authorization") token: String,
-    ): Call<EnrollmentFormResponseModel>
+    ): Call<ReEnrollmentFormResponseModel>
 
     @POST("save_re_enrollment")
     @Headers("Content-Type: application/json")
     fun getenrollsave(
         @Header("Authorization") token: String,
-        @Body json: JsonObject
+        @Body savereenrollmentModel: ReEnrollSubmitAPIModel
     ): Call<EnrollmentSaveResponseModel>
 
     @POST("re_enrollment_help")
