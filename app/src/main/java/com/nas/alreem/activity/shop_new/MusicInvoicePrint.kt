@@ -347,7 +347,7 @@ class MusicInvoicePrint : AppCompatActivity() {
                     "                    </tr>\n" +
                     "                    <!-- logo -->\n" +
                     "                    <tr>\n" +
-                    "                      <td align=\"center\" style=\"line-height:0px;\"><img style=\"display:block;font-size:0px; border:0px; line-height:0px;\" src=\"pdfnaslogonew.png\" alt=\"logo\" width=\"182\" /></td>\n" +
+                    "                      <td align=\"center\" style=\"line-height:0px;\"><img style=\"display:block;font-size:0px; border:0px; line-height:0px;\" src=\"nas.png.png\" alt=\"logo\" width=\"182\" /></td>\n" +
                     "                    </tr>\n" +
                     "                    <!-- end logo -->\n" +
                     "                    <tr>\n" +

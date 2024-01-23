@@ -94,7 +94,7 @@ class PermissionSlipFragmentNew :Fragment(){
     private fun initializeUI(){
         mContext=requireContext()
         titleTextView = view!!.findViewById(R.id.titleTextView) as TextView
-        titleTextView.text = "Permission Forms"
+        titleTextView.text = "Forms"
         //formslist= ArrayList()
         studentSpinner = view!!.findViewById<LinearLayout>(R.id.studentSpinner)
         studImg = view!!.findViewById<ImageView>(R.id.studImg)

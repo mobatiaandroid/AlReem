@@ -9,6 +9,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.Window
 import android.widget.AdapterView
@@ -187,12 +188,15 @@ class RequestBusServiceActivity : AppCompatActivity() {
 
                         DialogFunctions.commonErrorAlertDialog("Alert","Please select your Pickup Time",mContext)
                     }else{
-                        if (selectedItem.equals("") || selectedItem.equals("Please Select")
+                        Log.e("selectedItem",selectedItem)
+                        if (selectedItem.equals("") || selectedItem.equals("Pick up At")
                         ) {
+
                             DialogFunctions.commonErrorAlertDialog("Alert","You didn't enter any data of your child. Please Enter data and Submit",mContext)
 
                         }
                         else{
+
 
                             if (enterMessage.text.isEmpty()){
                                 DialogFunctions.commonErrorAlertDialog("Alert","Please enter reason for early pickup",mContext)

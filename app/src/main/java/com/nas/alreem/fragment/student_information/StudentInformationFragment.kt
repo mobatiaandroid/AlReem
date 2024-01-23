@@ -1,26 +1,20 @@
 package com.nas.alreem.fragment.student_information
 
 import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
-import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
-import android.graphics.Point
-import android.graphics.Rect
-import android.graphics.RectF
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.view.animation.DecelerateInterpolator
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -30,6 +24,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.nas.alreem.R
+import com.nas.alreem.activity.login.model.SignUpResponseModel
 import com.nas.alreem.activity.payments.adapter.StudentListAdapter
 import com.nas.alreem.activity.payments.model.StudentList
 import com.nas.alreem.activity.payments.model.StudentListModel
@@ -39,6 +34,7 @@ import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.OnItemClickListener
 import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.constants.addOnItemClickListener
+import com.nas.alreem.fragment.payments.model.SendEmailApiModel
 import com.nas.alreem.fragment.student_information.adapter.StudentInfoAdapter
 import com.nas.alreem.fragment.student_information.model.StudentInfoApiModel
 import com.nas.alreem.fragment.student_information.model.StudentInfoDetail
@@ -58,7 +54,11 @@ class StudentInformationFragment : Fragment(){
     lateinit var studentName: String
     lateinit var studentId: String
     lateinit var studentImg: String
-
+lateinit var email_icon : ImageView
+var email : String=""
+    private val EMAIL_PATTERN =
+        "^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$"
+    private val pattern = "^([a-zA-Z ]*)$"
     lateinit var progressDialog: RelativeLayout
     lateinit var imageView6: ImageView
     lateinit var imageView4: ImageView
@@ -119,6 +119,7 @@ class StudentInformationFragment : Fragment(){
         studentId=""
         linearLayoutManager = LinearLayoutManager(mContext)
         studentInfoRecycler = view!!.findViewById(R.id.studentInfoRecycler) as RecyclerView
+        email_icon = view!!.findViewById(R.id.email_icon) as ImageView
         studentNameTxt = view!!.findViewById(R.id.studentName) as TextView
         studImg = view!!.findViewById(R.id.studImg) as ImageView
         imageView6 = view!!.findViewById(R.id.imageView6) as ImageView
@@ -273,8 +274,15 @@ class StudentInformationFragment : Fragment(){
                     {
                         studentInfoRecycler.visibility=View.VISIBLE
                         studentInfoArrayList.addAll(response.body()!!.responseArray.studentInfo)
-                        val studentInfoAdapter = StudentInfoAdapter(studentInfoArrayList)
+
+                        val studentInfoAdapter = StudentInfoAdapter(studentInfoArrayList,mContext)
                         studentInfoRecycler.adapter = studentInfoAdapter
+
+                        email_icon.setOnClickListener {
+                            showSendEmailDialog(mContext!!)
+
+                        }
+
                     }
                     else
                     {
@@ -294,6 +302,122 @@ class StudentInformationFragment : Fragment(){
                 }
 
 
+            }
+
+        })
+    }
+    private fun showSendEmailDialog(mContext: Context)
+    {
+        val dialog = Dialog(mContext)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(true)
+        dialog.setContentView(R.layout.dialog_send_email)
+        dialog.window!!.setBackgroundDrawableResource(android.R.color.transparent)
+        val btn_submit = dialog.findViewById<Button>(R.id.submitButton)
+        val btn_cancel = dialog.findViewById<Button>(R.id.cancelButton)
+        val text_dialog = dialog.findViewById<EditText?>(R.id.text_dialog)
+        val text_content = dialog.findViewById<EditText>(R.id.text_content)
+
+        btn_cancel.setOnClickListener(View.OnClickListener {
+            dialog.dismiss()
+        })
+
+        btn_submit.setOnClickListener {
+            if (text_dialog.text.toString().trim().equals("")) {
+                DialogFunctions.commonErrorAlertDialog(
+                    mContext.resources.getString(R.string.alert), resources.getString(R.string.enter_subject),
+                    mContext
+                )
+
+
+            } else {
+                if (text_content.text.toString().trim().equals("")) {
+                    DialogFunctions.commonErrorAlertDialog(
+                        mContext.resources.getString(R.string.alert), resources.getString(R.string.enter_content),
+                        mContext
+                    )
+
+                } else if (PreferenceManager.getEmail(mContext)!!.matches(EMAIL_PATTERN.toRegex())) {
+                    if (text_dialog.text.toString().trim ().matches(pattern.toRegex())) {
+                        if (text_content.text.toString().trim ()
+                                .matches(pattern.toRegex())) {
+
+                            if (ConstantFunctions.internetCheck(mContext))
+                            {
+                                callSendEmailToStaffApi(text_dialog.text.toString().trim(), text_content.text.toString().trim(), dialog)
+                            }
+                            else
+                            {
+                                DialogFunctions.showInternetAlertDialog(mContext)
+                            }
+
+                        } else {
+                            val toast: Toast = Toast.makeText(mContext, mContext.getResources().getString(R.string.enter_valid_contents), Toast.LENGTH_SHORT)
+                            toast.show()
+                        }
+                    } else {
+                        val toast: Toast = Toast.makeText(
+                            mContext,
+                            mContext.getResources()
+                                .getString(
+                                    R.string.enter_valid_subjects
+                                ),
+                            Toast.LENGTH_SHORT
+                        )
+                        toast.show()
+                    }
+                } else {
+                    val toast: Toast = Toast.makeText(
+                        mContext,
+                        mContext.getResources()
+                            .getString(
+                                R.string.enter_valid_email
+                            ),
+                        Toast.LENGTH_SHORT
+                    )
+                    toast.show()
+                }
+            }
+        }
+        dialog.show()
+    }
+    fun callSendEmailToStaffApi(
+        title: String, message: String, dialog: Dialog)
+    {
+        Log.e("email",PreferenceManager.getEmail(mContext)!!)
+        val sendMailBody = SendEmailApiModel(PreferenceManager.getEmail(mContext)!!, title, message)
+        val call: Call<SignUpResponseModel> = ApiClient.getClient.sendEmailStaff(sendMailBody, "Bearer " + PreferenceManager.getaccesstoken(mContext!!))
+        call.enqueue(object : Callback<SignUpResponseModel> {
+            override fun onFailure(call: Call<SignUpResponseModel>, t: Throwable) {
+                //progressDialog.visibility = View.GONE
+            }
+
+            override fun onResponse(call: Call<SignUpResponseModel>, response: Response<SignUpResponseModel>) {
+                val responsedata = response.body()
+                //progressDialog.visibility = View.GONE
+                if (responsedata != null) {
+                    try {
+
+
+                        if (response.body()!!.status==100) {
+                            dialog.dismiss()
+                            showSuccessAlertt(
+                                mContext!!,
+                                "Email sent Successfully ",
+                                "Success",
+                                dialog
+                            )
+                        }else {
+                            DialogFunctions.commonErrorAlertDialog(
+                                mContext!!.resources.getString(R.string.alert),
+                                ConstantFunctions.commonErrorString(response.body()!!.status), mContext!!
+                            )
+
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
             }
 
         })
@@ -366,7 +490,26 @@ class StudentInformationFragment : Fragment(){
         dialog.show()
     }
 
-
+    fun showSuccessAlertt(context: Context, message: String, msgHead: String, mdialog: Dialog) {
+        val dialog = Dialog(context)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.dialog_common_error_alert)
+        var iconImageView = dialog.findViewById(R.id.iconImageView) as ImageView
+        var alertHead = dialog.findViewById(R.id.alertHead) as TextView
+        var text_dialog = dialog.findViewById(R.id.messageTxt) as TextView
+        var btn_Ok = dialog.findViewById(R.id.btn_Ok) as Button
+        text_dialog.text = message
+        alertHead.text = msgHead
+        iconImageView.setImageResource(R.drawable.tick)
+        btn_Ok.setOnClickListener()
+        {
+            dialog.dismiss()
+            mdialog.dismiss()
+        }
+        dialog.show()
+    }
 
     fun showSuccessAlert(context: Context,message : String,msgHead : String)
     {

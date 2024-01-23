@@ -168,7 +168,7 @@ class Intentionfragment : Fragment(){
                     studName.setText(primaryArrayList.get(position).student)
                     department.setText(primaryArrayList.get(position).question)
                     role.setText(intentionstatusArray.get(position).selected_options)
-                    section.setText(intentionstatusArray.get(position).class_id)
+                    section.setText(intentionstatusArray.get(position).className)
                     // TODO set Staff Image
                     // TODO set Staff Image
                     dialog.show()
@@ -401,7 +401,7 @@ class Intentionfragment : Fragment(){
         position: Int,
         intensionId: Int
     ) {
-        Log.e("size","size")
+
         primaryArrayList= ArrayList()
         // optionsArray = ArrayList()
         progress.visibility = View.VISIBLE
@@ -424,14 +424,7 @@ class Intentionfragment : Fragment(){
                         if (response.body()!!.status==100)
                         {
                             showSuccessReEnrollAlert(
-                                mContext,
-                                " Thank you         \n" +
-                                        "\n" +
-                                        "Successfully submitted",
-                                "Success",
-                                dialog1,
-                                dialog
-                            )
+                                mContext, " Thank you         \n" + "\n" + "Successfully submitted", "Success", dialog1, dialog)
                         }
                         else
                         {

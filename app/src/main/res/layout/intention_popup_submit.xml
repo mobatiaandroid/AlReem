@@ -70,6 +70,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
+                android:visibility="gone"
                 android:text="2023 NasAbudhabi"
                 android:textColor="@color/black"
                 android:textSize="25dp" />
@@ -313,6 +314,7 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
 
+
                 <!-- <com.mobatia.bisad.manager.CustomFontSansProEditTextNoColor
                    android:id="@+id/textField_choose"
                    android:layout_width="match_parent"
@@ -324,6 +326,35 @@
                    android:paddingLeft="8dp"
                    android:paddingTop="8dp"
                    android:textColorHint="@color/dark_grey1"/>-->
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linear_choose1"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_margin="16dp"
+                android:orientation="vertical"
+                android:weightSum="1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linear_choose">
+                <com.nas.alreem.commonviews.CustomFontSansProTextBlack
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:id="@+id/questionTxt2"
+                    android:layout_weight=".2"
+                    android:paddingLeft="8dp"
+                    android:textColor="@color/black"
+                    android:text="Will your child be returning for academic year 2023/24?" />
+                <com.nas.alreem.commonviews.CustomEditTextViewRegular
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:id="@+id/answerTxt2"
+                    android:layout_marginTop="4dp"
+                    android:layout_weight=".2"
+                    android:paddingLeft="8dp"
+                    android:textColor="@color/black"
+                    android:hint="Will your child be returning for academic year 2023/24?"
+                    />
             </LinearLayout>
             <com.nas.alreem.commonviews.button.CustomFontButtonBoldNoColor
                 android:id="@+id/sub_btn"
@@ -338,7 +369,7 @@
                 android:textStyle="bold"
                 android:layout_marginTop="40dp"
                 android:visibility="visible"
-                app:layout_constraintTop_toBottomOf="@+id/linear_choose"
+                app:layout_constraintTop_toBottomOf="@+id/linear_choose1"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
             <ImageView

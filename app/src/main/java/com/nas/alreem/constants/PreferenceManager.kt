@@ -1203,5 +1203,23 @@ class PreferenceManager {
             )
             return prefs.getString("lost_amount", "")
         }
+
+        fun setEmail(context: Context, result: String?) {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            val editor = prefs.edit()
+            editor.putString("email", result)
+            editor.commit()
+        }
+
+        fun getEmail(context: Context): String? {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            return prefs.getString("email", "")
+        }
     }
 }

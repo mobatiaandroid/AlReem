@@ -127,10 +127,20 @@
             app:layout_constraintTop_toTopOf="@+id/imageView4"
             app:srcCompat="@drawable/downarrow" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+    <ImageView
+        android:id="@+id/email_icon"
+        android:layout_width="30dp"
+        android:layout_height="20dp"
+        android:layout_gravity="end"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/mailiconpe"
+        android:layout_below="@+id/constraintLayout"/>
     <Button
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/constraintLayout"
+        android:layout_below="@+id/email_icon"
         android:background="@null"
         android:alpha="0.1"
         android:contextClickable="false"
@@ -139,6 +149,6 @@
               android:id="@+id/studentInfoRecycler"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:layout_below="@+id/constraintLayout"/>
+              android:layout_below="@+id/email_icon"/>
 
 </RelativeLayout>
