@@ -15,24 +15,14 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.nas.alreem.R
 import com.nas.alreem.activity.ProgressBarDialog
-import com.nas.alreem.activity.canteen.Myorderbasket_Activity
-import com.nas.alreem.activity.canteen.adapter.DateAdapter
 import com.nas.alreem.activity.canteen.adapter.ItemCategoriesAdapter
-import com.nas.alreem.activity.canteen.adapter.PreorderItemsAdapter
-import com.nas.alreem.activity.canteen.model.DateModel
-import com.nas.alreem.activity.canteen.model.add_orders.CanteenItemsApiModel
 import com.nas.alreem.activity.canteen.model.add_orders.CatItemsListModel
 import com.nas.alreem.activity.canteen.model.add_orders.CatListModel
 import com.nas.alreem.activity.canteen.model.add_orders.CategoryListModel
 import com.nas.alreem.activity.canteen.model.add_orders.ItemsListModel
 import com.nas.alreem.activity.canteen.model.canteen_cart.CanteenCartApiModel
-import com.nas.alreem.activity.canteen.model.canteen_cart.CanteenCartModel
-import com.nas.alreem.activity.canteen.model.canteen_cart.CanteenCartResModel
 import com.nas.alreem.activity.canteen.model.canteen_cart.CartItemsListModel
 import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.activity.lost_card.model.GetShopCartResponseModel
@@ -50,7 +40,6 @@ import com.nas.alreem.constants.addOnItemClickListener
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.ArrayList
 import java.util.Date
@@ -550,8 +539,18 @@ class Addorder_Activity_new : AppCompatActivity()  {
                     }
                     recyclerview_item.visibility= View.VISIBLE
                     recyclerview_item.layoutManager= LinearLayoutManager(nContext)
-                    var itemAdapter= PreorderItemsAdapter_new(item_list,nContext,date_selected,cart_list,cartTotalAmount,
-                        total_items,total_price,bottomview,cart_empty,progressDialogP)
+                    var itemAdapter= PreorderItemsAdapter_new(
+                        item_list,
+                        nContext,
+                        date_selected,
+                        cart_list,
+                        cartTotalAmount,
+                        total_items,
+                        total_price,
+                        bottomview,
+                        cart_empty,
+                        progressDialogP
+                    )
                     recyclerview_item.adapter=itemAdapter
 
 

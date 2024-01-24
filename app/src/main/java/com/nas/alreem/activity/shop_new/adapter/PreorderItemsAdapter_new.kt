@@ -39,14 +39,15 @@ import java.util.ArrayList
 class PreorderItemsAdapter_new(
     val itemlist: ArrayList<CatItemsListModel>,
     var mcontext: Context,
-    var date:String,
+    var date: String,
     var cart_list: ArrayList<ShopCartResModel>,
-    var cartTotalAmount: Int =0,
+    var cartTotalAmount: Int = 0,
     var totalItems: TextView,
     var totalPrice: TextView,
     var bottomView: LinearLayout,
     var cart_empty: ImageView,
-    var progressDialogP: ProgressBarDialog
+    var progressDialogP: ProgressBarDialog,
+
 ) :
     RecyclerView.Adapter<PreorderItemsAdapter_new.ViewHolder>() {
     // lateinit var onBottomReachedListener: OnBottomReachedListener
@@ -217,8 +218,8 @@ class PreorderItemsAdapter_new(
                     notifyDataSetChanged()
                 }else
                 {
-
-                    DialogFunctions.commonErrorAlertDialog(mcontext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), mcontext)
+                    bottomView.visibility = View.GONE
+                   // DialogFunctions.commonErrorAlertDialog(mcontext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), mcontext)
                 }
             }
 
@@ -346,7 +347,7 @@ class PreorderItemsAdapter_new(
                 }else
                 {
 
-                    DialogFunctions.commonErrorAlertDialog(mcontext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), mcontext)
+                   // DialogFunctions.commonErrorAlertDialog(mcontext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), mcontext)
                 }
             }
 

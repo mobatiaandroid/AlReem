@@ -10,6 +10,7 @@ class ConstantWords {
         var status_102="Internal Server Error."
         var status_103="Validation Error."
         var status_110="Invalid username and password."
+        var status_118="Invalid username and password."
         var status_113="Verification code not match."
         var status_114="This Email ID is not registered with our school. Kindly enter the school registered Email ID."
         var status_116="Token expired."

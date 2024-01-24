@@ -18,6 +18,9 @@ import com.nas.alreem.fragment.time_table.model.apimodel.FieldApiListModel
 import com.nas.alreem.fragment.time_table.model.usagemodel.PeriodModel
 import com.ryanharter.android.tooltips.ToolTip
 import com.ryanharter.android.tooltips.ToolTipLayout
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.Date
 
 
 var isClick: Boolean = false
@@ -74,6 +77,19 @@ class TimeTableAllWeekSelectionAdapterNew(
             holder.timeLinear.visibility=View.VISIBLE
             holder.txtBreak.setText(mFeildList.get(position).sortname)
             holder.timeLinear.setBackgroundResource(R.color.present)
+            val time = mFeildList[position].starttime
+            Log.e("time",time)
+
+            try {
+                val sdf = SimpleDateFormat("HH:mm")
+                val dateObj: Date = sdf.parse(time)
+                println(dateObj)
+                println(SimpleDateFormat("hh:mm a").format(dateObj))
+                Log.e("breaktime", SimpleDateFormat("hh:mm a").format(dateObj))
+                holder.timeBreak.text = SimpleDateFormat("hh:mm a").format(dateObj)
+            } catch (e: ParseException) {
+                e.printStackTrace()
+            }
 
         }
         else if (mFeildList.get(position).sortname.equals("Lunch"))
@@ -82,6 +98,19 @@ class TimeTableAllWeekSelectionAdapterNew(
             holder.timeLinear.visibility=View.VISIBLE
             holder.txtBreak.setText(mFeildList.get(position).sortname)
             holder.timeLinear.setBackgroundResource(R.color.present)
+            val time = mFeildList[position].starttime
+            Log.e("time",time)
+
+            try {
+                val sdf = SimpleDateFormat("HH:mm")
+                val dateObj: Date = sdf.parse(time)
+                println(dateObj)
+                println(SimpleDateFormat("hh:mm a").format(dateObj))
+                Log.e("breaktime", SimpleDateFormat("hh:mm a").format(dateObj))
+                holder.timeBreak.text = SimpleDateFormat("hh:mm a").format(dateObj)
+            } catch (e: ParseException) {
+                e.printStackTrace()
+            }
         }
         else{
 

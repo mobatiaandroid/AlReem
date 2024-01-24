@@ -110,6 +110,10 @@ class ConstantFunctions {
             {
                 msg=ConstantWords.status_125
             }
+            else if (status==118)
+            {
+                msg=ConstantWords.status_118
+            }
              else if (status==130)
             {
                 msg=ConstantWords.status_130
