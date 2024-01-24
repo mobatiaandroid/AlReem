@@ -275,9 +275,17 @@ var email : String=""
                         studentInfoRecycler.visibility=View.VISIBLE
                         studentInfoArrayList.addAll(response.body()!!.responseArray.studentInfo)
 
-                        val studentInfoAdapter = StudentInfoAdapter(studentInfoArrayList,mContext)
+                        val studentInfoAdapter = StudentInfoAdapter(studentInfoArrayList,mContext,email_icon)
                         studentInfoRecycler.adapter = studentInfoAdapter
+/*if(PreferenceManager.getEmail(mContext).equals(""))
+{
+    email_icon.visibility=View.GONE
+}
+                        else
+{
+    email_icon.visibility=View.VISIBLE
 
+}*/
                         email_icon.setOnClickListener {
                             showSendEmailDialog(mContext!!)
 
@@ -483,6 +491,7 @@ var email : String=""
                 }
                 progressDialog.visibility=View.VISIBLE
                 studentInfoRecycler.visibility=View.GONE
+
                 callStudentInfoApi()
                 dialog.dismiss()
             }

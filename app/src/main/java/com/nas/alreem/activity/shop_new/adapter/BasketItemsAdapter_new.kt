@@ -16,15 +16,9 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
 import com.nas.alreem.R
-import com.nas.alreem.activity.canteen.adapter.DatesBasketAdapter
-import com.nas.alreem.activity.canteen.model.add_to_cart.CanteenCartRemoveApiModel
 import com.nas.alreem.activity.canteen.model.add_to_cart.CanteenCartRemoveModel
-import com.nas.alreem.activity.canteen.model.add_to_cart.CanteenCartUpdateApiModel
 import com.nas.alreem.activity.canteen.model.add_to_cart.CanteenCartUpdateModel
 import com.nas.alreem.activity.canteen.model.canteen_cart.CanteenCartApiModel
-import com.nas.alreem.activity.canteen.model.canteen_cart.CanteenCartModel
-import com.nas.alreem.activity.canteen.model.canteen_cart.CanteenCartResModel
-import com.nas.alreem.activity.canteen.model.canteen_cart.CartItemsListModel
 import com.nas.alreem.activity.lost_card.model.GetShopCartResponseModel
 import com.nas.alreem.activity.lost_card.model.ShopCartResModel
 import com.nas.alreem.activity.shop_new.model.ShopCartRemoveApiModel
@@ -67,7 +61,7 @@ class BasketItemsAdapter_new (
         Log.e("array", items_list.toString())
         holder.itemNameTxt.text = items_list[position].item_name
         holder.itemDescription.text = items_list[position].description
-       // holder.amountTxt.text = items_list[position].price.toString() + "AED"
+        holder.amountTxt.text = items_list[position].price.toString() + "AED"
         holder.notAvailableTxt.visibility = View.GONE
         holder.removeTxt.visibility = View.GONE
         holder.multiLinear.visibility = View.VISIBLE
@@ -81,7 +75,7 @@ class BasketItemsAdapter_new (
 
             if (newValue != 0) {
                 progress.visibility= View.VISIBLE
-                updateCart(items_list[position].id.toString(),position,quantity)
+                updateCart(items_list[position].id.toString(),position,quantity,holder.soldout,holder.multiLinear)
                 notifyDataSetChanged()
             } else {
                 progress.visibility= View.VISIBLE
@@ -115,7 +109,7 @@ class BasketItemsAdapter_new (
              )
          }*/
         holder.removeTxt.setOnClickListener {
-            //cart cancel
+
         }
         /* holder.cartitemcount.setOnValueChangeListener { view, oldValue, newValue ->
              canteen_cart_id = items_list[position].item_id
@@ -193,6 +187,8 @@ class BasketItemsAdapter_new (
         var multiLinear: LinearLayout
         var linearlayout: LinearLayout
         var bannerImagePager: ViewPager
+         var soldout: LinearLayout
+
         // var Datas:String=""
 
         init {
@@ -207,6 +203,8 @@ class BasketItemsAdapter_new (
             removeTxt = view.findViewById<TextView>(R.id.removeTxt)
             portalTxt = view.findViewById<TextView>(R.id.portalTxt)
             bannerImagePager = view.findViewById(R.id.bannerImagePager)
+            soldout = view.findViewById(R.id.soldout)
+
         }
     }
     private fun getcanteen_cart(){
@@ -272,7 +270,13 @@ class BasketItemsAdapter_new (
 
         })
     }
-    private fun updateCart(id:String,position: Int,quant:String){
+    private fun updateCart(
+        id: String,
+        position: Int,
+        quant: String,
+        soldout: LinearLayout,
+        multiLinear: LinearLayout
+    ){
         progress.visibility= View.VISIBLE
         // progress.show()
         val token = PreferenceManager.getaccesstoken(mcontext)
@@ -305,8 +309,15 @@ class BasketItemsAdapter_new (
 
                 } else
                 {
+                    if(responsedata!!.status==300)
+                    {
 
-                    DialogFunctions.commonErrorAlertDialog(mcontext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), mcontext)
+                        multiLinear.visibility=View.GONE
+                       soldout.visibility=View.VISIBLE
+
+                    }
+
+                   // DialogFunctions.commonErrorAlertDialog(mcontext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), mcontext)
                 }
             }
 

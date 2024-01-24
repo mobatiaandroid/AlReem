@@ -258,10 +258,11 @@
 
                 <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
                     android:id="@+id/reason"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="45"
                     android:layout_gravity="top"
+                    android:singleLine="true"
                     android:layout_marginLeft="7dp"
                     android:text="Reason for not using the bus"
                     android:textColor="@color/black"
@@ -270,7 +271,7 @@
                 <com.nas.alreem.commonviews.CustomFontSansProTextBlack
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=":"
+                    android:text=""
                     android:layout_gravity="top"
                     android:textColor="@color/black"
                     />

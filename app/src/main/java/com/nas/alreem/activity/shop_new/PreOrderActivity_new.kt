@@ -10,11 +10,13 @@ import android.os.Bundle
 import android.view.View
 import android.view.Window
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,11 +27,9 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.nas.alreem.R
 import com.nas.alreem.activity.canteen.Addorder_Activity
-import com.nas.alreem.activity.canteen.MyorderActivity
-import com.nas.alreem.activity.canteen.OrderhistoryActivity
 import com.nas.alreem.activity.canteen.model.DateModel
-import com.nas.alreem.activity.canteen.model.TimeExceedModel
 import com.nas.alreem.activity.home.HomeActivity
+import com.nas.alreem.activity.login.model.SignUpResponseModel
 import com.nas.alreem.activity.payments.adapter.StudentListAdapter
 import com.nas.alreem.activity.payments.model.StudentList
 import com.nas.alreem.activity.payments.model.StudentListModel
@@ -39,6 +39,8 @@ import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.OnItemClickListener
 import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.constants.addOnItemClickListener
+import com.nas.alreem.fragment.canteen.model.CanteenBannerResponseModel
+import com.nas.alreem.fragment.payments.model.SendEmailApiModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -67,10 +69,18 @@ class PreOrderActivity_new :AppCompatActivity() {
     lateinit var dropdown: LinearLayout
     lateinit var title: TextView
     lateinit var add_order: RelativeLayout
-//    lateinit var my_orders: RelativeLayout
+    lateinit var my_orders: RelativeLayout
     lateinit var order_history: RelativeLayout
     lateinit var progressDialog: ProgressBar
-    lateinit var progressDialogAdd: ProgressBar
+    lateinit var progress: ProgressBar
+    lateinit var contactEmail:String
+    lateinit var email_icon: ImageView
+    lateinit var description: TextView
+    lateinit var bannerImg:ImageView
+    private val EMAIL_PATTERN =
+        "^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$"
+    private val pattern = "^([a-zA-Z ]*)$"
+
     var time_exeed: String = ""
     var datetime: String = ""
     var apiCall:Int=0
@@ -83,6 +93,7 @@ class PreOrderActivity_new :AppCompatActivity() {
         if (ConstantFunctions.internetCheck(nContext)) {
 //            progressDialog.visibility= View.VISIBLE
             callStudentListApi()
+            callGetShopBanner()
         } else {
             DialogFunctions.showInternetAlertDialog(nContext)
         }
@@ -100,13 +111,21 @@ class PreOrderActivity_new :AppCompatActivity() {
         studentlist = ArrayList()
         dropdown = findViewById(R.id.studentSpinner)
         progressDialog = findViewById(R.id.progressDialog)
-        progressDialogAdd = findViewById(R.id.progressDialogAdd)
+        progress =findViewById(R.id.progressDialogAdd)!!
         add_order = findViewById(R.id.addOrderRelative)
-      //  my_orders = findViewById(R.id.orderHistoryRelative)
+       my_orders = findViewById(R.id.myOrderRelative)
         order_history = findViewById(R.id.orderHistoryRelative)
         buttonLinear = findViewById(R.id.buttonLinear)
         title = findViewById(R.id.textViewtitle)
+        email_icon = findViewById(R.id.email_icon)!!
+        description =findViewById(R.id.description)!!
+        bannerImg = findViewById(R.id.bannerImage)!!
+
+
         title.text = "Shop-Order"
+        email_icon.setOnClickListener {
+            showSendEmailDialog()
+        }
         back.setOnClickListener {
             finish()
         }
@@ -116,9 +135,7 @@ class PreOrderActivity_new :AppCompatActivity() {
             startActivity(intent)
         }
 
-//        val aniRotate: Animation =
-//            AnimationUtils.loadAnimation(nContext, R.anim.linear_interpolator)
-//        progressDialog.startAnimation(aniRotate)
+
         studentSpinner.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
 
@@ -130,7 +147,6 @@ class PreOrderActivity_new :AppCompatActivity() {
     }
     private fun onclick() {
         add_order.setOnClickListener {
-          //  progressDialogAdd.visibility= View.VISIBLE
 
             val intent = Intent(nContext, Addorder_Activity_new::class.java)
             intent.putExtra("date_list",mDateArrayList)
@@ -145,6 +161,189 @@ class PreOrderActivity_new :AppCompatActivity() {
                 startActivity(intent)
 
         }
+        my_orders.setOnClickListener {
+            val intent = Intent(nContext, OrderhistoryActivityNew::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent)
+        }
+    }
+    private fun showSendEmailDialog()
+    {
+        val dialog = Dialog(nContext)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(true)
+        dialog.setContentView(R.layout.dialog_send_email)
+        dialog.window!!.setBackgroundDrawableResource(android.R.color.transparent)
+        val btn_submit = dialog.findViewById<Button>(R.id.submitButton)
+        val btn_cancel = dialog.findViewById<Button>(R.id.cancelButton)
+        val text_dialog = dialog.findViewById<EditText?>(R.id.text_dialog)
+        val text_content = dialog.findViewById<EditText>(R.id.text_content)
+
+        btn_cancel.setOnClickListener(View.OnClickListener {
+            dialog.dismiss()
+        })
+
+        btn_submit.setOnClickListener {
+            if (text_dialog.text.toString().trim().equals("")) {
+                DialogFunctions.commonErrorAlertDialog(
+                    nContext.resources.getString(R.string.alert), resources.getString(R.string.enter_subject),
+                    nContext
+                )
+
+
+            } else {
+                if (text_content.text.toString().trim().equals("")) {
+                    DialogFunctions.commonErrorAlertDialog(
+                        nContext.resources.getString(R.string.alert), resources.getString(R.string.enter_content),
+                        nContext
+                    )
+
+                } else if (contactEmail.matches(EMAIL_PATTERN.toRegex())) {
+                    if (text_dialog.text.toString().trim ().matches(pattern.toRegex())) {
+                        if (text_content.text.toString().trim ()
+                                .matches(pattern.toRegex())) {
+
+                            if (ConstantFunctions.internetCheck(nContext))
+                            {
+                                sendEmail(text_dialog.text.toString().trim(), text_content.text.toString().trim(), contactEmail, dialog)
+
+                            }
+                            else
+                            {
+                                DialogFunctions.showInternetAlertDialog(nContext)
+                            }
+
+                        } else {
+                            val toast: Toast = Toast.makeText(nContext, nContext.getResources().getString(R.string.enter_valid_contents), Toast.LENGTH_SHORT)
+                            toast.show()
+                        }
+                    } else {
+                        val toast: Toast = Toast.makeText(
+                            nContext,
+                            nContext.getResources()
+                                .getString(
+                                    R.string.enter_valid_subjects
+                                ),
+                            Toast.LENGTH_SHORT
+                        )
+                        toast.show()
+                    }
+                } else {
+                    val toast: Toast = Toast.makeText(
+                        nContext,
+                        nContext.getResources()
+                            .getString(
+                                R.string.enter_valid_email
+                            ),
+                        Toast.LENGTH_SHORT
+                    )
+                    toast.show()
+                }
+            }
+
+
+        }
+        dialog.show()
+    }
+    fun sendEmail(title: String, message: String,  staffEmail: String, dialog: Dialog)
+    {
+
+        val sendMailBody = SendEmailApiModel( staffEmail, title, message)
+        val call: Call<SignUpResponseModel> = ApiClient.getClient.sendEmailStaff(sendMailBody, "Bearer " + PreferenceManager.getaccesstoken(nContext))
+        call.enqueue(object : Callback<SignUpResponseModel> {
+            override fun onFailure(call: Call<SignUpResponseModel>, t: Throwable) {
+                //progressDialog.visibility = View.GONE
+            }
+
+            override fun onResponse(call: Call<SignUpResponseModel>, response: Response<SignUpResponseModel>) {
+                val responsedata = response.body()
+                //progressDialog.visibility = View.GONE
+                if (responsedata != null) {
+                    try {
+
+
+                        if (response.body()!!.status==100) {
+
+                            showSuccessAlertnew(
+                                nContext,
+                                "Email sent Successfully ",
+                                "Success",
+                                dialog
+                            )
+                            dialog.dismiss()
+                        }else {
+                            DialogFunctions.commonErrorAlertDialog(
+                                nContext.resources.getString(R.string.alert),
+                                ConstantFunctions.commonErrorString(response.body()!!.status),
+                                nContext
+                            )
+
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+
+        })
+    }
+    fun callGetShopBanner()
+    {
+        progress.visibility = View.VISIBLE
+
+        val token = PreferenceManager.getaccesstoken(nContext)
+        val call: Call<CanteenBannerResponseModel> = ApiClient.getClient.shop_banner("Bearer "+token)
+        call.enqueue(object : Callback<CanteenBannerResponseModel>
+        {
+            override fun onFailure(call: Call<CanteenBannerResponseModel>, t: Throwable) {
+                progress.visibility = View.GONE
+
+
+            }
+            override fun onResponse(call: Call<CanteenBannerResponseModel>, response: Response<CanteenBannerResponseModel>) {
+                val responsedata = response.body()
+                progress.visibility = View.GONE
+
+                if (responsedata!!.status==100) {
+
+                    contactEmail=response.body()!!.responseArray.data.contact_email
+
+                    var banner_image=response.body()!!.responseArray.data.image
+                    var trn_no=response.body()!!.responseArray.data.trn_no
+                    if (contactEmail.equals(""))
+                    {
+                        email_icon.visibility=View.GONE
+                    }
+                    else{
+                        email_icon.visibility=View.VISIBLE
+                    }
+                    if(response.body()!!.responseArray.data.description.equals(""))
+                    {
+                        description.visibility=View.GONE
+                    }
+                    else{
+                        description.visibility=View.VISIBLE
+                        description.text=response.body()!!.responseArray.data.description
+                    }
+                    if (banner_image != "") {
+
+                        Glide.with(nContext) //1
+                            .load(banner_image)
+                            .into(bannerImg)
+                    } else {
+                        bannerImg!!.setBackgroundResource(R.drawable.default_banner)
+                    }
+
+                }
+                else
+                {
+
+                    DialogFunctions.commonErrorAlertDialog(nContext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), nContext)
+                }
+            }
+
+        })
+
     }
     fun showStudentList(context: Context, mStudentList : ArrayList<StudentList>)
     {
@@ -183,7 +382,7 @@ class PreOrderActivity_new :AppCompatActivity() {
         }
         studentListRecycler.addOnItemClickListener(object: OnItemClickListener {
             override fun onItemClicked(position: Int, view: View) {
-                // Your logic
+
                 progressDialog.visibility= View.VISIBLE
 
 
@@ -216,7 +415,7 @@ class PreOrderActivity_new :AppCompatActivity() {
                 buttonLinear.visibility= View.VISIBLE
                 progressDialog.visibility = View.VISIBLE
 
-                //  Toast.makeText(activity, mStudentList.get(position).name, Toast.LENGTH_SHORT).show()
+
                 dialog.dismiss()
             }
         })
@@ -233,7 +432,7 @@ class PreOrderActivity_new :AppCompatActivity() {
             }
             override fun onResponse(call: Call<StudentListModel>, response: Response<StudentListModel>) {
                 progressDialog.visibility = View.GONE
-                //val arraySize :Int = response.body()!!.responseArray.studentList.size
+
                 if (response.body()!!.status==100)
                 {
                     studentListArrayList.addAll(response.body()!!.responseArray.studentList)
@@ -287,16 +486,7 @@ class PreOrderActivity_new :AppCompatActivity() {
                     }
                     add_order.visibility= View.VISIBLE
                     buttonLinear.visibility= View.VISIBLE
-//                    var internetCheck = InternetCheckClass.isInternetAvailable(nContext)
-//                    if (internetCheck)
-//                    {
-//                        //callStudentLeaveInfo()
-//                    }
-//                    else{
-//                        InternetCheckClass.showSuccessInternetAlert(com.mobatia.bisad.fragment.home.mContext)
-//                    }
 
-                    //callStudentInfoApi()
                 }
 
 
@@ -444,36 +634,12 @@ class PreOrderActivity_new :AppCompatActivity() {
 
         dialog.show()
     }
-    private fun time_exeed() {
-        val token = PreferenceManager.getaccesstoken(nContext)
-        progressDialogAdd.visibility= View.VISIBLE
-        val call: Call<TimeExceedModel> = ApiClient.getClient.time_exceed_status("Bearer "+token)
-        call.enqueue(object : Callback<TimeExceedModel> {
-            override fun onFailure(call: Call<TimeExceedModel>, t: Throwable) {
-
-                progressDialogAdd.visibility= View.GONE
-            }
-            override fun onResponse(call: Call<TimeExceedModel>, response: Response<TimeExceedModel>) {
-                val responsedata = response.body()
-                if (responsedata!!.status==100) {
-
-                    time_exeed=response!!.body()!!.responseArray.time_exceed.toString()
-                    progressDialogAdd.visibility= View.GONE
-                    calendarpopup()
-
-                } else
-                {
-
-                    DialogFunctions.commonErrorAlertDialog(nContext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), nContext)
-                }
-            }
-
-        })
 
 
 
-    }
-    fun showSuccessAlertnew(context: Context, message: String, msgHead: String) {
+
+
+    fun showSuccessAlertnew(context: Context, message: String, msgHead: String, dialog1: Dialog) {
         val dialog = Dialog(context)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -489,6 +655,7 @@ class PreOrderActivity_new :AppCompatActivity() {
         btn_Ok.setOnClickListener()
         {
             dialog.dismiss()
+            dialog1.dismiss()
         }
         dialog.show()
     }
@@ -510,4 +677,5 @@ class PreOrderActivity_new :AppCompatActivity() {
 
 
     }
+
 }

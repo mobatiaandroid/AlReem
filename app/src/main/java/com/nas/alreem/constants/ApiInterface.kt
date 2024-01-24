@@ -919,4 +919,10 @@ interface ApiInterface {
         @Body  studentbody: ShopHistoryModel,
         @Header("Authorization") token:String
     ): Call<ShopHistoryResponseModel>
+    @GET("shop_banner")
+    @Headers("Content-Type: application/json")
+    fun shop_banner(
+        //@Body  ptaConfirmationModel: PtaConfirmationApiModel,
+        @Header("Authorization") token:String
+    ): Call<CanteenBannerResponseModel>
 }
