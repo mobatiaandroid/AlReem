@@ -14,12 +14,13 @@ import com.nas.alreem.R
 import com.nas.alreem.activity.canteen.Myorderbasket_Activity
 import com.nas.alreem.activity.canteen.adapter.PreorderDatesAdapter
 import com.nas.alreem.activity.canteen.model.order_history.OrderHistoryApiModel
-import com.nas.alreem.activity.canteen.model.order_history.OrderHistoryDataModel
 import com.nas.alreem.activity.canteen.model.order_history.OrderHistoryResponseModel
 import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.activity.lost_card.model.ShopHistoryModel
-import com.nas.alreem.activity.shop_new.adapter.ShopCardHistoryAdapter
+import com.nas.alreem.activity.shop_new.adapter.PreorderDatesAdapter_new
+import com.nas.alreem.activity.shop_new.model.PaymentShopWalletHistoryModel
 import com.nas.alreem.activity.shop_new.model.ShopHistoryResponseModel
+import com.nas.alreem.activity.shop_new.model.ShopModel
 import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.DialogFunctions
@@ -37,7 +38,8 @@ class OrderhistoryActivityNew  : AppCompatActivity(){
     private var id: String? = null
     lateinit var title: TextView
     lateinit var basket: ImageView
-    lateinit var preorderhis_list: ArrayList<OrderHistoryDataModel>
+    lateinit var preorderhis_list: ArrayList<PaymentShopWalletHistoryModel>
+    lateinit var order_summery: ArrayList<ShopModel>
     lateinit var preorderhis_itemlist: ArrayList<String>
     var studentID:String=""
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,7 +49,7 @@ class OrderhistoryActivityNew  : AppCompatActivity(){
         initfn()
         if (ConstantFunctions.internetCheck(nContext)) {
 //            progressDialog.visibility= View.VISIBLE
-            callOderHistory()
+            getPaymentHistory(PreferenceManager.getStudentID(nContext))
         } else {
             DialogFunctions.showInternetAlertDialog(nContext)
         }
@@ -66,7 +68,7 @@ class OrderhistoryActivityNew  : AppCompatActivity(){
         progress = findViewById(R.id.progress)!!
 
         preorderhis_list = ArrayList()
-        preorderhis_itemlist = ArrayList()
+        order_summery = ArrayList()
         recyclerview = findViewById(R.id.date_rec)
         title.text = "Order History"
         back.setOnClickListener {
@@ -85,17 +87,17 @@ class OrderhistoryActivityNew  : AppCompatActivity(){
 
     }
     private fun getPaymentHistory(studentIdStr: String?) {
-       /* progress.visibility= View.VISIBLE
+        progress.visibility= View.VISIBLE
 
         val studentbody= ShopHistoryModel(studentIdStr!!,"0","20")
 
-        val call: Call<ShopHistoryResponseModel> = ApiClient.getClient.get_shop_orders_history(studentbody,"Bearer "+ PreferenceManager.getaccesstoken(mContext))
+        val call: Call<ShopHistoryResponseModel> = ApiClient.getClient.get_shop_orders_history(studentbody,"Bearer "+ PreferenceManager.getaccesstoken(nContext))
         call.enqueue(object : Callback<ShopHistoryResponseModel> {
             override fun onResponse(
                 call: Call<ShopHistoryResponseModel?>,
                 response: Response<ShopHistoryResponseModel?>
             ) {
-                progress.visibility= View.VISIBLE
+                progress.visibility= View.GONE
 
                 val responsedata = response.body()
                 if (responsedata != null) {
@@ -105,19 +107,14 @@ class OrderhistoryActivityNew  : AppCompatActivity(){
 
                             // Log.e("size", response.body()!!.response.data.size.toString())
                             if (response.body()!!.response.order_history.size > 0) {
-                                newsLetterModelArrayList.clear()
-                                newsLetterModelArrayList.addAll(response.body()!!.response.order_history)
-                                mNewsLetterListView!!.visibility = View.VISIBLE
-                                val newsLetterAdapter =
-                                    ShopCardHistoryAdapter(mContext, newsLetterModelArrayList)
-                                mNewsLetterListView!!.adapter = newsLetterAdapter
+                                preorderhis_list=response.body()!!.response.order_history
+                                for (i in preorderhis_list.indices)
+                                {
+                                    order_summery=response.body()!!.response.order_history.get(i).order_summery
+                                }
+                                recyclerview.adapter = PreorderDatesAdapter_new(preorderhis_list, nContext,order_summery)
                             } else {
-                                newsLetterModelArrayList.clear()
-                                mNewsLetterListView!!.visibility = View.GONE
-                                val newsLetterAdapter =
-                                    ShopCardHistoryAdapter(mContext, newsLetterModelArrayList)
-                                mNewsLetterListView!!.adapter = newsLetterAdapter
-                                DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert),"No Data Found", mContext)
+
 
 
                             }
@@ -130,16 +127,16 @@ class OrderhistoryActivityNew  : AppCompatActivity(){
             }
 
             override fun onFailure(call: Call<ShopHistoryResponseModel?>, t: Throwable) {
-                progress.visibility= View.VISIBLE
+                progress.visibility= View.GONE
 
 
 
 
             }
-        })*/
+        })
 
     }
-    fun callOderHistory()
+   /* fun callOderHistory()
     {
         progress.visibility= View.VISIBLE
         val token = PreferenceManager.getaccesstoken(nContext)
@@ -172,5 +169,5 @@ class OrderhistoryActivityNew  : AppCompatActivity(){
 
 
 
-    }
+    }*/
 }

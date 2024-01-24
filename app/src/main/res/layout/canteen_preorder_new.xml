@@ -136,16 +136,20 @@
 
     </LinearLayout>
 
+
     <ImageView
         android:id="@+id/bannerImage"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="50"
         android:src="@drawable/default_banner"
+        android:layout_marginTop="5dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline7"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/studentSpinner" />
+        app:layout_constraintTop_toBottomOf="@+id/studentSpinner"
+        app:layout_constraintVertical_bias="0.0" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline7"
@@ -159,11 +163,31 @@
         android:layout_height="40dp"
         android:layout_centerInParent="true"
         android:indeterminateDrawable="@anim/customspinner"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline7"
         />
+    <ImageView
+        android:id="@+id/email_icon"
+        android:layout_width="30dp"
+        android:layout_height="20dp"
+        android:layout_gravity="end"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/mailiconpe"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline7" />
+    <com.nas.alreem.commonviews.CustomTextViewRegular
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/description"
+        android:layout_margin="10dp"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/email_icon"/>
+
     <RelativeLayout
         android:id="@+id/addOrderRelative"
         android:layout_width="match_parent"
@@ -174,9 +198,10 @@
         android:layout_marginRight="10dp"
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline7">
+        app:layout_constraintTop_toBottomOf="@+id/description">
 
         <ImageView
             android:id="@+id/addOrderImg"
@@ -196,73 +221,74 @@
 
     </RelativeLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/addOrderRelative"
-        android:orientation="horizontal"
-        android:weightSum="100"
-        android:visibility="visible"
-        android:id="@+id/buttonLinear"
-        app:layout_constraintTop_toBottomOf="@+id/addOrderRelative">
 
-        <RelativeLayout
-            android:id="@+id/myOrderRelative"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="2dp"
-            android:layout_weight="50"
-            android:visibility="gone"
-            android:background="@drawable/sportsbtnorange"
-            android:gravity="center">
+            android:layout_below="@+id/addOrderRelative"
+            android:orientation="horizontal"
+            android:weightSum="100"
+            android:visibility="visible"
+            android:id="@+id/buttonLinear"
+            app:layout_constraintTop_toBottomOf="@+id/addOrderRelative">
 
-            <ImageView
-                android:id="@+id/myOrderImg"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="6dp"
-                android:src="@drawable/my_order" />
-
-            <com.nas.alreem.commonviews.CustomTextViewRegular
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:id="@+id/myOrderRelative"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/myOrderImg"
-                android:layout_centerHorizontal="true"
-                android:text="My Orders"
-                android:textColor="@color/white" />
-        </RelativeLayout>
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="2dp"
+                android:layout_weight="50"
+                android:background="@drawable/sportsbtnorange"
+                android:gravity="center">
 
-        <RelativeLayout
-            android:id="@+id/orderHistoryRelative"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_weight="100"
-            android:background="@drawable/sportsbtnblue"
-            android:gravity="center">
+                <ImageView
+                    android:id="@+id/myOrderImg"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="6dp"
+                    android:src="@drawable/my_order" />
 
-            <ImageView
-                android:id="@+id/orderHistoryImg"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="6dp"
-                android:src="@drawable/order_history" />
+                <com.nas.alreem.commonviews.CustomTextViewRegular
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/myOrderImg"
+                    android:layout_centerHorizontal="true"
+                    android:text="My Orders"
+                    android:textColor="@color/white" />
+            </RelativeLayout>
 
-            <com.nas.alreem.commonviews.CustomTextViewRegular
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:id="@+id/orderHistoryRelative"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/orderHistoryImg"
-                android:layout_centerHorizontal="true"
-                android:text="Order History"
-                android:textColor="@color/white" />
-        </RelativeLayout>
-    </LinearLayout>
+                android:layout_marginLeft="2dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="50"
+                android:background="@drawable/sportsbtnblue"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/orderHistoryImg"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="6dp"
+                    android:src="@drawable/order_history" />
+
+                <com.nas.alreem.commonviews.CustomTextViewRegular
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/orderHistoryImg"
+                    android:layout_centerHorizontal="true"
+                    android:text="Order History"
+                    android:textColor="@color/white" />
+            </RelativeLayout>
+        </LinearLayout>
+
     <ProgressBar
         android:id="@+id/progressDialogAdd"
         android:layout_width="40dp"

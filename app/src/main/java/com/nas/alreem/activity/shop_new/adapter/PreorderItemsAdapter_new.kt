@@ -305,7 +305,7 @@ class PreorderItemsAdapter_new(
                     if(responsedata!!.status==300)
                     {
                         multiLinear.visibility=View.GONE
-                        soldout.visibility=View.GONE
+                        soldout.visibility=View.VISIBLE
 
                     }
                   //  DialogFunctions.commonErrorAlertDialog(mcontext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), mcontext)

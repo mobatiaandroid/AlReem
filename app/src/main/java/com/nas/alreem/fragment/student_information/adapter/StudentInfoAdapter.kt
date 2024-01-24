@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.NonNull
 import androidx.recyclerview.widget.RecyclerView
@@ -15,7 +16,8 @@ import com.nas.alreem.fragment.student_information.model.StudentInfoDetail
 
 internal class StudentInfoAdapter(
     private var studentInfoList: List<StudentInfoDetail>,
-    var mContext: Context
+    var mContext: Context,
+   var email_icon: ImageView
 ) :
     RecyclerView.Adapter<StudentInfoAdapter.MyViewHolder>() {
     internal inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -33,10 +35,22 @@ internal class StudentInfoAdapter(
         holder.nameTxt.text = movie.title
         holder.valueTxt.text = movie.value
         Log.e("value",movie.value)
-        if (movie.value.contains(".com"))
+        if(movie.value.equals(""))
         {
-            PreferenceManager.setEmail(mContext,movie.value)
+            holder.nameTxt.visibility=View.GONE
+            holder.valueTxt.visibility=View.GONE
+            email_icon.visibility=View.GONE
         }
+        else{
+            holder.nameTxt.visibility=View.VISIBLE
+            holder.valueTxt.visibility=View.VISIBLE
+            email_icon.visibility=View.VISIBLE
+            if (movie.value.contains(".com"))
+            {
+                PreferenceManager.setEmail(mContext,movie.value)
+            }
+        }
+
 
     }
     override fun getItemCount(): Int {

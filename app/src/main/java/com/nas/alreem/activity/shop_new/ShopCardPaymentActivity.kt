@@ -351,7 +351,7 @@ class ShopCardPaymentActivity :AppCompatActivity(){
         val dialogButton = dialog.findViewById<View>(R.id.btn_Ok) as Button
         dialogButton.setOnClickListener {
             dialog.dismiss()
-            val intent = Intent(mContext, Myorderbasket_Activity_new::class.java)
+            val intent = Intent(mContext, Addorder_Activity_new::class.java)
            //  intent.putExtra("StudentId",studentId)
             mContext.startActivity(intent)
         }
