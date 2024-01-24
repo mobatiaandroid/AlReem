@@ -41,7 +41,7 @@ import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.ConstantWords
 import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.PreferenceManager
-import com.nas.alreem.constants.WebLinkActivity
+import com.nas.alreem.constants.WebViewTextActivity
 import com.nas.alreem.fragment.about_us.AboutUsFragment
 import com.nas.alreem.fragment.absence.AbsenceFragment
 import com.nas.alreem.fragment.bus_service.BusServiceFragment
@@ -51,7 +51,7 @@ import com.nas.alreem.fragment.cca.CCAFragment
 import com.nas.alreem.fragment.contact_us.ContactUsFragment
 import com.nas.alreem.fragment.gallery.GalleryFragment
 import com.nas.alreem.fragment.home.model.BannerResponseModel
-import com.nas.alreem.fragment.home.re_enrollment.EnrollmentFormResponseModel
+import com.nas.alreem.fragment.home.re_enrollment.EnrollmentHelpResponseModel
 import com.nas.alreem.fragment.home.re_enrollment.EnrollmentSaveResponseModel
 import com.nas.alreem.fragment.home.re_enrollment.ReEnrollSubmitModel
 import com.nas.alreem.fragment.home.re_enrollment.ReEnrollmentFormResponseModel
@@ -75,7 +75,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
-import kotlin.collections.ArrayList
 
 lateinit var relone: RelativeLayout
 lateinit var reltwo: RelativeLayout
@@ -287,7 +286,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                         studentList.addAll(apiResponse.responseArray.students)
                         val responseArrayObject = response.body()!!.responseArray
 
-                        val studentsArray: ArrayList<StudentEnrollList>? =
+                        val studentsArray: ArrayList<StudentEnrollList> =
                             responseArrayObject.students
 
                         var isAtLeastOneStatusEmpty = false
@@ -466,7 +465,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
         val parent_name = d.findViewById<EditText>(R.id.textField_parentName)
         val parent_email = d.findViewById<EditText>(R.id.textField_parentEmail)
         val spinnerList = d.findViewById<Spinner>(R.id.spinnerlist)
-        val option_txt = d.findViewById<TextView>(R.id.option_txt)
+//        val option_txt = d.findViewById<TextView>(R.id.option_txt)
         val clear = d.findViewById<TextView>(R.id.clear)
         val dropdown_btn = d.findViewById<ImageView>(R.id.dropdown_btn)
         val sign_btn = d.findViewById<Button>(R.id.signature_btn)
@@ -511,8 +510,9 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             } else {
                                 if (ConstantFunctions.internetCheck(mContext)) {
                                     // TODO ReEnrollment Help
-//                                    sendEmailEnroll(textDialog.text.toString().trim { it <= ' ' },
-//                                        textContent.text.toString().trim { it <= ' ' }, dialog)
+                                    sendEmailEnroll(textDialog.text.toString().trim { it <= ' ' },
+                                        textContent.text.toString().trim { it <= ' ' }, dialog
+                                    )
                                 } else {
                                     ConstantFunctions.showDialogueWithOk(
                                         mContext,
@@ -556,10 +556,12 @@ class HomeFragment : Fragment(), View.OnClickListener {
             dropdownList.add(i, optionsArray[i - 1])
         }
         val sp_adapter = ArrayAdapter<String>(
-            mContext, R.layout.spinner_textview, dropdownList
+            mContext, R.layout.spinner_textview_white, dropdownList
         )
         spinnerList.adapter = sp_adapter
+        sp_adapter.setDropDownViewResource(R.layout.spinner_textview)
         spinnerList.setSelection(0)
+
         spinnerList.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
@@ -571,15 +573,15 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     val selectedItem: String = parent.getItemAtPosition(position).toString()
                     val optionlistSize: Int = dropdownList.size - 1
                     for (i in 1..optionlistSize) {
-                        Log.e("opt", dropdownList.get(i))
-                        if ((selectedItem == dropdownList.get(i))) {
+                        Log.e("opt", dropdownList[i])
+                        if ((selectedItem == dropdownList[i])) {
                             Log.e("setcheck", "1")
-                            reEnrollsave.get(page_count.get(0)).status = dropdownList.get(i)
+                            reEnrollsave[page_count[0]].status = dropdownList[i]
                             check[0] = 1
                         } else if ((selectedItem == dropdownList.get(0))) {
                             Log.e("setcheck", "0")
                             check[0] = 0
-                            reEnrollsave.get(page_count.get(0)).status = ""
+                            reEnrollsave[page_count.get(0)].status = ""
                         }
                     }
                 }
@@ -603,15 +605,15 @@ class HomeFragment : Fragment(), View.OnClickListener {
         if (!question.isEmpty()) {
             questionTextView.text = question
         }
-        option_txt.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View) {
-                option_txt.visibility = View.GONE
-                spinnerList.visibility = View.VISIBLE
-            }
-        })
+//        option_txt.setOnClickListener(object : View.OnClickListener {
+//            override fun onClick(v: View) {
+//                option_txt.visibility = View.GONE
+//                spinnerList.visibility = View.VISIBLE
+//            }
+//        })
         terms_and_condtns.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View) {
-                val intent = Intent(mContext, WebLinkActivity::class.java)
+                val intent = Intent(mContext, WebViewTextActivity::class.java)
                 intent.putExtra("Url", tAndCString)
                 startActivity(intent)
             }
@@ -907,6 +909,51 @@ class HomeFragment : Fragment(), View.OnClickListener {
         d.show()
     }
 
+    private fun sendEmailEnroll(subject: String, content: String, dialog: Dialog) {
+        val paramObject = JsonObject()
+        paramObject.addProperty("title", subject.trim().toString())
+        paramObject.addProperty("message", content.trim().toString())
+        val call: Call<EnrollmentHelpResponseModel> = ApiClient.getClient.getenrollhelp(
+            "Bearer " + PreferenceManager.getaccesstoken(mContext),
+            paramObject
+        )
+        call.enqueue(object : Callback<EnrollmentHelpResponseModel> {
+            override fun onFailure(call: Call<EnrollmentHelpResponseModel>, t: Throwable) {
+                //progressDialog.visibility = View.GONE
+            }
+
+            override fun onResponse(
+                call: Call<EnrollmentHelpResponseModel>,
+                response: Response<EnrollmentHelpResponseModel>
+            ) {
+                val responsedata = response.body()
+                //progressDialog.visibility = View.GONE
+                if (responsedata != null) {
+                    try {
+
+
+                        if (response.body()!!.status == 100) {
+                            Toast.makeText(context, "Email sent successfully", Toast.LENGTH_SHORT)
+                                .show()
+                            dialog.dismiss()
+                        } else {
+                            DialogFunctions.commonErrorAlertDialog(
+                                mContext.resources.getString(R.string.alert),
+                                ConstantFunctions.commonErrorString(response.body()!!.status),
+                                mContext
+                            )
+
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+
+        })
+    }
+
+
     //    private void reEnroll(Context mContext) {
     //        int page_count = 0;
     //        //int total_count=studDetailList.size-1;
@@ -1144,12 +1191,12 @@ class HomeFragment : Fragment(), View.OnClickListener {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.setCancelable(false)
-        dialog.setContentView(R.layout.dialog_yes_no_alert)
+        dialog.setContentView(R.layout.dialog_ok_cancel)
         val iconImageView = dialog.findViewById<ImageView>(R.id.iconImageView)
         val alertHead = dialog.findViewById<TextView>(R.id.alertHead)
-        val text_dialog = dialog.findViewById<TextView>(R.id.messageTxt)
+        val text_dialog = dialog.findViewById<TextView>(R.id.text_dialog)
         val btn_Ok = dialog.findViewById<Button>(R.id.btn_Ok)
-        val btn_Cancel = dialog.findViewById<Button>(R.id.btn_cancel)
+        val btn_Cancel = dialog.findViewById<Button>(R.id.btn_Cancel)
         text_dialog.text = message
         alertHead.text = msgHead
         btn_Ok.setOnClickListener {
