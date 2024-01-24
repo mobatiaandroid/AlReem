@@ -2220,7 +2220,6 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     mFragment = CommunicationFragment()
                     fragmentIntent(mFragment)
                 }
-
                 ConstantWords.TAB_BUS_SERVICE -> {
                     mFragment = BusServiceFragment()
                     fragmentIntent(mFragment)
