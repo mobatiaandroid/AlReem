@@ -17,6 +17,7 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -46,11 +47,13 @@ import com.nas.alreem.activity.shop_new.adapter.BasketItemsAdapter_new
 import com.nas.alreem.activity.shop_new.adapter.DatesBasketAdapter_new
 import com.nas.alreem.activity.shop_new.model.ItemsModelShop
 import com.nas.alreem.activity.shop_new.model.OrdersModelShop
+import com.nas.alreem.activity.shop_new.model.StudentShopCardResponseModel
 import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.PreferenceManager
 import payment.sdk.android.PaymentClient
+import payment.sdk.android.cardpayment.CardPaymentData
 import payment.sdk.android.cardpayment.CardPaymentRequest
 import retrofit2.Call
 import retrofit2.Callback
@@ -65,7 +68,7 @@ class Myorderbasket_Activity_new : AppCompatActivity() {
     var student_id = ""
     var parent_id = ""
     var staff_id = ""
-    var cartTotalAmount = 0
+    var cartTotalAmount=0
     var apiCall: Int = 0
     var cartTotalItem = 0
     lateinit var activity: Activity
@@ -191,7 +194,11 @@ class Myorderbasket_Activity_new : AppCompatActivity() {
 
 
                     }
-                Log.e("data1", orderArray.toString())
+                 var cartIDList =ArrayList<String>()
+                for (i in orderArray.indices){
+                    cartIDList.add(orderArray[i]!!.id)
+                }
+                Log.e("data1", cartIDList.toString())
                     val gson = Gson()
                     val Data = gson.toJson(orderArray)
                     Log.e("data",Data)
@@ -210,12 +217,12 @@ class Myorderbasket_Activity_new : AppCompatActivity() {
                 intent.putExtra("studentname", PreferenceManager.getStudentName(nContext))
                 Log.e("amount", cartTotalAmount.toString())
                 intent.putExtra("amount",cartTotalAmount)
-                intent.putExtra("data",Data )
+                intent.putExtra("data",cartIDList.toString() )
 
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
                // et_amount!!.text = "Lost Card Date"
                 startActivity(intent)
-                    /*if (ConstantFunctions.internetCheck(nContext)) {
+                  /*  if (ConstantFunctions.internetCheck(nContext)) {
                         CallForPaymentToken(Data)
                     } else {
                         DialogFunctions.showInternetAlertDialog(nContext)
@@ -484,7 +491,7 @@ class Myorderbasket_Activity_new : AppCompatActivity() {
                             var payment_token=responsedata.responseArray.access_token
                             val tsLong = System.currentTimeMillis() / 1000
                             val ts = tsLong.toString()
-                            invoice_ref="NASCANAND"
+                            invoice_ref="NASSHOPAND"
                             var mechantorderRef=invoice_ref+"-"+ts
 
                             val amountDouble: Double = WalletAmount.toDouble() * 100
@@ -519,11 +526,13 @@ class Myorderbasket_Activity_new : AppCompatActivity() {
 
 
     }
+
     private fun callForPayment(paymentToken: String, amount: String, Data: String) {
         progressDialogAdd.visibility=View.VISIBLE
         val tsLong = System.currentTimeMillis() / 1000
         val ts = tsLong.toString()
         var mechantorderRef=invoice_ref+"-"+ts
+        Log.e("mechantorderRef",mechantorderRef)
         val token = PreferenceManager.getaccesstoken(nContext)
         val paymentGatewayBody = PaymentGatewayApiModel(amount,PreferenceManager.getEmailId(nContext).toString(),
             mechantorderRef, PreferenceManager.getStudentName(nContext)!!,"","NAS","","Abu Dhabi",
@@ -586,20 +595,16 @@ class Myorderbasket_Activity_new : AppCompatActivity() {
         paramObject.addProperty("device_type", "2")
         paramObject.addProperty("device_name", devicename)
         paramObject.addProperty("app_version", version)
-        val call: Call<StudentLostCardResponseModel> =
-            ApiClient.getClient.student_lost_card(
-                "Bearer " + PreferenceManager.getaccesstoken(
-                    nContext
-                ), paramObject
-            )
-        call.enqueue(object : Callback<StudentLostCardResponseModel> {
-            override fun onFailure(call: Call<StudentLostCardResponseModel>, t: Throwable) {
+        val call: Call<StudentShopCardResponseModel> =
+            ApiClient.getClient.shop_order_submit("Bearer " + PreferenceManager.getaccesstoken(nContext), paramObject)
+        call.enqueue(object : Callback<StudentShopCardResponseModel> {
+            override fun onFailure(call: Call<StudentShopCardResponseModel>, t: Throwable) {
                 progressDialogAdd.visibility = View.GONE
             }
 
             override fun onResponse(
-                call: Call<StudentLostCardResponseModel>,
-                response: Response<StudentLostCardResponseModel>
+                call: Call<StudentShopCardResponseModel>,
+                response: Response<StudentShopCardResponseModel>
             ) {
                 val responsedata = response.body()
                 progressDialogAdd.visibility = View.GONE

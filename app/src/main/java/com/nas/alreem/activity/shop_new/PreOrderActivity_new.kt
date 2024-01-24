@@ -67,7 +67,7 @@ class PreOrderActivity_new :AppCompatActivity() {
     lateinit var dropdown: LinearLayout
     lateinit var title: TextView
     lateinit var add_order: RelativeLayout
-    lateinit var my_orders: RelativeLayout
+//    lateinit var my_orders: RelativeLayout
     lateinit var order_history: RelativeLayout
     lateinit var progressDialog: ProgressBar
     lateinit var progressDialogAdd: ProgressBar
@@ -102,7 +102,7 @@ class PreOrderActivity_new :AppCompatActivity() {
         progressDialog = findViewById(R.id.progressDialog)
         progressDialogAdd = findViewById(R.id.progressDialogAdd)
         add_order = findViewById(R.id.addOrderRelative)
-        my_orders = findViewById(R.id.myOrderRelative)
+      //  my_orders = findViewById(R.id.orderHistoryRelative)
         order_history = findViewById(R.id.orderHistoryRelative)
         buttonLinear = findViewById(R.id.buttonLinear)
         title = findViewById(R.id.textViewtitle)
@@ -115,6 +115,7 @@ class PreOrderActivity_new :AppCompatActivity() {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)
         }
+
 //        val aniRotate: Animation =
 //            AnimationUtils.loadAnimation(nContext, R.anim.linear_interpolator)
 //        progressDialog.startAnimation(aniRotate)
@@ -136,15 +137,13 @@ class PreOrderActivity_new :AppCompatActivity() {
             startActivity(intent)
 
         }
-        my_orders.setOnClickListener {
-            val intent = Intent(nContext, MyorderActivity::class.java)
-            intent.putExtra("StudentId",studentId)
-            nContext.startActivity(intent)
-        }
+
         order_history.setOnClickListener {
-            /*val intent = Intent(nContext, OrderhistoryActivity::class.java)
-            intent.putExtra("StudentId",studentId)
-            nContext.startActivity(intent)*/
+            PreferenceManager.setStudentID(nContext,"")
+                val intent = Intent(nContext, InvoiceListingActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                startActivity(intent)
+
         }
     }
     fun showStudentList(context: Context, mStudentList : ArrayList<StudentList>)

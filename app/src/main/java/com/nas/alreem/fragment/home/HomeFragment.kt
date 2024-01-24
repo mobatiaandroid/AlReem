@@ -1167,10 +1167,10 @@ class HomeFragment : Fragment(), View.OnClickListener {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.setCancelable(false)
-        dialog.setContentView(R.layout.dialog_yes_no_alert)
+        dialog.setContentView(R.layout.dialog_common_error_alert)
         val iconImageView = dialog.findViewById<ImageView>(R.id.iconImageView)
         val alertHead = dialog.findViewById<TextView>(R.id.alertHead)
-        val text_dialog = dialog.findViewById<TextView>(R.id.text_dialog)
+        val text_dialog = dialog.findViewById<TextView>(R.id.messageTxt)
         val btn_Ok = dialog.findViewById<Button>(R.id.btn_Ok)
         text_dialog.text = message
         alertHead.text = msgHead

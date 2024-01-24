@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/includeRel"
+        layout="@layout/layout_activity_header" />
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/namelayout"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
+                    android:id="@+id/stName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="45"
+                    android:text="Name"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <com.nas.alreem.commonviews.CustomFontSansProTextBlack
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":"
+                    android:textColor="@color/black"
+                    />
+
+                <com.nas.alreem.commonviews.CustomTextViewRegular
+                    android:id="@+id/stnameValue"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="50"
+                    android:text="Gayathri"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/studClassLinear"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
+                    android:id="@+id/studClassTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="45"
+                    android:text="Class"
+
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <com.nas.alreem.commonviews.CustomFontSansProTextBlack
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":"
+                    android:textColor="@color/black"
+                    />
+
+                <com.nas.alreem.commonviews.CustomTextViewRegular
+                    android:id="@+id/studClassValue"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="50"
+                    android:text="X1"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linear_parentMail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/linear_parentName"
+                android:layout_margin="8dp"
+                android:orientation="vertical"
+                android:weightSum="1">
+
+                <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_weight=".2"
+                    android:text="Question" />
+
+                <com.nas.alreem.commonviews.CustomFontSansProEditTextNoColor
+                    android:id="@+id/mailtxt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/textfield_bg"
+                    android:hint="email@gmail.com"
+                    android:padding="8dp"
+                    android:editable="false"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/dark_grey1" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linear_Enrollstatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/linear_parentMail"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="16dp"
+                android:orientation="vertical"
+                android:weightSum="1">
+
+                <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_weight=".2"
+                    android:text="Selected Options" />
+
+                <com.nas.alreem.commonviews.CustomFontSansProEditTextNoColor
+                    android:id="@+id/statustxt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/textfield_bg"
+                    android:hint="Unsure"
+                    android:padding="8dp"
+                    android:editable="false"
+                    android:paddingBottom="4dp"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/dark_grey1" />
+            </LinearLayout>
+
+
+
+
+
+        </LinearLayout>
+
+    </ScrollView>
+</LinearLayout>

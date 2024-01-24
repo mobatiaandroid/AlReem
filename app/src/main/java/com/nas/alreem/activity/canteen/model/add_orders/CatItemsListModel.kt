@@ -15,7 +15,8 @@ class CatItemsListModel (
     @SerializedName("isItemCart") var isItemCart:Boolean,
     @SerializedName("cartId") var cartId:String,
     @SerializedName("quantityCart") var quantityCart:Int,
-    @SerializedName("item_already_ordered") var item_already_ordered:Int
+    @SerializedName("item_already_ordered") var item_already_ordered:Int,
+    @SerializedName("available_quantity") var available_quantity:Int
    /*
     @SerializedName("available_date") val available_date: String,
     @SerializedName("available_quantity") val available_quantity: String,

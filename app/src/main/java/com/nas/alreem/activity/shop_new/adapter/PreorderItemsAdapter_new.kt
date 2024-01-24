@@ -17,15 +17,10 @@ import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
 import com.nas.alreem.R
 import com.nas.alreem.activity.ProgressBarDialog
 import com.nas.alreem.activity.canteen.model.add_orders.CatItemsListModel
-import com.nas.alreem.activity.canteen.model.add_to_cart.AddToCartCanteenApiModel
 import com.nas.alreem.activity.canteen.model.add_to_cart.AddToCartCanteenModel
-import com.nas.alreem.activity.canteen.model.add_to_cart.CanteenCartRemoveApiModel
 import com.nas.alreem.activity.canteen.model.add_to_cart.CanteenCartRemoveModel
-import com.nas.alreem.activity.canteen.model.add_to_cart.CanteenCartUpdateApiModel
 import com.nas.alreem.activity.canteen.model.add_to_cart.CanteenCartUpdateModel
 import com.nas.alreem.activity.canteen.model.canteen_cart.CanteenCartApiModel
-import com.nas.alreem.activity.canteen.model.canteen_cart.CanteenCartModel
-import com.nas.alreem.activity.canteen.model.canteen_cart.CanteenCartResModel
 import com.nas.alreem.activity.lost_card.model.GetShopCartResponseModel
 import com.nas.alreem.activity.lost_card.model.ShopCartResModel
 import com.nas.alreem.activity.shop_new.model.AddToCartShopApiModel
@@ -46,7 +41,7 @@ class PreorderItemsAdapter_new(
     var mcontext: Context,
     var date:String,
     var cart_list: ArrayList<ShopCartResModel>,
-    var cartTotalAmount:Int,
+    var cartTotalAmount: Int =0,
     var totalItems: TextView,
     var totalPrice: TextView,
     var bottomView: LinearLayout,
@@ -75,61 +70,72 @@ class PreorderItemsAdapter_new(
         holder.itemNameTxt.text=itemlist[position].item_name
         holder.itemDescription.text = itemlist[position].description
         holder.amountTxt.text = itemlist[position].price.toString() + " AED"
-        if (itemlist[position].item_already_ordered==0) {
-            holder.confirmedTxt.visibility = View.GONE
-        } else {
-            holder.confirmedTxt.visibility = View.VISIBLE
-        }
-        if (itemlist[position].isItemCart) {
-            holder.multiLinear.visibility = View.VISIBLE
-            holder.addLinear.visibility = View.GONE
-            holder.itemCount.setNumber(itemlist.get(position).quantityCart.toString())
-            holder.itemCount.setRange(
-                0,
-                50
-            )
-        } else {
+        if(itemlist[position].available_quantity==0)
+        {
             holder.multiLinear.visibility = View.GONE
-            holder.addLinear.visibility = View.VISIBLE
+            holder.addLinear.visibility = View.GONE
+            holder.soldout.visibility=View.VISIBLE
         }
-        holder.addLinear.setOnClickListener {
-            addToCart(itemlist[position].id,itemlist[position].price,position)
-        }
+        else {
 
 
-        //holder.itemCount.setNumber(itemlist.get(position).quantityCart.toString())
-        holder.itemCount.setOnValueChangeListener { view, oldValue, newValue ->
+            if (itemlist[position].item_already_ordered == 0) {
+                holder.confirmedTxt.visibility = View.GONE
+            } else {
+                holder.confirmedTxt.visibility = View.VISIBLE
+            }
+            if (itemlist[position].isItemCart) {
+                holder.multiLinear.visibility = View.VISIBLE
+                holder.addLinear.visibility = View.GONE
+                holder.itemCount.setNumber(itemlist.get(position).quantityCart.toString())
+                holder.itemCount.setRange(
+                    0,
+                    50
+                )
+            } else {
+                holder.multiLinear.visibility = View.GONE
+                holder.addLinear.visibility = View.VISIBLE
+            }
+            holder.addLinear.setOnClickListener {
+                addToCart(itemlist[position].id, itemlist[position].price, position)
+            }
 
-            var cartPos:Int=0;
-            for (i in  cart_list.indices)
-            {
-                Log.e("itemlistd",itemlist.get(position).id)
-                Log.e("cartlistidd", cart_list.get(i).item_id.toString())
 
-                if (itemlist.get(position).id.equals(cart_list.get(i).item_id.toString()))
-                {
-                    canteen_cart_id= cart_list.get(i).id.toString()
-                    Log.e("cart_id_store",canteen_cart_id)
+            //holder.itemCount.setNumber(itemlist.get(position).quantityCart.toString())
+            holder.itemCount.setOnValueChangeListener { view, oldValue, newValue ->
+
+                var cartPos: Int = 0;
+                for (i in cart_list.indices) {
+                    Log.e("itemlistd", itemlist.get(position).id)
+                    Log.e("cartlistidd", cart_list.get(i).item_id.toString())
+
+                    if (itemlist.get(position).id.equals(cart_list.get(i).item_id.toString())) {
+                        canteen_cart_id = cart_list.get(i).id.toString()
+                        Log.e("cart_id_store", canteen_cart_id)
+                    }
+                }
+
+
+                //  canteen_cart_id = cart_list[cartPos].items.get(position).id
+                quantity = newValue.toString()
+                if (newValue != 0) {
+                    //progressDialogP.visibility=View.VISIBLE
+                    updateCart(
+                        itemlist[position].id,
+                        position,
+                        quantity,
+                        holder.multiLinear,
+                        holder.soldout
+                    )
+                    //  Log.e("amout",cart_list[position].item_total.toString())
+                    //   holder.amountTxt.text = cart_list[position].item_total.toString() + " AED"
+                    //   Log.e("amout1",cart_list[position].item_total.toString())
+                } else {
+                    //progressDialogP.visibility=View.VISIBLE
+                    cancelCart(position)
                 }
             }
-
-
-
-            //  canteen_cart_id = cart_list[cartPos].items.get(position).id
-            quantity = newValue.toString()
-            if (newValue != 0) {
-                //progressDialogP.visibility=View.VISIBLE
-                updateCart(itemlist[position].id,position,quantity)
-             //  Log.e("amout",cart_list[position].item_total.toString())
-            //   holder.amountTxt.text = cart_list[position].item_total.toString() + " AED"
-             //   Log.e("amout1",cart_list[position].item_total.toString())
-            }
-            else {
-                //progressDialogP.visibility=View.VISIBLE
-                cancelCart(position)
-            }
         }
-
     }
 
     override fun getItemCount(): Int {
@@ -145,6 +151,7 @@ class PreorderItemsAdapter_new(
         lateinit    var itemDescription: TextView
         lateinit    var confirmedTxt: TextView
         lateinit var itemImage: ImageView
+        lateinit var soldout: LinearLayout
         lateinit var addLinear: LinearLayout
         lateinit var multiLinear: LinearLayout
         lateinit var itemCount: ElegantNumberButton
@@ -158,6 +165,7 @@ class PreorderItemsAdapter_new(
             notAvailableTxt = itemView.findViewById(R.id.notAvailableTxt) as TextView
             // itemImage = itemView.findViewById(R.id.itemImage) as ImageView
             addLinear = itemView.findViewById(R.id.addLinear) as LinearLayout
+            soldout = itemView.findViewById(R.id.soldout) as LinearLayout
             multiLinear = itemView.findViewById(R.id.multiLinear) as LinearLayout
             itemCount = itemView.findViewById(R.id.itemCount)
             itemDescription = itemView.findViewById(R.id.itemDescription)
@@ -219,6 +227,7 @@ class PreorderItemsAdapter_new(
     private fun addToCart(id:String,price:String,position: Int){
         progressDialogP.show()
         //   progressDialogP.show()
+
         val token = PreferenceManager.getaccesstoken(mcontext)
         var canteenadd= AddToCartShopApiModel(
             PreferenceManager.getStudentID(mcontext)!!,id,"1",price)
@@ -250,7 +259,13 @@ class PreorderItemsAdapter_new(
 
         })
     }
-    private fun updateCart(id:String,position: Int,quant:String){
+    private fun updateCart(
+        id: String,
+        position: Int,
+        quant: String,
+        multiLinear: LinearLayout,
+        soldout: LinearLayout
+    ){
         progressDialogP.show()
         // progressDialogP.show()
         Log.e("Cart_id",id)
@@ -286,7 +301,13 @@ class PreorderItemsAdapter_new(
                 }else
                 {
 
-                    DialogFunctions.commonErrorAlertDialog(mcontext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), mcontext)
+                    if(responsedata!!.status==300)
+                    {
+                        multiLinear.visibility=View.GONE
+                        soldout.visibility=View.GONE
+
+                    }
+                  //  DialogFunctions.commonErrorAlertDialog(mcontext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), mcontext)
                 }
             }
 

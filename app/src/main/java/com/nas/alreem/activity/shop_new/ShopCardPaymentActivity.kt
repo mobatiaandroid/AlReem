@@ -31,6 +31,8 @@ import com.nas.alreem.activity.payments.model.payment_gateway.PaymentGatewayApiM
 import com.nas.alreem.activity.payments.model.payment_gateway.PaymentGatewayModel
 import com.nas.alreem.activity.payments.model.payment_token.PaymentTokenApiModel
 import com.nas.alreem.activity.payments.model.payment_token.PaymentTokenModel
+import com.nas.alreem.activity.shop.model.PaymentGatewayApiModelShop
+import com.nas.alreem.activity.shop_new.model.StudentShopCardResponseModel
 import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.DialogFunctions
@@ -65,7 +67,7 @@ class ShopCardPaymentActivity :AppCompatActivity(){
     var orderReff:String = ""
     var dataa =""
     var amount :String=""
-    var order_id = ""
+    var order_id : Int =0
     var mStudentSpinner: LinearLayout? = null
     var newsLetterModelArrayList: ArrayList<PaymentWalletHistoryModel> =
         ArrayList<PaymentWalletHistoryModel>()
@@ -97,6 +99,7 @@ class ShopCardPaymentActivity :AppCompatActivity(){
             stud_name = extras!!.getString("studentname")
             amount = extras!!.getInt("amount").toString()
             dataa = extras!!.getString("data").toString()
+            Log.e("date",dataa)
         }
         progressDialogAdd = findViewById(R.id.progressDialogAdd)
 
@@ -149,7 +152,7 @@ class ShopCardPaymentActivity :AppCompatActivity(){
                             var payment_token=responsedata.responseArray.access_token
                             val tsLong = System.currentTimeMillis() / 1000
                             val ts = tsLong.toString()
-                            invoice_ref="NASCANAND"
+                            invoice_ref="NASSHOPAND"
                             var mechantorderRef=invoice_ref+"-"+ts
 
                             val amountDouble: Double = WalletAmount.toDouble() * 100
@@ -159,7 +162,7 @@ class ShopCardPaymentActivity :AppCompatActivity(){
                             var amt:Int=amount.toInt() * 100
                             progressDialogAdd.visibility= View.VISIBLE
                             if (ConstantFunctions.internetCheck(mContext)) {
-                                callForPayment(payment_token,amt.toString())
+                               callForPayment(payment_token,amt.toString())
                             } else {
                                 DialogFunctions.showInternetAlertDialog(mContext)
                             }
@@ -190,12 +193,12 @@ class ShopCardPaymentActivity :AppCompatActivity(){
         val ts = tsLong.toString()
         var mechantorderRef=invoice_ref+"-"+ts
         val token = PreferenceManager.getaccesstoken(mContext)
-        val paymentGatewayBody = PaymentGatewayApiModel(amount,
+        val paymentGatewayBody = PaymentGatewayApiModelShop(amount,
             PreferenceManager.getEmailId(mContext).toString(),
             mechantorderRef, stud_name!!,"","NAS","","Abu Dhabi",
-            paymentToken,"wallet_topup")
+            paymentToken,"shop", dataa,PreferenceManager.getStudentID(mContext).toString())
         val call: Call<PaymentGatewayModel> =
-            ApiClient.getClient.payment_gateway(paymentGatewayBody, "Bearer " + token)
+            ApiClient.getClient.payment_gateway_shop(paymentGatewayBody, "Bearer " + token)
         call.enqueue(object : Callback<PaymentGatewayModel> {
             override fun onFailure(call: Call<PaymentGatewayModel>, t: Throwable) {
                 progressDialogAdd.visibility = View.GONE
@@ -213,7 +216,7 @@ class ShopCardPaymentActivity :AppCompatActivity(){
                             var orderPageUrl=responsedata.responseArray.order_paypage_url
                             var auth=responsedata.responseArray.authorization
                             val Code: String = orderPageUrl.split("=").toTypedArray().get(1)
-
+                            order_id = responsedata.responseArray.order_id
                             progressDialogAdd.visibility = View.GONE
                             val request: CardPaymentRequest = CardPaymentRequest.Builder().gatewayUrl(auth).code(Code).build()
 
@@ -283,20 +286,22 @@ class ShopCardPaymentActivity :AppCompatActivity(){
         paramObject.addProperty("device_type", "2")
         paramObject.addProperty("device_name", devicename)
         paramObject.addProperty("app_version", version)
-        val call: Call<StudentLostCardResponseModel> =
+        paramObject.addProperty("order_id", order_id)
+
+        val call: Call<StudentShopCardResponseModel> =
             ApiClient.getClient.shop_order_submit(
                 "Bearer " + PreferenceManager.getaccesstoken(
                     mContext
                 ), paramObject
             )
-        call.enqueue(object : Callback<StudentLostCardResponseModel> {
-            override fun onFailure(call: Call<StudentLostCardResponseModel>, t: Throwable) {
+        call.enqueue(object : Callback<StudentShopCardResponseModel> {
+            override fun onFailure(call: Call<StudentShopCardResponseModel>, t: Throwable) {
                 progressDialogAdd.visibility = View.GONE
             }
 
             override fun onResponse(
-                call: Call<StudentLostCardResponseModel>,
-                response: Response<StudentLostCardResponseModel>
+                call: Call<StudentShopCardResponseModel>,
+                response: Response<StudentShopCardResponseModel>
             ) {
                 val responsedata = response.body()
                 progressDialogAdd.visibility = View.GONE
@@ -304,7 +309,7 @@ class ShopCardPaymentActivity :AppCompatActivity(){
                     try {
 
                         if (responsedata.responsecode.equals("200")) {
-                            if (responsedata.response.statuscode.equals("303")) {
+                            if (responsedata.response.statuscode==100) {
                                 showDialogAlertDismissOk(
                                     mContext as Activity?,
                                     "Payment Successful",

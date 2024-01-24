@@ -66,7 +66,7 @@ class Addorder_Activity_new : AppCompatActivity()  {
     lateinit var cart_items_list: ArrayList<CartItemsListModel>
     private var id: String? = null
     lateinit var date_title: TextView
-   // lateinit var date_list: ArrayList<DateModel>
+    // lateinit var date_list: ArrayList<DateModel>
     lateinit var recyclerview_item: RecyclerView
     var studentListArrayList = ArrayList<StudentList>()
 
@@ -97,7 +97,7 @@ class Addorder_Activity_new : AppCompatActivity()  {
         setContentView(R.layout.shop_addorder)
         firstVisit = true
         initfn()
-      //  setdate()
+        //  setdate()
         //progressDialog.visibility=View.VISIBLE
         if (ConstantFunctions.internetCheck(nContext)) {
 //            progressDialog.visibility= View.VISIBLE
@@ -130,9 +130,9 @@ class Addorder_Activity_new : AppCompatActivity()  {
         category_list = ArrayList()
         cart_list = ArrayList()
         cart_items_list = ArrayList()
-       // date_list = intent.getSerializableExtra("date_list") as ArrayList<DateModel>
+        // date_list = intent.getSerializableExtra("date_list") as ArrayList<DateModel>
         //date_list=PreferenceManager().getdate_list(nContext)
-     //   var year = date_list[0].year
+        //   var year = date_list[0].year
         /*var strCurrentDate = ""
         var format = SimpleDateFormat("MMM", Locale.ENGLISH)
         var newDate: Date? = null
@@ -145,9 +145,9 @@ class Addorder_Activity_new : AppCompatActivity()  {
         strCurrentDate = format.format(newDate)
         var month=strCurrentDate*/
         //var month = CommonMethods.dateParsingTommm(date_list[0].month)
-      //  var date = date_list[0].numberDate
-      //  date_string = date_list[0].numberDate
-       // date_selected = date_string.toString()
+        //  var date = date_list[0].numberDate
+        //  date_string = date_list[0].numberDate
+        // date_selected = date_string.toString()
         total_items = findViewById(R.id.itemCount)
         total_price = findViewById(R.id.totalAmount)
         bottomview = findViewById(R.id.cartLinear)
@@ -326,16 +326,16 @@ class Addorder_Activity_new : AppCompatActivity()  {
     }
     fun callStudentListApi()
     {
-       // progressDialogAdd.visibility=View.VISIBLE
+        // progressDialogAdd.visibility=View.VISIBLE
         studentListArrayList= ArrayList()
         val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+ PreferenceManager.getaccesstoken(nContext))
         call.enqueue(object : Callback<StudentListModel> {
             override fun onFailure(call: Call<StudentListModel>, t: Throwable) {
-               // progressDialogAdd.visibility=View.GONE
+                // progressDialogAdd.visibility=View.GONE
             }
             override fun onResponse(call: Call<StudentListModel>, response: Response<StudentListModel>) {
                 val responsedata = response.body()
-              //  progressDialogAdd.visibility=View.GONE
+                //  progressDialogAdd.visibility=View.GONE
                 if (responsedata != null) {
                     try {
 
@@ -350,46 +350,46 @@ class Addorder_Activity_new : AppCompatActivity()  {
                                 studentId=studentListArrayList.get(0).id
                                 studentClass=studentListArrayList.get(0).section*/
                                 PreferenceManager.setStudentID(nContext,studentListArrayList.get(0).id)
-                               /* PreferenceManager.setStudentName(mContext,studentName)
-                                PreferenceManager.setStudentPhoto(mContext,studentImg)
-                                PreferenceManager.setStudentClass(mContext,studentClass)
-                                studentNameTxt.text=studentName*/
-                               /* if(!studentImg.equals(""))
-                                {
-                                    Glide.with(mContext) //1
-                                        .load(studentImg)
-                                        .placeholder(R.drawable.student)
-                                        .error(R.drawable.student)
-                                        .skipMemoryCache(true) //2
-                                        .diskCacheStrategy(DiskCacheStrategy.NONE) //3
-                                        .transform(CircleCrop()) //4
-                                        .into(studImg)
-                                }
-                                else{
-                                    studImg.setImageResource(R.drawable.student)
-                                }*/
+                                /* PreferenceManager.setStudentName(mContext,studentName)
+                                 PreferenceManager.setStudentPhoto(mContext,studentImg)
+                                 PreferenceManager.setStudentClass(mContext,studentClass)
+                                 studentNameTxt.text=studentName*/
+                                /* if(!studentImg.equals(""))
+                                 {
+                                     Glide.with(mContext) //1
+                                         .load(studentImg)
+                                         .placeholder(R.drawable.student)
+                                         .error(R.drawable.student)
+                                         .skipMemoryCache(true) //2
+                                         .diskCacheStrategy(DiskCacheStrategy.NONE) //3
+                                         .transform(CircleCrop()) //4
+                                         .into(studImg)
+                                 }
+                                 else{
+                                     studImg.setImageResource(R.drawable.student)
+                                 }*/
 
                             }
                             else{
-                               /* studentName= PreferenceManager.getStudentName(mContext)!!
-                                studentImg= PreferenceManager.getStudentPhoto(mContext)!!
-                                studentId= PreferenceManager.getStudentID(mContext)!!
-                                studentClass= PreferenceManager.getStudentClass(mContext)!!
-                                studentNameTxt.text=studentName
-                                if(!studentImg.equals(""))
-                                {
-                                    Glide.with(mContext) //1
-                                        .load(studentImg)
-                                        .placeholder(R.drawable.student)
-                                        .error(R.drawable.student)
-                                        .skipMemoryCache(true) //2
-                                        .diskCacheStrategy(DiskCacheStrategy.NONE) //3
-                                        .transform(CircleCrop()) //4
-                                        .into(studImg)
-                                }
-                                else{
-                                    studImg.setImageResource(R.drawable.student)
-                                }*/
+                                /* studentName= PreferenceManager.getStudentName(mContext)!!
+                                 studentImg= PreferenceManager.getStudentPhoto(mContext)!!
+                                 studentId= PreferenceManager.getStudentID(mContext)!!
+                                 studentClass= PreferenceManager.getStudentClass(mContext)!!
+                                 studentNameTxt.text=studentName
+                                 if(!studentImg.equals(""))
+                                 {
+                                     Glide.with(mContext) //1
+                                         .load(studentImg)
+                                         .placeholder(R.drawable.student)
+                                         .error(R.drawable.student)
+                                         .skipMemoryCache(true) //2
+                                         .diskCacheStrategy(DiskCacheStrategy.NONE) //3
+                                         .transform(CircleCrop()) //4
+                                         .into(studImg)
+                                 }
+                                 else{
+                                     studImg.setImageResource(R.drawable.student)
+                                 }*/
                             }
 
                         }
@@ -442,10 +442,10 @@ class Addorder_Activity_new : AppCompatActivity()  {
                             for (n in cart_list.indices) {
 
 
-                                        if (jId.equals(cart_list.get(n).item_id.toString())) {
-                                            isFound = true
-                                            cartDatePos = n
-                                            cartItemPos = n
+                                if (jId.equals(cart_list.get(n).item_id.toString())) {
+                                    isFound = true
+                                    cartDatePos = n
+                                    cartItemPos = n
 
                                 }
                             }
@@ -524,11 +524,11 @@ class Addorder_Activity_new : AppCompatActivity()  {
 
 
 
-                                        if (jId.equals(cart_list.get(n).item_id.toString())) {
-                                            isFound = true
-                                            cartDatePos = n
-                                            cartItemPos = n
-                                        }
+                                if (jId.equals(cart_list.get(n).item_id.toString())) {
+                                    isFound = true
+                                    cartDatePos = n
+                                    cartItemPos = n
+                                }
 
 
                             }
@@ -592,7 +592,7 @@ class Addorder_Activity_new : AppCompatActivity()  {
                     cartTotalAmount=0
 
 
-                        cartTotalAmount=cartTotalAmount + responsedata.responseArray.total_amount
+                    cartTotalAmount=cartTotalAmount + responsedata.responseArray.total_amount
 
                     if (cartTotalAmount==0){
                         bottomview.visibility= View.GONE
@@ -602,7 +602,7 @@ class Addorder_Activity_new : AppCompatActivity()  {
                         for (i in cart_list.indices){
 
 
-                                cartTotalItem=cartTotalItem + cart_list[i].quantity
+                            cartTotalItem=cartTotalItem + cart_list[i].quantity
 
                         }
                         total_items.setText(cartTotalItem.toString() + "Items")

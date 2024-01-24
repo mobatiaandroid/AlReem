@@ -3,6 +3,7 @@ package com.nas.alreem.fragment.intention
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
@@ -15,6 +16,7 @@ import android.view.Window
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
@@ -23,7 +25,6 @@ import android.widget.RelativeLayout
 import android.widget.ScrollView
 import android.widget.Spinner
 import android.widget.TextView
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -37,6 +38,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.nas.alreem.R
 import com.nas.alreem.activity.cca.adapter.CCAsListActivityAdapter
+import com.nas.alreem.activity.intentions.IntentionDetailedView
+import com.nas.alreem.activity.intentions.IntentionRegisterActivity
 import com.nas.alreem.activity.payments.adapter.StudentListAdapter
 import com.nas.alreem.activity.payments.model.StudentList
 import com.nas.alreem.activity.payments.model.StudentListModel
@@ -148,13 +151,32 @@ class Intentionfragment : Fragment(){
             {
                 Log.e("intention","intention")
                 if (primaryArrayList.get(position).status.equals("")) {
-                    showIntentionPopUp(
+                    val intent = Intent(mContext, IntentionRegisterActivity::class.java)
+
+                    intent.putExtra("question",primaryArrayList.get(position).question)
+                    intent.putExtra("student",primaryArrayList.get(position).student)
+                    intent.putExtra("classs",primaryArrayList.get(position).classs)
+                    intent.putExtra("intenmt_id",primaryArrayList.get(position).intension_id)
+                    PreferenceManager.setOptions(primaryArrayList.get(position).options,mContext)
+                   // intent.putExtra("options",primaryArrayList.get(position).options)
+                    intent.putExtra("position",position)
+                    startActivity(intent)
+                   /* showIntentionPopUp(
                         mContext,
-                        primaryArrayList,position)
+                        primaryArrayList,position)*/
 
                 }
                 else{
-                    val dialog = Dialog(mContext)
+                    val intent = Intent(mContext, IntentionDetailedView::class.java)
+
+                    intent.putExtra("student",primaryArrayList.get(position).student)
+                    intent.putExtra("question",primaryArrayList.get(position).question)
+                    intent.putExtra("classs",intentionstatusArray.get(position).className)
+                    intent.putExtra("options",intentionstatusArray.get(position).selected_options)
+
+                    intent.putExtra("position",position)
+                    startActivity(intent)
+                   /* val dialog = Dialog(mContext)
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                     dialog.setContentView(R.layout.alert_intention_view)
                     dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -171,7 +193,7 @@ class Intentionfragment : Fragment(){
                     section.setText(intentionstatusArray.get(position).className)
                     // TODO set Staff Image
                     // TODO set Staff Image
-                    dialog.show()
+                    dialog.show()*/
                 }
 
             }
@@ -211,6 +233,8 @@ class Intentionfragment : Fragment(){
         val questionTxt = dialog.findViewById<TextView>(R.id.questionTxt)
         var dropDownList: java.util.ArrayList<String> = ArrayList<String>()
         //val currentDate = LocalDate.now().toString()
+        val answerTxt2 = dialog.findViewById<EditText>(R.id.answerTxt2)
+        val questionTxt2 = dialog.findViewById<TextView>(R.id.questionTxt2)
         val currentYear = Calendar.YEAR.toString()
         val currentMonth = Calendar.MONTH.toString()
         val currentDay = Calendar.DAY_OF_MONTH.toString()
@@ -226,7 +250,21 @@ class Intentionfragment : Fragment(){
             optionsArray.addAll(primaryArrayList.get(position).options)
             Log.e("arraysizeoption",optionsArray.size.toString())
 
-
+        answerTxt2.setFocusable(false)
+        answerTxt2.setFocusableInTouchMode(false)
+        answerTxt2.setClickable(false)
+        if (optionsArray.contains("YES")) {
+            questionTxt2.setTextColor(mContext.resources.getColor(R.color.black))
+            answerTxt2.isEnabled()
+            answerTxt2.setFocusable(true)
+            answerTxt2.setFocusableInTouchMode(true)
+            answerTxt2.setClickable(true)
+        } else {
+            questionTxt2.setTextColor(mContext.resources.getColor(R.color.grey))
+            answerTxt2.setFocusable(false)
+            answerTxt2.setFocusableInTouchMode(false)
+            answerTxt2.setClickable(false)
+        }
       //  date = AppUtils.dateConversionddmmyyyy(currentDate)
       //  date_field.setText(date)
         dropDownList =ArrayList()
@@ -508,7 +546,7 @@ class Intentionfragment : Fragment(){
                 stud_class = mStudentArray.get(position).studentClass.toString()
                 stud_img = mStudentArray.get(position).photo.toString()
               //  textViewYear!!.text = "Class : " + mStudentArray.get(position).studentClass
-                // PreferenceManager.setStudentID(mContext,stud_id)
+                PreferenceManager.setStudentID(mContext,stud_id)
 
                 if (stud_img != "") {
                     Glide.with(mContext) //1
@@ -545,6 +583,7 @@ class Intentionfragment : Fragment(){
     {
         Log.e("size","size")
         primaryArrayList= ArrayList()
+
        // optionsArray = ArrayList()
         progress.visibility = View.VISIBLE
         val body = IntentionApiModel(stud_id,"0","20")
@@ -571,7 +610,7 @@ class Intentionfragment : Fragment(){
                             if (primaryArrayList.size>0)
                             {
 
-
+                                recycler_review.visibility=View.VISIBLE
                                 var primaryAdapter= IntentionAdapter(primaryArrayList,mContext)
                                 recycler_review.adapter=primaryAdapter
 
@@ -589,7 +628,7 @@ class Intentionfragment : Fragment(){
                             recycler_review.adapter=primaryAdapter
                             //Toast.makeText(mContext, "No Registered Early Pickup Found", Toast.LENGTH_SHORT).show()
 
-                            DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), mContext)
+                         //   DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), mContext)
                         }
                         } catch (e: Exception) {
                             e.printStackTrace()
@@ -650,7 +689,8 @@ class Intentionfragment : Fragment(){
                         stud_id=studentListArrayList.get(0).id
                         stud_class=studentListArrayList.get(0).section
                         // Log.e("Student_idss",stud_id)
-                        // PreferenceManager.setStudentID(mContext,studentId)
+                         PreferenceManager.setStudentID(mContext,stud_id)
+                        Log.e("id",stud_id)
                         //  PreferenceManager.setStudentName(mContext,student_Name)
                         //PreferenceManager.setStudentPhoto(mContext,studentImg)
                         //  PreferenceManager.setStudentClass(mContext,studentClass)
@@ -680,7 +720,7 @@ class Intentionfragment : Fragment(){
                         stud_name= studentListArrayList[studentSelectPosition].name!!
                         stud_img= studentListArrayList[studentSelectPosition].photo!!
                         stud_id=  studentListArrayList!![studentSelectPosition].id.toString()
-                        // PreferenceManager.setStudentID(mContext, studentId)
+                         PreferenceManager.setStudentID(mContext, stud_id)
                         // PreferenceManager.setStudIdForCCA(mContext, studentId)
                         //  Log.e("Studentid1",stud_id)
                         stud_class= studentListArrayList[studentSelectPosition].studentClass!!
@@ -720,16 +760,16 @@ class Intentionfragment : Fragment(){
 
     override fun onResume() {
         super.onResume()
-        //getIntentionListAPI(stud_id)
 
-        /*mPickupListView.visibility = View.GONE
-        mAbsenceListView.visibility = View.GONE
-        studentNameTxt.text = PreferenceManager.getStudentName(mContext)
-        studentId = PreferenceManager.getStudentID(mContext).toString()
-        studentImg = PreferenceManager.getStudentPhoto(mContext)!!
-        if (!studentImg.equals("")) {
+        recycler_review.visibility = View.GONE
+
+        studentName.text = PreferenceManager.getStudentName(mContext)
+        stud_id = PreferenceManager.getStudentID(mContext).toString()
+        Log.e("studid",stud_id)
+        stud_img = PreferenceManager.getStudentPhoto(mContext)!!
+        if (!stud_img.equals("")) {
             Glide.with(mContext) //1
-                .load(studentImg)
+                .load(stud_img)
                 .placeholder(R.drawable.student)
                 .error(R.drawable.student)
                 .skipMemoryCache(true) //2
@@ -739,21 +779,19 @@ class Intentionfragment : Fragment(){
         } else {
             studImg.setImageResource(R.drawable.student)
         }
-        if (select_val == 0) {
-            progressDialogAdd.visibility = View.VISIBLE
-            callStudentLeaveInfo()
-        } else if (select_val == 1) {
-            progressDialogAdd.visibility = View.VISIBLE
-            if (ConstantFunctions.internetCheck(mContext))
-            {
-                callpickuplist_api()
-            }
-            else
-            {
-                DialogFunctions.showInternetAlertDialog(mContext)
-            }
 
-        }*/
+        progress.visibility = View.VISIBLE
+        if (ConstantFunctions.internetCheck(mContext))
+        {
+            getIntentionListAPI(stud_id)
+            getIntentionStatusAPI(stud_id)
+        }
+        else
+        {
+            DialogFunctions.showInternetAlertDialog(mContext)
+        }
+
+
 
     }
 }

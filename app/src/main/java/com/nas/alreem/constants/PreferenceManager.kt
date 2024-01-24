@@ -6,6 +6,7 @@ import com.google.gson.reflect.TypeToken
 import com.nas.alreem.R
 import com.nas.alreem.activity.cca.model.CCADetailModel
 import com.nas.alreem.activity.payments.model.StudentList
+import com.nas.alreem.activity.shop_new.model.ShopModel
 import com.nas.alreem.fragment.about_us.model.AboutusList
 import java.lang.reflect.Type
 
@@ -1205,6 +1206,30 @@ class PreferenceManager {
             val type = object : TypeToken<ArrayList<StudentList>?>() {}.type
             return gson.fromJson(json, type)
         }
+        fun setOrderArrayListModel(
+            list: ArrayList<ShopModel>,
+            context: Context
+        ) {
+            val prefs = context.getSharedPreferences(PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            val editor = prefs.edit()
+            val gson = Gson()
+            val json = gson.toJson(list)
+            editor.putString("student_list_model", json)
+            editor.apply() // This line is IMPORTANT !!!
+        }
+
+        fun getOrderArrayList(context: Context): java.util.ArrayList<ShopModel>? {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME ,
+                Context.MODE_PRIVATE
+            )
+            val gson = Gson()
+            val json = prefs.getString("student_list", null)
+            val type = object : TypeToken<ArrayList<ShopModel>?>() {}.type
+            return gson.fromJson(json, type)
+        }
 
         fun setLostAmount(context: Context, result: String?) {
             val prefs = context.getSharedPreferences(
@@ -1241,5 +1266,31 @@ class PreferenceManager {
             )
             return prefs.getString("email", "")
         }
+
+        fun setOptions(
+            list: ArrayList<String>,
+            context: Context
+        ) {
+            val prefs = context.getSharedPreferences(PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            val editor = prefs.edit()
+            val gson = Gson()
+            val json = gson.toJson(list)
+            editor.putString("options", json)
+            editor.apply() // This line is IMPORTANT !!!
+        }
+
+        fun getoptions(context: Context): java.util.ArrayList<String>? {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME ,
+                Context.MODE_PRIVATE
+            )
+            val gson = Gson()
+            val json = prefs.getString("options", null)
+            val type = object : TypeToken<ArrayList<String>?>() {}.type
+            return gson.fromJson(json, type)
+        }
+
     }
 }

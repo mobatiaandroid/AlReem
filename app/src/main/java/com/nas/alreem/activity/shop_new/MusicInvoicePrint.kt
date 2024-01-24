@@ -28,10 +28,13 @@ import androidx.core.content.FileProvider
 import com.github.barteksc.pdfviewer.PDFView
 import com.nas.alreem.R
 import com.nas.alreem.activity.home.HomeActivity
+import com.nas.alreem.activity.lost_card.PayLostRecActivity
 import com.nas.alreem.activity.shop.model.OrderSummary
+import com.nas.alreem.activity.shop_new.model.ShopModel
 import com.nas.alreem.activity.trips.PdfPrint
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.HeaderManager
+import com.nas.alreem.constants.PreferenceManager
 import java.io.BufferedReader
 import java.io.File
 import java.io.IOException
@@ -69,14 +72,16 @@ class MusicInvoicePrint : AppCompatActivity() {
     var htmlPart2:kotlin.String? = null
     var htmlPart3:kotlin.String? = null
     var htmlActualPart2:kotlin.String? = null
-    var itemsList: ArrayList<OrderSummary>? = ArrayList<OrderSummary>()
+    var itam_name :String?=""
+    var quantity: String?=""
+    var itemsList: ArrayList<ShopModel>? = ArrayList<ShopModel>()
     var termName: String? = null
     var instrumentName: String? = null
     var lessonName: String? = null
     var actualAmount: String? = null
     var vatAmount: String? = null
     var totalAmount: String? = null
-    private var mContext: Context? = null
+    lateinit var mContext: Context
     private var mWebView: WebView? = null
     private var paymentWebDummy: WebView? = null
     // lateinit var mProgressRelLayout: RelativeLayout
@@ -100,7 +105,7 @@ class MusicInvoicePrint : AppCompatActivity() {
         extras = intent.extras
         if (extras != null) {
             tab_type = extras!!.getString("tab_type")
-            orderId = extras!!.getString("orderId")
+           orderId = extras!!.getString("orderreference")
             amount = extras!!.getString("amount")
             title = extras!!.getString("title")
             invoice = extras!!.getString("invoice")
@@ -108,7 +113,9 @@ class MusicInvoicePrint : AppCompatActivity() {
             paidDate = extras!!.getString("paidDate")
             tr_no = extras!!.getString("tr_no")
             payment_type = extras!!.getString("payment_type")
-            itemsList = intent.getSerializableExtra("key") as ArrayList<OrderSummary>?
+            itam_name  = extras!!.getString("name")
+            quantity  = extras!!.getString("quantity")
+            itemsList = PreferenceManager.getOrderArrayList(mContext)
         }
         initialiseUI()
         getWebViewSettings()
@@ -235,61 +242,12 @@ class MusicInvoicePrint : AppCompatActivity() {
     }
 
     fun loadWebViewWithDataPrint() {
-        var sb = StringBuffer()
-        var eachLine = ""
-        try {
-            val br = BufferedReader(InputStreamReader(assets.open("payreciept.html")))
-            sb = StringBuffer()
-            eachLine = br.readLine()
-            while (eachLine != null) {
-                sb.append(eachLine)
-                sb.append("\n")
-                eachLine = br.readLine()
-            }
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-        fullHtml = sb.toString()
-        initialiseStrings()
-        for (i in itemsList!!.indices) {
-            termName = itemsList!![i].getTerm_name()
-            instrumentName = itemsList!![i].getInstrument_name()
-            lessonName = itemsList!![i].getLesson_name()
-            actualAmount = itemsList!![i].getActual_amount()
-            vatAmount = itemsList!![i].getTax_amount()
-            totalAmount = itemsList!![i].getTotal_amount()
-            var temp: String = htmlPart2!!
-            if (temp.length > 0) {
-                temp = temp.replace("###term###", termName!!)
-                temp = temp.replace("###instrument###", instrumentName!!)
-                temp = temp.replace("###lesson###", lessonName!!)
-                temp = temp.replace("###amount###", actualAmount!!)
-                temp = temp.replace("###vat###", vatAmount!!)
-                temp = temp.replace("###total###", totalAmount!!)
-            }
-            htmlActualPart2 = htmlActualPart2 + temp
-        }
-        fullHtml = ""
-        fullHtml = htmlPart1 + htmlActualPart2 + htmlPart3
-        if (fullHtml!!.length > 0) {
-            fullHtml = fullHtml!!.replace("###grand_total###", amount!!)
-            fullHtml = fullHtml!!.replace("###order_Id###", orderId!!)
-            fullHtml = fullHtml!!.replace("###ParentName###", paidby!!)
-          //  fullHtml = fullHtml!!.replace("###Date###", ConstantFunctions().dateParsingTodd_MMM_yyyy(paidDate))
-            fullHtml = fullHtml!!.replace("###paidBy###", invoice!!)
-            fullHtml = fullHtml!!.replace("###trn_no###", tr_no!!)
-            fullHtml = fullHtml!!.replace("###payment_type###", payment_type!!)
-            // fullHtml = fullHtml.replace("###paidBy###", "Done");
-            fullHtml = fullHtml!!.replace("###title###", title!!)
-            paymentWebDummy!!.loadDataWithBaseURL(
-                "file:///android_asset/images/",
-                fullHtml!!, "text/html; charset=utf-8", "utf-8", "about:blank"
-            )
-            mWebView!!.loadDataWithBaseURL(
-                "file:///android_asset/images/",
-                fullHtml!!, "text/html; charset=utf-8", "utf-8", "about:blank"
-            )
-        }
+
+        var br = BufferedReader(InputStreamReader(assets.open("payshoprecieptcard.html")))
+        PayShopRecActivity().loadWebViewWithDataPrint(
+            mWebView!!,br,paidby, orderId!!,
+            paidby,amount,paidDate,invoice,payment_type,
+            PreferenceManager.getStudentName(mContext!!),tr_no)
     }
 
     private fun initialiseStrings() {

@@ -40,6 +40,7 @@ import com.nas.alreem.activity.login.model.SignUpResponseModel
 import com.nas.alreem.activity.lost_card.model.GetShopCartResponseModel
 import com.nas.alreem.activity.lost_card.model.LostCardHistoryResponseModel
 import com.nas.alreem.activity.lost_card.model.LostCardIntructionResponseModel
+import com.nas.alreem.activity.lost_card.model.ShopHistoryModel
 import com.nas.alreem.activity.lost_card.model.StudentLostCardResponseModel
 import com.nas.alreem.activity.notifications.model.MessageDetailApiModel
 import com.nas.alreem.activity.notifications.model.MessageDetailModel
@@ -66,10 +67,13 @@ import com.nas.alreem.activity.permission_slip.model.PermissionResApiModel
 import com.nas.alreem.activity.permission_slip.model.PermissionResponseModel
 import com.nas.alreem.activity.primary.model.ComingUpResponseModel
 import com.nas.alreem.activity.settings.model.TermsOfServiceResponseModel
+import com.nas.alreem.activity.shop.model.PaymentGatewayApiModelShop
 import com.nas.alreem.activity.shop_new.model.AddToCartShopApiModel
 import com.nas.alreem.activity.shop_new.model.ShopCartRemoveApiModel
 import com.nas.alreem.activity.shop_new.model.ShopCartUpdateApiModel
+import com.nas.alreem.activity.shop_new.model.ShopHistoryResponseModel
 import com.nas.alreem.activity.shop_new.model.ShopItemsApiModel
+import com.nas.alreem.activity.shop_new.model.StudentShopCardResponseModel
 import com.nas.alreem.activity.staff_directory.model.ListStaffDetailApiModel
 import com.nas.alreem.activity.staff_directory.model.ListStaffDetailModel
 import com.nas.alreem.activity.staff_directory.model.StaffCatListResponseModel
@@ -358,7 +362,12 @@ interface ApiInterface {
         @Body  paymentGateway: PaymentGatewayApiModel,
         @Header("Authorization") token:String
     ): Call<PaymentGatewayModel>
-
+    @POST("network_payment_gateway_creating_an_order")
+    @Headers("Content-Type: application/json")
+    fun payment_gateway_shop(
+        @Body  paymentGateway: PaymentGatewayApiModelShop,
+        @Header("Authorization") token:String
+    ): Call<PaymentGatewayModel>
     //payment success
     @POST("submit_payment")
     @Headers("Content-Type: application/json")
@@ -902,5 +911,12 @@ interface ApiInterface {
     (
         @Header("Authorization") token: String,
         @Body json: JsonObject
-    ): Call<StudentLostCardResponseModel>
+    ): Call<StudentShopCardResponseModel>
+
+    @POST("get_shop_orders_history")
+    @Headers("Content-Type: application/json")
+    fun get_shop_orders_history(
+        @Body  studentbody: ShopHistoryModel,
+        @Header("Authorization") token:String
+    ): Call<ShopHistoryResponseModel>
 }

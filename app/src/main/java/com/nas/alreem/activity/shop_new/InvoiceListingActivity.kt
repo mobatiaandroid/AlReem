@@ -1,6 +1,5 @@
 package com.nas.alreem.activity.shop_new
 
-import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -8,31 +7,40 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.Window
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.Gson
-import com.google.gson.JsonObject
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.nas.alreem.R
 import com.nas.alreem.activity.home.HomeActivity
+import com.nas.alreem.activity.lost_card.model.ShopHistoryModel
 import com.nas.alreem.activity.payments.adapter.StudentListAdapter
 import com.nas.alreem.activity.payments.model.StudentList
+import com.nas.alreem.activity.payments.model.StudentListModel
 import com.nas.alreem.activity.shop.model.MusicPaymentHistoryModel
 import com.nas.alreem.activity.shop.model.OrderSummary
+import com.nas.alreem.activity.shop_new.adapter.ShopCardHistoryAdapter
+import com.nas.alreem.activity.shop_new.model.PaymentShopWalletHistoryModel
+import com.nas.alreem.activity.shop_new.model.ShopHistoryResponseModel
+import com.nas.alreem.activity.shop_new.model.ShopModel
 import com.nas.alreem.constants.ApiClient
-import com.nas.alreem.constants.ApiInterface
+import com.nas.alreem.constants.ConstantFunctions
+import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.HeaderManager
 import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.recyclermanager.DividerItemDecoration
 import com.nas.alreem.recyclermanager.RecyclerItemListener
-import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -45,18 +53,25 @@ class InvoiceListingActivity : AppCompatActivity() {
     lateinit var home: ImageView
     lateinit var mContext: Context
     lateinit var studImg: ImageView
-    var stud_img: String? = ""
     var extras: Bundle? = null
-    var studentNameStr: String? = ""
-    var studentClassStr = ""
-    var studentIdStr: String? = ""
+    lateinit var student_Name: String
+    lateinit var studentId: String
+    lateinit var studentImg: String
+    lateinit var studentClass: String
+    lateinit var studentNameTxt: TextView
+    lateinit var stud_Img: ImageView
     lateinit var studentName: TextView
+    lateinit var studentNameStr:String
+    lateinit var studentIdStr:String
+    lateinit var studimg:String
+    lateinit var progressDialogAdd: ProgressBar
+
     var mStudentSpinner: LinearLayout? = null
-    var newsLetterModelArrayList: ArrayList<MusicPaymentHistoryModel> =
-        ArrayList<MusicPaymentHistoryModel>()
+    var newsLetterModelArrayList: ArrayList<PaymentShopWalletHistoryModel> =
+        ArrayList<PaymentShopWalletHistoryModel>()
     var studentsModelArrayList: ArrayList<StudentList>? = ArrayList<StudentList>()
-    var paymentHistoryList: ArrayList<MusicPaymentHistoryModel> =
-        ArrayList<MusicPaymentHistoryModel>()
+    var paymentHistoryList: ArrayList<ShopModel> =
+        ArrayList<ShopModel>()
     lateinit var mNewsLetterListView: RecyclerView
    // var progressBarDialog: ProgressBarDialog? = null
 
@@ -65,17 +80,25 @@ class InvoiceListingActivity : AppCompatActivity() {
         setContentView(R.layout.activity_invoice_listing)
         mContext = this
         initialiseUI()
+        if (ConstantFunctions.internetCheck(mContext)) {
+
+            getStudentsListAPI()
+        } else {
+            DialogFunctions.showInternetAlertDialog(mContext)
+        }
     }
 
     private fun initialiseUI() {
         extras = intent.extras
         if (extras != null) {
-            studentNameStr = extras!!.getString("studentName")
-            studentIdStr = extras!!.getString("studentId")
-            studentsModelArrayList = extras!!
+           // studentNameStr = extras!!.getString("studentName").toString()
+         //   studentIdStr = extras!!.getString("studentId").toString()
+           /* studentsModelArrayList = extras!!
                 .getSerializable("StudentModelArray") as ArrayList<StudentList>?
-            stud_img = extras!!.getString("studentImage")
+            studimg = extras!!.getString("studentImage").toString()*/
         }
+        progressDialogAdd = findViewById(R.id.progressDialogAdd)
+
         relativeHeader = findViewById<View>(R.id.relativeHeader) as RelativeLayout
         mStudentSpinner = findViewById<View>(R.id.studentSpinner) as LinearLayout
         studentName = findViewById<View>(R.id.studentName) as TextView
@@ -86,7 +109,7 @@ class InvoiceListingActivity : AppCompatActivity() {
         mNewsLetterListView!!.layoutManager = llm
         mNewsLetterListView!!.setHasFixedSize(true)
         mNewsLetterListView!!.addItemDecoration(DividerItemDecoration(resources.getDrawable(R.drawable.list_divider_teal)))
-        headermanager = HeaderManager(this@InvoiceListingActivity, "Payment History")
+        headermanager = HeaderManager(this@InvoiceListingActivity, "Shop History")
         headermanager.getHeader(relativeHeader, 0)
       //  progressBarDialog = ProgressBarDialog(mContext, R.drawable.spinner)
         back = headermanager.leftButton!!
@@ -112,38 +135,34 @@ class InvoiceListingActivity : AppCompatActivity() {
 
             }
         }
-        studentName!!.text = studentNameStr
-        if (stud_img != "") {
+      //  studentName!!.text = studentNameStr
+       /* if (studimg != "") {
 
         } else {
             studImg!!.setImageResource(R.drawable.boy)
-        }
-        PreferenceManager.setStudentID(mContext, studentIdStr)
+        }*/
+       // PreferenceManager.setStudentID(mContext, studentIdStr)
         mNewsLetterListView!!.addOnItemTouchListener(
             RecyclerItemListener(mContext, mNewsLetterListView,
                 object : RecyclerItemListener.RecyclerTouchListener{
                     override fun onClickItem(v: View?, position: Int) {
+                        PreferenceManager.setOrderArrayListModel(newsLetterModelArrayList[position].order_summery,mContext)
                         val intent = Intent(mContext, MusicInvoicePrint::class.java)
-                        intent.putExtra("title", "Music Academy Registration")
-                        intent.putExtra("key", paymentHistoryList[position].getOrder_summery())
-                        intent.putExtra("orderId", paymentHistoryList[position].getId())
-                        intent.putExtra("invoice", paymentHistoryList[position].getInvoice())
-                        intent.putExtra("amount", paymentHistoryList[position].getAmount())
-                        intent.putExtra("paidby", paymentHistoryList[position].getName())
-                        intent.putExtra("paidDate", paymentHistoryList[position].getDate_time())
-                        intent.putExtra("tr_no", paymentHistoryList[position].getTrn_no())
+                        intent.putExtra("title", "Shop Registration")
+                       // intent.putExtra("key", newsLetterModelArrayList[position].order_summery)
+                       intent.putExtra("orderreference", newsLetterModelArrayList[position].order_reference)
+                        intent.putExtra("invoice", newsLetterModelArrayList[position].invoice_note)
+                        intent.putExtra("amount", newsLetterModelArrayList[position].order_total)
+                        intent.putExtra("paidby", newsLetterModelArrayList[position].student_name)
+                        intent.putExtra("paidDate", newsLetterModelArrayList[position].created_on)
+                        intent.putExtra("tr_no", newsLetterModelArrayList[position].trn_no)
+
+
                         intent.putExtra(
                             "payment_type",
-                            paymentHistoryList[position].getPayment_type()
+                            newsLetterModelArrayList[position].payment_type
                         )
-                        if (paymentHistoryList[position].getBill_no().equals("")) {
-                            intent.putExtra("billingCode", "--")
-                        } else {
-                            intent.putExtra(
-                                "billingCode",
-                                paymentHistoryList[position].getBill_no()
-                            )
-                        }
+
                         mContext!!.startActivity(intent)
                     }
 
@@ -153,9 +172,153 @@ class InvoiceListingActivity : AppCompatActivity() {
                 })
         )
     }
+    private fun getStudentsListAPI() {
+        progressDialogAdd.visibility=View.VISIBLE
+        studentsModelArrayList!!.clear()
+       // studentList.clear()
+        val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+ PreferenceManager.getaccesstoken(mContext))
+        call.enqueue(object : Callback<StudentListModel> {
+            override fun onResponse(
+                call: Call<StudentListModel?>,
+                response: Response<StudentListModel?>
+            ) {
+                progressDialogAdd.visibility=View.GONE
+
+                val responsedata = response.body()
+                if (responsedata != null) {
+                    try {
+
+                        if (response.body()!!.status==100)
+                        {
+                            studentsModelArrayList=ArrayList()
+                            studentsModelArrayList!!.addAll(response.body()!!.responseArray.studentList)
+                            if (PreferenceManager.getStudentID(mContext).equals(""))
+                            {
+                                student_Name= studentsModelArrayList!!.get(0).name
+                                studentImg= studentsModelArrayList!!.get(0).photo
+                                studentId= studentsModelArrayList!!.get(0).id
+                                studentClass= studentsModelArrayList!!.get(0).section
+                                PreferenceManager.setStudentID(mContext,studentId)
+                                PreferenceManager.setStudentName(mContext,student_Name)
+                                PreferenceManager.setStudentPhoto(mContext,studentImg)
+                                PreferenceManager.setStudentClass(mContext,studentClass)
+                                studentName.text=student_Name
+                                if(!studentImg.equals(""))
+                                {
+                                    Glide.with(mContext) //1
+                                        .load(studentImg)
+                                        .placeholder(R.drawable.student)
+                                        .error(R.drawable.student)
+                                        .skipMemoryCache(true) //2
+                                        .diskCacheStrategy(DiskCacheStrategy.NONE) //3
+                                        .transform(CircleCrop()) //4
+                                        .into(studImg)
+                                }
+                                else{
+                                    studImg.setImageResource(R.drawable.student)
+                                }
+
+                            }
+                            else{
+                                student_Name= PreferenceManager.getStudentName(mContext)!!
+                                studentImg= PreferenceManager.getStudentPhoto(mContext)!!
+                                studentId= PreferenceManager.getStudentID(mContext)!!
+                                studentClass= PreferenceManager.getStudentClass(mContext)!!
+                                studentName.text=student_Name
+                                if(!studentImg.equals(""))
+                                {
+                                    Glide.with(mContext) //1
+                                        .load(studentImg)
+                                        .placeholder(R.drawable.student)
+                                        .error(R.drawable.student)
+                                        .skipMemoryCache(true) //2
+                                        .diskCacheStrategy(DiskCacheStrategy.NONE) //3
+                                        .transform(CircleCrop()) //4
+                                        .into(studImg)
+                                }
+                                else{
+                                    studImg.setImageResource(R.drawable.student)
+                                }
+                            }
+                            getPaymentHistory(studentId)
+                        }
+                        else
+                        {
+
+                            DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), mContext)
+                        }
+
+
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<StudentListModel?>, t: Throwable) {
+                progressDialogAdd.visibility=View.GONE
+
+            }
+        })
+
+
+
+    }
 
     private fun getPaymentHistory(studentIdStr: String?) {
-        /*val service: ApiInterface = ApiClient.getClient.create(ApiInterface::class.java)
+        progressDialogAdd.visibility=View.VISIBLE
+
+        val studentbody= ShopHistoryModel(studentIdStr!!,"0","20")
+
+        val call: Call<ShopHistoryResponseModel> = ApiClient.getClient.get_shop_orders_history(studentbody,"Bearer "+ PreferenceManager.getaccesstoken(mContext))
+        call.enqueue(object : Callback<ShopHistoryResponseModel> {
+            override fun onResponse(
+                call: Call<ShopHistoryResponseModel?>,
+                response: Response<ShopHistoryResponseModel?>
+            ) {
+                progressDialogAdd.visibility=View.GONE
+
+                val responsedata = response.body()
+                if (responsedata != null) {
+                    try {
+                        if(responsedata.status==100)
+                        {
+
+                               // Log.e("size", response.body()!!.response.data.size.toString())
+                                if (response.body()!!.response.order_history.size > 0) {
+                                    newsLetterModelArrayList.clear()
+                                    newsLetterModelArrayList.addAll(response.body()!!.response.order_history)
+                                    mNewsLetterListView!!.visibility = View.VISIBLE
+                                    val newsLetterAdapter =
+                                        ShopCardHistoryAdapter(mContext, newsLetterModelArrayList)
+                                    mNewsLetterListView!!.adapter = newsLetterAdapter
+                                } else {
+                                    newsLetterModelArrayList.clear()
+                                    mNewsLetterListView!!.visibility = View.GONE
+                                    val newsLetterAdapter =
+                                        ShopCardHistoryAdapter(mContext, newsLetterModelArrayList)
+                                    mNewsLetterListView!!.adapter = newsLetterAdapter
+                                    DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert),"No Data Found", mContext)
+
+
+                                }
+
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ShopHistoryResponseModel?>, t: Throwable) {
+                progressDialogAdd.visibility=View.GONE
+
+
+
+
+            }
+        })
+       /* val service: ApiInterface = ApiClient.getClient.create(ApiInterface::class.java)
         val paramObject = JsonObject()
         paramObject.addProperty("student_id", studentIdStr)
         val call: Call<PaymentHistoryResponseModel> = service.postMusicPaymentHistory(
@@ -345,9 +508,11 @@ class InvoiceListingActivity : AppCompatActivity() {
                         dialog.dismiss()
                         studentName.setText(mStudentArray!![position].name)
                         studentIdStr = mStudentArray!![position].id
-                        studentClassStr = mStudentArray[position].studentClass
-                        stud_img = mStudentArray[position].photo
-                        if (stud_img != "") {
+                        Log.e("Student_id",studentIdStr)
+                        studentClass = mStudentArray[position].studentClass
+                        studimg = mStudentArray[position].photo
+
+                        if (studimg != "") {
 
                         } else {
                             studImg!!.setImageResource(R.drawable.boy)
@@ -363,7 +528,7 @@ class InvoiceListingActivity : AppCompatActivity() {
                         )
 
                             // TODO INVOICE LIST
-                            getPaymentHistory(PreferenceManager.getStudentID(mContext))
+                            getPaymentHistory(studentIdStr)
                             //  getEventsListApi(PreferenceManager.getStudentID(mContext));
 
                     }

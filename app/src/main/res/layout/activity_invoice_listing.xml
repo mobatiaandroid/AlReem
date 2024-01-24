@@ -86,7 +86,7 @@
 
             </LinearLayout>
 
-            <com.mobatia.naisapp.manager.CustomFontSansProTextBlack
+            <com.nas.alreem.commonviews.CustomFontSansProTextBlack
 
                 android:id="@+id/textViewYear"
                 android:layout_width="wrap_content"
@@ -109,7 +109,7 @@
 
                 android:visibility="gone" />
 
-            <com.mobatia.naisapp.manager.CustomFontSansProTextBlack
+            <com.nas.alreem.commonviews.CustomFontSansProTextBlack
                 android:id="@+id/enterTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -140,6 +140,14 @@
 
 
     </LinearLayout>
+    <ProgressBar
+        android:id="@+id/progressDialogAdd"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerInParent="true"
+        android:indeterminateDrawable="@anim/customspinner"
+        android:visibility="gone"
 
+        />
 
 </RelativeLayout>

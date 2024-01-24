@@ -1,48 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="350dp"
-    android:layout_height="500dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/white">
-
-    <RelativeLayout
-        android:id="@+id/relativeHeader"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/relative_logo_header"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/titlebar" />
-
-        <ImageView
-            android:id="@+id/logoClickImgView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/relative_logo_header"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/logotransperent" />
-
-    </RelativeLayout>
-
-    <ImageView
-        android:id="@+id/close_img"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_marginRight="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/relativeHeader"
-        app:layout_constraintEnd_toEndOf="@+id/relativeHeader"
-        app:layout_constraintTop_toTopOf="parent"
-        android:background="@drawable/close"/>
-       <!-- android:background="@drawable/calendar_close"-->
-
+    <include
+        android:id="@+id/includeRel"
+        layout="@layout/layout_activity_header" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/title_header"
@@ -50,7 +16,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relativeHeader">
+        app:layout_constraintTop_toBottomOf="@+id/includeRel">
 
         <LinearLayout
 
@@ -334,16 +300,17 @@
                 android:layout_margin="16dp"
                 android:orientation="vertical"
                 android:weightSum="1"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linear_choose">
-                <com.nas.alreem.commonviews.CustomFontSansProTextBlack
+                <com.nas.alreem.commonviews.CustomTextViewRegular
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:id="@+id/questionTxt2"
                     android:layout_weight=".2"
                     android:paddingLeft="8dp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/grey"
                     android:text="Will your child be returning for academic year 2023/24?" />
                 <com.nas.alreem.commonviews.CustomEditTextViewRegular
                     android:layout_width="match_parent"
@@ -352,18 +319,19 @@
                     android:layout_marginTop="4dp"
                     android:layout_weight=".2"
                     android:paddingLeft="8dp"
-                    android:textColor="@color/black"
-                    android:hint="Will your child be returning for academic year 2023/24?"
+                    android:textColor="@color/grey"
+                    android:hint="Answer"
                     />
             </LinearLayout>
             <com.nas.alreem.commonviews.button.CustomFontButtonBoldNoColor
                 android:id="@+id/sub_btn"
-                android:layout_width="100dp"
-                android:layout_height="30dp"
-                android:layout_marginEnd="16sp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
                 android:background="@drawable/button_blue"
                 android:gravity="center"
                 android:text="SUBMIT"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textStyle="bold"

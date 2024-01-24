@@ -149,7 +149,7 @@ class LostCardPaymentActivity : AppCompatActivity() {
                             var payment_token=responsedata.responseArray.access_token
                             val tsLong = System.currentTimeMillis() / 1000
                             val ts = tsLong.toString()
-                            invoice_ref="NASCANAND"
+                            invoice_ref="NASIDAND"
                             var mechantorderRef=invoice_ref+"-"+ts
 
                             val amountDouble: Double = WalletAmount.toDouble() * 100
@@ -276,8 +276,7 @@ class LostCardPaymentActivity : AppCompatActivity() {
         val paramObject = JsonObject()
         paramObject.addProperty("student_id", studentIdStr)
         paramObject.addProperty("amount", PreferenceManager.getLostAmount(mContext))
-        paramObject.addProperty("keycode", orderReff)
-        paramObject.addProperty("network_response", "200")
+        paramObject.addProperty("order_reference", orderReff)
         paramObject.addProperty("device_type", "2")
         paramObject.addProperty("device_name", devicename)
         paramObject.addProperty("app_version", version)

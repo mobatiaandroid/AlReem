@@ -152,7 +152,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:visibility="gone"
-        android:background="@drawable/no_food_items"
+        android:background="@drawable/no_data"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/categoryRecyclerView"
         tools:layout_editor_absoluteX="-16dp" />
