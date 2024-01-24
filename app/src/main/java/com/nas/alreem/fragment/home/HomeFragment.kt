@@ -48,6 +48,7 @@ import com.nas.alreem.fragment.bus_service.BusServiceFragment
 import com.nas.alreem.fragment.calendar.CalendarFragment
 import com.nas.alreem.fragment.canteen.CanteenFragment
 import com.nas.alreem.fragment.cca.CCAFragment
+import com.nas.alreem.fragment.communication.CommunicationFragment
 import com.nas.alreem.fragment.contact_us.ContactUsFragment
 import com.nas.alreem.fragment.gallery.GalleryFragment
 import com.nas.alreem.fragment.home.model.BannerResponseModel
@@ -2215,6 +2216,10 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     fragmentIntent(mFragment)
                 }
 
+                ConstantWords.TAB_COMMUNICATION -> {
+                    mFragment = CommunicationFragment()
+                    fragmentIntent(mFragment)
+                }
                 ConstantWords.TAB_BUS_SERVICE -> {
                     mFragment = BusServiceFragment()
                     fragmentIntent(mFragment)

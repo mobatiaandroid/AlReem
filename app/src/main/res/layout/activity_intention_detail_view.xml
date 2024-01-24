@@ -155,8 +155,66 @@
             </LinearLayout>
 
 
+            <LinearLayout
+                android:id="@+id/linear_Option_question"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/linear_parentName"
+                android:layout_margin="8dp"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:weightSum="1">
 
+                <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_weight=".2"
+                    android:text="Question" />
 
+                <com.nas.alreem.commonviews.CustomFontSansProEditTextNoColor
+                    android:id="@+id/option_question"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/textfield_bg"
+                    android:hint="email@gmail.com"
+                    android:padding="8dp"
+                    android:editable="false"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/dark_grey1" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linear_answer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/linear_parentMail"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone"
+                android:orientation="vertical"
+                android:weightSum="1">
+
+                <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_weight=".2"
+                    android:text="Selected Options" />
+
+                <com.nas.alreem.commonviews.CustomFontSansProEditTextNoColor
+                    android:id="@+id/answeroption"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/textfield_bg"
+                    android:hint="Unsure"
+                    android:padding="8dp"
+                    android:editable="false"
+                    android:paddingBottom="4dp"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/dark_grey1" />
+            </LinearLayout>
 
         </LinearLayout>
 
