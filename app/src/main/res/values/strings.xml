@@ -8,7 +8,7 @@
         <item>Calendar</item>
         <item>Communication</item>
         <item>Payments</item>
-        <item>Re-Enrollment</item>
+        <item>Re-Enrolment</item>
         <item>Lunch Box</item>
         <item>Shop</item>
         <item>Parent Essentials</item>
@@ -24,8 +24,6 @@
         <item>Gallery</item>
         <item>Contact Us</item>
         <item>About Us</item>
-
-
 
 
     </string-array>
@@ -53,8 +51,6 @@
         <item>@drawable/gallery</item>
         <item>@drawable/contacts</item>
         <item>@drawable/aboutus</item>
-
-
 
 
     </string-array>

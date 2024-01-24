@@ -51,7 +51,7 @@ import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.MyDragShadowBuilder
 import com.nas.alreem.constants.PreferenceManager
-import com.nas.alreem.constants.WebLinkActivity
+import com.nas.alreem.constants.WebViewTextActivity
 import com.nas.alreem.fragment.about_us.AboutUsFragment
 import com.nas.alreem.fragment.absence.AbsenceFragment
 import com.nas.alreem.fragment.bus_service.BusServiceFragment
@@ -65,6 +65,7 @@ import com.nas.alreem.fragment.gallery.GalleryFragment
 import com.nas.alreem.fragment.home.HomeFragment
 import com.nas.alreem.fragment.home.adapter.ReEnrollAdapter
 import com.nas.alreem.fragment.home.mContext
+import com.nas.alreem.fragment.home.re_enrollment.EnrollmentHelpResponseModel
 import com.nas.alreem.fragment.home.re_enrollment.EnrollmentSaveResponseModel
 import com.nas.alreem.fragment.home.re_enrollment.ReEnrollSubmitModel
 import com.nas.alreem.fragment.home.re_enrollment.ReEnrollmentFormResponseModel
@@ -433,7 +434,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                                             Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                                         val uri = Uri.fromParts(
                                             "package",
-                                            mActivity.getPackageName(),
+                                            mActivity.packageName,
                                             null
                                         )
                                         intent.data = uri
@@ -475,7 +476,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                                             Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                                         val uri = Uri.fromParts(
                                             "package",
-                                            mActivity.getPackageName(),
+                                            mActivity.packageName,
                                             null
                                         )
                                         intent.data = uri
@@ -891,12 +892,33 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                 dialog.findViewById<View>(R.id.text_content) as EditText
             dialogCancelButton.setOnClickListener { dialog.dismiss() }
             submitButton.setOnClickListener {
-                // sendEmailEnroll(URL_SEND_EMAIL_ENROLL)
-                dialog.dismiss()
+                if (text_dialog.text.toString().trim().equals("")) {
+                    DialogFunctions.commonErrorAlertDialog(
+                        mContext.resources.getString(R.string.alert),
+                        resources.getString(R.string.enter_subject),
+                        mContext
+                    )
+                } else if (text_content.text.toString().trim().equals("")) {
+                    DialogFunctions.commonErrorAlertDialog(
+                        mContext.resources.getString(R.string.alert),
+                        resources.getString(R.string.enter_content),
+                        mContext
+                    )
+                } else {
+                    if (ConstantFunctions.internetCheck(mContext)) {
+                        sendEmailEnroll(
+                            text_dialog.text.toString().trim(),
+                            text_content.text.toString().trim(),
+                            dialog
+                        )
+                    } else {
+                        DialogFunctions.showInternetAlertDialog(mContext)
+                    }
+                }
             }
             dialog.show()
         }
-        titleTextView.text = "Re-Enrollment"
+        titleTextView.text = "Re-Enrolment"
         studentEnrollList = ArrayList<StudentEnrollList>()
         callSettingsAPI(mContext)
         closeImage.setOnClickListener { dialog.dismiss() }
@@ -930,11 +952,11 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                             val role = dialog.findViewById<TextView>(R.id.statustxt)
                             val section = dialog.findViewById<TextView>(R.id.section)
                             val imageView = dialog.findViewById<ImageView>(R.id.iconImageView)
-                            name.setText(studentList.get(position).parent_name)
-                            studName.setText(studentList.get(position).name)
-                            department.setText(studentList.get(position).parent_email)
-                            role.setText(studentList.get(position).status)
-                            section.setText(studentList.get(position).section)                           // TODO set Staff Image
+                            name.text = studentList.get(position).parent_name
+                            studName.text = studentList.get(position).name
+                            department.text = studentList.get(position).parent_email
+                            role.text = studentList.get(position).status
+                            section.text = studentList.get(position).section                           // TODO set Staff Image
                             dialog.show()
                         }
                     }
@@ -945,9 +967,53 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
         dialog.show()
     }
 
+    private fun sendEmailEnroll(subject: String, content: String, dialog: Dialog) {
+        val paramObject = JsonObject()
+        paramObject.addProperty("title", subject.trim().toString())
+        paramObject.addProperty("message", content.trim().toString())
+        val call: Call<EnrollmentHelpResponseModel> = ApiClient.getClient.getenrollhelp(
+            "Bearer " + PreferenceManager.getaccesstoken(mContext),
+            paramObject
+        )
+        call.enqueue(object : Callback<EnrollmentHelpResponseModel> {
+            override fun onFailure(call: Call<EnrollmentHelpResponseModel>, t: Throwable) {
+                //progressDialog.visibility = View.GONE
+            }
+
+            override fun onResponse(
+                call: Call<EnrollmentHelpResponseModel>,
+                response: Response<EnrollmentHelpResponseModel>
+            ) {
+                val responsedata = response.body()
+                //progressDialog.visibility = View.GONE
+                if (responsedata != null) {
+                    try {
+
+
+                        if (response.body()!!.status == 100) {
+                            Toast.makeText(context, "Email sent successfully", Toast.LENGTH_SHORT)
+                                .show()
+                            dialog.dismiss()
+                        } else {
+                            DialogFunctions.commonErrorAlertDialog(
+                                mContext.resources.getString(R.string.alert),
+                                ConstantFunctions.commonErrorString(response.body()!!.status),
+                                mContext
+                            )
+
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+
+        })
+    }
+
     private fun callSettingsAPI(mContext: Context) {
         //  progressDialogP.show()
-        studentList= ArrayList()
+        studentList = ArrayList()
         val call: Call<ReEnrollmentStatusResponseModel> =
             ApiClient.getClient.getenrollstatus(
                 "Bearer " + PreferenceManager.getaccesstoken(
@@ -1115,13 +1181,15 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
         position: Int
     ) {
         val service: ApiInterface = ApiClient.getClient
-        val paramObject = JsonObject()
-        paramObject.addProperty("status", selectedItem)
-        paramObject.addProperty("student_id", studentList[position].id)
-        val save_reenroll = ReEnrollSubmitAPIModel(reEnrollSaveArray)
+//        progressBarDialog.show();
+        val temp = ReEnrollSubmitModel(studentList[position].id, selectedItem)
+        val tempArray: java.util.ArrayList<ReEnrollSubmitModel> =
+            java.util.ArrayList<ReEnrollSubmitModel>()
+        tempArray.add(temp)
+        val saveReEnrollArray = ReEnrollSubmitAPIModel(tempArray)
         val call: Call<EnrollmentSaveResponseModel> = service.getenrollsave(
             "Bearer " + PreferenceManager.getaccesstoken(mContext),
-            save_reenroll
+            saveReEnrollArray
         )
         call.enqueue(object : Callback<EnrollmentSaveResponseModel?> {
             override fun onResponse(
@@ -1131,7 +1199,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                 // progressDialogP.hide()
                 if (response.body() != null) {
                     val apiResponse: EnrollmentSaveResponseModel? = response.body()
-                    val status: String = apiResponse!!.getStatus()
+                    val status: String = apiResponse!!.status
                     if (status == "100") {
                         if (selectedItem.equals("Returning", ignoreCase = true)) {
                             showSuccessReEnrollAlert(
@@ -1223,7 +1291,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
         d.setContentView(R.layout.dialog_common_error_alert)
         val iconImageView = d.findViewById<ImageView>(R.id.iconImageView)
         val alertHead = d.findViewById<TextView>(R.id.alertHead)
-        val text_dialog = d.findViewById<TextView>(R.id.text_dialog)
+        val text_dialog = d.findViewById<TextView>(R.id.messageTxt)
         val btn_Ok = d.findViewById<Button>(R.id.btn_Ok)
         text_dialog.text = successfully_submitted_
         alertHead.text = success
@@ -1244,7 +1312,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
         val iconImageView = dialog1.findViewById<ImageView>(R.id.iconImageView)
         iconImageView.setImageResource(R.drawable.exclamationicon)
         val alertHead = dialog1.findViewById<TextView>(R.id.alertHead)
-        val text_dialog = dialog1.findViewById<TextView>(R.id.text_dialog)
+        val text_dialog = dialog1.findViewById<TextView>(R.id.messageTxt)
         val btn_Ok = dialog1.findViewById<Button>(R.id.btn_Ok)
         // var btn_Cancel = dialog.findViewById(R.id.btn_Cancel) as Button
         text_dialog.text = s
@@ -1343,21 +1411,27 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
             dropDownList.add(optionsArray[i - 1])
         }
         val sp_adapter: ArrayAdapter<*> =
-            ArrayAdapter(mContext, R.layout.spinner_textview, dropDownList)
+            ArrayAdapter(mContext, R.layout.spinner_textview_white, dropDownList)
+        sp_adapter.setDropDownViewResource(R.layout.spinner_textview)
         spinnerList.adapter = sp_adapter
         spinnerList.setSelection(0)
         val finalDropDownList: java.util.ArrayList<*> = dropDownList
         spinnerList.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View,
+                position: Int,
+                id: Long
+            ) {
                 selectedItem = parent.getItemAtPosition(position).toString()
                 val optionlistSize = finalDropDownList.size - 1
                 for (i in 1 until optionlistSize) {
                     if (selectedItem === finalDropDownList[i].toString()) {
-                        reEnrollSubmit[0].setStatus(finalDropDownList[i].toString())
-                        reEnrollSubmit[0].setStudent_id(studentEnrollList[position].id)
+                        reEnrollSubmit[0].status = finalDropDownList[i].toString()
+                        reEnrollSubmit[0].student_id = studentEnrollList[position].id
                         check[0] = 1
                     } else if (selectedItem === finalDropDownList[0]) {
-                        reEnrollSubmit[position].setStatus("")
+                        reEnrollSubmit[position].status = ""
                         check[0] = 0
                     }
                 }
@@ -1388,7 +1462,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
             spinnerList.visibility = View.VISIBLE
         }
         terms_and_condtns.setOnClickListener {
-            val intent = Intent(mContext, WebLinkActivity::class.java)
+            val intent = Intent(mContext, WebViewTextActivity::class.java)
             intent.putExtra("Url", tAndCString)
             mContext.startActivity(intent)
         }
@@ -1405,7 +1479,14 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                     dialog
                 )
             } else {
-                showSubmitConfirm(mContext, "Would you like to submit?", "Alert", dialog, position)
+                showSubmitConfirm(
+                    mContext,
+                    "Would you like to submit?",
+                    "Alert",
+                    dialog,
+                    position,
+                    reEnrollSubmit
+                )
             }
         }
         close_img.setOnClickListener { dialog.dismiss() }
@@ -1413,7 +1494,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
     }
     private fun showSubmitConfirm(
         activity: Context, do_you_want_to_submit: String, alert: String,
-        dialog: Dialog, position: Int
+        dialog: Dialog, position: Int, reEnrollSubmit: java.util.ArrayList<ReEnrollSubmitModel>
     ) {
         val dialog1 = Dialog(mContext)
         dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -1429,7 +1510,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
         alertHead.text = alert
         btn_Ok.setOnClickListener {
             saveReEnrollApi(
-               reEnrollSaveArray,
+                reEnrollSubmit,
                 dialog1,
                 dialog,
                 position

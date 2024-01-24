@@ -284,7 +284,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:background="@drawable/text_field_bg_teal"
-                        android:popupBackground="@color/split_bg"
+                        android:popupBackground="@color/white"
                         android:spinnerMode="dropdown"
                         android:textColor="@color/white"
                         android:visibility="visible"
@@ -320,6 +320,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_margin="16dp"
+                android:visibility="gone"
                 android:text="Personal Information Collection Statement"
                 android:textColor="@color/blue"
                 app:layout_constraintTop_toBottomOf="@+id/linear_choose" />
@@ -371,7 +372,7 @@
             </LinearLayout>
 
 
-            <com.nas.alreem.commonviews.button.CustomFontButtonRegularTeal
+            <com.nas.alreem.commonviews.button.CustomButtonFontSansButtonBold
                 android:id="@+id/terms_conditions"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
@@ -380,7 +381,7 @@
                 android:textColor="@color/blue"
                 app:layout_constraintTop_toBottomOf="@+id/linear_choose"
                 tools:layout_editor_absoluteX="16dp"
-                tools:text="Important note on re-enrolment" />
+                android:text="Important note on re-enrolment" />
 
             <LinearLayout
                 android:id="@+id/linear_termsDeclaratn"
