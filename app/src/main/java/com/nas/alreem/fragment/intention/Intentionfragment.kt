@@ -54,7 +54,7 @@ import com.nas.alreem.fragment.intention.adapter.IntentionAdapter
 import com.nas.alreem.fragment.intention.model.IntentionApiModel
 import com.nas.alreem.fragment.intention.model.IntentionApiSubmit
 import com.nas.alreem.fragment.intention.model.IntentionInfoResponseArray
-import com.nas.alreem.fragment.intention.model.IntentionResponseModel
+import com.nas.alreem.fragment.intention.model.IntentionListAPIResponseModel
 import com.nas.alreem.fragment.intention.model.IntentionStatusResponseModel
 import com.nas.alreem.fragment.intention.model.IntentionSubmitModel
 import com.nas.alreem.fragment.intention.model.IntentionstatusResponseArray
@@ -69,8 +69,8 @@ class Intentionfragment : Fragment(){
     lateinit var titleTextView: TextView
     lateinit var back: ImageView
 
-    lateinit var primaryArrayList:ArrayList<IntentionInfoResponseArray>
-    lateinit var intentionstatusArray:ArrayList<IntentionstatusResponseArray>
+    lateinit var primaryArrayList: ArrayList<IntentionListAPIResponseModel.Intention>
+    lateinit var intentionstatusArray: ArrayList<IntentionstatusResponseArray>
 
     lateinit var optionsArray : ArrayList<String>
     lateinit var backRelative: RelativeLayout
@@ -150,27 +150,26 @@ class Intentionfragment : Fragment(){
             override fun onItemClicked(position: Int, view: View)
             {
                 Log.e("intention","intention")
-                if (primaryArrayList.get(position).status.equals("")) {
+                if (primaryArrayList[position].status.equals("")) {
                     val intent = Intent(mContext, IntentionRegisterActivity::class.java)
 
-                    intent.putExtra("question",primaryArrayList.get(position).question)
-                    intent.putExtra("student",primaryArrayList.get(position).student)
-                    intent.putExtra("classs",primaryArrayList.get(position).classs)
-                    intent.putExtra("intenmt_id",primaryArrayList.get(position).intension_id)
-                    PreferenceManager.setOptions(primaryArrayList.get(position).options,mContext)
-                   // intent.putExtra("options",primaryArrayList.get(position).options)
-                    intent.putExtra("position",position)
+                    intent.putExtra("question", primaryArrayList[position].question)
+                    intent.putExtra("student", primaryArrayList[position].studentName)
+                    intent.putExtra("class", primaryArrayList[position].intensionClass)
+                    intent.putExtra("intent_id", primaryArrayList[position].intensionId)
+                    intent.putParcelableArrayListExtra(
+                        "options",
+                        primaryArrayList[position].options
+                    )
+//                    PreferenceManager.setOptions(primaryArrayList.get(position).options,mContext)
+                    intent.putExtra("position", position)
                     startActivity(intent)
-                   /* showIntentionPopUp(
-                        mContext,
-                        primaryArrayList,position)*/
-
                 }
                 else{
                     val intent = Intent(mContext, IntentionDetailedView::class.java)
 
-                    intent.putExtra("student",primaryArrayList.get(position).student)
-                    intent.putExtra("question",primaryArrayList.get(position).question)
+                    intent.putExtra("student", primaryArrayList.get(position).studentName)
+                    intent.putExtra("question", primaryArrayList.get(position).question)
                     intent.putExtra("classs",intentionstatusArray.get(position).className)
                     intent.putExtra("options",intentionstatusArray.get(position).selected_options)
 
@@ -243,33 +242,33 @@ class Intentionfragment : Fragment(){
      //   descrcrptn.setText(descriptionString)
       //  parent_email.setText(emailString)
       //  parent_name.setText(userNameString)
-        questionTxt.setText(primaryArrayList.get(position).question)
+        questionTxt.text = primaryArrayList.get(position).question
         optionsArray=ArrayList()
         val reEnrollSubmit = IntentionSubmitModel("", "")
 
             optionsArray.addAll(primaryArrayList.get(position).options)
             Log.e("arraysizeoption",optionsArray.size.toString())
 
-        answerTxt2.setFocusable(false)
-        answerTxt2.setFocusableInTouchMode(false)
-        answerTxt2.setClickable(false)
+        answerTxt2.isFocusable = false
+        answerTxt2.isFocusableInTouchMode = false
+        answerTxt2.isClickable = false
         if (optionsArray.contains("YES")) {
             questionTxt2.setTextColor(mContext.resources.getColor(R.color.black))
-            answerTxt2.isEnabled()
-            answerTxt2.setFocusable(true)
-            answerTxt2.setFocusableInTouchMode(true)
-            answerTxt2.setClickable(true)
+            answerTxt2.isEnabled
+            answerTxt2.isFocusable = true
+            answerTxt2.isFocusableInTouchMode = true
+            answerTxt2.isClickable = true
         } else {
             questionTxt2.setTextColor(mContext.resources.getColor(R.color.grey))
-            answerTxt2.setFocusable(false)
-            answerTxt2.setFocusableInTouchMode(false)
-            answerTxt2.setClickable(false)
+            answerTxt2.isFocusable = false
+            answerTxt2.isFocusableInTouchMode = false
+            answerTxt2.isClickable = false
         }
       //  date = AppUtils.dateConversionddmmyyyy(currentDate)
       //  date_field.setText(date)
         dropDownList =ArrayList()
-        stud_name.setText(primaryArrayList.get(position).student)
-        stud_class.setText(primaryArrayList.get(position).classs)
+        stud_name.text = primaryArrayList.get(position).student
+        stud_class.text = primaryArrayList.get(position).classs
       //  val stud_photo: String = studentEnrollList.get(position).getPhoto()
 
       //  val stud_id: String = studentEnrollList.get(position).getId()
@@ -527,7 +526,7 @@ class Intentionfragment : Fragment(){
 
         val divider = DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL)
         divider.setDrawable(ContextCompat.getDrawable(mContext,R.drawable.list_divider_teal)!!)
-        socialMediaList!!.addItemDecoration(divider)
+        socialMediaList.addItemDecoration(divider)
 
         socialMediaList.setHasFixedSize(true)
         val llm = LinearLayoutManager(mContext)
@@ -540,8 +539,8 @@ class Intentionfragment : Fragment(){
         socialMediaList.addOnItemClickListener(object : OnItemClickListener {
             override fun onItemClicked(position: Int, view: View) {
                 dialog.dismiss()
-                studentName!!.setText(mStudentArray!!.get(position).name)
-                stud_id = mStudentArray!!.get(position).id.toString()
+                studentName.text = mStudentArray.get(position).name
+                stud_id = mStudentArray.get(position).id.toString()
                 stud_name = mStudentArray.get(position).name.toString()
                 stud_class = mStudentArray.get(position).studentClass.toString()
                 stud_img = mStudentArray.get(position).photo.toString()
@@ -556,9 +555,9 @@ class Intentionfragment : Fragment(){
                         .skipMemoryCache(true) //2
                         .diskCacheStrategy(DiskCacheStrategy.NONE) //3
                         .transform(CircleCrop()) //4
-                        .into(studImg!!)
+                        .into(studImg)
                 } else {
-                    studImg!!.setImageResource(R.drawable.boy)
+                    studImg.setImageResource(R.drawable.boy)
                 }
                 PreferenceManager.setCCAStudentIdPosition(
                     mContext,
@@ -579,33 +578,36 @@ class Intentionfragment : Fragment(){
 
         dialog.show()
     }
-    private fun getIntentionListAPI(stud_id: String)
-    {
-        Log.e("size","size")
-        primaryArrayList= ArrayList()
+    private fun getIntentionListAPI(stud_id: String) {
+        Log.e("size", "size")
+        primaryArrayList = ArrayList()
 
-       // optionsArray = ArrayList()
+        // optionsArray = ArrayList()
         progress.visibility = View.VISIBLE
-        val body = IntentionApiModel(stud_id,"0","20")
+        val body = IntentionApiModel(stud_id, "0", "20")
         val token = PreferenceManager.getaccesstoken(mContext)
-        val call: Call<IntentionResponseModel> = ApiClient.getClient.intension(body,"Bearer "+token)
-        call.enqueue(object : Callback<IntentionResponseModel> {
-            override fun onFailure(call: Call<IntentionResponseModel>, t: Throwable) {
-                 Log.e("Error", t.localizedMessage)
+        val call: Call<IntentionListAPIResponseModel> =
+            ApiClient.getClient.intension(body, "Bearer " + token)
+        call.enqueue(object : Callback<IntentionListAPIResponseModel> {
+            override fun onFailure(call: Call<IntentionListAPIResponseModel>, t: Throwable) {
+                Log.e("Error", t.localizedMessage)
                 progress.visibility = View.GONE
             }
-            override fun onResponse(call: Call<IntentionResponseModel>, response: Response<IntentionResponseModel>) {
+
+            override fun onResponse(
+                call: Call<IntentionListAPIResponseModel>,
+                response: Response<IntentionListAPIResponseModel>
+            ) {
                 progress.visibility = View.GONE
                 //val arraySize :Int = response.body()!!.responseArray.studentList.size
                 val responsedata = response.body()
-                Log.e("size","size")
+                Log.e("size", "size")
                 if (responsedata != null) {
                     try {
 
-                        if (response.body()!!.status==100)
-                        {
-                            Log.e("size","size")
-                            primaryArrayList= response.body()!!.responseArray.intension!!
+                        if (response.body()!!.status == 100) {
+                            Log.e("size", "size")
+                            primaryArrayList = response.body()!!.responseArray.intensions
                             Log.e("Arraysize",(primaryArrayList.size.toString()))
                             if (primaryArrayList.size>0)
                             {
@@ -681,23 +683,22 @@ class Intentionfragment : Fragment(){
                 if (response.body()!!.status==100)
                 {
                     studentListArrayList.addAll(response.body()!!.responseArray.studentList)
-                    if (PreferenceManager.getStudIdForCCA(mContext).equals(""))
-                    {
+                    if (PreferenceManager.getStudIdForCCA(mContext).equals("")) {
                         //  Log.e("studentname",student_Name)
-                        stud_name=studentListArrayList.get(0).name
-                        stud_img=studentListArrayList.get(0).photo
-                        stud_id=studentListArrayList.get(0).id
-                        stud_class=studentListArrayList.get(0).section
+                        stud_name = studentListArrayList[0].name
+                        stud_img = studentListArrayList[0].photo
+                        stud_id = studentListArrayList[0].id
+                        stud_class = studentListArrayList[0].section
                         // Log.e("Student_idss",stud_id)
-                         PreferenceManager.setStudentID(mContext,stud_id)
-                        Log.e("id",stud_id)
+                        PreferenceManager.setStudentID(mContext, stud_id)
+                        Log.e("id", stud_id)
                         //  PreferenceManager.setStudentName(mContext,student_Name)
                         //PreferenceManager.setStudentPhoto(mContext,studentImg)
                         //  PreferenceManager.setStudentClass(mContext,studentClass)
-                        studentName.text=stud_name
+                        studentName.text = stud_name
                         PreferenceManager.setCCAStudentIdPosition(mContext, "0")
 
-                        if(!stud_img.equals(""))
+                        if (!stud_img.equals(""))
                         {
                             Glide.with(mContext) //1
                                 .load(stud_img)
@@ -717,13 +718,13 @@ class Intentionfragment : Fragment(){
                         val studentSelectPosition = Integer.valueOf(
                             PreferenceManager.getCCAStudentIdPosition(mContext)
                         )
-                        stud_name= studentListArrayList[studentSelectPosition].name!!
-                        stud_img= studentListArrayList[studentSelectPosition].photo!!
-                        stud_id=  studentListArrayList!![studentSelectPosition].id.toString()
+                        stud_name= studentListArrayList[studentSelectPosition].name
+                        stud_img= studentListArrayList[studentSelectPosition].photo
+                        stud_id=  studentListArrayList[studentSelectPosition].id.toString()
                          PreferenceManager.setStudentID(mContext, stud_id)
                         // PreferenceManager.setStudIdForCCA(mContext, studentId)
                         //  Log.e("Studentid1",stud_id)
-                        stud_class= studentListArrayList[studentSelectPosition].studentClass!!
+                        stud_class= studentListArrayList[studentSelectPosition].studentClass
                         studentName.text=stud_name
                         if(!stud_img.equals(""))
                         {
@@ -743,7 +744,7 @@ class Intentionfragment : Fragment(){
                     var internetCheck = ConstantFunctions.internetCheck(mContext)
                     if (internetCheck) {
                         getIntentionListAPI(stud_id)
-                        getIntentionStatusAPI(stud_id)
+//                        getIntentionStatusAPI(stud_id)
 
                     } else {
                         DialogFunctions.showInternetAlertDialog(mContext)

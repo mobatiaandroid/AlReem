@@ -10,15 +10,19 @@ import android.widget.TextView
 import androidx.annotation.NonNull
 import androidx.recyclerview.widget.RecyclerView
 import com.nas.alreem.R
-import com.nas.alreem.fragment.intention.model.IntentionInfoResponseArray
+import com.nas.alreem.fragment.intention.model.IntentionListAPIResponseModel
 
 
-class IntentionAdapter(private var primaryArrayList: ArrayList<IntentionInfoResponseArray>, var context: Context) :
+class IntentionAdapter(
+    private var primaryArrayList: ArrayList<IntentionListAPIResponseModel.Intention>,
+    var context: Context
+) :
     RecyclerView.Adapter<IntentionAdapter.MyViewHolder>() {
     inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var listTxtTitle: TextView = view.findViewById(R.id.listTxtTitle)
-        var arrowImg : ImageView = view.findViewById(R.id.arrowImg)
+        var arrowImg: ImageView = view.findViewById(R.id.arrowImg)
     }
+
     @NonNull
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView = LayoutInflater.from(parent.context)

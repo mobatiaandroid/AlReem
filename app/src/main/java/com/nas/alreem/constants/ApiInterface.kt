@@ -98,7 +98,7 @@ import com.nas.alreem.fragment.home.re_enrollment.ReEnrollmentFormResponseModel
 import com.nas.alreem.fragment.home.re_enrollment.ReEnrollmentStatusResponseModel
 import com.nas.alreem.fragment.intention.model.IntentionApiModel
 import com.nas.alreem.fragment.intention.model.IntentionApiSubmit
-import com.nas.alreem.fragment.intention.model.IntentionResponseModel
+import com.nas.alreem.fragment.intention.model.IntentionListAPIResponseModel
 import com.nas.alreem.fragment.intention.model.IntentionStatusResponseModel
 import com.nas.alreem.fragment.notifications.model.NotificationApiModel
 import com.nas.alreem.fragment.notifications.model.NotificationResponseModel
@@ -736,9 +736,9 @@ interface ApiInterface {
     @POST("intension")
     @Headers("Content-Type: application/json")
     fun intension(
-        @Body  intentionbody: IntentionApiModel,
-        @Header("Authorization") token:String
-    ): Call<IntentionResponseModel>
+        @Body intentionbody: IntentionApiModel,
+        @Header("Authorization") token: String
+    ): Call<IntentionListAPIResponseModel>
 
     @POST("intension-status")
     @Headers("Content-Type: application/json")

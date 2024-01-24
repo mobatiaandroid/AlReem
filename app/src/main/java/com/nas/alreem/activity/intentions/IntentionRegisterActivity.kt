@@ -1,8 +1,6 @@
 package com.nas.alreem.activity.intentions
 
-import android.app.DatePickerDialog
 import android.app.Dialog
-import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -15,7 +13,6 @@ import android.view.Window
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
-import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -25,7 +22,6 @@ import android.widget.RelativeLayout
 import android.widget.ScrollView
 import android.widget.Spinner
 import android.widget.TextView
-import android.widget.TimePicker
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -35,33 +31,24 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.nas.alreem.R
-import com.nas.alreem.activity.absence.model.EarlyPickupModel
 import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.activity.payments.adapter.StudentListAdapter
 import com.nas.alreem.activity.payments.model.StudentList
-import com.nas.alreem.activity.payments.model.StudentListModel
 import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ConstantFunctions
-import com.nas.alreem.constants.ConstantWords
 import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.OnItemClickListener
 import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.constants.addOnItemClickListener
-import com.nas.alreem.fragment.bus_service.model.RequestBusServiceModelSubmit
-import com.nas.alreem.fragment.intention.adapter.IntentionAdapter
-import com.nas.alreem.fragment.intention.model.IntentionApiModel
 import com.nas.alreem.fragment.intention.model.IntentionApiSubmit
 import com.nas.alreem.fragment.intention.model.IntentionInfoResponseArray
-import com.nas.alreem.fragment.intention.model.IntentionResponseModel
-import com.nas.alreem.fragment.intention.model.IntentionStatusResponseModel
+import com.nas.alreem.fragment.intention.model.IntentionListAPIResponseModel
 import com.nas.alreem.fragment.intention.model.IntentionSubmitModel
 import com.nas.alreem.fragment.intention.model.IntentionstatusResponseArray
 import com.nas.alreem.fragment.student_information.model.StudentInfoModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.text.DateFormat
-import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 
@@ -107,8 +94,9 @@ class IntentionRegisterActivity : AppCompatActivity(){
     var question = ""
     var student_name = ""
     var classs = ""
-    var intention_id : Int = 0
-    lateinit var optionArray : ArrayList<String>
+    var intention_id: Int = 0
+    var receivedOptions: ArrayList<IntentionListAPIResponseModel.Option> = ArrayList()
+    lateinit var optionArray: ArrayList<String>
     var position :Int=0
 
 
@@ -131,18 +119,20 @@ class IntentionRegisterActivity : AppCompatActivity(){
     }
     @RequiresApi(Build.VERSION_CODES.N)
     private fun initfn() {
-        optionArray=ArrayList()
-        heading=findViewById(R.id.heading)
-        heading.text= "Intention"
-        question=intent.getStringExtra("question").toString()
-        student_name=intent.getStringExtra("student").toString()
-        classs=intent.getStringExtra("classs").toString()
-        intention_id=intent.getIntExtra("intenmt_id",0)
-        optionArray= PreferenceManager.getoptions(mContext)!!
-         position =intent.getIntExtra("position",0)!!
+        optionArray = ArrayList()
+        heading = findViewById(R.id.heading)
+        heading.text = "Intention"
+        question = intent.getStringExtra("question")!!.toString()
+        student_name = intent.getStringExtra("student")!!.toString()
+        classs = intent.getStringExtra("class")!!.toString()
+        receivedOptions = intent.getParcelableArrayListExtra("options")!!
+        intention_id = intent.getIntExtra("intent_id", 0)
+//        optionArray= PreferenceManager.getoptions(mContext)!!
+        position = intent.getIntExtra("position", 0)
         val check = intArrayOf(0)
-        backRelative=findViewById(R.id.backRelative)
-        logoClickImgView=findViewById(R.id.logoClickImgView)
+        Log.e("option", receivedOptions[0].option + " " + receivedOptions[0].optionQuestion)
+        backRelative = findViewById(R.id.backRelative)
+        logoClickImgView = findViewById(R.id.logoClickImgView)
 
         backRelative.setOnClickListener(View.OnClickListener {
             finish()
@@ -179,32 +169,32 @@ class IntentionRegisterActivity : AppCompatActivity(){
         val currentDay = Calendar.DAY_OF_MONTH.toString()
         var date = "$currentDay/$currentMonth/$currentYear"
 
-        questionTxt.setText(question)
+        questionTxt.text = question
         optionsArray = ArrayList()
         val reEnrollSubmit = IntentionSubmitModel("", "")
 
         optionsArray.addAll(optionArray)
         Log.e("arraysizeoption", optionsArray.size.toString())
 
-        answerTxt2.setFocusable(false)
-        answerTxt2.setFocusableInTouchMode(false)
-        answerTxt2.setClickable(false)
+        answerTxt2.isFocusable = false
+        answerTxt2.isFocusableInTouchMode = false
+        answerTxt2.isClickable = false
         if (optionsArray.contains("YES")) {
             questionTxt2.setTextColor(mContext.resources.getColor(R.color.black))
-            answerTxt2.isEnabled()
-            answerTxt2.setFocusable(true)
-            answerTxt2.setFocusableInTouchMode(true)
-            answerTxt2.setClickable(true)
+            answerTxt2.isEnabled
+            answerTxt2.isFocusable = true
+            answerTxt2.isFocusableInTouchMode = true
+            answerTxt2.isClickable = true
         } else {
             questionTxt2.setTextColor(mContext.resources.getColor(R.color.grey))
-            answerTxt2.setFocusable(false)
-            answerTxt2.setFocusableInTouchMode(false)
-            answerTxt2.setClickable(false)
+            answerTxt2.isFocusable = false
+            answerTxt2.isFocusableInTouchMode = false
+            answerTxt2.isClickable = false
         }
 
         dropDownList = ArrayList()
-        stud_name.setText(student_name)
-        stud_class.setText(classs)
+        stud_name.text = student_name
+        stud_class.text = classs
         //  val stud_photo: String = studentEnrollList.get(position).getPhoto()
 
         //  val stud_id: String = studentEnrollList.get(position).getId()
