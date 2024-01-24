@@ -31,6 +31,7 @@ import com.nas.alreem.activity.canteen.model.wallet.WalletBalanceModel
 import com.nas.alreem.activity.canteen.model.wallethistory.WalletHistoryApiModel
 import com.nas.alreem.activity.canteen.model.wallethistory.WalletHistoryModel
 import com.nas.alreem.activity.cca.model.*
+import com.nas.alreem.activity.communication.information.model.InformationResponseModel
 import com.nas.alreem.activity.communication.newesletters.model.NewsletterResponseModel
 import com.nas.alreem.activity.gallery.model.*
 import com.nas.alreem.activity.home.model.ReEnrollSubmitAPIModel
@@ -85,22 +86,20 @@ import com.nas.alreem.fragment.calendar.model.CalendarResponseModel
 import com.nas.alreem.fragment.calendar.model.TermCalendarResponseModel
 import com.nas.alreem.fragment.canteen.model.CanteenBannerResponseModel
 import com.nas.alreem.fragment.cca.model.BannerResponseModelCCa
+import com.nas.alreem.fragment.communication.model.CommunicationBannerResponseModel
 import com.nas.alreem.fragment.communication.model.CommunicationResponseModel
 import com.nas.alreem.fragment.communication.model.SocialMediaResponseModel
 import com.nas.alreem.fragment.contact_us.model.ContactUsResponseModel
 import com.nas.alreem.fragment.gallery.model.ThumnailResponseModel
 import com.nas.alreem.fragment.home.model.BannerResponseModel
-import com.nas.alreem.fragment.home.re_enrollment.EnrollmentFormResponseModel
 import com.nas.alreem.fragment.home.re_enrollment.EnrollmentHelpResponseModel
 import com.nas.alreem.fragment.home.re_enrollment.EnrollmentSaveResponseModel
-import com.nas.alreem.fragment.home.re_enrollment.EnrollmentStatusResponseModel
 import com.nas.alreem.fragment.home.re_enrollment.ReEnrollmentFormResponseModel
 import com.nas.alreem.fragment.home.re_enrollment.ReEnrollmentStatusResponseModel
 import com.nas.alreem.fragment.intention.model.IntentionApiModel
 import com.nas.alreem.fragment.intention.model.IntentionApiSubmit
 import com.nas.alreem.fragment.intention.model.IntentionResponseModel
 import com.nas.alreem.fragment.intention.model.IntentionStatusResponseModel
-
 import com.nas.alreem.fragment.notifications.model.NotificationApiModel
 import com.nas.alreem.fragment.notifications.model.NotificationResponseModel
 import com.nas.alreem.fragment.parent_meetings.model.ListStaffPtaApiModel
@@ -120,8 +119,6 @@ import com.nas.alreem.fragment.student_information.model.StudentInfoApiModel
 import com.nas.alreem.fragment.student_information.model.StudentInfoModel
 import com.nas.alreem.fragment.time_table.model.apimodel.TimeTableApiDataModel
 import com.nas.alreem.fragment.time_table.model.apimodel.TimeTableApiModel
-import okhttp3.ResponseBody
-
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -875,18 +872,19 @@ interface ApiInterface {
     @Headers("Content-Type: application/json")
     fun communication_banner_images(
         @Header("Authorization") token: String
-    ): Call<PerformingResponseModel>
+    ): Call<CommunicationBannerResponseModel>
+
     @POST("communication_info")
     @Headers("Content-Type: application/json")
     fun communication_info(
         @Header("Authorization") token: String
-    ): Call<CommunicationResponseModel>
+    ): Call<InformationResponseModel>
 
     @POST("whole_school_coming_up")
     @Headers("Content-Type: application/json")
     fun whole_school_coming_up(
         @Header("Authorization") token: String
-    ): Call<CommunicationResponseModel>
+    ): Call<com.nas.alreem.activity.communication.commingup.model.ComingUpResponseModel>
 
     @POST("newsletter_categories")
     @Headers("Content-Type: application/json")

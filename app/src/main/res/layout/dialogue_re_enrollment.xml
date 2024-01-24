@@ -176,6 +176,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:layout_gravity="center"
+                    android:editable="false"
+                    android:focusable="false"
                     android:background="@drawable/textfield_bg"
                     android:hint="Date"
                     android:paddingLeft="8dp"

@@ -48,6 +48,7 @@ import com.nas.alreem.fragment.bus_service.BusServiceFragment
 import com.nas.alreem.fragment.calendar.CalendarFragment
 import com.nas.alreem.fragment.canteen.CanteenFragment
 import com.nas.alreem.fragment.cca.CCAFragment
+import com.nas.alreem.fragment.communication.CommunicationFragment
 import com.nas.alreem.fragment.contact_us.ContactUsFragment
 import com.nas.alreem.fragment.gallery.GalleryFragment
 import com.nas.alreem.fragment.home.model.BannerResponseModel
@@ -291,7 +292,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
                         var isAtLeastOneStatusEmpty = false
 
-                        for (student in studentsArray!!) {
+                        for (student in studentsArray) {
                             if ("1" == student.enrollment_status && (student.status == null || student.status.isEmpty())) {
                                 isAtLeastOneStatusEmpty = true
                                 break
@@ -578,10 +579,10 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             Log.e("setcheck", "1")
                             reEnrollsave[page_count[0]].status = dropdownList[i]
                             check[0] = 1
-                        } else if ((selectedItem == dropdownList.get(0))) {
+                        } else if ((selectedItem == dropdownList[0])) {
                             Log.e("setcheck", "0")
                             check[0] = 0
-                            reEnrollsave[page_count.get(0)].status = ""
+                            reEnrollsave[page_count[0]].status = ""
                         }
                     }
                 }
@@ -2215,9 +2216,18 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     fragmentIntent(mFragment)
                 }
 
+                ConstantWords.TAB_COMMUNICATION -> {
+                    mFragment = CommunicationFragment()
+                    fragmentIntent(mFragment)
+                }
+
                 ConstantWords.TAB_BUS_SERVICE -> {
                     mFragment = BusServiceFragment()
                     fragmentIntent(mFragment)
+                }
+
+                ConstantWords.TAB_REENROLMENT -> {
+                    getReEnrollmentStatus()
                 }
 
                 ConstantWords.TAB_INTENTIONS -> {

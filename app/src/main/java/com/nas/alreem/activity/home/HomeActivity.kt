@@ -1398,6 +1398,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
         date_field.setText(date)
         dropDownList = java.util.ArrayList()
         stud_name.text = studentEnrollList[position].name
+        val studentID = studentEnrollList[position].id
         //        stud_name.setText(studentList.get(position).getName());
         stud_class.text = studentEnrollList[position].class_name
         //        stud_class.setText(studentList.get(position).getClass_name());
@@ -1407,8 +1408,8 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
         val stud_id = studentEnrollList[position].id
         //        String stud_id=studentList.get(position).getId();
         dropDownList.add(0, "Please Select")
-        for (i in 1..optionsArray.size) {
-            dropDownList.add(optionsArray[i - 1])
+        for (i in optionsArray.indices) {
+            dropDownList.add(optionsArray[i])
         }
         val sp_adapter: ArrayAdapter<*> =
             ArrayAdapter(mContext, R.layout.spinner_textview_white, dropDownList)
@@ -1425,10 +1426,12 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
             ) {
                 selectedItem = parent.getItemAtPosition(position).toString()
                 val optionlistSize = finalDropDownList.size - 1
-                for (i in 1 until optionlistSize) {
+                for (i in finalDropDownList.indices - 1) {
                     if (selectedItem === finalDropDownList[i].toString()) {
                         reEnrollSubmit[0].status = finalDropDownList[i].toString()
-                        reEnrollSubmit[0].student_id = studentEnrollList[position].id
+                        Log.e("status", reEnrollSubmit[0].status)
+                        Log.e("student", studentID)
+                        reEnrollSubmit[0].student_id = studentID
                         check[0] = 1
                     } else if (selectedItem === finalDropDownList[0]) {
                         reEnrollSubmit[position].status = ""

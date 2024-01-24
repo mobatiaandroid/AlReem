@@ -18,10 +18,8 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nas.alreem.R
+import com.nas.alreem.activity.communication.information.model.InformationResponseModel
 import com.nas.alreem.activity.home.HomeActivity
-import com.nas.alreem.activity.payments.adapter.Canteeninfo_adapter
-import com.nas.alreem.activity.payments.model.InfoCanteenModel
-import com.nas.alreem.activity.payments.model.InfoListModel
 import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.ConstantWords
@@ -33,7 +31,6 @@ import com.nas.alreem.constants.WebLinkActivity
 import com.nas.alreem.constants.addOnItemClickListener
 import com.nas.alreem.fragment.communication.adapter.CommunicationInformationRecyclerAdapter
 import com.nas.alreem.fragment.communication.model.CommunicationDataModel
-import com.nas.alreem.fragment.communication.model.CommunicationResponseModel
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
@@ -45,7 +42,8 @@ class CommunicationInformationActivity : AppCompatActivity() {
     private lateinit var logoClickImg: ImageView
     lateinit var recyclerview: RecyclerView
     lateinit var back: ImageView
-    lateinit var informationlist: ArrayList<CommunicationDataModel>
+    lateinit var informationlist: ArrayList<
+            InformationResponseModel.CommunicationInfo>
     lateinit var heading: TextView
     lateinit var logoClickImgView: ImageView
     lateinit var backRelative: RelativeLayout
@@ -95,17 +93,17 @@ class CommunicationInformationActivity : AppCompatActivity() {
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onItemClicked(position: Int, view: View)
             {
-                if (informationlist.get(position).filename.endsWith(".pdf")) {
+                if (informationlist[position].filename?.endsWith(".pdf") == true) {
                     val intent = Intent(mContext, PDFViewerActivity::class.java)
-                    intent.putExtra("Url", informationlist!![position].filename)
-                    intent.putExtra("title",informationlist.get(position).submenu)
+                    intent.putExtra("Url", informationlist[position].filename)
+                    intent.putExtra("title", informationlist[position].submenu)
                     startActivity(intent)
                 } else {
                     val intent = Intent(
                         mContext,
                         WebLinkActivity::class.java
                     )
-                    intent.putExtra("url", informationlist!![position].filename)
+                    intent.putExtra("url", informationlist[position].filename)
                     intent.putExtra("heading",informationlist.get(position).submenu)
                     startActivity(intent)
                 }
@@ -116,34 +114,31 @@ class CommunicationInformationActivity : AppCompatActivity() {
         })
 
     }
-    private fun  getList(){
+    private fun  getList() {
         val token = PreferenceManager.getaccesstoken(mContext)
-        val call: Call<CommunicationResponseModel> = ApiClient.getClient.communication_info("Bearer "+token)
-        call.enqueue(object : Callback<CommunicationResponseModel> {
-            override fun onFailure(call: Call<CommunicationResponseModel>, t: Throwable) {
+        val call: Call<InformationResponseModel> =
+            ApiClient.getClient.communication_info("Bearer " + token)
+        call.enqueue(object : Callback<InformationResponseModel> {
+            override fun onFailure(call: Call<InformationResponseModel>, t: Throwable) {
 
-                progressDialogAdd.visibility= View.GONE
+                progressDialogAdd.visibility = View.GONE
             }
-            override fun onResponse(call: Call<CommunicationResponseModel>, response: Response<CommunicationResponseModel>) {
+
+            override fun onResponse(
+                call: Call<InformationResponseModel>,
+                response: Response<InformationResponseModel>
+            ) {
                 val responsedata = response.body()
-                progressDialogAdd.visibility= View.GONE
+                progressDialogAdd.visibility = View.GONE
 
-                if (responsedata!!.status==100) {
+                if (responsedata!!.status == 100) {
 
 
-                    val bannerImage = responsedata!!.responseArray!!.banner_image
+                    val bannerImage = responsedata.responseArray.bannerImage
 
-                    if (responsedata.responseArray!!.data!!.size > 0) {
-                        for (i in 0 until responsedata.responseArray!!.data!!.size) {
-
-                            // val item: CommunicationDataModel =
-                            //      response.body()!!.responseArray!!.data!!.get(i)
-                            //  val gson = Gson()
-                            //   val eventJson = gson.toJson(item)
-                            //   try {
-                            //      val jsonObject = JSONObject(eventJson)
-                            //      Log.e("json", jsonObject.toString())
-                            informationlist.add( response.body()!!.responseArray!!.data!!.get(i))
+                    if (responsedata.responseArray.data.size > 0) {
+                        for (i in 0 until responsedata.responseArray.data.size) {
+                            informationlist.add(response.body()!!.responseArray.data[i])
                             Log.e("arraydata", informationlist.toString())
                             //  Log.e("array", String.valueOf(mCCAmodelArrayList));
                             //  } catch (e: JSONException) {

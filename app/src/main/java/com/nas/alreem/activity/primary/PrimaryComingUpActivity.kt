@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
@@ -20,13 +19,8 @@ import com.nas.alreem.R
 import com.nas.alreem.activity.early_years.ComingUpDetailActivity
 import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.activity.primary.adapter.ComingUpAdapter
-import com.nas.alreem.activity.primary.adapter.PrimaryDataAdapter
-import com.nas.alreem.activity.primary.model.ComingUpDataModell
 import com.nas.alreem.activity.primary.model.ComingUpResponseModel
 import com.nas.alreem.constants.*
-import com.nas.alreem.fragment.primary.adapter.PrimaryAdapter
-import com.nas.alreem.fragment.primary.model.PrimaryFileModel
-import com.nas.alreem.fragment.primary.model.PrimaryResponseModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -38,7 +32,7 @@ class PrimaryComingUpActivity : AppCompatActivity(){
     lateinit var heading: TextView
     lateinit var backRelative: RelativeLayout
     lateinit var logoClickImgView: ImageView
-    lateinit var comingUpArrayList:ArrayList<ComingUpDataModell>
+    lateinit var comingUpArrayList: ArrayList<com.nas.alreem.activity.communication.commingup.model.ComingUpResponseModel.ComingUpItem>
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
@@ -132,7 +126,7 @@ class PrimaryComingUpActivity : AppCompatActivity(){
 
                         if (response.body()!!.status==100)
                         {
-                            comingUpArrayList=response.body()!!.responseArray!!.data!!
+//                            comingUpArrayList=response.body()!!.responseArray!!.data!!
                             if (comingUpArrayList.size>0)
                             {
                                 var adapterComing= ComingUpAdapter(comingUpArrayList,mContext)

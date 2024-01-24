@@ -8,14 +8,17 @@ import android.widget.TextView
 import androidx.annotation.NonNull
 import androidx.recyclerview.widget.RecyclerView
 import com.nas.alreem.R
-import com.nas.alreem.activity.primary.model.ComingUpDataModell
-import com.nas.alreem.fragment.primary.model.PrimaryFileModel
+import com.nas.alreem.activity.communication.commingup.model.ComingUpResponseModel
 
-class ComingUpAdapter (private var comingUpArrayList: ArrayList<ComingUpDataModell>, var context: Context) :
+class ComingUpAdapter(
+    private var comingUpArrayList: ArrayList<ComingUpResponseModel.ComingUpItem>,
+    var context: Context
+) :
     RecyclerView.Adapter<ComingUpAdapter.MyViewHolder>() {
     inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var listTxtTitle: TextView = view.findViewById(R.id.listTxtTitle)
     }
+
     @NonNull
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView = LayoutInflater.from(parent.context)

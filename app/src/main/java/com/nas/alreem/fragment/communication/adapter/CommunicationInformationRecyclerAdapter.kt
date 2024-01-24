@@ -1,7 +1,6 @@
 package com.nas.alreem.fragment.communication.adapter
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,15 +9,17 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.nas.alreem.R
-import com.nas.alreem.fragment.communication.model.CommunicationDataModel
+import com.nas.alreem.activity.communication.information.model.InformationResponseModel
 
 
 class CommunicationInformationRecyclerAdapter(
     private val mContext: Context,
-    mnNewsLetterModelArrayList: ArrayList<CommunicationDataModel>
+    mnNewsLetterModelArrayList: ArrayList<
+            InformationResponseModel.CommunicationInfo>
 ) :
     RecyclerView.Adapter<CommunicationInformationRecyclerAdapter.MyViewHolder>() {
-    private val mnNewsLetterModelArrayList: ArrayList<CommunicationDataModel>
+    private val mnNewsLetterModelArrayList: ArrayList<
+            InformationResponseModel.CommunicationInfo>
     var dept: String? = null
     private val statusLayout: RelativeLayout? = null
     private val status: TextView? = null
@@ -45,7 +46,7 @@ class CommunicationInformationRecyclerAdapter(
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 //        holder.submenu.setText(mnNewsLetterModelArrayList.get(position).getSubmenu());
-        holder.pdfTitle.setText(mnNewsLetterModelArrayList[position].submenu)
+        holder.pdfTitle.text = mnNewsLetterModelArrayList[position].submenu
         // holder.imageIcon.visibility = View.GONE
         /*
         if (mnNewsLetterModelArrayList.get(position).getmFile().endsWith(".pdf")) {

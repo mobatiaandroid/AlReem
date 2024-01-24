@@ -7,7 +7,6 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.webkit.*
 import android.widget.*
@@ -67,13 +66,15 @@ class WebLinkActivity : AppCompatActivity() {
         webView.webViewClient = MyWebViewClient(this)
 
 
-
-     //   webView.getSettings().setUserAgentString("ur user agent");
-        webView.loadUrl(url!!)
-
+        //   webView.getSettings().setUserAgentString("ur user agent");
+        if (url != null) {
+            webView.loadUrl(url!!)
+        } else {
+            Toast.makeText(mContext, "URL not available", Toast.LENGTH_SHORT).show()
+        }
 
         //webView.loadUrl(url!!)
-       // progressDialogAdd.visibility= View.GONE
+        // progressDialogAdd.visibility= View.GONE
 
         webView.webChromeClient = object : WebChromeClient() {
 
@@ -103,7 +104,7 @@ class WebLinkActivity : AppCompatActivity() {
         override fun shouldOverrideUrlLoading(webView: WebView, url: String): Boolean {
             var overrideUrlLoading = false
             if (url != null && url.contains("whatsapp")) {
-                webView.getContext().startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                webView.context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
                 overrideUrlLoading = true
             }
             else {
