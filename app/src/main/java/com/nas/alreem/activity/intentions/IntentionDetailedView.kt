@@ -3,6 +3,7 @@ package com.nas.alreem.activity.intentions
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -13,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.nas.alreem.R
 import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.constants.ConstantWords
+import com.nas.alreem.fragment.intention.model.IntentionListAPIResponseModel
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -26,14 +28,16 @@ class IntentionDetailedView : AppCompatActivity(){
     lateinit var stud_class: TextView
     lateinit var pickup_name: TextView
     lateinit var reasonTxt: TextView
-    lateinit var reasonRejectionLinear: LinearLayout
-    lateinit var reasonRejectionScroll: ScrollView
-
+    lateinit var linear_Option_question: LinearLayout
+    lateinit var linear_answer: LinearLayout
+lateinit var option_question:TextView
+lateinit var answeroption:TextView
     var studname_pickup:String=""
     var studcls_pickup:String=""
     var pickby_pickup:String=""
     var reason_pickup:String=""
-
+var selectedoptionanswer:String=""
+    var receivedOptions: ArrayList<IntentionListAPIResponseModel.Option> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,16 +53,26 @@ class IntentionDetailedView : AppCompatActivity(){
         backRelative=findViewById(R.id.backRelative)
         logoClickImgView=findViewById(R.id.logoClickImgView)
       //  timeofPickup=findViewById(R.id.leaveDateToValue)
-
-
-
+        option_question=findViewById(R.id.option_question)
+        linear_Option_question=findViewById(R.id.linear_Option_question)
+        linear_answer=findViewById(R.id.linear_answer)
+        answeroption=findViewById(R.id.answeroption)
         studname_pickup=intent.getStringExtra("student").toString()
         studcls_pickup=intent.getStringExtra("classs").toString()
         pickby_pickup=intent.getStringExtra("question").toString()
         reason_pickup=intent.getStringExtra("options").toString()
-
-
-
+        selectedoptionanswer=intent.getStringExtra("selectedchoice").toString()
+        receivedOptions = intent.getParcelableArrayListExtra("optionsarray")!!
+Log.e("array", receivedOptions.toString())
+        for (i in receivedOptions.indices){
+           if(reason_pickup.equals(receivedOptions.get(i).option))
+           {
+               linear_Option_question.visibility=View.VISIBLE
+               linear_answer.visibility=View.VISIBLE
+               option_question.text=receivedOptions.get(i).optionQuestion
+               answeroption.text=selectedoptionanswer
+           }
+        }
         stud_name=findViewById(R.id.stnameValue)
         stud_name.text = studname_pickup
         stud_class=findViewById(R.id.studClassValue)

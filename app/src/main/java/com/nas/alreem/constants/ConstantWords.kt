@@ -30,7 +30,7 @@ class ConstantWords {
         var status_100_login="Successfully Logged in."
         var status_100_change_password="Successfully Reset your password."
         var no_notification_found="No Notification Found."
-
+var status_141="Please Submit Before 2 pm"
 
 
         /*TAB_ID*/

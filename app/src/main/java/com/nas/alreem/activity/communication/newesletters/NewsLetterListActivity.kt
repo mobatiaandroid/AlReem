@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
@@ -105,6 +106,7 @@ class NewsLetterListActivity : AppCompatActivity(){
                         mContext,
                         WebLinkActivity::class.java
                     )
+                    Log.e("filename",newsLetterArrayList!![position].filename)
                     intent.putExtra("url", newsLetterArrayList!![position].filename)
                     intent.putExtra("heading",newsLetterArrayList.get(position).submenu)
                     startActivity(intent)

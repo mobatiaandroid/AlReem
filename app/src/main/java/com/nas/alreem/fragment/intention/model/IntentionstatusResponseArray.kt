@@ -9,6 +9,7 @@ class IntentionstatusResponseArray (
     @SerializedName("student_id") val student_id: String,
     @SerializedName("className") val className: String,
     @SerializedName("selected_options") val selected_options:String,
+    @SerializedName("selected_option_answer") val selected_option_answer:String,
     @SerializedName("description") val description: String,
     @SerializedName("status") val status: String
 )

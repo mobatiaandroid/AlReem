@@ -109,7 +109,7 @@ class InvoiceListingActivity : AppCompatActivity() {
         mNewsLetterListView!!.layoutManager = llm
         mNewsLetterListView!!.setHasFixedSize(true)
         mNewsLetterListView!!.addItemDecoration(DividerItemDecoration(resources.getDrawable(R.drawable.list_divider_teal)))
-        headermanager = HeaderManager(this@InvoiceListingActivity, "Shop History")
+        headermanager = HeaderManager(this@InvoiceListingActivity, "Payment History")
         headermanager.getHeader(relativeHeader, 0)
       //  progressBarDialog = ProgressBarDialog(mContext, R.drawable.spinner)
         back = headermanager.leftButton!!

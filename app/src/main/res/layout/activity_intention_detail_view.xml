@@ -169,7 +169,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
                     android:layout_weight=".2"
-                    android:text="Question" />
+                    android:text="Sub Question" />
 
                 <com.nas.alreem.commonviews.CustomFontSansProEditTextNoColor
                     android:id="@+id/option_question"
@@ -200,7 +200,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
                     android:layout_weight=".2"
-                    android:text="Selected Options" />
+                    android:text="Answer" />
 
                 <com.nas.alreem.commonviews.CustomFontSansProEditTextNoColor
                     android:id="@+id/answeroption"

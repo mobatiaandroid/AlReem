@@ -136,7 +136,7 @@ class Myorderbasket_Activity_new : AppCompatActivity() {
         id = PreferenceManager.getStudentID(nContext).toString()
         noItemTxt = findViewById(R.id.noItemTxt)
 
-        title.text = "Basket"
+        title.text = "Cart"
 
         back.setOnClickListener {
             finish()

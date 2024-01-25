@@ -37,11 +37,11 @@
         <item>@drawable/payment</item>
         <item>@drawable/re_enrollment</item>
         <item>@drawable/lunchbox_icon</item>
-        <item>@drawable/store32</item>
+        <item>@drawable/store64</item>
         <item>@drawable/parent</item>
         <item>@drawable/absence</item>
         <item>@drawable/arts</item>
-        <item>@drawable/bussttop</item>
+        <item>@drawable/busstop64</item>
         <item>@drawable/yesorno32</item>
         <item>@drawable/report_side</item>
         <item>@drawable/time_table_side</item>

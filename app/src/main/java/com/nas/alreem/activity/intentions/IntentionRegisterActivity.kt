@@ -77,6 +77,9 @@ class IntentionRegisterActivity : AppCompatActivity(){
     lateinit var primaryArrayList:ArrayList<IntentionInfoResponseArray>
     lateinit var intentionstatusArray:ArrayList<IntentionstatusResponseArray>
     lateinit var recycler_review: RecyclerView
+    lateinit var subQuestionLinearLayout: LinearLayout
+    lateinit var answerTV: TextView
+    lateinit var questionTV: TextView
     var reEnrollSaveArray: ArrayList<IntentionSubmitModel>? = null
 
     lateinit var submitBtn: Button
@@ -97,6 +100,7 @@ class IntentionRegisterActivity : AppCompatActivity(){
     var intention_id: Int = 0
     var receivedOptions: ArrayList<IntentionListAPIResponseModel.Option> = ArrayList()
     lateinit var optionArray: ArrayList<String>
+    lateinit var subQuestion: ArrayList<String>
     var position :Int=0
 
 
@@ -121,13 +125,31 @@ class IntentionRegisterActivity : AppCompatActivity(){
     private fun initfn() {
         optionArray = ArrayList()
         heading = findViewById(R.id.heading)
+        subQuestionLinearLayout = findViewById(R.id.linear_choose1)
+        answerTV = findViewById(R.id.answerTxt2)
+        questionTV = findViewById(R.id.questionTxt2)
         heading.text = "Intention"
         question = intent.getStringExtra("question")!!.toString()
         student_name = intent.getStringExtra("student")!!.toString()
         classs = intent.getStringExtra("class")!!.toString()
         receivedOptions = intent.getParcelableArrayListExtra("options")!!
+        for (i in receivedOptions.indices){
+            optionArray.add(receivedOptions[i].option)
+        }
+        subQuestion = ArrayList()
+        subQuestion.add("")
+        for (i in 1..receivedOptions.size) {
+            if (receivedOptions[i-1].optionQuestion == null){
+                subQuestion.add("")
+            }else{
+                subQuestion.add(receivedOptions[i-1].optionQuestion.toString())
+            }
+
+        }
+        Log.e("option",optionArray.toString())
+        Log.e("subquestion",subQuestion.toString())
         intention_id = intent.getIntExtra("intent_id", 0)
-//        optionArray= PreferenceManager.getoptions(mContext)!!
+//       optionArray= PreferenceManager.getoptions(mContext)!!
         position = intent.getIntExtra("position", 0)
         val check = intArrayOf(0)
         Log.e("option", receivedOptions[0].option + " " + receivedOptions[0].optionQuestion)
@@ -176,21 +198,21 @@ class IntentionRegisterActivity : AppCompatActivity(){
         optionsArray.addAll(optionArray)
         Log.e("arraysizeoption", optionsArray.size.toString())
 
-        answerTxt2.isFocusable = false
-        answerTxt2.isFocusableInTouchMode = false
-        answerTxt2.isClickable = false
-        if (optionsArray.contains("YES")) {
-            questionTxt2.setTextColor(mContext.resources.getColor(R.color.black))
-            answerTxt2.isEnabled
-            answerTxt2.isFocusable = true
-            answerTxt2.isFocusableInTouchMode = true
-            answerTxt2.isClickable = true
-        } else {
-            questionTxt2.setTextColor(mContext.resources.getColor(R.color.grey))
-            answerTxt2.isFocusable = false
-            answerTxt2.isFocusableInTouchMode = false
-            answerTxt2.isClickable = false
-        }
+//        answerTxt2.isFocusable = false
+//        answerTxt2.isFocusableInTouchMode = false
+//        answerTxt2.isClickable = false
+//        if (optionsArray.contains("YES")) {
+//            questionTxt2.setTextColor(mContext.resources.getColor(R.color.black))
+//            answerTxt2.isEnabled
+//            answerTxt2.isFocusable = true
+//            answerTxt2.isFocusableInTouchMode = true
+//            answerTxt2.isClickable = true
+//        } else {
+//            questionTxt2.setTextColor(mContext.resources.getColor(R.color.grey))
+//            answerTxt2.isFocusable = false
+//            answerTxt2.isFocusableInTouchMode = false
+//            answerTxt2.isClickable = false
+//        }
 
         dropDownList = ArrayList()
         stud_name.text = student_name
@@ -200,13 +222,14 @@ class IntentionRegisterActivity : AppCompatActivity(){
         //  val stud_id: String = studentEnrollList.get(position).getId()
         dropDownList.add(0, "Please Select")
         for (i in 1..optionsArray.size) {
-            dropDownList.add(optionsArray.get(i - 1).toString())
+//        for (i in optionsArray.indices) {
+            dropDownList.add(optionsArray.get(i-1).toString())
         }
 
         val sp_adapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(mContext, R.layout.spinner_textview, dropDownList as List<Any?>)
         spinnerList.adapter = sp_adapter
-        spinnerList.setSelection(0)
+//        spinnerList.setSelection(0)
         val finalDropDownList: java.util.ArrayList<*> = dropDownList
         spinnerList.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
@@ -216,18 +239,28 @@ class IntentionRegisterActivity : AppCompatActivity(){
                 id: Long
             ) {
                 selectedItem = parent.getItemAtPosition(position).toString()
-                val optionlistSize = finalDropDownList.size - 1
-                for (i in 1 until optionlistSize) {
-                    if (selectedItem === finalDropDownList[i].toString()) {
-                        reEnrollSubmit.status = (finalDropDownList[i].toString())
-                        reEnrollSubmit.student_id =
-                            PreferenceManager.getCCAStudentIdPosition(mContext).toString()
-                        check[0] = 1
-                    } else if (selectedItem === finalDropDownList[0]) {
-                        reEnrollSubmit.status = ("")
-                        check[0] = 0
+                for (i in subQuestion.indices){
+                    if (subQuestion[position].isNotEmpty()){
+                        // show sub question
+                        subQuestionLinearLayout.visibility = View.VISIBLE
+                        questionTV.text = subQuestion[position]
+                    }else{
+                        subQuestionLinearLayout.visibility = View.GONE
+                        // continus
                     }
                 }
+//                val optionlistSize = finalDropDownList.size - 1
+//                for (i in 1 until optionlistSize) {
+//                    if (selectedItem === finalDropDownList[i].toString()) {
+//                        reEnrollSubmit.status = (finalDropDownList[i].toString())
+//                        reEnrollSubmit.student_id =
+//                            PreferenceManager.getCCAStudentIdPosition(mContext).toString()
+//                        check[0] = 1
+//                    } else if (selectedItem === finalDropDownList[0]) {
+//                        reEnrollSubmit.status = ("")
+//                        check[0] = 0
+//                    }
+//                }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -253,10 +286,17 @@ class IntentionRegisterActivity : AppCompatActivity(){
                     mContext,
                     "You didn't enter any data of your child. Please Enter data and Submit", "Alert")*/
             } else {
-                showSubmitConfirm(
-                    mContext,
-                    "Would you like to submit?",
-                    "Alert", selectedItem, position,intention_id)
+                if(answerTV.text.trim().equals(""))
+                {
+                    Toast.makeText(mContext, " Please Enter The Contents", Toast.LENGTH_SHORT).show()
+                }
+                else{
+                    showSubmitConfirm(
+                        mContext,
+                        "Would you like to submit?",
+                        "Alert", selectedItem, position,intention_id)
+                }
+
             }
         }
 
@@ -315,7 +355,7 @@ class IntentionRegisterActivity : AppCompatActivity(){
         primaryArrayList= ArrayList()
         // optionsArray = ArrayList()
        // progress.visibility = View.VISIBLE
-        val body = IntentionApiSubmit(PreferenceManager.getStudentID(mContext)!!,intensionId.toString(),"2","hbhhhj","1.0",selectedItem)
+        val body = IntentionApiSubmit(PreferenceManager.getStudentID(mContext)!!,intensionId.toString(),"2","hbhhhj","1.0",selectedItem,answerTV.text.trim().toString())
         val token = PreferenceManager.getaccesstoken(mContext)
         val call: Call<StudentInfoModel> = ApiClient.getClient.intensionstatusupdate(body,"Bearer "+token)
         call.enqueue(object : Callback<StudentInfoModel> {

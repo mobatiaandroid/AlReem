@@ -374,8 +374,12 @@ class RequestBusServiceActivity : AppCompatActivity() {
                         }
                         else
                         {
+                            if (response.body()!!.status==141)
+                            {
+                                DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), mContext)
 
-                            DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), mContext)
+                            }
+
                         }
 
                     } catch (e: Exception) {

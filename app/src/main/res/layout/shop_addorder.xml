@@ -184,7 +184,7 @@
                 android:background="@drawable/curved_white_canteen"
                 android:gravity="center"
                 android:padding="5dp"
-                android:text="View Basket"
+                android:text="View Cart"
                 android:textColor="@color/cart_bg" />
 
         </LinearLayout>

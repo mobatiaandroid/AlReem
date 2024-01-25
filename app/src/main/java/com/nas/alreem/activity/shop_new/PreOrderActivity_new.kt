@@ -72,7 +72,7 @@ class PreOrderActivity_new :AppCompatActivity() {
     lateinit var my_orders: RelativeLayout
     lateinit var order_history: RelativeLayout
     lateinit var progressDialog: ProgressBar
-    lateinit var progress: ProgressBar
+  //  lateinit var progress: ProgressBar
     lateinit var contactEmail:String
     lateinit var email_icon: ImageView
     lateinit var description: TextView
@@ -111,7 +111,7 @@ class PreOrderActivity_new :AppCompatActivity() {
         studentlist = ArrayList()
         dropdown = findViewById(R.id.studentSpinner)
         progressDialog = findViewById(R.id.progressDialog)
-        progress =findViewById(R.id.progressDialogAdd)!!
+      //  progress =findViewById(R.id.progressDialogAdd)!!
         add_order = findViewById(R.id.addOrderRelative)
        my_orders = findViewById(R.id.myOrderRelative)
         order_history = findViewById(R.id.orderHistoryRelative)
@@ -289,20 +289,20 @@ class PreOrderActivity_new :AppCompatActivity() {
     }
     fun callGetShopBanner()
     {
-        progress.visibility = View.VISIBLE
+        progressDialog.visibility = View.VISIBLE
 
         val token = PreferenceManager.getaccesstoken(nContext)
         val call: Call<CanteenBannerResponseModel> = ApiClient.getClient.shop_banner("Bearer "+token)
         call.enqueue(object : Callback<CanteenBannerResponseModel>
         {
             override fun onFailure(call: Call<CanteenBannerResponseModel>, t: Throwable) {
-                progress.visibility = View.GONE
+                progressDialog.visibility = View.GONE
 
 
             }
             override fun onResponse(call: Call<CanteenBannerResponseModel>, response: Response<CanteenBannerResponseModel>) {
                 val responsedata = response.body()
-                progress.visibility = View.GONE
+                progressDialog.visibility = View.GONE
 
                 if (responsedata!!.status==100) {
 
@@ -383,7 +383,7 @@ class PreOrderActivity_new :AppCompatActivity() {
         studentListRecycler.addOnItemClickListener(object: OnItemClickListener {
             override fun onItemClicked(position: Int, view: View) {
 
-                progressDialog.visibility= View.VISIBLE
+             //   progressDialog.visibility= View.VISIBLE
 
 
                 studentName=studentListArrayList.get(position).name
@@ -413,7 +413,7 @@ class PreOrderActivity_new :AppCompatActivity() {
                 }
                 add_order.visibility= View.VISIBLE
                 buttonLinear.visibility= View.VISIBLE
-                progressDialog.visibility = View.VISIBLE
+              //  progressDialog.visibility = View.VISIBLE
 
 
                 dialog.dismiss()
@@ -647,11 +647,11 @@ class PreOrderActivity_new :AppCompatActivity() {
         dialog.setContentView(R.layout.dialog_common_error_alert)
         var iconImageView = dialog.findViewById(R.id.iconImageView) as ImageView
         var alertHead = dialog.findViewById(R.id.alertHead) as TextView
-        var text_dialog = dialog.findViewById(R.id.text_dialog) as TextView
+        var text_dialog = dialog.findViewById(R.id.messageTxt) as TextView
         var btn_Ok = dialog.findViewById(R.id.btn_Ok) as Button
         text_dialog.text = message
         alertHead.text = msgHead
-        iconImageView.setImageResource(R.drawable.exclamationicon)
+        iconImageView.setImageResource(R.drawable.tick)
         btn_Ok.setOnClickListener()
         {
             dialog.dismiss()

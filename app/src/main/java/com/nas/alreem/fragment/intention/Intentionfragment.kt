@@ -172,8 +172,12 @@ class Intentionfragment : Fragment(){
                     intent.putExtra("question", primaryArrayList.get(position).question)
                     intent.putExtra("classs",intentionstatusArray.get(position).className)
                     intent.putExtra("options",intentionstatusArray.get(position).selected_options)
-
+                    intent.putExtra("selectedchoice", intentionstatusArray[position].selected_option_answer)
                     intent.putExtra("position",position)
+                    intent.putParcelableArrayListExtra(
+                        "optionsarray",
+                        primaryArrayList[position].options
+                    )
                     startActivity(intent)
                    /* val dialog = Dialog(mContext)
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -423,59 +427,59 @@ class Intentionfragment : Fragment(){
         text_dialog.text = do_you_want_to_submit
         alertHead.text = alert
         btn_Ok.setOnClickListener {
-            saveIntentionApi(reEnrollSaveArray, dialog1, dialog, selectedItem, position,intensionId)
+//            saveIntentionApi(reEnrollSaveArray, dialog1, dialog, selectedItem, position,intensionId)
             dialog1.dismiss()
         }
         btn_Cancel.setOnClickListener { dialog1.dismiss() }
         dialog1.show()
     }
 
-    private fun saveIntentionApi(
-        reEnrollSaveArray: ArrayList<IntentionSubmitModel>?,
-        dialog1: Dialog,
-        dialog: Dialog,
-        selectedItem: String,
-        position: Int,
-        intensionId: Int
-    ) {
-
-        primaryArrayList= ArrayList()
-        // optionsArray = ArrayList()
-        progress.visibility = View.VISIBLE
-        val body = IntentionApiSubmit(stud_id,intensionId.toString(),"2","hbhhhj","1.0",selectedItem)
-        val token = PreferenceManager.getaccesstoken(mContext)
-        val call: Call<StudentInfoModel> = ApiClient.getClient.intensionstatusupdate(body,"Bearer "+token)
-        call.enqueue(object : Callback<StudentInfoModel> {
-            override fun onFailure(call: Call<StudentInfoModel>, t: Throwable) {
-                Log.e("Error", t.localizedMessage)
-                progress.visibility = View.GONE
-            }
-            override fun onResponse(call: Call<StudentInfoModel>, response: Response<StudentInfoModel>) {
-                progress.visibility = View.GONE
-                //val arraySize :Int = response.body()!!.responseArray.studentList.size
-                val responsedata = response.body()
-                Log.e("size","size")
-                if (responsedata != null) {
-                    try {
-
-                        if (response.body()!!.status==100)
-                        {
-                            showSuccessReEnrollAlert(
-                                mContext, " Thank you         \n" + "\n" + "Successfully submitted", "Success", dialog1, dialog)
-                        }
-                        else
-                        {
-
-                        }
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                }
-
-            }
-
-        })
-    }
+//    private fun saveIntentionApi(
+//        reEnrollSaveArray: ArrayList<IntentionSubmitModel>?,
+//        dialog1: Dialog,
+//        dialog: Dialog,
+//        selectedItem: String,
+//        position: Int,
+//        intensionId: Int
+//    ) {
+//
+//        primaryArrayList= ArrayList()
+//        // optionsArray = ArrayList()
+//        progress.visibility = View.VISIBLE
+//        val body = IntentionApiSubmit(stud_id,intensionId.toString(),"2","hbhhhj","1.0",selectedItem)
+//        val token = PreferenceManager.getaccesstoken(mContext)
+//        val call: Call<StudentInfoModel> = ApiClient.getClient.intensionstatusupdate(body,"Bearer "+token)
+//        call.enqueue(object : Callback<StudentInfoModel> {
+//            override fun onFailure(call: Call<StudentInfoModel>, t: Throwable) {
+//                Log.e("Error", t.localizedMessage)
+//                progress.visibility = View.GONE
+//            }
+//            override fun onResponse(call: Call<StudentInfoModel>, response: Response<StudentInfoModel>) {
+//                progress.visibility = View.GONE
+//                //val arraySize :Int = response.body()!!.responseArray.studentList.size
+//                val responsedata = response.body()
+//                Log.e("size","size")
+//                if (responsedata != null) {
+//                    try {
+//
+//                        if (response.body()!!.status==100)
+//                        {
+//                            showSuccessReEnrollAlert(
+//                                mContext, " Thank you         \n" + "\n" + "Successfully submitted", "Success", dialog1, dialog)
+//                        }
+//                        else
+//                        {
+//
+//                        }
+//                    } catch (e: Exception) {
+//                        e.printStackTrace()
+//                    }
+//                }
+//
+//            }
+//
+//        })
+//    }
     private fun showSuccessReEnrollAlert(
         mContext: Context,
         successfully_submitted_: String,
@@ -546,7 +550,7 @@ class Intentionfragment : Fragment(){
                 stud_img = mStudentArray.get(position).photo.toString()
               //  textViewYear!!.text = "Class : " + mStudentArray.get(position).studentClass
                 PreferenceManager.setStudentID(mContext,stud_id)
-
+                PreferenceManager.setStudentName(mContext,stud_name)
                 if (stud_img != "") {
                     Glide.with(mContext) //1
                         .load(stud_img)
@@ -692,9 +696,9 @@ class Intentionfragment : Fragment(){
                         // Log.e("Student_idss",stud_id)
                         PreferenceManager.setStudentID(mContext, stud_id)
                         Log.e("id", stud_id)
-                        //  PreferenceManager.setStudentName(mContext,student_Name)
-                        //PreferenceManager.setStudentPhoto(mContext,studentImg)
-                        //  PreferenceManager.setStudentClass(mContext,studentClass)
+                          PreferenceManager.setStudentName(mContext,stud_name)
+                        PreferenceManager.setStudentPhoto(mContext,stud_img)
+                          PreferenceManager.setStudentClass(mContext,stud_class)
                         studentName.text = stud_name
                         PreferenceManager.setCCAStudentIdPosition(mContext, "0")
 
@@ -722,6 +726,8 @@ class Intentionfragment : Fragment(){
                         stud_img= studentListArrayList[studentSelectPosition].photo
                         stud_id=  studentListArrayList[studentSelectPosition].id.toString()
                          PreferenceManager.setStudentID(mContext, stud_id)
+                       // PreferenceManager.setStudentName(mContext,stud_name)
+
                         // PreferenceManager.setStudIdForCCA(mContext, studentId)
                         //  Log.e("Studentid1",stud_id)
                         stud_class= studentListArrayList[studentSelectPosition].studentClass
@@ -744,7 +750,7 @@ class Intentionfragment : Fragment(){
                     var internetCheck = ConstantFunctions.internetCheck(mContext)
                     if (internetCheck) {
                         getIntentionListAPI(stud_id)
-//                        getIntentionStatusAPI(stud_id)
+                        getIntentionStatusAPI(stud_id)
 
                     } else {
                         DialogFunctions.showInternetAlertDialog(mContext)
@@ -767,6 +773,7 @@ class Intentionfragment : Fragment(){
         studentName.text = PreferenceManager.getStudentName(mContext)
         stud_id = PreferenceManager.getStudentID(mContext).toString()
         Log.e("studid",stud_id)
+        Log.e("studname", PreferenceManager.getStudentName(mContext)!!)
         stud_img = PreferenceManager.getStudentPhoto(mContext)!!
         if (!stud_img.equals("")) {
             Glide.with(mContext) //1
