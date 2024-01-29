@@ -560,7 +560,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
             dropdownList.add(i, optionsArray[i - 1])
         }
         val sp_adapter = ArrayAdapter<String>(
-            mContext, R.layout.spinner_textview_white, dropdownList
+            mContext, R.layout.spinner_textview, dropdownList
         )
         spinnerList.adapter = sp_adapter
         sp_adapter.setDropDownViewResource(R.layout.spinner_textview)
@@ -577,13 +577,10 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     val selectedItem: String = parent.getItemAtPosition(position).toString()
                     val optionlistSize: Int = dropdownList.size - 1
                     for (i in 1..optionlistSize) {
-                        Log.e("opt", dropdownList[i])
                         if ((selectedItem == dropdownList[i])) {
-                            Log.e("setcheck", "1")
                             reEnrollsave[page_count[0]].status = dropdownList[i]
                             check[0] = 1
                         } else if ((selectedItem == dropdownList[0])) {
-                            Log.e("setcheck", "0")
                             check[0] = 0
                             reEnrollsave[page_count[0]].status = ""
                         }
@@ -625,7 +622,6 @@ class HomeFragment : Fragment(), View.OnClickListener {
         sub_btn.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View) {
                 if (check[0] == 0) {
-                    Log.e("check", "plsselct")
                     for (i in studentEnrollList.indices) {
                         if (!reEnrollsave[i].status.isEmpty()) {
                             reEnrollsave[i].student_id = studentEnrollList[i].id
@@ -643,8 +639,6 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 reEnrollsubmit.add(0, r1)
                             } else {
                                 for (j in 1..reEnrollsubmit.size) {
-                                    Log.e("save", reEnrollsave.size.toString())
-                                    Log.e("sub", reEnrollsubmit.size.toString())
                                     if (!reEnrollsave[i].student_id
                                             .equals(reEnrollsubmit[j - 1].student_id)
                                     ) {
@@ -654,7 +648,6 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                         )
                                         reEnrollsubmit.add(j, r1)
                                     } else {
-                                        Log.e("new", "stud")
                                     }
                                 }
                             }
@@ -693,8 +686,6 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 reEnrollsubmit.add(0, r1)
                             } else {
                                 for (j in 1..reEnrollsubmit.size) {
-                                    Log.e("save", reEnrollsave.size.toString())
-                                    Log.e("sub", reEnrollsubmit.size.toString())
                                     if (!reEnrollsave[i].student_id
                                             .equals(reEnrollsubmit[j - 1].student_id)
                                     ) {
@@ -704,7 +695,6 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                         )
                                         reEnrollsubmit.add(j, r1)
                                     } else {
-                                        Log.e("new", "stud")
                                     }
                                 }
                             }
@@ -716,12 +706,8 @@ class HomeFragment : Fragment(), View.OnClickListener {
         })
         nxt_btn.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View) {
-                Log.e("check", check[0].toString())
                 if (check[0] == 0) {
-                    Log.e("checknxt", "plsselct")
                     page_count[0] = page_count[0] + 1
-                    Log.e("nxt_pg", page_count[0].toString())
-                    Log.e("studnt_count", studentEnrollList.size.toString())
                     if (page_count[0] == studentEnrollList.size - 1) {
                         nxt_btn.visibility = View.GONE
                         sub_btn.visibility = View.VISIBLE
@@ -731,7 +717,6 @@ class HomeFragment : Fragment(), View.OnClickListener {
                         prev_btn.visibility = View.VISIBLE
                         sub_btn.visibility = View.GONE
                     }
-                    Log.e("stsnxt", reEnrollsave[page_count[0]].status)
                     if (reEnrollsave[page_count[0]].status.equals("")) {
                         spinnerList.setSelection(0)
                     } else {
@@ -751,10 +736,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             .into(stud_img)
                     }
                 } else {
-                    Log.e("check", "checked")
                     page_count[0] = page_count[0] + 1
-                    Log.e("nxt_pg", page_count[0].toString())
-                    Log.e("studnt_count", studentEnrollList.size.toString())
                     if (page_count[0] == studentEnrollList.size - 1) {
                         nxt_btn.visibility = View.GONE
                         sub_btn.visibility = View.VISIBLE
@@ -795,11 +777,8 @@ class HomeFragment : Fragment(), View.OnClickListener {
         })
         prev_btn.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View) {
-                Log.e("checkpre", check[0].toString())
                 if (check[0] == 0) {
-                    Log.e("check", "plsselct")
                     page_count[0] = page_count[0] - 1
-                    Log.e("studnt_count", studentEnrollList.size.toString())
                     if (page_count[0] == 0) {
                         nxt_btn.visibility = View.VISIBLE
                         prev_btn.visibility = View.GONE
@@ -815,7 +794,6 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             sub_btn.visibility = View.GONE
                         }
                     }
-                    Log.e("sts", reEnrollsave[page_count[0]].status)
                     if (reEnrollsave[page_count[0]].status.equals("")) {
                         spinnerList.setSelection(0)
                     } else {
@@ -835,10 +813,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             .into(stud_img)
                     }
                 } else {
-                    Log.e("check", "checked")
                     page_count[0] = page_count[0] - 1
-                    Log.e("pg", page_count.get(0).toString())
-                    Log.e("studnt_count", studentEnrollList.size.toString())
                     if (page_count.get(0) == 0) {
                         nxt_btn.visibility = View.VISIBLE
                         prev_btn.visibility = View.GONE

@@ -324,7 +324,6 @@ class PermissionSlipFragmentNew :Fragment(){
                 progressDialog.visibility = View.GONE
                 if (response.body()!!.status==100)
                 {
-                    Log.e("success","success")
                     forms_recycler.visibility= View.GONE
                     general_rec.visibility= View.VISIBLE
 

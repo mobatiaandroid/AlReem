@@ -392,7 +392,6 @@ var email : String=""
     fun callSendEmailToStaffApi(
         title: String, message: String, dialog: Dialog)
     {
-        Log.e("email",PreferenceManager.getEmail(mContext)!!)
         val sendMailBody = SendEmailApiModel(PreferenceManager.getEmail(mContext)!!, title, message)
         val call: Call<SignUpResponseModel> = ApiClient.getClient.sendEmailStaff(sendMailBody, "Bearer " + PreferenceManager.getaccesstoken(mContext!!))
         call.enqueue(object : Callback<SignUpResponseModel> {

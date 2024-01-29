@@ -30,7 +30,6 @@ class IntentionAdapter(
         return MyViewHolder(itemView)
     }
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        Log.e("title",primaryArrayList[position].title)
         val list = primaryArrayList[position]
             holder.listTxtTitle.text = list.title
         if (primaryArrayList[position].status.equals("")) {
@@ -46,7 +45,6 @@ class IntentionAdapter(
 
     }
     override fun getItemCount(): Int {
-Log.e("sizeeee", primaryArrayList.size.toString())
         return primaryArrayList.size
 
     }

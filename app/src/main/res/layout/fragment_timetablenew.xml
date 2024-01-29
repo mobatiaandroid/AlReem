@@ -241,23 +241,9 @@
                             android:layout_height="match_parent"
                             android:layout_toLeftOf="@+id/llread"
                             android:textSize="16dp"
-                            android:text="Sun"
-                            android:background="@color/present"
-                            android:gravity="center"
-                            android:textColor="@color/black" />
-                        <com.nas.alreem.commonviews.CustomFontSansProTextBlack
-                            style="@style/textstyletimetablesingle"
-                            android:layout_width="0dp"
-                            android:layout_weight="20"
-                            android:layout_height="match_parent"
-                            android:layout_toLeftOf="@+id/llread"
-                            android:textSize="16dp"
                             android:text="Mon"
-                            android:gravity="center"
-                            android:layout_marginRight="1dp"
-
                             android:background="@color/present"
-
+                            android:gravity="center"
                             android:textColor="@color/black" />
                         <com.nas.alreem.commonviews.CustomFontSansProTextBlack
                             style="@style/textstyletimetablesingle"
@@ -281,6 +267,20 @@
                             android:layout_toLeftOf="@+id/llread"
                             android:textSize="16dp"
                             android:text="Wed"
+                            android:gravity="center"
+                            android:layout_marginRight="1dp"
+
+                            android:background="@color/present"
+
+                            android:textColor="@color/black" />
+                        <com.nas.alreem.commonviews.CustomFontSansProTextBlack
+                            style="@style/textstyletimetablesingle"
+                            android:layout_width="0dp"
+                            android:layout_weight="20"
+                            android:layout_height="match_parent"
+                            android:layout_toLeftOf="@+id/llread"
+                            android:textSize="16dp"
+                            android:text="Thu"
                             android:layout_marginRight="1dp"
 
                             android:gravity="center"
@@ -297,7 +297,7 @@
                             android:gravity="center"
                             android:background="@color/present"
 
-                            android:text="Thu"
+                            android:text="Fri"
                             android:textColor="@color/black" />
 
                     </LinearLayout>

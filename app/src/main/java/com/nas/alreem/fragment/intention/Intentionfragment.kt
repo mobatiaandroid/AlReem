@@ -149,7 +149,6 @@ class Intentionfragment : Fragment(){
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onItemClicked(position: Int, view: View)
             {
-                Log.e("intention","intention")
                 if (primaryArrayList[position].status.equals("")) {
                     val intent = Intent(mContext, IntentionRegisterActivity::class.java)
 
@@ -251,7 +250,6 @@ class Intentionfragment : Fragment(){
         val reEnrollSubmit = IntentionSubmitModel("", "")
 
             optionsArray.addAll(primaryArrayList.get(position).options)
-            Log.e("arraysizeoption",optionsArray.size.toString())
 
         answerTxt2.isFocusable = false
         answerTxt2.isFocusableInTouchMode = false
@@ -340,7 +338,6 @@ class Intentionfragment : Fragment(){
         }
         sub_btn.setOnClickListener {
 
-            Log.e("Intention_validation",selectedItem)
             if (selectedItem.equals("", ignoreCase = true) || selectedItem.equals(
                     "Please Select",
                     ignoreCase = true
@@ -583,7 +580,6 @@ class Intentionfragment : Fragment(){
         dialog.show()
     }
     private fun getIntentionListAPI(stud_id: String) {
-        Log.e("size", "size")
         primaryArrayList = ArrayList()
 
         // optionsArray = ArrayList()
@@ -594,7 +590,6 @@ class Intentionfragment : Fragment(){
             ApiClient.getClient.intension(body, "Bearer " + token)
         call.enqueue(object : Callback<IntentionListAPIResponseModel> {
             override fun onFailure(call: Call<IntentionListAPIResponseModel>, t: Throwable) {
-                Log.e("Error", t.localizedMessage)
                 progress.visibility = View.GONE
             }
 
@@ -605,14 +600,11 @@ class Intentionfragment : Fragment(){
                 progress.visibility = View.GONE
                 //val arraySize :Int = response.body()!!.responseArray.studentList.size
                 val responsedata = response.body()
-                Log.e("size", "size")
                 if (responsedata != null) {
                     try {
 
                         if (response.body()!!.status == 100) {
-                            Log.e("size", "size")
                             primaryArrayList = response.body()!!.responseArray.intensions
-                            Log.e("Arraysize",(primaryArrayList.size.toString()))
                             if (primaryArrayList.size>0)
                             {
 
@@ -695,7 +687,6 @@ class Intentionfragment : Fragment(){
                         stud_class = studentListArrayList[0].section
                         // Log.e("Student_idss",stud_id)
                         PreferenceManager.setStudentID(mContext, stud_id)
-                        Log.e("id", stud_id)
                           PreferenceManager.setStudentName(mContext,stud_name)
                         PreferenceManager.setStudentPhoto(mContext,stud_img)
                           PreferenceManager.setStudentClass(mContext,stud_class)
@@ -772,8 +763,6 @@ class Intentionfragment : Fragment(){
 
         studentName.text = PreferenceManager.getStudentName(mContext)
         stud_id = PreferenceManager.getStudentID(mContext).toString()
-        Log.e("studid",stud_id)
-        Log.e("studname", PreferenceManager.getStudentName(mContext)!!)
         stud_img = PreferenceManager.getStudentPhoto(mContext)!!
         if (!stud_img.equals("")) {
             Glide.with(mContext) //1

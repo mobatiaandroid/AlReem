@@ -78,14 +78,12 @@ class TimeTableAllWeekSelectionAdapterNew(
             holder.txtBreak.setText(mFeildList.get(position).sortname)
             holder.timeLinear.setBackgroundResource(R.color.present)
             val time = mFeildList[position].starttime
-            Log.e("time",time)
 
             try {
                 val sdf = SimpleDateFormat("HH:mm")
                 val dateObj: Date = sdf.parse(time)
                 println(dateObj)
                 println(SimpleDateFormat("hh:mm a").format(dateObj))
-                Log.e("breaktime", SimpleDateFormat("hh:mm a").format(dateObj))
                 holder.timeBreak.text = SimpleDateFormat("hh:mm a").format(dateObj)
             } catch (e: ParseException) {
                 e.printStackTrace()
@@ -99,14 +97,12 @@ class TimeTableAllWeekSelectionAdapterNew(
             holder.txtBreak.setText(mFeildList.get(position).sortname)
             holder.timeLinear.setBackgroundResource(R.color.present)
             val time = mFeildList[position].starttime
-            Log.e("time",time)
 
             try {
                 val sdf = SimpleDateFormat("HH:mm")
                 val dateObj: Date = sdf.parse(time)
                 println(dateObj)
                 println(SimpleDateFormat("hh:mm a").format(dateObj))
-                Log.e("breaktime", SimpleDateFormat("hh:mm a").format(dateObj))
                 holder.timeBreak.text = SimpleDateFormat("hh:mm a").format(dateObj)
             } catch (e: ParseException) {
                 e.printStackTrace()
@@ -116,12 +112,9 @@ class TimeTableAllWeekSelectionAdapterNew(
 
 
         holder.periodTxt.text = mFeildList[position].sortname
-        Log.e("PERIODTEXT:",mFeildList[position].sortname)
 
         holder.timeTxt.visibility = View.GONE
-        Log.e("TimeTable", mPeriodModel[position].timeTableDayModel.size.toString());
         if (mPeriodModel[position].timeTableDayModel.size > 0) {
-            Log.e("insidetimetable","insidetimetable");
             holder.timeLinear.visibility = View.GONE
             holder.tutorLinear.visibility = View.VISIBLE
             holder.llread.visibility = View.VISIBLE
@@ -129,37 +122,35 @@ class TimeTableAllWeekSelectionAdapterNew(
             holder.relSub.visibility = View.VISIBLE
 
            // Log.e("TimeTableee", mPeriodModel[position].timeTableListS.size.toString());
-            if (mPeriodModel[position].timeTableListS.size > 1) {
-               // Log.e("insideperiod","insidetimetable");
-                holder.tutor1.text = mPeriodModel.get(position).timeTableListS.get(0).subject_name
-            } else {
-               // Log.e("outsideperiod","insidetimetable");
-                holder.tutor1.text = mPeriodModel.get(position).sunday
-            }
-            Log.e("Monday", mPeriodModel[position].timeTableListM.size.toString());
+
             if (mPeriodModel.get(position).timeTableListM.size > 0) {
-                Log.e("mondayinside","mondayinside");
 
-                holder.tutor2.text = mPeriodModel.get(position).timeTableListM.get(0).subject_name
+                holder.tutor1.text = mPeriodModel.get(position).timeTableListM.get(0).subject_name
             } else {
-                Log.e("mondayoutside","mondayoutside");
 
-                holder.tutor2.text = mPeriodModel.get(position).monday
+                holder.tutor1.text = mPeriodModel.get(position).monday
             }
             if (mPeriodModel.get(position).timeTableListTu.size > 0) {
-                holder.tutor3.text = mPeriodModel.get(position).timeTableListTu.get(0).subject_name
+                holder.tutor2.text = mPeriodModel.get(position).timeTableListTu.get(0).subject_name
             } else {
-                holder.tutor3.text = mPeriodModel.get(position).tuesday
+                holder.tutor2.text = mPeriodModel.get(position).tuesday
             }
             if (mPeriodModel.get(position).timeTableListW.size > 0) {
-                holder.tutor4.text = mPeriodModel.get(position).timeTableListW.get(0).subject_name
+                holder.tutor3.text = mPeriodModel.get(position).timeTableListW.get(0).subject_name
             } else {
-                holder.tutor4.text = mPeriodModel.get(position).wednesday
+                holder.tutor3.text = mPeriodModel.get(position).wednesday
             }
             if (mPeriodModel.get(position).timeTableListTh.size > 0) {
-                holder.tutor5.text = mPeriodModel.get(position).timeTableListTh.get(0).subject_name
+                holder.tutor4.text = mPeriodModel.get(position).timeTableListTh.get(0).subject_name
             } else {
-                holder.tutor5.text = mPeriodModel.get(position).thursday
+                holder.tutor4.text = mPeriodModel.get(position).thursday
+            }
+            if (mPeriodModel[position].timeTableListS.size > 0) {
+                // Log.e("insideperiod","insidetimetable");
+                 holder.tutor5.text = mPeriodModel.get(position).timeTableListS.get(0).subject_name
+            } else {
+                // Log.e("outsideperiod","insidetimetable");
+                  holder.tutor5.text = mPeriodModel.get(position).sunday
             }
 
             if (mPeriodModel.get(position).countS > 1) {

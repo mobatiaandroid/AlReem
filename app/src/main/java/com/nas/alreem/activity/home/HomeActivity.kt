@@ -1413,7 +1413,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
             dropDownList.add(optionsArray[i])
         }
         val sp_adapter: ArrayAdapter<*> =
-            ArrayAdapter(mContext, R.layout.spinner_textview_white, dropDownList)
+            ArrayAdapter(mContext, R.layout.spinner_textview, dropDownList)
         sp_adapter.setDropDownViewResource(R.layout.spinner_textview)
         spinnerList.adapter = sp_adapter
         spinnerList.setSelection(0)

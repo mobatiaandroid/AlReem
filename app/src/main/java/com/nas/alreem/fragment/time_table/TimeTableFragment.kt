@@ -439,7 +439,6 @@ class TimeTableFragment : Fragment() {
         call.enqueue(object : Callback<TimeTableApiDataModel> {
             override fun onFailure(call: Call<TimeTableApiDataModel>, t: Throwable) {
                 progressDialog.visibility = View.GONE
-                Log.e("Error", t.localizedMessage)
                 showSuccessAlert(mContext, "Something went wrong.", "Alert")
             }
 
@@ -515,19 +514,20 @@ class TimeTableFragment : Fragment() {
                                 mTimetableApiArrayList.addAll(response.body()!!.responseArray.timeTableList)
                                 mPeriodModel = ArrayList()
                                 var mDataModelArrayList = ArrayList<DayModel>()
-                                var s = 0
                                 var m = 0
                                 var tu = 0
                                 var w = 0
                                 var th = 0
+                                var fri = 0
                                 for (f in 0..feildAPIArrayList.size - 1) {
                                     var mDayModel: DayModel = DayModel()
                                     var mPeriod: PeriodModel = PeriodModel()
-                                    var timeTableListS = ArrayList<DayModel>()
+
                                     var timeTableListM = ArrayList<DayModel>()
                                     var timeTableListT = ArrayList<DayModel>()
                                     var timeTableListW = ArrayList<DayModel>()
                                     var timeTableListTh = ArrayList<DayModel>()
+                                    var timeTableListF = ArrayList<DayModel>()
                                     for (t in 0..mTimetableApiArrayList.size - 1) {
                                         if (feildAPIArrayList.get(f).sortname.equals(
                                                 mTimetableApiArrayList.get(t).sortname
@@ -535,49 +535,19 @@ class TimeTableFragment : Fragment() {
                                         ) {
 
                                             mDayModel.id = mTimetableApiArrayList.get(t).id
-                                            Log.e("id", mDayModel.id.toString());
                                             mDayModel.period_id =
                                                 mTimetableApiArrayList.get(t).period_id
-                                            Log.e("period_id", mDayModel.period_id.toString());
                                             mDayModel.day = mTimetableApiArrayList.get(t).day
-                                            Log.e("day", mDayModel.day);
                                             mDayModel.sortname =
                                                 mTimetableApiArrayList.get(t).sortname
-                                            Log.e("sortname", mDayModel.sortname );
                                             mDayModel.starttime =
                                                 mTimetableApiArrayList.get(t).starttime
-                                            Log.e("starttime", mDayModel.starttime);
                                             mDayModel.endtime =
                                                 mTimetableApiArrayList.get(t).endtime
-                                            Log.e("endtime",  mDayModel.endtime);
                                             mDayModel.subject_name =
                                                 mTimetableApiArrayList.get(t).subject_name
-                                            Log.e("subject_name",   mDayModel.subject_name );
                                             //    mDayModel.staff=mTimetableApiArrayList.get(t).staff
-                                            Log.e("error",   mTimetableApiArrayList.get(t).day );
-                                            if (mTimetableApiArrayList.get(t).day.equals("Sunday")) {
-                                                Log.e("monday","monday");
-                                                s = s + 1
-                                                var dayModel = DayModel()
-                                                dayModel.id = mTimetableApiArrayList.get(t).id
-                                                dayModel.period_id =
-                                                    mTimetableApiArrayList.get(t).period_id
-                                                dayModel.day = mTimetableApiArrayList.get(t).day
-                                                dayModel.sortname =
-                                                    mTimetableApiArrayList.get(t).sortname
-                                                dayModel.starttime =
-                                                    mTimetableApiArrayList.get(t).starttime
-                                                dayModel.endtime =
-                                                    mTimetableApiArrayList.get(t).endtime
-                                                dayModel.subject_name =
-                                                    mTimetableApiArrayList.get(t).subject_name
-
-                                                dayModel.staff = mTimetableApiArrayList.get(t).staff
-                                                timeTableListS.add(dayModel)
-                                                mPeriod.sunday =
-                                                    mTimetableApiArrayList.get(t).subject_name
-                                            } else if (mTimetableApiArrayList.get(t).day.equals("Monday")) {
-                                                Log.e("monday","monday");
+                                              if (mTimetableApiArrayList.get(t).day.equals("Monday")) {
 
                                                 m = m + 1
                                                 var dayModel = DayModel()
@@ -658,19 +628,40 @@ class TimeTableFragment : Fragment() {
                                                 timeTableListTh.add(dayModel)
                                                 mPeriod.thursday =
                                                     mTimetableApiArrayList.get(t).subject_name
-                                            } else {
+                                            }
+                                           else if (mTimetableApiArrayList.get(t).day.equals("Friday")) {
+                                                fri = fri + 1
+                                                var dayModel = DayModel()
+                                                dayModel.id = mTimetableApiArrayList.get(t).id
+                                                dayModel.period_id =
+                                                    mTimetableApiArrayList.get(t).period_id
+                                                dayModel.day = mTimetableApiArrayList.get(t).day
+                                                dayModel.sortname =
+                                                    mTimetableApiArrayList.get(t).sortname
+                                                dayModel.starttime =
+                                                    mTimetableApiArrayList.get(t).starttime
+                                                dayModel.endtime =
+                                                    mTimetableApiArrayList.get(t).endtime
+                                                dayModel.subject_name =
+                                                    mTimetableApiArrayList.get(t).subject_name
+
+                                                dayModel.staff = mTimetableApiArrayList.get(t).staff
+                                                timeTableListF.add(dayModel)
+                                                mPeriod.sunday =
+                                                    mTimetableApiArrayList.get(t).subject_name
+                                            }else {
                                                 mPeriod.sunday = ""
                                                 mPeriod.monday = ""
                                                 mPeriod.tuesday = ""
                                                 mPeriod.wednesday = ""
                                                 mPeriod.thursday = ""
                                             }
-                                            mPeriod.countS = s
+                                            mPeriod.countS = fri
                                             mPeriod.countM = m
                                             mPeriod.countT = tu
                                             mPeriod.countW = w
                                             mPeriod.countTh = th
-                                            mPeriod.timeTableListS = timeTableListS
+                                            mPeriod.timeTableListS = timeTableListF
                                             mPeriod.timeTableListM = timeTableListM
                                             mPeriod.timeTableListTu = timeTableListT
                                             mPeriod.timeTableListW = timeTableListW
@@ -758,7 +749,6 @@ class TimeTableFragment : Fragment() {
                             sharedownloadlinear.visibility  =View.VISIBLE
                         }
                     }
-                    Log.e("APISUCCESS", response.body().toString())
 
 
                 } else if (response.body()!!.status == 116) {
@@ -914,7 +904,6 @@ class TimeTableFragment : Fragment() {
         val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer " + token)
         call.enqueue(object : Callback<StudentListModel> {
             override fun onFailure(call: Call<StudentListModel>, t: Throwable) {
-                Log.e("Error", t.localizedMessage)
             }
 
             override fun onResponse(
@@ -927,7 +916,6 @@ class TimeTableFragment : Fragment() {
                     studentListArrayList.addAll(response.body()!!.responseArray.studentList)
                     System.out.println("CalendarResoponse" + response.body())
                     if (PreferenceManager.getStudentID(mContext).equals("")) {
-                        Log.e("Empty Img", "Empty")
                         studentName = studentListArrayList.get(0).name
                         studentImg = studentListArrayList.get(0).photo
                         studentId = studentListArrayList.get(0).id

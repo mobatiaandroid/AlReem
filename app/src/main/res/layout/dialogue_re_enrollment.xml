@@ -285,7 +285,7 @@
                         android:id="@+id/spinnerlist"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
-                        android:background="@drawable/text_field_bg_teal"
+                        android:background="@drawable/textfield_bg"
                         android:popupBackground="@color/white"
                         android:spinnerMode="dropdown"
                         android:textColor="@color/white"
@@ -308,7 +308,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="8dp"
-                        android:background="@drawable/arrow_down_white"
+                        android:background="@drawable/arrowdownnew"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="@+id/spinnerlist"
                         app:layout_constraintTop_toTopOf="@+id/spinnerlist" />
@@ -380,7 +380,8 @@
                 android:layout_height="40dp"
                 android:layout_margin="16dp"
                 android:layout_marginTop="16dp"
-                android:textColor="@color/blue"
+                android:textColor="@color/white"
+                android:background="@drawable/text_field_bg_teal"
                 app:layout_constraintTop_toBottomOf="@+id/linear_choose"
                 tools:layout_editor_absoluteX="16dp"
                 android:text="Important note on re-enrolment" />

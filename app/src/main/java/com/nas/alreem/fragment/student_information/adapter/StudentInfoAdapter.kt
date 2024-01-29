@@ -34,7 +34,6 @@ internal class StudentInfoAdapter(
         val movie = studentInfoList[position]
         holder.nameTxt.text = movie.title
         holder.valueTxt.text = movie.value
-        Log.e("value",movie.value)
         if(movie.value.equals(""))
         {
             holder.nameTxt.visibility=View.GONE
