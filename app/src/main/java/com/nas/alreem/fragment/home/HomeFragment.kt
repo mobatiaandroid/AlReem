@@ -12,16 +12,21 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.view.*
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.nas.alreem.BuildConfig
@@ -31,10 +36,12 @@ import com.nas.alreem.activity.login.model.SignUpResponseModel
 import com.nas.alreem.activity.survey.adapter.SurveyQuestionPagerAdapter
 import com.nas.alreem.activity.survey.model.*
 import com.nas.alreem.constants.ApiClient
+import com.nas.alreem.constants.ApiInterface
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.ConstantWords
 import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.PreferenceManager
+import com.nas.alreem.constants.WebViewTextActivity
 import com.nas.alreem.fragment.about_us.AboutUsFragment
 import com.nas.alreem.fragment.absence.AbsenceFragment
 import com.nas.alreem.fragment.calendar.CalendarFragment
@@ -43,7 +50,16 @@ import com.nas.alreem.fragment.cca.CCAFragment
 import com.nas.alreem.fragment.contact_us.ContactUsFragment
 import com.nas.alreem.fragment.early_years.EarlyYearsFragment
 import com.nas.alreem.fragment.gallery.GalleryFragment
+import com.nas.alreem.fragment.home.adapter.ReEnrollAdapter
 import com.nas.alreem.fragment.home.model.BannerResponseModel
+import com.nas.alreem.fragment.home.re_enrollment.ReEnrollmentFormResponseModel
+import com.nas.alreem.fragment.home.re_enrollment.ReEnrollmentStatusResponseModel
+import com.nas.alreem.fragment.home.reenrollment.EnrollmentHelpResponseModel
+import com.nas.alreem.fragment.home.reenrollment.EnrollmentSaveResponseModel
+import com.nas.alreem.fragment.home.reenrollment.ReEnrollSubmitAPIModel
+import com.nas.alreem.fragment.home.reenrollment.ReEnrollSubmitModel
+import com.nas.alreem.fragment.home.reenrollment.ReEnrollmentFormStudentModel
+import com.nas.alreem.fragment.home.reenrollment.StudentEnrollList
 import com.nas.alreem.fragment.notifications.NotificationFragment
 import com.nas.alreem.fragment.parent_meetings.ParentMeetingsFragment
 import com.nas.alreem.fragment.parents_essentials.ParentsEssentialFragment
@@ -53,9 +69,13 @@ import com.nas.alreem.fragment.permission_slip.PermissionSlipFragment
 import com.nas.alreem.fragment.primary.PrimaryFragment
 import com.nas.alreem.fragment.reports.ReportsFragment
 import com.nas.alreem.fragment.secondary.SecondaryFragment
+import com.nas.alreem.recyclermanager.RecyclerItemListener
+import org.json.JSONException
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.time.LocalDate
 import java.util.*
 
 lateinit var relone: RelativeLayout
@@ -133,7 +153,12 @@ lateinit var surveyQuestionArrayList: ArrayList<SurveyQuestionsModel>
 lateinit var surveyAnswersArrayList: ArrayList<SurveyOfferedAnswersModel>
 lateinit var mAnswerList: ArrayList<SurveySubmitDataModel>
 
+lateinit var progressDialogAdd: ProgressBar
+
 class HomeFragment : Fragment() , View.OnClickListener{
+    lateinit var studentList: ArrayList<StudentEnrollList>
+    lateinit var studentEnrollList: ArrayList<StudentEnrollList>
+    lateinit var notice: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -163,12 +188,18 @@ class HomeFragment : Fragment() , View.OnClickListener{
 
     fun getbannerimages()
     {
+        progressDialogAdd.visibility= View.VISIBLE
+
         val call: Call<BannerResponseModel> = ApiClient.getClient.bannerImages()
         call.enqueue(object : Callback<BannerResponseModel> {
             override fun onFailure(call: Call<BannerResponseModel>, t: Throwable) {
+                progressDialogAdd.visibility= View.GONE
+
                 Log.e("Failed", t.localizedMessage)
             }
             override fun onResponse(call: Call<BannerResponseModel>, response: Response<BannerResponseModel>) {
+                progressDialogAdd.visibility= View.GONE
+
                 val responsedata = response.body()
                 if (responsedata != null) {
                     try {
@@ -190,45 +221,40 @@ class HomeFragment : Fragment() , View.OnClickListener{
                             else {
                                 pager.setBackgroundResource(R.drawable.default_banner)
                             }
-                            var notice=response.body()!!.responseArray!!.notice
+                             notice=response.body()!!.responseArray!!.notice
                             val survey: Int = response.body()!!.responseArray!!.survey
+                            val enrollmentStatus =
+                                response.body()!!.responseArray!!.enrollmentStatus
                             //										int survey=0;
                             PreferenceManager.setSurvey(mContext, survey)
-                            if(notice.equals(""))
-                            {
-                                if (PreferenceManager.getSurvey(mContext) === 1) {
-                                    if (PreferenceManager.getIsSurveyHomeVisible(mContext))
-                                    {
-                                    }
-                                    else
-                                    {
-                                        Log.e("SURVEY VALUE", "API CALL")
-                                        if (ConstantFunctions.internetCheck(mContext))
-                                        {
-                                            callSurveyApi()
+                            if (enrollmentStatus.equals("0") || enrollmentStatus.equals("")) {
+                                if (notice.equals("")) {
+                                    if (PreferenceManager.getSurvey(mContext) === 1) {
+                                        if (PreferenceManager.getIsSurveyHomeVisible(mContext)) {
+                                        } else {
+                                            if (ConstantFunctions.internetCheck(mContext)) {
+                                                callSurveyApi()
+                                            } else {
+                                                DialogFunctions.showInternetAlertDialog(mContext)
+                                            }
                                         }
-                                        else
-                                        {
-                                            DialogFunctions.showInternetAlertDialog(mContext)
-                                        }
-
+                                    } else {
                                     }
-                                } else
-                                {
+                                } else {
+                                    if (PreferenceManager.getNoticeFirstTime(mContext).equals("")) {
+                                        PreferenceManager.setNoticeFirtTime(mContext, "djhdhhf")
+                                        showPopUpImage(notice, mContext)
+                                    } else {
+                                    }
+                                }
+                            } else {
+                                if (PreferenceManager().getIsEnrollmentHomeVisible(mContext)) {
 
+                                } else {
+                                    getReEnrollmentStatus()
                                 }
                             }
-                            else{
-                                if (PreferenceManager.getNoticeFirstTime(mContext).equals(""))
-                                {
-                                    PreferenceManager.setNoticeFirtTime(mContext,"djhdhhf")
-                                    showPopUpImage(notice,mContext)
-                                }
-                                else{
 
-                                }
-
-                            }
 
                         }
                         else
@@ -246,7 +272,816 @@ class HomeFragment : Fragment() , View.OnClickListener{
 
         })
     }
+    private fun getReEnrollmentStatus() {
+        progressDialogAdd.visibility= View.VISIBLE
 
+        val call: Call<ReEnrollmentStatusResponseModel> = ApiClient.getClient.getenrollstatus(
+            "Bearer " + PreferenceManager.getaccesstoken(mContext)
+        )
+
+        call.enqueue(object : Callback<ReEnrollmentStatusResponseModel?> {
+            override fun onResponse(
+                call: Call<ReEnrollmentStatusResponseModel?>,
+                response: Response<ReEnrollmentStatusResponseModel?>
+            ) {
+                if (response.body() != null) {
+                    progressDialogAdd.visibility= View.GONE
+
+                    val apiResponse: ReEnrollmentStatusResponseModel? = response.body()
+                    val status: String = apiResponse!!.status
+                    if (status == "100") {
+                        studentList = ArrayList()
+                        studentList.addAll(apiResponse.responseArray.students)
+                        val responseArrayObject = response.body()!!.responseArray
+
+                        val studentsArray: ArrayList<StudentEnrollList> =
+                            responseArrayObject.students
+
+                        var isAtLeastOneStatusEmpty = false
+
+                        for (student in studentsArray) {
+                            if ("1" == student.enrollment_status && (student.status == null || student.status.isEmpty())) {
+                                isAtLeastOneStatusEmpty = true
+                                break
+                            }
+                        }
+
+                        studentEnrollList = ArrayList()
+
+                        val studentsWithEmptyStatus: ArrayList<StudentEnrollList> =
+                            ArrayList<StudentEnrollList>()
+
+                        for (student in studentsArray) {
+                            if ("1" == student.enrollment_status && (student.status == null || student.status.isEmpty())) {
+                                studentsWithEmptyStatus.add(student)
+                            }
+                        }
+                        studentEnrollList = studentsWithEmptyStatus
+
+                        if (isAtLeastOneStatusEmpty) {
+                            showReEnrollmentPopUp()
+                        } else {
+                            if (notice == "") {
+                                if (PreferenceManager.getSurvey(mContext) === 1) {
+                                    if (PreferenceManager.getIsSurveyHomeVisible(mContext)) {
+                                    } else {
+                                        if (ConstantFunctions.internetCheck(mContext)) {
+                                            callSurveyApi()
+                                        } else {
+                                            DialogFunctions.showInternetAlertDialog(mContext)
+                                        }
+                                    }
+                                } else {
+                                }
+                            } else {
+                                if (PreferenceManager.getNoticeFirstTime(mContext).equals("")) {
+                                    PreferenceManager.setNoticeFirtTime(mContext, "djhdhhf")
+                                    showPopUpImage(notice, mContext)
+                                } else {
+                                }
+                            }
+                        }
+
+                    } else {
+
+                    }
+                } else {
+
+                }
+            }
+
+            override fun onFailure(call: Call<ReEnrollmentStatusResponseModel?>, t: Throwable) {
+                progressDialogAdd.visibility= View.GONE
+
+            }
+        })
+    }
+    private fun showReEnrollmentPopUp() {
+        val service: ApiInterface = ApiClient.getClient
+
+        val call: Call<ReEnrollmentFormResponseModel> =
+            service.getenrollform("Bearer " + PreferenceManager.getaccesstoken(mContext))
+        call.enqueue(object : Callback<ReEnrollmentFormResponseModel?> {
+            @RequiresApi(Build.VERSION_CODES.O)
+            override fun onResponse(
+                call: Call<ReEnrollmentFormResponseModel?>,
+                response: Response<ReEnrollmentFormResponseModel?>
+            ) {
+                if (response.body() != null) {
+                    val apiResponse: ReEnrollmentFormResponseModel? = response.body()
+                    val status: String = apiResponse!!.status
+                    if (status == "100") {
+                        val responseData: ReEnrollmentFormResponseModel.SecondResponseArray =
+                            apiResponse.responseArray
+
+                        val settingsObject: ReEnrollmentFormResponseModel.Settings =
+                            apiResponse.responseArray.settings
+                        val headingString: String = settingsObject.heading
+                        val question: String = settingsObject.question
+                        val descriptionString: String = settingsObject.description
+                        val tAndCString: String = settingsObject.tAndC
+                        val optionsArray: ArrayList<String> = settingsObject.options
+                        val userObject: ReEnrollmentFormResponseModel.User =
+                            apiResponse.responseArray.user
+                        val userNameString: String = userObject.name
+                        val emailString: String = userObject.email
+                        val studentArray: ArrayList<StudentEnrollList> =
+                            apiResponse.responseArray.students
+                        val studentList: ArrayList<ReEnrollmentFormStudentModel> =
+                            ArrayList()
+                        val temp = ReEnrollmentFormStudentModel()
+                        for (i in studentArray.indices) {
+                            val item: StudentEnrollList =
+                                apiResponse.responseArray.students[i]
+                            val gson = Gson()
+                            val eventJson = gson.toJson(item)
+                            try {
+                                val jsonObject = JSONObject(eventJson)
+                                studentList.add(
+                                    addStudentReEnrollDetails(
+                                        jsonObject
+                                    )
+                                )
+                            } catch (e: JSONException) {
+                                e.printStackTrace()
+                            }
+                        }
+                        re_enroll_popup(
+                            mContext,
+                            headingString,
+                            descriptionString,
+                            tAndCString,
+                            optionsArray,
+                            userNameString,
+                            emailString,
+                            studentEnrollList,
+                            question
+                        )
+
+                    } else {
+
+                    }
+                } else {
+
+                }
+            }
+
+            override fun onFailure(call: Call<ReEnrollmentFormResponseModel?>, t: Throwable) {
+
+            }
+        })
+    }
+    @SuppressLint("WrongConstant")
+    private fun re_enroll_popup(
+        mContext: Context,
+        headingString: String,
+        descriptionString: String,
+        tAndCString: String,
+        optionsArray: ArrayList<String>,
+        userNameString: String,
+        emailString: String,
+        studentEnrollList: ArrayList<StudentEnrollList>,  //                                  ArrayList<StudentEnrollList> studentEnrollList,
+        question: String
+    ) {
+        val d = Dialog(mContext)
+        d.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        d.window!!.setBackgroundDrawable(ColorDrawable(Color.WHITE))
+        d.setCancelable(false)
+        d.setContentView(R.layout.dialog_re_enrollment_swipe_page)
+        val total_count = studentEnrollList.size - 1
+        removeStudentsWithEnrollmentStatusZero(studentEnrollList)
+        val page_count = intArrayOf(0)
+        val check = intArrayOf(0)
+        val questionTextView = d.findViewById<TextView>(R.id.questionTxt)
+        val scrollView = d.findViewById<ScrollView>(R.id.scrollView)
+        val close_img = d.findViewById<ImageView>(R.id.close_img)
+        val header = d.findViewById<TextView>(R.id.header)
+        val mailIcon = d.findViewById<LinearLayout>(R.id.linear_mail)
+        val prev_btn = d.findViewById<LinearLayout>(R.id.prev_linear)
+        val nxt_btn = d.findViewById<LinearLayout>(R.id.nxt_linear)
+        val sub_btn = d.findViewById<Button>(R.id.sub_btn)
+        val terms_and_condtns = d.findViewById<Button>(R.id.terms_conditions)
+        val personal_info = d.findViewById<Button>(R.id.personal_info)
+        val save = d.findViewById<TextView>(R.id.save)
+        val image_view = d.findViewById<ImageView>(R.id.image_view)
+        val stud_img = d.findViewById<ImageView>(R.id.stud_img)
+        val stud_name = d.findViewById<TextView>(R.id.stud_name)
+        val stud_class = d.findViewById<TextView>(R.id.stud_class)
+        val date_field = d.findViewById<EditText>(R.id.textField_date)
+        val descrcrptn = d.findViewById<TextView>(R.id.descrptn_txt)
+        val parent_name = d.findViewById<EditText>(R.id.textField_parentName)
+        val parent_email = d.findViewById<EditText>(R.id.textField_parentEmail)
+        val spinnerList = d.findViewById<Spinner>(R.id.spinnerlist)
+//        val option_txt = d.findViewById<TextView>(R.id.option_txt)
+        val clear = d.findViewById<TextView>(R.id.clear)
+        val dropdown_btn = d.findViewById<ImageView>(R.id.dropdown_btn)
+        val sign_btn = d.findViewById<Button>(R.id.signature_btn)
+        val dropdownList: ArrayList<String>
+        val calendar = Calendar.getInstance()
+        val year = calendar[Calendar.YEAR]
+        val month = calendar[Calendar.MONTH]
+        val day = calendar[Calendar.DAY_OF_MONTH]
+        val currentDate = day.toString() + "/" + (month + 1) + "/" + year
+        val header_txt = "$year Re-enrolment and NAE Terms & Conditions"
+        val reEnrollsave: ArrayList<ReEnrollSubmitModel> = ArrayList<ReEnrollSubmitModel>()
+        val reEnrollsubmit: ArrayList<ReEnrollSubmitModel> = ArrayList<ReEnrollSubmitModel>()
+        mailIcon.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View) {
+                val dialog = Dialog(mContext)
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                dialog.setContentView(R.layout.alert_send_email_dialog)
+                dialog.window!!.setBackgroundDrawable(
+                    ColorDrawable(
+                        Color.TRANSPARENT
+                    )
+                )
+                val dialogCancelButton = dialog.findViewById<Button>(R.id.cancelButton)
+                val submitButton = dialog.findViewById<Button>(R.id.submitButton)
+                val textDialog = dialog.findViewById<EditText>(R.id.text_dialog)
+                val textContent = dialog.findViewById<EditText>(R.id.text_content)
+                submitButton.setOnClickListener(object : View.OnClickListener {
+                    override fun onClick(v: View) {
+                        if ((textDialog.text.toString().trim { it <= ' ' } == "")) {
+                            ConstantFunctions.showDialogueWithOk(
+                                mContext,
+                                "Please enter your subject",
+                                "Alert"
+                            )
+                        } else {
+                            if ((textContent.text.toString().trim { it <= ' ' } == "")) {
+                                ConstantFunctions.showDialogueWithOk(
+                                    mContext,
+                                    "Please enter your content",
+                                    "Alert"
+                                )
+                            } else {
+                                if (ConstantFunctions.internetCheck(mContext)) {
+                                    // TODO ReEnrollment Help
+                                    sendEmailEnroll(textDialog.text.toString().trim { it <= ' ' },
+                                        textContent.text.toString().trim { it <= ' ' }, dialog
+                                    )
+                                } else {
+                                    ConstantFunctions.showDialogueWithOk(
+                                        mContext,
+                                        "No Network.",
+                                        "Alert"
+                                    )
+                                }
+                            }
+                        }
+                    }
+                })
+                dialogCancelButton.setOnClickListener(object : View.OnClickListener {
+                    override fun onClick(v: View) {
+                        dialog.dismiss()
+                    }
+                })
+                dialog.show()
+            }
+        })
+        for (i in studentEnrollList.indices) {
+            val m1 = ReEnrollSubmitModel("", "")
+            reEnrollsave.add(i, m1)
+        }
+        if (page_count[0] == total_count) {
+            nxt_btn.visibility = View.GONE
+            prev_btn.visibility = View.GONE
+            sub_btn.visibility = View.VISIBLE
+        }
+        header.text = headingString
+        descrcrptn.text = descriptionString
+        val dateFor = currentDate.replace("-", "/")
+        date_field.setText(dateFor)
+        dropdownList = ArrayList<String>()
+        // studDetailList= new ArrayList<>();
+        stud_name.text = studentEnrollList.get(0).name
+        stud_class.text = studentEnrollList.get(0).section
+        val stud_photo = studentEnrollList[0].photo
+        val stud_id = studentEnrollList[0].id
+        dropdownList.add(0, "Please Select")
+        for (i in 1..optionsArray.size) {
+            dropdownList.add(i, optionsArray[i - 1])
+        }
+        val sp_adapter = ArrayAdapter<String>(
+            mContext, R.layout.spinner_textview, dropdownList
+        )
+        spinnerList.adapter = sp_adapter
+        sp_adapter.setDropDownViewResource(R.layout.spinner_textview)
+        spinnerList.setSelection(0)
+
+        spinnerList.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View,
+                    position: Int,
+                    id: Long
+                ) {
+                    val selectedItem: String = parent.getItemAtPosition(position).toString()
+                    val optionlistSize: Int = dropdownList.size - 1
+                    for (i in 1..optionlistSize) {
+                        Log.e("opt", dropdownList[i])
+                        if ((selectedItem == dropdownList[i])) {
+                            Log.e("setcheck", "1")
+                            reEnrollsave[page_count[0]].status = dropdownList[i]
+                            check[0] = 1
+                        } else if ((selectedItem == dropdownList[0])) {
+                            Log.e("setcheck", "0")
+                            check[0] = 0
+                            reEnrollsave[page_count[0]].status = ""
+                        }
+                    }
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+            }
+        if (stud_photo != "") {
+            Glide.with(mContext).load(stud_photo).placeholder(R.drawable.student)
+                .error(R.drawable.student).skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.NONE) //                    .transform(new CircleCrop())
+                .into(stud_img)
+        } else {
+            stud_img.setImageResource(R.drawable.student)
+        }
+        if (userNameString != "") {
+            parent_name.setText(userNameString)
+        }
+        if (emailString != "") {
+            parent_email.setText(emailString)
+        }
+        if (!question.isEmpty()) {
+            questionTextView.text = question
+        }
+//        option_txt.setOnClickListener(object : View.OnClickListener {
+//            override fun onClick(v: View) {
+//                option_txt.visibility = View.GONE
+//                spinnerList.visibility = View.VISIBLE
+//            }
+//        })
+        terms_and_condtns.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View) {
+                val intent = Intent(mContext, WebViewTextActivity::class.java)
+                intent.putExtra("Url", tAndCString)
+                startActivity(intent)
+            }
+        })
+        sub_btn.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View) {
+                if (check[0] == 0) {
+                    Log.e("check", "plsselct")
+                    for (i in studentEnrollList.indices) {
+                        if (!reEnrollsave[i].status.isEmpty()) {
+                            reEnrollsave[i].student_id = studentEnrollList[i].id
+                        }
+                    }
+                    for (i in reEnrollsave.indices) {
+                        if (!reEnrollsave[i].student_id
+                                .isEmpty() && !reEnrollsave[i].status.isEmpty()
+                        ) {
+                            if (reEnrollsubmit.size == 0) {
+                                val r1 = ReEnrollSubmitModel(
+                                    reEnrollsave[i].student_id,
+                                    reEnrollsave[i].status
+                                )
+                                reEnrollsubmit.add(0, r1)
+                            } else {
+                                for (j in 1..reEnrollsubmit.size) {
+                                    Log.e("save", reEnrollsave.size.toString())
+                                    Log.e("sub", reEnrollsubmit.size.toString())
+                                    if (!reEnrollsave[i].student_id
+                                            .equals(reEnrollsubmit[j - 1].student_id)
+                                    ) {
+                                        val r1 = ReEnrollSubmitModel(
+                                            reEnrollsave[i].student_id,
+                                            reEnrollsave[i].status
+                                        )
+                                        reEnrollsubmit.add(j, r1)
+                                    } else {
+                                        Log.e("new", "stud")
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (reEnrollsubmit.size > 0) {
+                        showConfirmationPopUp(
+                            mContext,
+                            "Do you want to Submit?",
+                            "",
+                            reEnrollsubmit,
+                            d
+                        )
+                    } else {
+                        ConstantFunctions.showDialogueWithOk(
+                            mContext,
+                            "You didn't enter any data of your child. Please Enter data and Submit",
+                            "Alert"
+                        )
+                    }
+                } else {
+                    for (i in studentEnrollList.indices) {
+                        if (!reEnrollsave[i].status.isEmpty()) {
+                            reEnrollsave[i].student_id = studentEnrollList[i].id
+                        }
+                    }
+                    for (i in reEnrollsave.indices) {
+                        if (!reEnrollsave[i].student_id
+                                .isEmpty() && !reEnrollsave[i].status.isEmpty()
+                        ) {
+                            if (reEnrollsubmit.size == 0) {
+                                val r1 = ReEnrollSubmitModel(
+                                    reEnrollsave[i].student_id,
+                                    reEnrollsave[i].status
+                                )
+                                reEnrollsubmit.add(0, r1)
+                            } else {
+                                for (j in 1..reEnrollsubmit.size) {
+                                    Log.e("save", reEnrollsave.size.toString())
+                                    Log.e("sub", reEnrollsubmit.size.toString())
+                                    if (!reEnrollsave[i].student_id
+                                            .equals(reEnrollsubmit[j - 1].student_id)
+                                    ) {
+                                        val r1 = ReEnrollSubmitModel(
+                                            reEnrollsave[i].student_id,
+                                            reEnrollsave[i].status
+                                        )
+                                        reEnrollsubmit.add(j, r1)
+                                    } else {
+                                        Log.e("new", "stud")
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    showConfirmationPopUp(mContext, "Do you want to Submit?", "", reEnrollsubmit, d)
+                }
+            }
+        })
+        nxt_btn.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View) {
+                Log.e("check", check[0].toString())
+                if (check[0] == 0) {
+                    Log.e("checknxt", "plsselct")
+                    page_count[0] = page_count[0] + 1
+                    Log.e("nxt_pg", page_count[0].toString())
+                    Log.e("studnt_count", studentEnrollList.size.toString())
+                    if (page_count[0] == studentEnrollList.size - 1) {
+                        nxt_btn.visibility = View.GONE
+                        sub_btn.visibility = View.VISIBLE
+                        prev_btn.visibility = View.VISIBLE
+                    } else {
+                        nxt_btn.visibility = View.VISIBLE
+                        prev_btn.visibility = View.VISIBLE
+                        sub_btn.visibility = View.GONE
+                    }
+                    Log.e("stsnxt", reEnrollsave[page_count[0]].status)
+                    if (reEnrollsave[page_count[0]].status.equals("")) {
+                        spinnerList.setSelection(0)
+                    } else {
+                        for (i in dropdownList.indices) {
+                            if (reEnrollsave[page_count[0]].status.equals(dropdownList[i])) {
+                                spinnerList.setSelection(i)
+                            }
+                        }
+                    }
+                    stud_name.text = studentEnrollList.get(page_count.get(0)).name
+                    stud_class.text = studentEnrollList.get(page_count.get(0)).section
+                    val stud_photo = studentEnrollList[page_count[0]].photo
+                    if (stud_photo != "") {
+                        Glide.with(mContext).load(stud_photo).placeholder(R.drawable.student)
+                            .error(R.drawable.student).skipMemoryCache(true)
+                            .diskCacheStrategy(DiskCacheStrategy.NONE) //                                .transform(new CircleCrop())
+                            .into(stud_img)
+                    }
+                } else {
+                    Log.e("check", "checked")
+                    page_count[0] = page_count[0] + 1
+                    Log.e("nxt_pg", page_count[0].toString())
+                    Log.e("studnt_count", studentEnrollList.size.toString())
+                    if (page_count[0] == studentEnrollList.size - 1) {
+                        nxt_btn.visibility = View.GONE
+                        sub_btn.visibility = View.VISIBLE
+                        prev_btn.visibility = View.VISIBLE
+                    } else {
+                        nxt_btn.visibility = View.VISIBLE
+                        prev_btn.visibility = View.VISIBLE
+                        sub_btn.visibility = View.GONE
+                    }
+                    if (reEnrollsave[page_count[0]].status.equals("")) {
+                        spinnerList.setSelection(0)
+                    } else {
+                        for (i in dropdownList.indices) {
+                            if (reEnrollsave[page_count[0]].status.equals(dropdownList[i])) {
+                                spinnerList.setSelection(i)
+                            }
+                        }
+                    }
+                    stud_name.text = studentEnrollList.get(page_count.get(0)).name
+                    stud_class.text = studentEnrollList.get(page_count.get(0)).section
+                    val stud_photo = studentEnrollList[page_count[0]].photo
+                    if (stud_photo != "") {
+                        Glide.with(mContext).load(stud_photo).placeholder(R.drawable.student)
+                            .error(R.drawable.student).skipMemoryCache(true)
+                            .diskCacheStrategy(DiskCacheStrategy.NONE) //                                        .transform(new CircleCrop())
+                            .into(stud_img)
+                    }
+                }
+                scrollView.post(object : Runnable {
+                    override fun run() {
+                        // X, Y are scroll positions until where you want to scroll up
+                        val X = 0
+                        val Y = 0
+                        scrollView.scrollTo(X, Y)
+                    }
+                })
+            }
+        })
+        prev_btn.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View) {
+                Log.e("checkpre", check[0].toString())
+                if (check[0] == 0) {
+                    Log.e("check", "plsselct")
+                    page_count[0] = page_count[0] - 1
+                    Log.e("studnt_count", studentEnrollList.size.toString())
+                    if (page_count[0] == 0) {
+                        nxt_btn.visibility = View.VISIBLE
+                        prev_btn.visibility = View.GONE
+                        sub_btn.visibility = View.GONE
+                    } else if (page_count[0] < studentEnrollList.size - 1) {
+                        if (page_count[0] == studentEnrollList.size - 1) {
+                            nxt_btn.visibility = View.GONE
+                            sub_btn.visibility = View.VISIBLE
+                            prev_btn.visibility = View.VISIBLE
+                        } else {
+                            nxt_btn.visibility = View.VISIBLE
+                            prev_btn.visibility = View.VISIBLE
+                            sub_btn.visibility = View.GONE
+                        }
+                    }
+                    Log.e("sts", reEnrollsave[page_count[0]].status)
+                    if (reEnrollsave[page_count[0]].status.equals("")) {
+                        spinnerList.setSelection(0)
+                    } else {
+                        for (i in dropdownList.indices) {
+                            if (reEnrollsave[page_count[0]].status.equals(dropdownList[i])) {
+                                spinnerList.setSelection(i)
+                            }
+                        }
+                    }
+                    stud_name.text = studentEnrollList.get(page_count.get(0)).name
+                    stud_class.text = studentEnrollList.get(page_count.get(0)).section
+                    val stud_photo = studentEnrollList[page_count[0]].photo
+                    if (stud_photo != "") {
+                        Glide.with(mContext).load(stud_photo).placeholder(R.drawable.student)
+                            .error(R.drawable.student).skipMemoryCache(true)
+                            .diskCacheStrategy(DiskCacheStrategy.NONE) //                                .transform(new CircleCrop())
+                            .into(stud_img)
+                    }
+                } else {
+                    Log.e("check", "checked")
+                    page_count[0] = page_count[0] - 1
+                    Log.e("pg", page_count.get(0).toString())
+                    Log.e("studnt_count", studentEnrollList.size.toString())
+                    if (page_count.get(0) == 0) {
+                        nxt_btn.visibility = View.VISIBLE
+                        prev_btn.visibility = View.GONE
+                        sub_btn.visibility = View.GONE
+                    } else if (page_count.get(0) < studentEnrollList.size - 1) {
+                        if (page_count.get(0) == studentEnrollList.size - 1) {
+                            nxt_btn.visibility = View.GONE
+                            sub_btn.visibility = View.VISIBLE
+                            prev_btn.visibility = View.VISIBLE
+                        } else {
+                            nxt_btn.visibility = View.VISIBLE
+                            prev_btn.visibility = View.VISIBLE
+                            sub_btn.visibility = View.GONE
+                        }
+                    }
+                    if (reEnrollsave.get(page_count.get(0)).status.equals("")) {
+                        spinnerList.setSelection(0)
+                    } else {
+                        for (i in dropdownList.indices) {
+                            if (reEnrollsave.get(page_count.get(0)).status
+                                    .equals(dropdownList.get(i))
+                            ) {
+                                spinnerList.setSelection(i)
+                            }
+                        }
+                    }
+                    stud_name.text = studentEnrollList.get(page_count.get(0)).name
+                    stud_class.text = studentEnrollList.get(page_count.get(0)).section
+                    val stud_photo = studentEnrollList.get(page_count.get(0)).photo
+                    if (stud_photo != "") {
+                        Glide.with(mContext).load(stud_photo).placeholder(R.drawable.student)
+                            .error(R.drawable.student).skipMemoryCache(true)
+                            .diskCacheStrategy(DiskCacheStrategy.NONE) //                                    .transform(new CircleCrop())
+                            .into(stud_img)
+                    }
+                }
+                scrollView.post(object : Runnable {
+                    override fun run() {
+                        // X, Y are scroll positions until where you want to scroll up
+                        val X = 0
+                        val Y = 0
+                        scrollView.scrollTo(X, Y)
+                    }
+                })
+            }
+        })
+        close_img.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View) {
+                PreferenceManager().setIsEnrollmentHomeVisible(mContext, true)
+                if (notice.equals("")) {
+                    if (PreferenceManager.getSurvey(mContext) === 1) {
+                        if (PreferenceManager.getIsSurveyHomeVisible(mContext)) {
+                        } else {
+                            if (ConstantFunctions.internetCheck(mContext)) {
+                                callSurveyApi()
+                            } else {
+                                DialogFunctions.showInternetAlertDialog(mContext)
+                            }
+                        }
+                    } else {
+                    }
+                } else {
+                    if (PreferenceManager.getNoticeFirstTime(mContext).equals("")) {
+                        PreferenceManager.setNoticeFirtTime(mContext, "djhdhhf")
+                        showPopUpImage(notice, mContext)
+                    } else {
+                    }
+                }
+                d.dismiss()
+            }
+        })
+        d.show()
+    }
+    private fun sendEmailEnroll(subject: String, content: String, dialog: Dialog) {
+        val paramObject = JsonObject()
+        paramObject.addProperty("title", subject.trim().toString())
+        paramObject.addProperty("message", content.trim().toString())
+        val call: Call<EnrollmentHelpResponseModel> = ApiClient.getClient.getenrollhelp(
+            "Bearer " + PreferenceManager.getaccesstoken(mContext),
+            paramObject
+        )
+        call.enqueue(object : Callback<EnrollmentHelpResponseModel> {
+            override fun onFailure(call: Call<EnrollmentHelpResponseModel>, t: Throwable) {
+                //progressDialog.visibility = View.GONE
+            }
+
+            override fun onResponse(
+                call: Call<EnrollmentHelpResponseModel>,
+                response: Response<EnrollmentHelpResponseModel>
+            ) {
+                val responsedata = response.body()
+                //progressDialog.visibility = View.GONE
+                if (responsedata != null) {
+                    try {
+
+
+                        if (response.body()!!.status == 100) {
+                            Toast.makeText(context, "Email sent successfully", Toast.LENGTH_SHORT)
+                                .show()
+                            dialog.dismiss()
+                        } else {
+                            DialogFunctions.commonErrorAlertDialog(
+                                mContext.resources.getString(R.string.alert),
+                                ConstantFunctions.commonErrorString(response.body()!!.status),
+                                mContext
+                            )
+
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+
+        })
+    }
+    private fun showConfirmationPopUp(
+        context: Context,
+        message: String,
+        msgHead: String,
+        reEnrollsubmit: ArrayList<ReEnrollSubmitModel>,
+        d: Dialog
+    ) {
+        val dialog = Dialog(context)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.dialog_ok_cancel)
+        val iconImageView = dialog.findViewById<ImageView>(R.id.iconImageView)
+        val alertHead = dialog.findViewById<TextView>(R.id.alertHead)
+        val text_dialog = dialog.findViewById<TextView>(R.id.text_dialog)
+        val btn_Ok = dialog.findViewById<Button>(R.id.btn_Ok)
+        val btn_Cancel = dialog.findViewById<Button>(R.id.btn_Cancel)
+        text_dialog.text = message
+        alertHead.text = msgHead
+        btn_Ok.setOnClickListener {
+            saveReEnrollApi(reEnrollsubmit, dialog, d)
+            dialog.dismiss()
+        }
+        btn_Cancel.setOnClickListener { dialog.dismiss() }
+        dialog.show()
+    }
+    private fun saveReEnrollApi(
+        reEnrollsubmit: ArrayList<ReEnrollSubmitModel>,
+        dialog: Dialog,
+        d: Dialog
+    ) {
+        val service: ApiInterface = ApiClient.getClient
+
+        val save_reenroll = ReEnrollSubmitAPIModel(reEnrollsubmit)
+        val call: Call<EnrollmentSaveResponseModel> = service.getenrollsave(
+            "Bearer " + PreferenceManager.getaccesstoken(mContext), save_reenroll
+        )
+        call.enqueue(object : Callback<EnrollmentSaveResponseModel?> {
+            override fun onResponse(
+                call: Call<EnrollmentSaveResponseModel?>,
+                response: Response<EnrollmentSaveResponseModel?>
+            ) {
+                // progressDialogP.hide()
+                if (response.body() != null) {
+                    val apiResponse: EnrollmentSaveResponseModel? = response.body()
+                    val status: String = apiResponse!!.status
+                    if (status == "100") {
+                        showSuccessReenrollAlert(
+                            mContext, "Success", "", dialog, d
+                        )
+                    } else {
+
+                    }
+                } else {
+
+                }
+            }
+
+            override fun onFailure(call: Call<EnrollmentSaveResponseModel?>, t: Throwable) {
+
+            }
+        })
+    }
+    private fun showSuccessReenrollAlert(
+        context: Context, message: String, msgHead: String, dlg: Dialog, d: Dialog
+    ) {
+        val dialog = Dialog(context)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.dialog_common_error_alert)
+        val iconImageView = dialog.findViewById<ImageView>(R.id.iconImageView)
+        val alertHead = dialog.findViewById<TextView>(R.id.alertHead)
+        val text_dialog = dialog.findViewById<TextView>(R.id.messageTxt)
+        val btn_Ok = dialog.findViewById<Button>(R.id.btn_Ok)
+        text_dialog.text = message
+        alertHead.text = msgHead
+        iconImageView.setImageResource(R.drawable.tick)
+        btn_Ok.setOnClickListener {
+            dialog.dismiss()
+            dlg.dismiss()
+            d.dismiss()
+            if (notice.equals("")) {
+                if (PreferenceManager.getSurvey(mContext) === 1) {
+                    if (PreferenceManager.getIsSurveyHomeVisible(mContext)) {
+                    } else {
+                        if (ConstantFunctions.internetCheck(mContext)) {
+                            callSurveyApi()
+                        } else {
+                            DialogFunctions.showInternetAlertDialog(mContext)
+                        }
+                    }
+                } else {
+                }
+            } else {
+                if (PreferenceManager.getNoticeFirstTime(mContext).equals("")) {
+                    PreferenceManager.setNoticeFirtTime(mContext, "djhdhhf")
+                    showPopUpImage(notice, mContext)
+                } else {
+                }
+            }
+        }
+        dialog.show()
+    }
+    fun removeStudentsWithEnrollmentStatusZero(studentEnrollList: ArrayList<StudentEnrollList>) {
+        val iterator = studentEnrollList.iterator()
+        while (iterator.hasNext()) {
+            val student = iterator.next()
+            if ("0" == student.enrollment_status) {
+                iterator.remove()
+            }
+        }
+    }
+    private fun addStudentReEnrollDetails(dataObject: JSONObject): ReEnrollmentFormStudentModel {
+        val studentModel = ReEnrollmentFormStudentModel()
+        studentModel.id = dataObject.optString("id")
+        studentModel.unique_id = dataObject.optString("unique_id")
+        studentModel.name = dataObject.optString("name")
+        studentModel.class_name = dataObject.optString("class_name")
+        studentModel.section = dataObject.optString("section")
+        studentModel.house = dataObject.optString("house")
+        studentModel.photo = dataObject.optString("photo")
+        return studentModel
+    }
     private fun setListeners() {
         relone.setOnClickListener(this)
         reltwo.setOnClickListener(this)
@@ -770,6 +1605,9 @@ class HomeFragment : Fragment() , View.OnClickListener{
                 textdata.equals(ConstantWords.payments, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_PAYMENTS
                 }
+                textdata.equals(ConstantWords.re_enroll, ignoreCase = true) -> {
+                    TAB_ID = ConstantWords.TAB_REENROLL
+                }
                 textdata.equals(ConstantWords.early_years, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_EARLY_YEARS
                 }
@@ -912,6 +1750,7 @@ class HomeFragment : Fragment() , View.OnClickListener{
         relseven = view!!.findViewById(R.id.relSeven) as RelativeLayout
         releight = view!!.findViewById(R.id.relEight) as RelativeLayout
         relnine = view!!.findViewById(R.id.relNine) as RelativeLayout
+        progressDialogAdd=view!!.findViewById(R.id.progressDialogAdd)
 
         relTxtone = view!!.findViewById(R.id.relTxtOne) as TextView
         relTxttwo = view!!.findViewById(R.id.relTxtTwo) as TextView
@@ -1142,6 +1981,10 @@ class HomeFragment : Fragment() , View.OnClickListener{
                 ConstantWords.TAB_ABSENCE -> {
                     PreferenceManager.setStudentID(mContext,"")
                     mFragment = AbsenceFragment()
+                    fragmentIntent(mFragment)
+                }
+                ConstantWords.TAB_REENROLL -> {
+                    getReEnrollmentStatus()
                     fragmentIntent(mFragment)
                 }
                 ConstantWords.TAB_ENRICHMENT -> {

@@ -1162,4 +1162,21 @@ class PreferenceManager {
             return gson.fromJson(json, type)
         }
     }
+    fun getIsEnrollmentHomeVisible(context: Context): Boolean {
+        val prefs = context.getSharedPreferences(
+            PREFSNAME,
+            Context.MODE_PRIVATE
+        )
+        return prefs.getBoolean("is_enrollment_visible", false)
+    }
+
+    fun setIsEnrollmentHomeVisible(context: Context, result: Boolean) {
+        val prefs = context.getSharedPreferences(
+            PREFSNAME,
+            Context.MODE_PRIVATE
+        )
+        val editor = prefs.edit()
+        editor.putBoolean("is_enrollment_visible", result)
+        editor.commit()
+    }
 }

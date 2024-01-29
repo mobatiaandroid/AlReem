@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.nas.alreem.commonviews.CustomTextViewRegular xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cust_view"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:gravity="left|center_vertical"
+    android:minWidth="246dp"
+    android:paddingLeft="8dp"
+    android:textColor="@android:color/white"
+    android:textIsSelectable="false"
+    android:textSize="16sp"
+    tools:text="Filler" />

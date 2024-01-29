@@ -6,6 +6,7 @@
         <item>Notifications</item>
         <item>Calendar</item>
         <item>Payments</item>
+        <item>Re-Enrolment</item>
         <item>Lunch Box</item>
         <item>Parent Essentials</item>
         <item>Absence &amp; Early Pickup</item>
@@ -30,6 +31,7 @@
         <item>@drawable/notif</item>
         <item>@drawable/calendar</item>
         <item>@drawable/payment</item>
+        <item>@drawable/re_enrollment</item>
         <item>@drawable/lunchbox_icon</item>
         <item>@drawable/parent</item>
         <item>@drawable/absence</item>
@@ -313,5 +315,11 @@
     <string name="requestHint">If you need to cancel a registered absence/early pickup please contact reception (phone or email).</string>
 
 
-
+    <string name="personal_info">Please check to confirm you have read and acknowledged the Nord Anglia
+        Education Personal Information Collection Statement</string>
+    <string name="agree">I have agreed to the terms and conditions.</string>
+    <string name="agree_info">I confirm I have read and acknowledged the Nord Anglia Education Personal
+        Information Collection Statement as outlined in the above link.</string>
+    <string name="terms_conditions">Please click and sign here to let us know you have understood the
+         NAE Terms and Conditions.</string>
 </resources>

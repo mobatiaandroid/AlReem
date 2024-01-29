@@ -1,5 +1,6 @@
 package com.nas.alreem.constants
 
+import com.google.gson.JsonObject
 import com.nas.alreem.activity.absence.model.AbsenceListModel
 import com.nas.alreem.activity.absence.model.EarlyPickupModel
 import com.nas.alreem.activity.absence.model.ListAbsenceApiModel
@@ -71,6 +72,11 @@ import com.nas.alreem.fragment.cca.model.BannerResponseModelCCa
 import com.nas.alreem.fragment.contact_us.model.ContactUsResponseModel
 import com.nas.alreem.fragment.gallery.model.ThumnailResponseModel
 import com.nas.alreem.fragment.home.model.BannerResponseModel
+import com.nas.alreem.fragment.home.re_enrollment.ReEnrollmentFormResponseModel
+import com.nas.alreem.fragment.home.re_enrollment.ReEnrollmentStatusResponseModel
+import com.nas.alreem.fragment.home.reenrollment.EnrollmentHelpResponseModel
+import com.nas.alreem.fragment.home.reenrollment.EnrollmentSaveResponseModel
+import com.nas.alreem.fragment.home.reenrollment.ReEnrollSubmitAPIModel
 import com.nas.alreem.fragment.notifications.model.NotificationApiModel
 import com.nas.alreem.fragment.notifications.model.NotificationResponseModel
 import com.nas.alreem.fragment.parent_meetings.model.ListStaffPtaApiModel
@@ -675,4 +681,30 @@ interface ApiInterface {
         @Body reportListModel: ReportApiModel,
         @Header("Authorization") token:String
     ): Call<ReportListModel>
+
+
+    @GET("get_enrollment_status")
+    @Headers("Content-Type: application/json")
+    fun getenrollstatus(@Header("Authorization") token: String): Call<ReEnrollmentStatusResponseModel>
+
+    @POST("get_enrollment_form")
+    @Headers("Content-Type: application/json")
+    fun getenrollform(
+        @Header("Authorization") token: String,
+    ): Call<ReEnrollmentFormResponseModel>
+
+    @POST("save_re_enrollment")
+    @Headers("Content-Type: application/json")
+    fun getenrollsave(
+        @Header("Authorization") token: String,
+        @Body savereenrollmentModel: ReEnrollSubmitAPIModel
+    ): Call<EnrollmentSaveResponseModel>
+
+    @POST("re_enrollment_help")
+    @Headers("Content-Type: application/json")
+    fun getenrollhelp(
+        @Header("Authorization") token: String,
+        @Body json: JsonObject?
+    ): Call<EnrollmentHelpResponseModel>
+
 }
