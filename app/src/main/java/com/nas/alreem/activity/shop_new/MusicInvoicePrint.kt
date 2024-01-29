@@ -28,6 +28,7 @@ import androidx.core.content.FileProvider
 import com.github.barteksc.pdfviewer.PDFView
 import com.nas.alreem.R
 import com.nas.alreem.activity.home.HomeActivity
+import com.nas.alreem.activity.lost_card.LostCardPrintPaymentActivity
 import com.nas.alreem.activity.lost_card.PayLostRecActivity
 import com.nas.alreem.activity.shop.model.OrderSummary
 import com.nas.alreem.activity.shop_new.model.ShopModel
@@ -65,7 +66,7 @@ class MusicInvoicePrint : AppCompatActivity() {
     lateinit var printLinearClick: LinearLayout
     lateinit var downloadLinear: LinearLayout
     lateinit var shareLinear: LinearLayout
-    var anim: RotateAnimation? = null
+    lateinit var anim: RotateAnimation
     var printJob: PrintJob? = null
     var BackPage = true
     var htmlPart1: String? = null
@@ -82,8 +83,11 @@ class MusicInvoicePrint : AppCompatActivity() {
     var vatAmount: String? = null
     var totalAmount: String? = null
     lateinit var mContext: Context
-    private var mWebView: WebView? = null
-    private var paymentWebDummy: WebView? = null
+    lateinit var mWebView: WebView
+    lateinit var paymentWebDummy: WebView
+    lateinit var mProgressRelLayout: RelativeLayout
+    lateinit private var mwebSettings: WebSettings
+
     // lateinit var mProgressRelLayout: RelativeLayout
    /* var permissionListenerStorage: PermissionListener = object : PermissionListener() {
         fun onPermissionGranted() {
@@ -95,17 +99,28 @@ class MusicInvoicePrint : AppCompatActivity() {
                 .show()
         }
     }*/
-    private var mwebSettings: WebSettings? = null
-    private val mLoadUrl: String? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.preview_activity)
         mContext = this
+
+
+        initialiseUI()
+        getWebViewSettings()
+    }
+
+    /*******************************************************
+     * Method name : initialiseUI Description : initialise UI elements
+     * Parameters : nil Return type : void Date : Oct 30, 2014 Author : Vandana
+     * Surendranath
+     */
+    private fun initialiseUI() {
         extras = intent.extras
         if (extras != null) {
             tab_type = extras!!.getString("tab_type")
-           orderId = extras!!.getString("orderreference")
+            orderId = extras!!.getString("orderreference")
             amount = extras!!.getString("amount")
             title = extras!!.getString("title")
             invoice = extras!!.getString("invoice")
@@ -117,16 +132,6 @@ class MusicInvoicePrint : AppCompatActivity() {
             quantity  = extras!!.getString("quantity")
             itemsList = PreferenceManager.getOrderArrayList(mContext)
         }
-        initialiseUI()
-        getWebViewSettings()
-    }
-
-    /*******************************************************
-     * Method name : initialiseUI Description : initialise UI elements
-     * Parameters : nil Return type : void Date : Oct 30, 2014 Author : Vandana
-     * Surendranath
-     */
-    private fun initialiseUI() {
         relativeHeader = findViewById<View>(R.id.relativeHeader) as RelativeLayout
         mWebView = findViewById<View>(R.id.paymentWeb) as WebView
         paymentWebDummy = findViewById<View>(R.id.paymentWebDummy) as WebView
@@ -137,6 +142,7 @@ class MusicInvoicePrint : AppCompatActivity() {
         headermanager = HeaderManager(this, "Invoice")
         headermanager.getHeader(relativeHeader, 0)
         back = headermanager.leftButton
+        mProgressRelLayout=findViewById(R.id.progressDialog)
         emailLinear = findViewById<LinearLayout>(R.id.emailLinear)
         printLinearClick = findViewById<LinearLayout>(R.id.printLinearClick)
         downloadLinear = findViewById<LinearLayout>(R.id.downloadLinear)
@@ -156,14 +162,12 @@ class MusicInvoicePrint : AppCompatActivity() {
         )
         back!!.setOnClickListener { finish() }
         printLinearClick.setOnClickListener(View.OnClickListener {
-            BackPage = false
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
-                //  mWebView.loadUrl("about:blank");
-                paymentWebDummy!!.loadUrl("about:blank")
+                paymentWebDummy.loadUrl("about:blank")
                 setWebViewSettingsPrint()
                 loadWebViewWithDataPrint()
-                createWebPrintJob(paymentWebDummy)
-            } else {
+                createWebPrintJob(mWebView)
+            }  else {
                 Toast.makeText(
                     mContext,
                     "Print is not supported below Android KITKAT Version",
@@ -186,20 +190,8 @@ class MusicInvoicePrint : AppCompatActivity() {
             }
         })
         shareLinear.setOnClickListener(View.OnClickListener {
-            if (Build.VERSION.SDK_INT >= 23) {
-                /*println("share function sharePdfFilePrint permission")
-                TedPermission.with(mContext)
-                    .setPermissionListener(permissionListenerStorage)
-                    .setDeniedMessage("If you reject permission,you cannot use this service\n\nPlease turn on permissions at [Setting] > [Permission]")
-                    .setPermissions(
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE
-                    )
-                    .check()*/
-            } else {
-                println("share function sharePdfFilePrint")
-                sharePdfFilePrint()
-            }
+            shareFile()
+
         })
     }
 
@@ -209,35 +201,35 @@ class MusicInvoicePrint : AppCompatActivity() {
      * Surendranath
      */
     private fun getWebViewSettings() {
-        mWebView!!.isFocusable = true
-        mWebView!!.isFocusableInTouchMode = true
-        mWebView!!.setBackgroundColor(0X00000000)
-        mWebView!!.isVerticalScrollBarEnabled = false
-        mWebView!!.isHorizontalScrollBarEnabled = false
-        mWebView!!.webChromeClient = WebChromeClient()
-        mwebSettings = mWebView!!.settings
-        mwebSettings!!.saveFormData = true
-        mwebSettings!!.builtInZoomControls = false
-        mwebSettings!!.setSupportZoom(false)
-        mwebSettings!!.pluginState = WebSettings.PluginState.ON
-        mwebSettings!!.setRenderPriority(WebSettings.RenderPriority.HIGH)
-        mwebSettings!!.javaScriptCanOpenWindowsAutomatically = true
-        mwebSettings!!.domStorageEnabled = true
-        mwebSettings!!.databaseEnabled = true
-        mwebSettings!!.defaultTextEncodingName = "utf-8"
-        mwebSettings!!.loadsImagesAutomatically = true
-        mwebSettings!!.loadsImagesAutomatically = true
-        mwebSettings!!.useWideViewPort = true
-        mWebView!!.setInitialScale(1)
-        mwebSettings!!.loadWithOverviewMode = true
-        //        mWebView.getSettings().setAppCacheMaxSize(10 * 1024 * 1024); // 5MB
-//        mWebView.getSettings().setAppCachePath(
-//                mContext.getCacheDir().getAbsolutePath());
-        mWebView!!.settings.allowFileAccess = true
-        //        mWebView.getSettings().setAppCacheEnabled(true);
-        mWebView!!.settings.cacheMode = WebSettings.LOAD_NO_CACHE
-        mWebView!!.settings.javaScriptEnabled = true
-        mWebView!!.settings.cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
+        mWebView.isFocusable = true
+        mWebView.isFocusableInTouchMode = true
+        mWebView.setBackgroundColor(0X00000000)
+        mWebView.isVerticalScrollBarEnabled = false
+        mWebView.isHorizontalScrollBarEnabled = false
+        mWebView.webChromeClient = WebChromeClient()
+        mwebSettings = mWebView.settings
+        mwebSettings.saveFormData = true
+        mwebSettings.builtInZoomControls = false
+        mwebSettings.setSupportZoom(false)
+        mwebSettings.pluginState = WebSettings.PluginState.ON
+        mwebSettings.setRenderPriority(WebSettings.RenderPriority.HIGH)
+        mwebSettings.javaScriptCanOpenWindowsAutomatically = true
+        mwebSettings.domStorageEnabled = true
+        mwebSettings.databaseEnabled = true
+        mwebSettings.defaultTextEncodingName = "utf-8"
+        mwebSettings.loadsImagesAutomatically = true
+        mwebSettings.loadsImagesAutomatically = true
+        mwebSettings.useWideViewPort = true
+        mWebView.setInitialScale(1)
+        mwebSettings.loadWithOverviewMode = true
+        /* mWebView.settings.setAppCacheMaxSize((10 * 1024 * 1024).toLong()) // 5MB
+         mWebView.settings.setAppCachePath(
+             nContext.getCacheDir().getAbsolutePath()
+         )*/
+        mWebView.settings.allowFileAccess = true
+        mWebView.settings.cacheMode=WebSettings.LOAD_NO_CACHE
+        mWebView.settings.javaScriptEnabled = true
+        mWebView.settings.cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
         loadWebViewWithDataPrint()
     }
 
@@ -593,44 +585,98 @@ class MusicInvoicePrint : AppCompatActivity() {
     }
 
     private fun setWebViewSettingsPrint() {
-        //mProgressRelLayout!!.visibility = View.VISIBLE
+        mProgressRelLayout.setVisibility(View.VISIBLE)
         anim = RotateAnimation(
             0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f,
             Animation.RELATIVE_TO_SELF, 0.5f
         )
-      //  anim!!.setInterpolator(mContext, R.interpolator.linear)
-        anim!!.repeatCount = Animation.INFINITE
-        anim!!.duration = 1000
-       // mProgressRelLayout!!.animation = anim
-       // mProgressRelLayout!!.startAnimation(anim)
-        paymentWebDummy!!.settings.javaScriptEnabled = true
-        paymentWebDummy!!.clearCache(true)
-        paymentWebDummy!!.settings.domStorageEnabled = true
-        paymentWebDummy!!.settings.javaScriptCanOpenWindowsAutomatically = true
-        paymentWebDummy!!.settings.setSupportMultipleWindows(true)
-        paymentWebDummy!!.webViewClient = MyPrintWebViewClient()
-//        paymentWeb.setWebChromeClient(new MyWebChromeClient());
+        anim.setInterpolator(mContext, android.R.interpolator.linear)
+        anim.setRepeatCount(Animation.INFINITE)
+        anim.setDuration(1000)
+        mProgressRelLayout.setAnimation(anim)
+        mProgressRelLayout.startAnimation(anim)
+        paymentWebDummy.settings.javaScriptEnabled = true
+        paymentWebDummy.clearCache(true)
+        paymentWebDummy.settings.domStorageEnabled = true
+        paymentWebDummy.settings.javaScriptCanOpenWindowsAutomatically = true
+        paymentWebDummy.settings.setSupportMultipleWindows(true)
+        paymentWebDummy.webViewClient =MyPrintWebViewClient()
     }
 
-    private fun createWebPrintJob(webView: WebView?) {
-      //  mProgressRelLayout!!.clearAnimation()
-      //  mProgressRelLayout!!.visibility = View.GONE
-        paymentWebDummy!!.visibility = View.GONE
+    private fun createWebPrintJob(webView: WebView) {
+        mProgressRelLayout.clearAnimation()
+        mProgressRelLayout.visibility = View.GONE
+        paymentWebDummy.visibility = View.GONE
         val printManager = this.getSystemService(PRINT_SERVICE) as PrintManager
-        val printAdapter = webView!!.createPrintDocumentAdapter()
-        val jobName = getString(R.string.app_name) + "_Pay" + "NASDUBAI_MUSIC_ACADEMY"
+        val printAdapter = webView.createPrintDocumentAdapter()
+        val jobName = getString(R.string.app_name) + "_Pay" + "BISAD"
         val builder = PrintAttributes.Builder()
         builder.setMediaSize(PrintAttributes.MediaSize.ISO_A4)
         if (printManager != null) {
             printJob = printManager.print(jobName, printAdapter, builder.build())
         }
-        if (printJob!!.isCompleted) {
+        if (printJob!!.isCompleted()) {
 //            Toast.makeText(getApplicationContext(), R.string.print_complete, Toast.LENGTH_LONG).show();
-        } else if (printJob!!.isFailed) {
+        } else if (printJob!!.isFailed()) {
             Toast.makeText(applicationContext, "Print failed", Toast.LENGTH_SHORT).show()
         }
     }
+    fun shareFile(){
+        startdownloadingforshare()
+        val aName = intent.getStringExtra("iName")
+        val shareIntent = Intent(Intent.ACTION_SEND)
+        shareIntent.putExtra(Intent.EXTRA_STREAM,  uriFromFile(mContext,File(this.getExternalFilesDir(pdfUri.toString()
+        )?.absolutePath.toString(), "$aName")))
+        shareIntent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+        shareIntent.type = "application/pdf"
+        startActivity(Intent.createChooser(shareIntent, "share.."))
 
+        /* val intentShareFile = Intent(Intent.ACTION_SEND)
+         val fileWithinMyDir = File(getFilepath(payment_type + "docs.pdf"))
+         if (fileWithinMyDir.exists()) {
+             intentShareFile.type = "application/pdf"
+             intentShareFile.putExtra(
+                 Intent.EXTRA_STREAM,
+                 Uri.parse("file://" + getFilepath(payment_type + "docs.pdf"))
+             )
+             startActivity(Intent.createChooser(intentShareFile, "Share File"))
+         } else {
+             startdownloadingforshare()
+
+             intentShareFile.type = "application/pdf"
+             intentShareFile.putExtra(
+                 Intent.EXTRA_STREAM,
+                 Uri.parse("file://" + getFilepath(payment_type + "docs.pdf"))
+             )
+             startActivity(Intent.createChooser(intentShareFile, "Share File"))
+
+         }*/
+    }
+    fun uriFromFile(context:Context, file:File):Uri {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+        {
+            return FileProvider.getUriForFile(context, "com.nas.alreem" + ".provider", file)
+        }
+        else
+        {
+            return Uri.fromFile(file)
+        }
+    }
+    private fun startdownloadingforshare() {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+            paymentWebDummy.loadUrl("about:blank")
+            setWebViewSettingsPrint()
+            loadWebViewWithDataPrint()
+            createWebPrintJob(mWebView)
+        }
+        else {
+            Toast.makeText(
+                mContext,
+                "Print is not supported below Android KITKAT Version",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
     fun sharePdfFilePrint() {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
             paymentWebDummy!!.loadUrl("about:blank")

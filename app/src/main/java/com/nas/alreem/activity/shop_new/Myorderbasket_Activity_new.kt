@@ -17,7 +17,6 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -35,16 +34,13 @@ import com.nas.alreem.activity.canteen.model.preorder.CanteenPreorderModel
 import com.nas.alreem.activity.canteen.model.wallet.WalletBalanceApiModel
 import com.nas.alreem.activity.canteen.model.wallet.WalletBalanceModel
 import com.nas.alreem.activity.home.HomeActivity
-import com.nas.alreem.activity.lost_card.LostCardPaymentActivity
 import com.nas.alreem.activity.lost_card.model.GetShopCartResponseModel
 import com.nas.alreem.activity.lost_card.model.ShopCartResModel
-import com.nas.alreem.activity.lost_card.model.StudentLostCardResponseModel
 import com.nas.alreem.activity.payments.model.payment_gateway.PaymentGatewayApiModel
 import com.nas.alreem.activity.payments.model.payment_gateway.PaymentGatewayModel
 import com.nas.alreem.activity.payments.model.payment_token.PaymentTokenApiModel
 import com.nas.alreem.activity.payments.model.payment_token.PaymentTokenModel
 import com.nas.alreem.activity.shop_new.adapter.BasketItemsAdapter_new
-import com.nas.alreem.activity.shop_new.adapter.DatesBasketAdapter_new
 import com.nas.alreem.activity.shop_new.model.ItemsModelShop
 import com.nas.alreem.activity.shop_new.model.OrdersModelShop
 import com.nas.alreem.activity.shop_new.model.StudentShopCardResponseModel
@@ -53,7 +49,6 @@ import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.PreferenceManager
 import payment.sdk.android.PaymentClient
-import payment.sdk.android.cardpayment.CardPaymentData
 import payment.sdk.android.cardpayment.CardPaymentRequest
 import retrofit2.Call
 import retrofit2.Callback
@@ -228,7 +223,7 @@ class Myorderbasket_Activity_new : AppCompatActivity() {
                         DialogFunctions.showInternetAlertDialog(nContext)
                     }*/
 
-
+finish()
 
             })
 
@@ -458,7 +453,10 @@ class Myorderbasket_Activity_new : AppCompatActivity() {
         text.text = msg
         textHead.text = msgHead
         val dialogButton = dialog.findViewById<View>(R.id.btn_Ok) as Button
-        dialogButton.setOnClickListener { dialog.dismiss() }
+        dialogButton.setOnClickListener {
+            finish()
+            dialog.dismiss()
+        }
         //		Button dialogButtonCancel = (Button) dialog.findViewById(R.id.btn_Cancel);
 //		dialogButtonCancel.setVisibility(View.GONE);
 //		dialogButtonCancel.setOnClickListener(new View.OnClickListener() {
@@ -657,6 +655,10 @@ class Myorderbasket_Activity_new : AppCompatActivity() {
         }
 
         dialog.show()
+    }
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
     }
     fun showSuccessAlertnew(context: Context, message: String, msgHead: String) {
         val dialog = Dialog(context)

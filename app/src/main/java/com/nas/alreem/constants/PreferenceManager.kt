@@ -1248,7 +1248,23 @@ class PreferenceManager {
             )
             return prefs.getString("lost_amount", "")
         }
+        fun setBusnotes(context: Context, result: String?) {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            val editor = prefs.edit()
+            editor.putString("Bus_notes", result)
+            editor.commit()
+        }
 
+        fun getBusnotes(context: Context): String? {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            return prefs.getString("Bus_notes", "")
+        }
         fun setEmail(context: Context, result: String?) {
             val prefs = context.getSharedPreferences(
                 PREFSNAME,
@@ -1290,6 +1306,24 @@ class PreferenceManager {
             val json = prefs.getString("options", null)
             val type = object : TypeToken<ArrayList<String>?>() {}.type
             return gson.fromJson(json, type)
+        }
+
+        fun setbackkey(context: Context, result: String?) {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            val editor = prefs.edit()
+            editor.putString("back", result)
+            editor.commit()
+        }
+
+        fun getbackkey(context: Context): String? {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            return prefs.getString("back", "")
         }
 
     }

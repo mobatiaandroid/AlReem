@@ -13,6 +13,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nas.alreem.R
@@ -37,13 +38,11 @@ import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.OnItemClickListener
 import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.constants.addOnItemClickListener
+import com.nas.alreem.fragment.home.HomeFragment
+import com.nas.alreem.fragment.shop.ShopFragment
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.text.SimpleDateFormat
-import java.util.ArrayList
-import java.util.Date
-import java.util.Locale
 
 class Addorder_Activity_new : AppCompatActivity()  {
     lateinit var nContext: Context
@@ -113,6 +112,7 @@ class Addorder_Activity_new : AppCompatActivity()  {
         // progressDialog = findViewById(R.id.progressDialogM)
         progressDialogP= ProgressBarDialog(nContext)
 
+
         //   val aniRotate: Animation =
         //  AnimationUtils.loadAnimation(nContext, R.anim.linear_interpolator)
         // progress.startAnimation(aniRotate)
@@ -153,16 +153,17 @@ class Addorder_Activity_new : AppCompatActivity()  {
 
 
         back.setOnClickListener {
-
-            finish()
+finish()
         }
         basketbtn.setOnClickListener {
+            finish()
             val intent = Intent(nContext, Myorderbasket_Activity_new::class.java)
             intent.putExtra("date", date_selected)
             nContext.startActivity(intent)
         }
 
         bottomview.setOnClickListener(View.OnClickListener {
+            finish()
             val intent = Intent(nContext, Myorderbasket_Activity_new::class.java)
             intent.putExtra("date", date_selected)
             nContext.startActivity(intent)
@@ -653,4 +654,9 @@ class Addorder_Activity_new : AppCompatActivity()  {
 
         super.onResume()
     }
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
+    }
+
 }

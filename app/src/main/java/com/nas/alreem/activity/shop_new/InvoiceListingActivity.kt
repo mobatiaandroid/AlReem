@@ -147,7 +147,7 @@ class InvoiceListingActivity : AppCompatActivity() {
                 object : RecyclerItemListener.RecyclerTouchListener{
                     override fun onClickItem(v: View?, position: Int) {
                         PreferenceManager.setOrderArrayListModel(newsLetterModelArrayList[position].order_summery,mContext)
-                        val intent = Intent(mContext, MusicInvoicePrint::class.java)
+                        val intent = Intent(mContext, MusicInvoicePrintNew::class.java)
                         intent.putExtra("title", "Shop Registration")
                        // intent.putExtra("key", newsLetterModelArrayList[position].order_summery)
                        intent.putExtra("orderreference", newsLetterModelArrayList[position].order_reference)

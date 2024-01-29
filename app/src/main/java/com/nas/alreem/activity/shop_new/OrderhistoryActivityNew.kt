@@ -73,6 +73,7 @@ class OrderhistoryActivityNew  : AppCompatActivity(){
         title.text = "Order History"
         back.setOnClickListener {
             finish()
+
         }
         logoClickImg.setOnClickListener {
             val intent = Intent(nContext, HomeActivity::class.java)
@@ -170,4 +171,9 @@ class OrderhistoryActivityNew  : AppCompatActivity(){
 
 
     }*/
+   override fun onBackPressed() {
+
+       finish()
+
+   }
 }

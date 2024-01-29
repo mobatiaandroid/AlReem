@@ -13,4 +13,7 @@ class BannerResponseArrayModel {
     val lost_student_card_amount: String = ""
     @SerializedName("enrollment_status")
     val enrollmentStatus: String = ""
+    @SerializedName("bus_note")
+    val bus_note: String = ""
+
 }

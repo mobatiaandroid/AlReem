@@ -103,8 +103,8 @@ class PreOrderActivity_new :AppCompatActivity() {
     }
     private fun initfn() {
         nContext = this
-        logoClickImg=findViewById(R.id.logoclick)
-        back = findViewById(R.id.back)
+      //  logoClickImg=findViewById(R.id.logoclick)
+      //  back = findViewById(R.id.back)
         studImg = findViewById<ImageView>(R.id.imagicon)
         studentNameTxt = findViewById<TextView>(R.id.studentName)
         studentSpinner = findViewById<LinearLayout>(R.id.studentSpinner)
@@ -116,24 +116,24 @@ class PreOrderActivity_new :AppCompatActivity() {
        my_orders = findViewById(R.id.myOrderRelative)
         order_history = findViewById(R.id.orderHistoryRelative)
         buttonLinear = findViewById(R.id.buttonLinear)
-        title = findViewById(R.id.textViewtitle)
         email_icon = findViewById(R.id.email_icon)!!
         description =findViewById(R.id.description)!!
         bannerImg = findViewById(R.id.bannerImage)!!
-
-
-        title.text = "Shop-Order"
+        title=findViewById(R.id.titleTextView)!!
+        title.text = "Shop"
         email_icon.setOnClickListener {
             showSendEmailDialog()
         }
-        back.setOnClickListener {
-            finish()
+        /*back.setOnClickListener {
+            val intent = Intent(nContext, HomeActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent)
         }
         logoClickImg.setOnClickListener {
             val intent = Intent(nContext, HomeActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)
-        }
+        }*/
 
 
         studentSpinner.setOnClickListener(object : View.OnClickListener {

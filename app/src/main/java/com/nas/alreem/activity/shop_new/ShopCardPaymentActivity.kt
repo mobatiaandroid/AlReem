@@ -350,12 +350,19 @@ class ShopCardPaymentActivity :AppCompatActivity(){
         textHead.text = msgHead
         val dialogButton = dialog.findViewById<View>(R.id.btn_Ok) as Button
         dialogButton.setOnClickListener {
+
             dialog.dismiss()
+            finish()
+            PreferenceManager.setbackkey(mContext,"0")
             val intent = Intent(mContext, Addorder_Activity_new::class.java)
-           //  intent.putExtra("StudentId",studentId)
             mContext.startActivity(intent)
+
         }
 
         dialog.show()
+    }
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
     }
 }

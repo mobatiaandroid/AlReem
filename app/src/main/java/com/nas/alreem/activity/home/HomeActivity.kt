@@ -44,6 +44,7 @@ import com.google.gson.JsonObject
 import com.nas.alreem.R
 import com.nas.alreem.activity.home.adapter.HomeListAdapter
 import com.nas.alreem.activity.home.model.ReEnrollSubmitAPIModel
+import com.nas.alreem.activity.shop_new.Addorder_Activity_new
 import com.nas.alreem.activity.shop_new.PreOrderActivity_new
 import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ApiInterface
@@ -83,6 +84,7 @@ import com.nas.alreem.fragment.primary.PrimaryFragment
 import com.nas.alreem.fragment.reports.ReportsFragment
 import com.nas.alreem.fragment.secondary.SecondaryFragment
 import com.nas.alreem.fragment.settings.SettingsFragment
+import com.nas.alreem.fragment.shop.ShopFragment
 import com.nas.alreem.fragment.student_information.StudentInformationFragment
 import com.nas.alreem.fragment.time_table.TimeTableFragment
 import com.nas.alreem.recyclermanager.RecyclerItemListener
@@ -552,12 +554,11 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                     }
                     8->
                     {
-                        val intent = Intent(mContext, PreOrderActivity_new::class.java)
-                      //  intent.putExtra("date_list",mDateArrayList)
-                        startActivity(intent)
-                        //Early years
-                      //  mFragment = ShopFragment()
-                      //  replaceFragmentsSelected(position)
+                       /* val intent = Intent(mContext, PreOrderActivity_new::class.java)
+                        startActivity(intent)*/
+                        mFragment = ShopFragment()
+                        replaceFragmentsSelected(position)
+
                     }
                     9->
                     {

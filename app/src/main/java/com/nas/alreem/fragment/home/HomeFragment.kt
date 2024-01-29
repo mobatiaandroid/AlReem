@@ -68,6 +68,7 @@ import com.nas.alreem.fragment.payments.model.SendEmailApiModel
 import com.nas.alreem.fragment.performing_arts.PerformingArtsFragment
 import com.nas.alreem.fragment.permission_slip.PermissionSlipFragmentNew
 import com.nas.alreem.fragment.reports.ReportsFragment
+import com.nas.alreem.fragment.shop.ShopFragment
 import com.nas.alreem.fragment.student_information.StudentInformationFragment
 import com.nas.alreem.fragment.time_table.TimeTableFragment
 import org.json.JSONException
@@ -219,6 +220,8 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 response.body()!!.responseArray!!.lost_student_card_amount
                             val enrollmentStatus =
                                 response.body()!!.responseArray!!.enrollmentStatus
+                            val bus_note= response.body()!!.responseArray!!.bus_note
+                            PreferenceManager.setBusnotes(mContext, bus_note)
                             PreferenceManager.setLostAmount(mContext, lost_student_card_amount)
                             PreferenceManager.setSurvey(mContext, survey)
                             if (enrollmentStatus.equals("0") || enrollmentStatus.equals("")) {
@@ -2245,9 +2248,8 @@ class HomeFragment : Fragment(), View.OnClickListener {
                 }
 
                 ConstantWords.TAB_SHOP -> {
-                    val intent = Intent(mContext, PreOrderActivity_new::class.java)
-                    //  intent.putExtra("date_list",mDateArrayList)
-                    startActivity(intent)
+                    mFragment = ShopFragment()
+                    fragmentIntent(mFragment)
                     //  mFragment = ShopFragment()
                     //  fragmentIntent(mFragment)
                 }
