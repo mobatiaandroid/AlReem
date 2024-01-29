@@ -60,7 +60,7 @@ class PreorderItemsAdapter_new(
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val view: View = LayoutInflater.from(viewGroup.context)
-            .inflate(R.layout.preorder_itemlist_adapter, viewGroup, false)
+            .inflate(R.layout.preorder_itemlist_adapter_new, viewGroup, false)
         return ViewHolder(view)
     }
 
