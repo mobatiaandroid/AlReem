@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nas.alreem.R
 import com.nas.alreem.activity.ProgressBarDialog
+import com.nas.alreem.activity.bus_service.BusServiceDetailActivity
 import com.nas.alreem.activity.canteen.adapter.ItemCategoriesAdapter
 import com.nas.alreem.activity.canteen.model.add_orders.CatItemsListModel
 import com.nas.alreem.activity.canteen.model.add_orders.CatListModel
@@ -30,7 +31,7 @@ import com.nas.alreem.activity.lost_card.model.GetShopCartResponseModel
 import com.nas.alreem.activity.lost_card.model.ShopCartResModel
 import com.nas.alreem.activity.payments.model.StudentList
 import com.nas.alreem.activity.payments.model.StudentListModel
-import com.nas.alreem.activity.shop_new.adapter.PreorderItemsAdapter_new
+import com.nas.alreem.activity.shop_new.adapter.PreorderItemsAdapterShop_new
 import com.nas.alreem.activity.shop_new.model.ShopItemsApiModel
 import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ConstantFunctions
@@ -168,7 +169,22 @@ finish()
             intent.putExtra("date", date_selected)
             nContext.startActivity(intent)
         })
+        recyclerview_item.addOnItemClickListener(object: OnItemClickListener {
+            override fun onItemClicked(position: Int, view: View) {
+                // Your logic
+                val intent =Intent(nContext, ProductDetailsPage::class.java)
+                intent.putExtra("item_name",item_list.get(position).item_name)
+                intent.putExtra("item_desc",item_list.get(position).description)
+                intent.putExtra("price",item_list.get(position).price)
+                intent.putExtra("position",position)
+                intent.putExtra("quantity_cart",item_list.get(position).quantityCart)
+                intent.putExtra("item_cart",item_list.get(position).isItemCart)
+                intent.putExtra("id",item_list.get(position).id)
+                intent.putExtra("cart_id",item_list.get(position).cartId)
 
+                startActivity(intent)
+            }
+        })
     }
     private fun setdate(){
         /*var one_date=date_list[0].day+","+date_list[0].date+" "+date_list[0].month+" "+date_list[0].year
@@ -459,7 +475,7 @@ finish()
                     }
                     recyclerview_item.visibility= View.VISIBLE
                     recyclerview_item.layoutManager= LinearLayoutManager(nContext)
-                    var itemAdapter= PreorderItemsAdapter_new(item_list,nContext,date_selected,cart_list,cartTotalAmount,
+                    var itemAdapter= PreorderItemsAdapterShop_new(item_list,nContext,date_selected,cart_list,cartTotalAmount,
                         total_items,total_price,bottomview,cart_empty,progressDialogP)
                     recyclerview_item.adapter=itemAdapter
                 }
@@ -540,7 +556,7 @@ finish()
                     }
                     recyclerview_item.visibility= View.VISIBLE
                     recyclerview_item.layoutManager= LinearLayoutManager(nContext)
-                    var itemAdapter= PreorderItemsAdapter_new(
+                    var itemAdapter= PreorderItemsAdapterShop_new(
                         item_list,
                         nContext,
                         date_selected,
