@@ -3,7 +3,6 @@ package com.nas.alreem.fragment.notifications
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,10 +12,20 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.JsonObject
 import com.nas.alreem.R
-import com.nas.alreem.activity.login.model.LoginResponseModel
-import com.nas.alreem.activity.notifications.*
-import com.nas.alreem.constants.*
+import com.nas.alreem.activity.notifications.AudioPlayerDetailNew
+import com.nas.alreem.activity.notifications.ImageMessageActivity
+import com.nas.alreem.activity.notifications.TextMessageActivity
+import com.nas.alreem.activity.notifications.VideoMessageActivity
+import com.nas.alreem.activity.shop_new.model.StudentShopCardResponseModel
+import com.nas.alreem.constants.ApiClient
+import com.nas.alreem.constants.ConstantFunctions
+import com.nas.alreem.constants.ConstantWords
+import com.nas.alreem.constants.DialogFunctions
+import com.nas.alreem.constants.OnItemClickListener
+import com.nas.alreem.constants.PreferenceManager
+import com.nas.alreem.constants.addOnItemClickListener
 import com.nas.alreem.fragment.notifications.adapter.NotificationListAdapter
 import com.nas.alreem.fragment.notifications.model.NotificationApiModel
 import com.nas.alreem.fragment.notifications.model.NotificationModel
@@ -32,6 +41,7 @@ class NotificationFragment : Fragment() {
     lateinit var titleTextView: TextView
     lateinit var progressDialogAdd: ProgressBar
     lateinit var notificationList:ArrayList<NotificationModel>
+    lateinit var notificationAdapter:NotificationListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,6 +77,14 @@ class NotificationFragment : Fragment() {
 
         notificationRecycler.addOnItemClickListener(object: OnItemClickListener {
             override fun onItemClicked(position: Int, view: View) {
+                if (notificationList.get(position).read_unread_status
+                        .equals("0") || notificationList.get(position).read_unread_status
+                        .equals("2")
+                ) {
+                    callStatusChangeApi(
+                        notificationList.get(position).id,position,
+                        notificationList.get(position).read_unread_status)
+                }
                 if(notificationList.get(position).alert_type.equals("Text"))
                 {
                     val intent = Intent(activity, TextMessageActivity::class.java)
@@ -101,6 +119,45 @@ class NotificationFragment : Fragment() {
         })
     }
 
+    private fun callStatusChangeApi(ccaDaysId: String,event_position:Int, status: String) {
+        progressDialogAdd.visibility=View.VISIBLE
+        notificationList= ArrayList()
+        var token="Bearer "+PreferenceManager.getaccesstoken(mContext)
+        var model=NotificationApiModel(0,500)
+        val paramObject = JsonObject()
+        paramObject.addProperty("id", id)
+        paramObject.addProperty("type", "cca")
+        val call: Call<StudentShopCardResponseModel> = ApiClient.getClient.status_changeAPI(token,paramObject)
+        call.enqueue(object : Callback<StudentShopCardResponseModel> {
+            override fun onFailure(call: Call<StudentShopCardResponseModel>, t: Throwable) {
+                progressDialogAdd.visibility=View.GONE
+            }
+            override fun onResponse(call: Call<StudentShopCardResponseModel>, response: Response<StudentShopCardResponseModel>) {
+                val responsedata = response.body()
+                progressDialogAdd.visibility=View.GONE
+                if (responsedata != null) {
+                    try {
+
+
+                        if (status.equals("0", ignoreCase = true) || status.equals(
+                                "2",
+                                ignoreCase = true
+                            )
+                        ) {
+                            notificationList.get(event_position).read_unread_status="1"
+                            notificationAdapter.notifyDataSetChanged()
+                        }
+
+
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+
+        })
+    }
+
     private fun callNotificationApi()
     {
         progressDialogAdd.visibility=View.VISIBLE
@@ -125,7 +182,7 @@ class NotificationFragment : Fragment() {
                             if (notificationList.size>0)
                             {
                                 notificationRecycler.visibility=View.VISIBLE
-                                var notificationAdapter= NotificationListAdapter(notificationList)
+                                 notificationAdapter= NotificationListAdapter(notificationList)
                                 notificationRecycler.adapter=notificationAdapter
                             }
                             else

@@ -63,15 +63,29 @@ var selectedoptionanswer:String=""
         reason_pickup=intent.getStringExtra("options").toString()
         selectedoptionanswer=intent.getStringExtra("selectedchoice").toString()
         receivedOptions = intent.getParcelableArrayListExtra("optionsarray")!!
-Log.e("array", receivedOptions.toString())
         for (i in receivedOptions.indices){
-           if(reason_pickup.equals(receivedOptions.get(i).option))
-           {
-               linear_Option_question.visibility=View.VISIBLE
-               linear_answer.visibility=View.VISIBLE
-               option_question.text=receivedOptions.get(i).optionQuestion
-               answeroption.text=selectedoptionanswer
-           }
+
+                if (receivedOptions.get(i).optionQuestion.isNullOrEmpty())
+                {
+                    linear_Option_question.visibility=View.GONE
+                    linear_answer.visibility=View.GONE
+                }
+                else
+                {
+                    if(reason_pickup.equals(receivedOptions.get(i).option))
+                    {
+
+
+                        linear_Option_question.visibility=View.VISIBLE
+                        linear_answer.visibility=View.VISIBLE
+                        option_question.text=receivedOptions.get(i).optionQuestion
+                        answeroption.text=selectedoptionanswer
+
+
+                    }
+
+            }
+
         }
         stud_name=findViewById(R.id.stnameValue)
         stud_name.text = studname_pickup

@@ -9,11 +9,13 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
+import com.bumptech.glide.Glide
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
 import com.nas.alreem.R
 import com.nas.alreem.activity.canteen.model.add_to_cart.CanteenCartRemoveModel
@@ -61,6 +63,22 @@ class BasketItemsAdapter_new (
         Log.e("array", items_list.toString())
         holder.itemNameTxt.text = items_list[position].item_name
         holder.itemDescription.text = items_list[position].description
+        var url:String?=""
+        url=items_list[position].item_image.get(0)
+        if (url.equals("")) {
+            holder.itemImg.setBackgroundResource(R.drawable.default_banner)
+
+        }
+        else
+        {
+            // holder.itemImg.setBackgroundResource(R.color.)
+            mcontext.let {
+                Glide.with(it)
+                    .load(url)
+                    .into(holder.itemImg)
+            }
+        }
+
         holder.amountTxt.text = items_list[position].price.toString() + "AED"
         holder.notAvailableTxt.visibility = View.GONE
         holder.removeTxt.visibility = View.GONE
@@ -75,7 +93,7 @@ class BasketItemsAdapter_new (
 
             if (newValue != 0) {
                 progress.visibility= View.VISIBLE
-                updateCart(items_list[position].id.toString(),position,quantity,holder.soldout,holder.multiLinear)
+                updateCart(items_list[position].id.toString(),position,quantity,holder.basketRelative,holder.multiLinear)
                 notifyDataSetChanged()
             } else {
                 progress.visibility= View.VISIBLE
@@ -188,11 +206,13 @@ class BasketItemsAdapter_new (
         var linearlayout: LinearLayout
         var bannerImagePager: ViewPager
          var soldout: LinearLayout
+         var itemImg : ImageView
+         var basketRelative : RelativeLayout
 
         // var Datas:String=""
 
         init {
-            //itemImage = view.findViewById<ImageView>(R.id.itemImage)
+            itemImg = view.findViewById<ImageView>(R.id.itemImg)
             itemNameTxt = view.findViewById<TextView>(R.id.itemNameTxt)
             itemDescription = view.findViewById<TextView>(R.id.itemDescription)
             amountTxt = view.findViewById<TextView>(R.id.amountTxt)
@@ -204,6 +224,7 @@ class BasketItemsAdapter_new (
             portalTxt = view.findViewById<TextView>(R.id.portalTxt)
             bannerImagePager = view.findViewById(R.id.bannerImagePager)
             soldout = view.findViewById(R.id.soldout)
+            basketRelative = view.findViewById(R.id.basketRelative)
 
         }
     }
@@ -274,7 +295,7 @@ class BasketItemsAdapter_new (
         id: String,
         position: Int,
         quant: String,
-        soldout: LinearLayout,
+        basketrelative: RelativeLayout,
         multiLinear: LinearLayout
     ){
         progress.visibility= View.VISIBLE
@@ -313,7 +334,7 @@ class BasketItemsAdapter_new (
                     {
 
                         multiLinear.visibility=View.GONE
-                       soldout.visibility=View.VISIBLE
+                        basketrelative.alpha=0.5f
 
                     }
 

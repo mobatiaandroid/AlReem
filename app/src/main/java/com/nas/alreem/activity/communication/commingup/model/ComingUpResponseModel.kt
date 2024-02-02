@@ -26,7 +26,7 @@ data class ComingUpResponseModel(
         @SerializedName("image")
         val image: String,
         @SerializedName("status")
-        val status: String
+        var status: String
     )
 }
 

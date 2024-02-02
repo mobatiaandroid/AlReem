@@ -1,4 +1,4 @@
-package com.nas.alreem.activity.canteen.adapter
+package com.nas.alreem.activity.shop_new.adapter
 
 import android.content.Context
 import android.os.Build
@@ -15,12 +15,12 @@ import com.nas.alreem.R
 import com.nas.alreem.activity.canteen.model.add_orders.CategoryListModel
 
 
-class ItemCategoriesAdapter (val category_list: ArrayList<CategoryListModel>, var mcontext: Context) :
-    RecyclerView.Adapter<ItemCategoriesAdapter.ViewHolder>() {
+class ItemCategoriesAdapter_new (val category_list: ArrayList<CategoryListModel>, var mcontext: Context) :
+    RecyclerView.Adapter<ItemCategoriesAdapter_new.ViewHolder>() {
     var isCatSelected:Boolean=false
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val view: View = LayoutInflater.from(viewGroup.context)
-            .inflate(R.layout.itemcategory_adapter, viewGroup, false)
+            .inflate(R.layout.itemcategory_adapter_new, viewGroup, false)
         return ViewHolder(view)
     }
 
@@ -30,7 +30,7 @@ class ItemCategoriesAdapter (val category_list: ArrayList<CategoryListModel>, va
         viewHolder.category_name.text = category_list[position].category_name
         viewHolder.selected.setBackgroundResource(R.drawable.date_selected)
 
-var url:String?=""
+        var url:String?=""
         url=category_list[position].category_image
 
         if (url.equals("")) {

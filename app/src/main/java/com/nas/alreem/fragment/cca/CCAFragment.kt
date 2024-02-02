@@ -265,33 +265,33 @@ import retrofit2.Response
                             description = response.body()!!.data!!.description!!
                             contactEmail = response.body()!!.data!!.contact_email!!
 //
-                            PreferenceManager.setCcaOptionBadge(
+                            PreferenceManager.setCcaOptionCCABadge(
                                 mContext!!,
                                 response.body()!!.data!!.cca_badge
                             )
-                            PreferenceManager.setCcaOptionEditedBadge(
+                            PreferenceManager.setCcaOptionEditedCCaBadge(
                                 mContext!!,
                                 response.body()!!.data!!.cca_edited_badge
                             )
-                            if (PreferenceManager.getCcaOptionBadge(mContext!!)!!.equals(0) &&
-                                PreferenceManager.getCcaOptionEditedBadge(mContext!!)!!.equals(0)
+                            if (PreferenceManager.getCcaoptionCCaBadge(mContext!!)!!.equals(0) &&
+                                PreferenceManager.getCcaoptionEditedCCaBadge(mContext!!)!!.equals(0)
                             ) {
                                 ccaDot!!.setVisibility(View.GONE)
-                            } else if (PreferenceManager.getCcaOptionBadge(mContext!!)!!.equals(0) &&
-                                !PreferenceManager.getCcaOptionEditedBadge(mContext!!)!!.equals(0)
+                            } else if (PreferenceManager.getCcaoptionCCaBadge(mContext!!)!!.equals(0) &&
+                                !PreferenceManager.getCcaoptionEditedCCaBadge(mContext!!)!!.equals(0)
                             ) {
                                 ccaDot!!.setVisibility(View.VISIBLE)
                                ccaDot!!.setText(response.body()!!.data!!.cca_edited_badge)
                                ccaDot!!.setBackgroundResource(R.drawable.shape_circle_navy)
-                            } else if (!PreferenceManager.getCcaOptionBadge(mContext!!)!!.equals(0)
-                                && PreferenceManager.getCcaOptionEditedBadge(
-                                    mContext!!).equals(0)
+                            } else if (!PreferenceManager.getCcaoptionCCaBadge(mContext!!)!!.equals(0)
+                                && PreferenceManager.getCcaoptionEditedCCaBadge(
+                                    mContext!!)!!.equals(0)
                             ) {
                                 ccaDot!!.setVisibility(View.VISIBLE)
                                ccaDot!!.setText(response.body()!!.data!!.cca_badge.toString())
                                 ccaDot!!.setBackgroundResource(R.drawable.shape_circle_red)
-                            } else if (!PreferenceManager.getCcaOptionBadge(mContext!!).equals(0)
-                                && !PreferenceManager.getCcaOptionEditedBadge(mContext!!)!!.equals(0)
+                            } else if (!PreferenceManager.getCcaoptionCCaBadge(mContext!!)!!.equals(0)
+                                && !PreferenceManager.getCcaoptionEditedCCaBadge(mContext!!)!!.equals(0)
                             ) {
                                ccaDot!!.setVisibility(View.VISIBLE)
                                 ccaDot!!.setText(response.body()!!.data!!.cca_badge)

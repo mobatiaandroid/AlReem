@@ -53,12 +53,12 @@ class SocialMediaAdapter(var mContext: Context, mSocialMediaModels: ArrayList<So
 
             //holder.imgIcon.setBackgroundDrawable(R.drawable.roundfb);
         } else if (mSocialMediaModels[position].tab_type.startsWith("X")) {
-            holder.imgIcon.setImageResource(R.drawable.twittericon)
+            holder.imgIcon.setImageResource(R.drawable.x)
             val sdk = Build.VERSION.SDK_INT
             if (sdk < Build.VERSION_CODES.JELLY_BEAN) {
-                holder.imgIcon.setBackgroundDrawable(mContext.resources.getDrawable(R.drawable.roundtw))
+                holder.imgIcon.setBackgroundDrawable(mContext.resources.getDrawable(R.color.black))
             } else {
-                holder.imgIcon.background = mContext.resources.getDrawable(R.drawable.roundtw)
+                holder.imgIcon.background = mContext.resources.getDrawable(R.color.black)
             }
             //holder.imgIcon.setBackground(mContext.getDrawable(R.drawable.roundtw));
             holder.listTxtView.setText(

@@ -19,7 +19,9 @@ import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.activity.lost_card.model.ShopHistoryModel
 import com.nas.alreem.activity.shop_new.adapter.PreorderDatesAdapter_new
 import com.nas.alreem.activity.shop_new.model.PaymentShopWalletHistoryModel
+import com.nas.alreem.activity.shop_new.model.ShopHistoryItemResponseModel
 import com.nas.alreem.activity.shop_new.model.ShopHistoryResponseModel
+import com.nas.alreem.activity.shop_new.model.ShopItemHistoryModel
 import com.nas.alreem.activity.shop_new.model.ShopModel
 import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ConstantFunctions
@@ -39,7 +41,7 @@ class OrderhistoryActivityNew  : AppCompatActivity(){
     lateinit var title: TextView
     lateinit var basket: ImageView
     lateinit var preorderhis_list: ArrayList<PaymentShopWalletHistoryModel>
-    lateinit var order_summery: ArrayList<ShopModel>
+    lateinit var order_summery: ArrayList<ShopItemHistoryModel>
     lateinit var preorderhis_itemlist: ArrayList<String>
     var studentID:String=""
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -92,11 +94,11 @@ class OrderhistoryActivityNew  : AppCompatActivity(){
 
         val studentbody= ShopHistoryModel(studentIdStr!!,"0","20")
 
-        val call: Call<ShopHistoryResponseModel> = ApiClient.getClient.get_shop_orders_history(studentbody,"Bearer "+ PreferenceManager.getaccesstoken(nContext))
-        call.enqueue(object : Callback<ShopHistoryResponseModel> {
+        val call: Call<ShopHistoryItemResponseModel> = ApiClient.getClient.get_shop_items_history(studentbody,"Bearer "+ PreferenceManager.getaccesstoken(nContext))
+        call.enqueue(object : Callback<ShopHistoryItemResponseModel> {
             override fun onResponse(
-                call: Call<ShopHistoryResponseModel?>,
-                response: Response<ShopHistoryResponseModel?>
+                call: Call<ShopHistoryItemResponseModel?>,
+                response: Response<ShopHistoryItemResponseModel?>
             ) {
                 progress.visibility= View.GONE
 
@@ -106,14 +108,10 @@ class OrderhistoryActivityNew  : AppCompatActivity(){
                         if(responsedata.status==100)
                         {
 
-                            // Log.e("size", response.body()!!.response.data.size.toString())
-                            if (response.body()!!.response.order_history.size > 0) {
-                                preorderhis_list=response.body()!!.response.order_history
-                                for (i in preorderhis_list.indices)
-                                {
-                                    order_summery=response.body()!!.response.order_history.get(i).order_summery
-                                }
-                                recyclerview.adapter = PreorderDatesAdapter_new(preorderhis_list, nContext,order_summery)
+                            if (response.body()!!.response.data.size > 0) {
+
+                                    order_summery=response.body()!!.response.data
+                                recyclerview.adapter = PreorderDatesAdapter_new( nContext,order_summery)
                             } else {
 
 
@@ -127,7 +125,7 @@ class OrderhistoryActivityNew  : AppCompatActivity(){
                 }
             }
 
-            override fun onFailure(call: Call<ShopHistoryResponseModel?>, t: Throwable) {
+            override fun onFailure(call: Call<ShopHistoryItemResponseModel?>, t: Throwable) {
                 progress.visibility= View.GONE
 
 

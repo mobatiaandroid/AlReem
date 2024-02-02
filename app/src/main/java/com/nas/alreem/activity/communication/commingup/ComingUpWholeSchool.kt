@@ -15,12 +15,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.JsonObject
 import com.nas.alreem.R
 import com.nas.alreem.activity.communication.commingup.model.ComingUpResponseModel
 import com.nas.alreem.activity.early_years.ComingUpDetailActivity
 import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.activity.primary.adapter.ComingUpAdapter
+import com.nas.alreem.activity.shop_new.model.StudentShopCardResponseModel
 import com.nas.alreem.constants.*
+import com.nas.alreem.fragment.notifications.model.NotificationApiModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -32,6 +35,7 @@ class ComingUpWholeSchool : AppCompatActivity() {
     lateinit var heading: TextView
     lateinit var backRelative: RelativeLayout
     lateinit var logoClickImgView: ImageView
+    lateinit var  adapterComing:ComingUpAdapter
     lateinit var comingUpArrayList: ArrayList<ComingUpResponseModel.ComingUpItem>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,7 +74,19 @@ class ComingUpWholeSchool : AppCompatActivity() {
             @SuppressLint("SimpleDateFormat", "SetTextI18n")
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onItemClicked(position: Int, view: View) {
-                var webViewComingUpDetail = """
+                if (comingUpArrayList.get(position).status
+                        .equals("0") || comingUpArrayList.get(position).status
+                        .equals("2")
+                ) {
+                    callStatusChangeApi(
+                        comingUpArrayList.get(position).id.toString(),
+                        position,
+                        comingUpArrayList.get(position).status
+                    )
+                }
+                else
+                {
+                    var webViewComingUpDetail = """
                   <!DOCTYPE html>
                     <html>
                     <head>
@@ -78,26 +94,28 @@ class ComingUpWholeSchool : AppCompatActivity() {
                     @font-face {
                     font-family: SourceSansPro-Semibold;src: url(SourceSansPro-Semibold.ttf);font-family: SourceSansPro-Regular;src: url(SourceSansPro-Regular.ttf);}.title {font-family: SourceSansPro-Regular;font-size:16px;text-align:left;color:	#46C1D0;}.description {font-family: SourceSansPro-Light;text-align:justify;font-size:14px;color: #000000;text-align:left;}</style>
                     </head><body><p class='title'>${
-                    comingUpArrayList.get(position).title
-                }
+                        comingUpArrayList.get(position).title
+                    }
                     """.trimIndent()
-                if (!comingUpArrayList.get(position).image.equals("")) {
-                    webViewComingUpDetail =
-                        webViewComingUpDetail + "<center><img src='" + comingUpArrayList.get(
-                            position
-                        ).image + "'width='100%', height='auto'>"
-                }
-                webViewComingUpDetail = """
+                    if (!comingUpArrayList.get(position).image.equals("")) {
+                        webViewComingUpDetail =
+                            webViewComingUpDetail + "<center><img src='" + comingUpArrayList.get(
+                                position
+                            ).image + "'width='100%', height='auto'>"
+                    }
+                    webViewComingUpDetail = """
                     $webViewComingUpDetail<p class='description'>${
-                    comingUpArrayList.get(position).description
-                }</p></body>
+                        comingUpArrayList.get(position).description
+                    }</p></body>
                     </html>
                     """.trimIndent()
 
-                val intent = Intent(mContext, ComingUpDetailActivity::class.java)
-                intent.putExtra("web_ink", webViewComingUpDetail)
-                intent.putExtra("title", "Coming Up")
-                startActivity(intent)
+                    val intent = Intent(mContext, ComingUpDetailActivity::class.java)
+                    intent.putExtra("web_ink", webViewComingUpDetail)
+                    intent.putExtra("title", "Coming Up")
+                    startActivity(intent)
+                }
+
 
             }
 
@@ -154,6 +172,45 @@ class ComingUpWholeSchool : AppCompatActivity() {
 //                    }
             }
 //            }
+
+        })
+    }
+
+    private fun callStatusChangeApi(ccaDaysId: String,event_position:Int, status: String) {
+        progressDialogAdd.visibility=View.VISIBLE
+        comingUpArrayList= ArrayList()
+        var token="Bearer "+PreferenceManager.getaccesstoken(mContext)
+        var model= NotificationApiModel(0,500)
+        val paramObject = JsonObject()
+        paramObject.addProperty("id", ccaDaysId)
+        paramObject.addProperty("type", "communications")
+        val call: Call<StudentShopCardResponseModel> = ApiClient.getClient.status_changeAPI(token,paramObject)
+        call.enqueue(object : Callback<StudentShopCardResponseModel> {
+            override fun onFailure(call: Call<StudentShopCardResponseModel>, t: Throwable) {
+                progressDialogAdd.visibility=View.GONE
+            }
+            override fun onResponse(call: Call<StudentShopCardResponseModel>, response: Response<StudentShopCardResponseModel>) {
+                val responsedata = response.body()
+                progressDialogAdd.visibility=View.GONE
+                if (responsedata != null) {
+                    try {
+
+
+                        if (status.equals("0", ignoreCase = true) || status.equals(
+                                "2",
+                                ignoreCase = true
+                            )
+                        ) {
+                            comingUpArrayList.get(event_position).status="1"
+                            adapterComing.notifyDataSetChanged()
+                        }
+
+
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
 
         })
     }

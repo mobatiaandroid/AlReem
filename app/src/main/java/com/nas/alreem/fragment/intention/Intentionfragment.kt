@@ -605,6 +605,7 @@ class Intentionfragment : Fragment(){
 
                         if (response.body()!!.status == 100) {
                             primaryArrayList = response.body()!!.responseArray.intensions
+                            Log.e("primaryArrayList", primaryArrayList.toString())
                             if (primaryArrayList.size>0)
                             {
 

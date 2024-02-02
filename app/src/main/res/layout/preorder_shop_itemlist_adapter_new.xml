@@ -15,6 +15,7 @@
         card_view:cardUseCompatPadding="true"
         android:background="@color/canteen_item_bg">
         <RelativeLayout
+            android:id="@+id/gradeoutrelative"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -35,7 +36,7 @@
                 android:id="@+id/item_linear"
                 android:orientation="vertical">
 
-                <TextView
+                <com.nas.alreem.commonviews.CustomTextViewBold
                     android:id="@+id/slugNameTxt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -47,7 +48,7 @@
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
-                <TextView
+                <com.nas.alreem.commonviews.CustomTextViewRegular
                     android:id="@+id/itemNameTxt"
                     android:layout_width="match_parent"
                     android:layout_height="35dp"
@@ -57,7 +58,7 @@
                     android:layout_marginBottom="5dp"
                     android:maxLines="2"
                     android:text="Desc"
-                    android:textSize="14sp" />
+                    android:textSize="12sp" />
 
 
             </LinearLayout>
@@ -68,7 +69,7 @@
     android:layout_toRightOf="@+id/itemImg"
     android:layout_below="@id/item_linear"
     android:weightSum="30">
-    <TextView
+    <com.nas.alreem.commonviews.CustomTextViewBold
         android:id="@+id/price"
         android:layout_width="wrap_content"
         android:layout_height="35dp"

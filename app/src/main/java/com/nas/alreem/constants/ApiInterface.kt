@@ -69,6 +69,7 @@ import com.nas.alreem.activity.permission_slip.model.PermissionResponseModel
 import com.nas.alreem.activity.primary.model.ComingUpResponseModel
 import com.nas.alreem.activity.settings.model.TermsOfServiceResponseModel
 import com.nas.alreem.activity.shop.model.PaymentGatewayApiModelShop
+import com.nas.alreem.activity.shop_new.model.ShopHistoryItemResponseModel
 import com.nas.alreem.activity.shop_new.model.AddToCartShopApiModel
 import com.nas.alreem.activity.shop_new.model.ShopCartRemoveApiModel
 import com.nas.alreem.activity.shop_new.model.ShopCartUpdateApiModel
@@ -91,6 +92,7 @@ import com.nas.alreem.fragment.communication.model.CommunicationResponseModel
 import com.nas.alreem.fragment.communication.model.SocialMediaResponseModel
 import com.nas.alreem.fragment.contact_us.model.ContactUsResponseModel
 import com.nas.alreem.fragment.gallery.model.ThumnailResponseModel
+import com.nas.alreem.fragment.home.model.BadgeResponseModel
 import com.nas.alreem.fragment.home.model.BannerResponseModel
 import com.nas.alreem.fragment.home.re_enrollment.EnrollmentHelpResponseModel
 import com.nas.alreem.fragment.home.re_enrollment.EnrollmentSaveResponseModel
@@ -917,10 +919,34 @@ interface ApiInterface {
         @Body  studentbody: ShopHistoryModel,
         @Header("Authorization") token:String
     ): Call<ShopHistoryResponseModel>
+
+    @POST("get_shop_items_history")
+    @Headers("Content-Type: application/json")
+    fun get_shop_items_history(
+        @Body  studentbody: ShopHistoryModel,
+        @Header("Authorization") token:String
+    ): Call<ShopHistoryItemResponseModel>
     @GET("shop_banner")
     @Headers("Content-Type: application/json")
     fun shop_banner(
         //@Body  ptaConfirmationModel: PtaConfirmationApiModel,
         @Header("Authorization") token:String
     ): Call<CanteenBannerResponseModel>
+
+    @POST("badge_counts")
+    @Headers("Content-Type: application/json")
+    fun badge_counts(
+        //@Body  ptaConfirmationModel: PtaConfirmationApiModel,
+        @Header("Authorization") token:String
+    ): Call<BadgeResponseModel>
+
+
+    //enrollment
+    @POST("status_changeAPI")
+    @Headers("Content-Type: application/json")
+    fun status_changeAPI(
+        @Header("Authorization") token: String?,
+        @Body json: JsonObject?
+    ): Call<StudentShopCardResponseModel>
+
 }

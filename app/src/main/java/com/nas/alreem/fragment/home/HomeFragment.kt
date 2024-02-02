@@ -32,7 +32,6 @@ import com.nas.alreem.R
 import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.activity.home.model.ReEnrollSubmitAPIModel
 import com.nas.alreem.activity.login.model.SignUpResponseModel
-import com.nas.alreem.activity.shop_new.PreOrderActivity_new
 import com.nas.alreem.activity.survey.adapter.SurveyQuestionPagerAdapter
 import com.nas.alreem.activity.survey.model.*
 import com.nas.alreem.constants.ApiClient
@@ -51,6 +50,7 @@ import com.nas.alreem.fragment.cca.CCAFragment
 import com.nas.alreem.fragment.communication.CommunicationFragment
 import com.nas.alreem.fragment.contact_us.ContactUsFragment
 import com.nas.alreem.fragment.gallery.GalleryFragment
+import com.nas.alreem.fragment.home.model.BadgeResponseModel
 import com.nas.alreem.fragment.home.model.BannerResponseModel
 import com.nas.alreem.fragment.home.re_enrollment.EnrollmentHelpResponseModel
 import com.nas.alreem.fragment.home.re_enrollment.EnrollmentSaveResponseModel
@@ -107,6 +107,17 @@ lateinit var relImgsix: ImageView
 lateinit var relImgseven: ImageView
 lateinit var relImgeight: ImageView
 lateinit var relImgnine: ImageView
+
+
+ lateinit var relImgOneDot: TextView
+ lateinit var relImgTwoDot: TextView
+ lateinit var relImgThreeDot: TextView
+ lateinit var relImgFourDot: TextView
+ lateinit var relImgFiveDot: TextView
+ lateinit var relImgSixDot: TextView
+ lateinit var relImgSevenDot: TextView
+ lateinit var relImgEightDot: TextView
+ lateinit var relImgNineDot: TextView
 var versionfromapi: String = ""
 var currentversion: String = ""
 
@@ -162,6 +173,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
     lateinit var notice: String
 
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
@@ -180,6 +192,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
         mListImgArrays = context!!.resources.obtainTypedArray(R.array.navigation_item_icons)
         initializeUI()
         getbannerimages()
+        getBadge()
         setListeners()
         setdraglisteners()
         getButtonBgAndTextImages()
@@ -271,6 +284,89 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
         })
     }
+   fun getBadge()
+   {
+       val token = PreferenceManager.getaccesstoken(mContext)
+       val call: Call<BadgeResponseModel> = ApiClient.getClient.badge_counts("Bearer "+token)
+       call.enqueue(object : Callback<BadgeResponseModel> {
+           override fun onFailure(call: Call<BadgeResponseModel>, t: Throwable) {
+           }
+
+           override fun onResponse(
+               call: Call<BadgeResponseModel>, response: Response<BadgeResponseModel>
+           ) {
+               val responsedata = response.body()
+               if (responsedata != null) {
+                   try {
+
+                       if (response.body()!!.status == 100) {
+
+                           val calendar_badge: String =
+                               responsedata.responseArray.badgeCounts.calendarBadge
+                           PreferenceManager.setCalendarHomeBadge(mContext, calendar_badge)
+                           val notification_badge: String =
+                               responsedata.responseArray.badgeCounts.notificationBadge
+                           PreferenceManager.setNotificationBadge(mContext, notification_badge)
+                           val whole_school_coming_up_badge: String =
+                               responsedata.responseArray.badgeCounts.wholeSchoolComingUpsBadge
+                           PreferenceManager.setNoticeBadge(mContext, whole_school_coming_up_badge)
+
+                           val reports_badge: String =responsedata.responseArray.badgeCounts.reportsBadge
+                           PreferenceManager.setReportsBadge(mContext, reports_badge)
+                           val cca_badge: String = responsedata.responseArray.badgeCounts.ccaBadge
+                           PreferenceManager.setCcaBadge(mContext, cca_badge)
+                           val paymentitem_badge: String =
+                               responsedata.responseArray.badgeCounts.paymentItemBadge
+                           PreferenceManager.setPaymentitem_badge(mContext, paymentitem_badge)
+                           val calendar_edited_badge: String =
+                               responsedata.responseArray.badgeCounts.calendarEditedBadge
+                           PreferenceManager.setCalendarEditedhomeBadge(mContext, calendar_edited_badge)
+                           val notification_edited_badge: String =
+                               responsedata.responseArray.badgeCounts.notificationEditedBadge
+                           PreferenceManager.setNotificationEditedBadge(
+                               mContext,
+                               notification_edited_badge
+                           )
+                           val whole_school_coming_up_edited_badge: String =
+                               responsedata.responseArray.badgeCounts.wholeSchoolComingUpsEditedBadge
+                           PreferenceManager.setNoticeEditedBadge(
+                               mContext,
+                               whole_school_coming_up_edited_badge
+                           )
+                           val report_edited_badge: String =
+                               responsedata.responseArray.badgeCounts.reportsEditedBadge
+                           PreferenceManager.setReportsEditedBadge(mContext, report_edited_badge)
+                           val cca_edited_badge: String =
+                               responsedata.responseArray.badgeCounts.ccaEditedBadge
+                           PreferenceManager.setCcaEditedBadge(mContext, cca_edited_badge)
+
+                           val paymentitem_edit_badge: String =
+                               responsedata.responseArray.badgeCounts.paymentItemEditBadge
+                           PreferenceManager.setPaymentitem_edit_badge(
+                               mContext,
+                               paymentitem_edit_badge
+                           )
+
+
+
+                       } else {
+
+                           DialogFunctions.commonErrorAlertDialog(
+                               mContext.resources.getString(R.string.alert),
+                               ConstantFunctions.commonErrorString(response.body()!!.status),
+                               mContext
+                           )
+                       }
+
+
+                   } catch (e: Exception) {
+                       e.printStackTrace()
+                   }
+               }
+           }
+
+       })
+   }
 
     private fun getReEnrollmentStatus() {
         val call: Call<ReEnrollmentStatusResponseModel> = ApiClient.getClient.getenrollstatus(
@@ -1359,6 +1455,197 @@ class HomeFragment : Fragment(), View.OnClickListener {
             relone.setBackgroundColor(
                 PreferenceManager.getButtonOneGuestBg(mContext)
             )
+
+            if (PreferenceManager.getbuttononetabid(mContext).equals(ConstantWords.TAB_CALENDAR)) {
+                if (!PreferenceManager.getCalenderhomeBadge(mContext).equals("0") &&
+                    !PreferenceManager.getCalenderEditedhomeBadge(mContext).equals("0")
+                ) {
+                    //System.out.println("relImgDot 1");
+                    //System.out.println("relImgDot 1 badge "+PreferenceManager.getCalendarBadge(mContext));
+                    relImgOneDot.visibility = View.VISIBLE
+                    relImgOneDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                    relImgOneDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getCalenderhomeBadge(mContext)
+                        .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(mContext)
+                        .equals("0")
+                ) {
+                    //System.out.println("relImgDot 2");
+                    relImgOneDot.visibility = View.VISIBLE
+                    relImgOneDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                    relImgOneDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
+                        .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(mContext)
+                        .equals("0")
+                ) {
+                    //System.out.println("relImgDot 3");
+                    relImgOneDot.visibility = View.VISIBLE
+                    relImgOneDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                    relImgOneDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+
+                    //System.out.println("relImgDot");
+                    relImgOneDot.visibility = View.GONE
+                }
+            } else if (PreferenceManager.getbuttononetabid(mContext)
+                    .equals(ConstantWords.TAB_NOTIFICATIONS)
+            ) {
+                if (!PreferenceManager.getNotificationBadge(mContext)
+                        .equals("0") && !PreferenceManager.getNotificationEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgOneDot.visibility = View.VISIBLE
+                    relImgOneDot.text = PreferenceManager.getNotificationBadge(mContext)
+                    relImgOneDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getNotificationBadge(mContext)
+                        .equals("0") && !PreferenceManager.getNotificationEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgOneDot.visibility = View.VISIBLE
+                    relImgOneDot.text = PreferenceManager.getNotificationEditedBadge(mContext)
+                    relImgOneDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getNotificationBadge(mContext)
+                        .equals("0") && PreferenceManager.getNotificationEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgOneDot.visibility = View.VISIBLE
+                    relImgOneDot.text = PreferenceManager.getNotificationBadge(mContext)
+                    relImgOneDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgOneDot.visibility = View.GONE
+                }
+            } else if (PreferenceManager.getbuttononetabid(mContext)
+                    .equals(ConstantWords.TAB_REPORTS)
+            ) {
+                if (!PreferenceManager.getReportsBadge(mContext)
+                        .equals("0") && !PreferenceManager.getReportsEditedBadge(mContext)
+                        .equals("0")
+                ) {
+                    relImgOneDot.visibility = View.VISIBLE
+                    relImgOneDot.text = PreferenceManager.getReportsBadge(mContext)
+                    relImgOneDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getReportsBadge(mContext)
+                        .equals("0") && !PreferenceManager.getReportsEditedBadge(mContext)
+                        .equals("0")
+                ) {
+                    relImgOneDot.visibility = View.VISIBLE
+                    relImgOneDot.text = PreferenceManager.getReportsEditedBadge(mContext)
+                    relImgOneDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getReportsBadge(mContext)
+                        .equals("0") && PreferenceManager.getReportsEditedBadge(mContext)
+                        .equals("0")
+                ) {
+                    relImgOneDot.visibility = View.VISIBLE
+                    relImgOneDot.text = PreferenceManager.getReportsBadge(mContext)
+                    relImgOneDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getReportsBadge(mContext)
+                        .equals("0") && PreferenceManager.getReportsEditedBadge(mContext)
+                        .equals("0")
+                ) {
+                    relImgOneDot.visibility = View.GONE
+                } else {
+                    relImgOneDot.visibility = View.GONE
+                }
+            } else if (PreferenceManager.getbuttononetabid(mContext)
+                    .equals(ConstantWords.TAB_ENRICHMENT)
+            ) {
+                if (!PreferenceManager.getCcaBadge(mContext)
+                        .equals("0") && !PreferenceManager.getCcaEditedBadge(mContext)
+                        .equals("0")
+                ) {
+                    relImgOneDot.visibility = View.VISIBLE
+                    relImgOneDot.text = PreferenceManager.getCcaBadge(mContext)
+                    relImgOneDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getCcaBadge(mContext)
+                        .equals("0") && !PreferenceManager.getCcaEditedBadge(mContext)
+                        .equals("0")
+                ) {
+                    relImgOneDot.visibility = View.VISIBLE
+                    relImgOneDot.text = PreferenceManager.getCcaEditedBadge(mContext)
+                    relImgOneDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getCcaBadge(mContext)
+                        .equals("0") && PreferenceManager.getCcaEditedBadge(mContext)
+                        .equals("0")
+                ) {
+                    relImgOneDot.visibility = View.VISIBLE
+                    relImgOneDot.text = PreferenceManager.getCcaBadge(mContext)
+                    relImgOneDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgOneDot.visibility = View.GONE
+                }
+            }   else if (PreferenceManager.getbuttononetabid(mContext)
+                    .equals(ConstantWords.TAB_COMMUNICATION)
+            ) {
+                if (!PreferenceManager.getNoticeBadge(mContext)
+                        .equals("0") && !PreferenceManager.getNoticeEditedBadge(mContext)
+                        .equals("0")
+                ) {
+                    relImgOneDot.visibility = View.VISIBLE
+                    relImgOneDot.text = PreferenceManager.getNoticeBadge(mContext)
+                    relImgOneDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getNoticeBadge(mContext)
+                        .equals("0") && !PreferenceManager.getNoticeEditedBadge(mContext)
+                        .equals("0")
+                ) {
+                    relImgOneDot.visibility = View.VISIBLE
+                    relImgOneDot.text = PreferenceManager.getNoticeEditedBadge(mContext)
+                    relImgOneDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getNoticeBadge(mContext)
+                        .equals("0") && PreferenceManager.getNoticeEditedBadge(mContext)
+                        .equals("0")
+                ) {
+                    relImgOneDot.visibility = View.VISIBLE
+                    relImgOneDot.text = PreferenceManager.getNoticeBadge(mContext)
+                    relImgOneDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgOneDot.visibility = View.GONE
+                }
+            } else if (PreferenceManager.getbuttononetabid(mContext)
+                    .equals(ConstantWords.TAB_PAYMENTS)
+            ) {
+                if (!PreferenceManager.getPaymentitem_badge(mContext)
+                        .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    println("relImgDot 1")
+                    System.out.println(
+                        "relImgDot 1 badge " + PreferenceManager.getPaymentitem_badge(
+                            mContext
+                        )
+                    )
+                    relImgOneDot.visibility = View.VISIBLE
+                    relImgOneDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                    relImgOneDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getPaymentitem_badge(mContext)
+                        .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    //System.out.println("relImgDot 2");
+                    relImgOneDot.visibility = View.VISIBLE
+                    relImgOneDot.text = PreferenceManager.getPaymentitem_edit_badge(mContext)
+                    relImgOneDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getPaymentitem_badge(mContext)
+                        .equals("0") && PreferenceManager.getPaymentitem_edit_badge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    //System.out.println("relImgDot 3");
+                    relImgOneDot.visibility = View.VISIBLE
+                    relImgOneDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                    relImgOneDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+
+                    //System.out.println("relImgDot");
+                    relImgOneDot.visibility = View.GONE
+                }
+            } else {
+                relImgOneDot.visibility = View.GONE
+            }
+
         }
         if (PreferenceManager.getbuttontwotextimage(mContext)!!.toInt() != 0) {
             relImgtwo.setImageDrawable(
@@ -1377,6 +1664,201 @@ class HomeFragment : Fragment(), View.OnClickListener {
             reltwo.setBackgroundColor(
                 PreferenceManager.getButtontwoGuestBg(mContext)
             )
+
+            if (PreferenceManager.getbuttontwotabid(mContext)
+                    .equals(ConstantWords.TAB_CALENDAR)
+            ) {
+                if (!PreferenceManager.getCalenderhomeBadge(mContext)
+                        .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgTwoDot.visibility = View.VISIBLE
+                    relImgTwoDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                    relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getCalenderhomeBadge(mContext)
+                        .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgTwoDot.visibility = View.VISIBLE
+                    relImgTwoDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                    relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
+                        .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgTwoDot.visibility = View.VISIBLE
+                    relImgTwoDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                    relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgTwoDot.visibility = View.GONE
+                }
+            } else if (PreferenceManager.getbuttontwotabid(mContext)
+                    .equals(ConstantWords.TAB_NOTIFICATIONS)
+            ) {
+                if (!PreferenceManager.getNotificationBadge(mContext)
+                        .equals("0") && !PreferenceManager.getNotificationEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgTwoDot.visibility = View.VISIBLE
+                    relImgTwoDot.text = PreferenceManager.getNotificationBadge(mContext)
+                    relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getNotificationBadge(mContext)
+                        .equals("0") && !PreferenceManager.getNotificationEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgTwoDot.visibility = View.VISIBLE
+                    relImgTwoDot.text =
+                        PreferenceManager.getNotificationEditedBadge(mContext)
+                    relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getNotificationBadge(mContext)
+                        .equals("0") && PreferenceManager.getNotificationEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgTwoDot.visibility = View.VISIBLE
+                    relImgTwoDot.text = PreferenceManager.getNotificationBadge(mContext)
+                    relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgTwoDot.visibility = View.GONE
+                }
+            } else if (PreferenceManager.getbuttontwotabid(mContext)
+                    .equals(ConstantWords.TAB_REPORTS)
+            ) {
+                if (!PreferenceManager.getReportsBadge(mContext)
+                        .equals("0") && !PreferenceManager.getReportsEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgTwoDot.visibility = View.VISIBLE
+                    relImgTwoDot.text = PreferenceManager.getReportsBadge(mContext)
+                    relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getReportsBadge(mContext)
+                        .equals("0") && !PreferenceManager.getReportsEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgTwoDot.visibility = View.VISIBLE
+                    relImgTwoDot.text = PreferenceManager.getReportsEditedBadge(mContext)
+                    relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getReportsBadge(mContext)
+                        .equals("0") && PreferenceManager.getReportsEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgTwoDot.visibility = View.VISIBLE
+                    relImgTwoDot.text = PreferenceManager.getReportsBadge(mContext)
+                    relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getReportsBadge(mContext)
+                        .equals("0") && PreferenceManager.getReportsEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgOneDot.visibility = View.GONE
+                } else {
+                    relImgTwoDot.visibility = View.GONE
+                }
+            } else if (PreferenceManager.getbuttontwotabid(mContext)
+                    .equals(ConstantWords.TAB_PAYMENTS)
+            ) {
+                if (!PreferenceManager.getPaymentitem_badge(mContext)
+                        .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgTwoDot.visibility = View.VISIBLE
+                    relImgTwoDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                    relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getPaymentitem_badge(mContext)
+                        .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgTwoDot.visibility = View.VISIBLE
+                    relImgTwoDot.text =
+                        PreferenceManager.getPaymentitem_edit_badge(mContext)
+                    relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getPaymentitem_badge(mContext)
+                        .equals("0") && PreferenceManager.getPaymentitem_edit_badge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgTwoDot.visibility = View.VISIBLE
+                    relImgTwoDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                    relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgTwoDot.visibility = View.GONE
+                }
+            } else if (PreferenceManager.getbuttontwotabid(mContext)
+                    .equals(ConstantWords.TAB_ENRICHMENT)
+            ) {
+                if (!PreferenceManager.getCcaBadge(mContext)
+                        .equals("0") && !PreferenceManager.getCcaEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgTwoDot.visibility = View.VISIBLE
+                    relImgTwoDot.text = PreferenceManager.getCcaBadge(mContext)
+                    relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getCcaBadge(mContext)
+                        .equals("0") && !PreferenceManager.getCcaEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgTwoDot.visibility = View.VISIBLE
+                    relImgTwoDot.text = PreferenceManager.getCcaEditedBadge(mContext)
+                    relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getCcaBadge(mContext)
+                        .equals("0") && PreferenceManager.getCcaEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgTwoDot.visibility = View.VISIBLE
+                    relImgTwoDot.text = PreferenceManager.getCcaBadge(mContext)
+                    relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgTwoDot.visibility = View.GONE
+                }
+            }   else if (PreferenceManager.getbuttontwotabid(mContext)
+                    .equals(ConstantWords.TAB_COMMUNICATION)
+            ) {
+                if (!PreferenceManager.getNoticeBadge(mContext)
+                        .equals("0") && !PreferenceManager.getNoticeEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgTwoDot.visibility = View.VISIBLE
+                    relImgTwoDot.text = PreferenceManager.getNoticeBadge(mContext)
+                    relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getNoticeBadge(mContext)
+                        .equals("0") && !PreferenceManager.getNoticeEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgTwoDot.visibility = View.VISIBLE
+                    relImgTwoDot.text = PreferenceManager.getNoticeEditedBadge(mContext)
+                    relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getNoticeBadge(mContext)
+                        .equals("0") && PreferenceManager.getNoticeEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgTwoDot.visibility = View.VISIBLE
+                    relImgTwoDot.text = PreferenceManager.getNoticeBadge(mContext)
+                    relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgTwoDot.visibility = View.GONE
+                }
+            } else {
+                relImgTwoDot.visibility = View.GONE
+            }
+
+
+
         }
         if (PreferenceManager.getbuttonthreetextimage(mContext)!!.toInt() != 0) {
             relImgthree.setImageDrawable(
@@ -1394,6 +1876,201 @@ class HomeFragment : Fragment(), View.OnClickListener {
             relthree.setBackgroundColor(
                 PreferenceManager.getButtonthreeGuestBg(mContext)
             )
+
+            if (PreferenceManager.getbuttonthreetabid(mContext)
+                    .equals(ConstantWords.TAB_CALENDAR)
+            ) {
+                if (!PreferenceManager.getCalenderhomeBadge(mContext)
+                        .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgThreeDot.visibility = View.VISIBLE
+                    relImgThreeDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                    relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getCalenderhomeBadge(mContext)
+                        .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgThreeDot.visibility = View.VISIBLE
+                    relImgThreeDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                    relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
+                        .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgThreeDot.visibility = View.VISIBLE
+                    relImgThreeDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                    relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgThreeDot.visibility = View.GONE
+                }
+            } else if (PreferenceManager.getbuttonthreetabid(mContext)
+                    .equals(ConstantWords.TAB_NOTIFICATIONS)
+            ) {
+                if (!PreferenceManager.getNotificationBadge(mContext)
+                        .equals("0") && !PreferenceManager.getNotificationEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgThreeDot.visibility = View.VISIBLE
+                    relImgThreeDot.text = PreferenceManager.getNotificationBadge(mContext)
+                    relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getNotificationBadge(mContext)
+                        .equals("0") && !PreferenceManager.getNotificationEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgThreeDot.visibility = View.VISIBLE
+                    relImgThreeDot.text =
+                        PreferenceManager.getNotificationEditedBadge(mContext)
+                    relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getNotificationBadge(mContext)
+                        .equals("0") && PreferenceManager.getNotificationEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgThreeDot.visibility = View.VISIBLE
+                    relImgThreeDot.text = PreferenceManager.getNotificationBadge(mContext)
+                    relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgThreeDot.visibility = View.GONE
+                }
+            } else if (PreferenceManager.getbuttonthreetabid(mContext)
+                    .equals(ConstantWords.TAB_REPORTS)
+            ) {
+                if (!PreferenceManager.getReportsBadge(mContext)
+                        .equals("0") && !PreferenceManager.getReportsEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgThreeDot.visibility = View.VISIBLE
+                    relImgThreeDot.text = PreferenceManager.getReportsBadge(mContext)
+                    relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getReportsBadge(mContext)
+                        .equals("0") && !PreferenceManager.getReportsEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgThreeDot.visibility = View.VISIBLE
+                    relImgThreeDot.text = PreferenceManager.getReportsEditedBadge(mContext)
+                    relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getReportsBadge(mContext)
+                        .equals("0") && PreferenceManager.getReportsEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgThreeDot.visibility = View.VISIBLE
+                    relImgThreeDot.text = PreferenceManager.getReportsBadge(mContext)
+                    relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getReportsBadge(mContext)
+                        .equals("0") && PreferenceManager.getReportsEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgThreeDot.visibility = View.GONE
+                } else {
+                    relImgThreeDot.visibility = View.GONE
+                }
+            } else if (PreferenceManager.getbuttonthreetabid(mContext)
+                    .equals(ConstantWords.TAB_PAYMENTS)
+            ) {
+                if (!PreferenceManager.getPaymentitem_badge(mContext)
+                        .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgThreeDot.visibility = View.VISIBLE
+                    relImgThreeDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                    relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getPaymentitem_badge(mContext)
+                        .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgThreeDot.visibility = View.VISIBLE
+                    relImgThreeDot.text =
+                        PreferenceManager.getPaymentitem_edit_badge(mContext)
+                    relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getPaymentitem_badge(mContext)
+                        .equals("0") && PreferenceManager.getPaymentitem_edit_badge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgThreeDot.visibility = View.VISIBLE
+                    relImgThreeDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                    relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgThreeDot.visibility = View.GONE
+                }
+            } else if (PreferenceManager.getbuttonthreetabid(mContext)
+                    .equals(ConstantWords.TAB_ENRICHMENT)
+            ) {
+                if (!PreferenceManager.getCcaBadge(mContext)
+                        .equals("0") && !PreferenceManager.getCcaEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgThreeDot.visibility = View.VISIBLE
+                    relImgThreeDot.text = PreferenceManager.getCcaBadge(mContext)
+                    relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getCcaBadge(mContext)
+                        .equals("0") && !PreferenceManager.getCcaEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgThreeDot.visibility = View.VISIBLE
+                    relImgThreeDot.text = PreferenceManager.getCcaEditedBadge(mContext)
+                    relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getCcaBadge(mContext)
+                        .equals("0") && PreferenceManager.getCcaEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgThreeDot.visibility = View.VISIBLE
+                    relImgThreeDot.text = PreferenceManager.getCcaBadge(mContext)
+                    relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgThreeDot.visibility = View.GONE
+                }
+            }   else if (PreferenceManager.getbuttonthreetabid(mContext)
+                    .equals(ConstantWords.TAB_COMMUNICATION)
+            ) {
+                if (!PreferenceManager.getNoticeBadge(mContext)
+                        .equals("0") && !PreferenceManager.getNoticeEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgThreeDot.visibility = View.VISIBLE
+                    relImgThreeDot.text = PreferenceManager.getNoticeBadge(mContext)
+                    relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getNoticeBadge(mContext)
+                        .equals("0") && !PreferenceManager.getNoticeEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgThreeDot.visibility = View.VISIBLE
+                    relImgThreeDot.text = PreferenceManager.getNoticeEditedBadge(mContext)
+                    relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getNoticeBadge(mContext)
+                        .equals("0") && PreferenceManager.getNoticeEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgThreeDot.visibility = View.VISIBLE
+                    relImgThreeDot.text = PreferenceManager.getNoticeBadge(mContext)
+                    relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgThreeDot.visibility = View.GONE
+                }
+            } else {
+                relImgThreeDot.visibility = View.GONE
+            }
+
+
+
         }
 
 
@@ -1413,6 +2090,202 @@ class HomeFragment : Fragment(), View.OnClickListener {
             relfour.setBackgroundColor(
                 PreferenceManager.getButtonfourGuestBg(mContext)
             )
+
+
+
+            if (PreferenceManager.getbuttonfourtabid(mContext)
+                    .equals(ConstantWords.TAB_CALENDAR)
+            ) {
+                if (!PreferenceManager.getCalenderhomeBadge(mContext)
+                        .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgFourDot.visibility = View.VISIBLE
+                    relImgFourDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                    relImgFourDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getCalenderhomeBadge(mContext)
+                        .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgFourDot.visibility = View.VISIBLE
+                    relImgFourDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                    relImgFourDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
+                        .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgFourDot.visibility = View.VISIBLE
+                    relImgFourDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                    relImgFourDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgFourDot.visibility = View.GONE
+                }
+            } else if (PreferenceManager.getbuttonfourtabid(mContext)
+                    .equals(ConstantWords.TAB_NOTIFICATIONS)
+            ) {
+                if (!PreferenceManager.getNotificationBadge(mContext)
+                        .equals("0") && !PreferenceManager.getNotificationEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgFourDot.visibility = View.VISIBLE
+                    relImgFourDot.text = PreferenceManager.getNotificationBadge(mContext)
+                    relImgFourDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getNotificationBadge(mContext)
+                        .equals("0") && !PreferenceManager.getNotificationEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgFourDot.visibility = View.VISIBLE
+                    relImgFourDot.text =
+                        PreferenceManager.getNotificationEditedBadge(mContext)
+                    relImgFourDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getNotificationBadge(mContext)
+                        .equals("0") && PreferenceManager.getNotificationEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgFourDot.visibility = View.VISIBLE
+                    relImgFourDot.text = PreferenceManager.getNotificationBadge(mContext)
+                    relImgFourDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgFourDot.visibility = View.GONE
+                }
+            } else if (PreferenceManager.getbuttonfourtabid(mContext)
+                    .equals(ConstantWords.TAB_REPORTS)
+            ) {
+                if (!PreferenceManager.getReportsBadge(mContext)
+                        .equals("0") && !PreferenceManager.getReportsEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgFourDot.visibility = View.VISIBLE
+                    relImgFourDot.text = PreferenceManager.getReportsBadge(mContext)
+                    relImgFourDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getReportsBadge(mContext)
+                        .equals("0") && !PreferenceManager.getReportsEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgFourDot.visibility = View.VISIBLE
+                    relImgFourDot.text = PreferenceManager.getReportsEditedBadge(mContext)
+                    relImgFourDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getReportsBadge(mContext)
+                        .equals("0") && PreferenceManager.getReportsEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgFourDot.visibility = View.VISIBLE
+                    relImgFourDot.text = PreferenceManager.getReportsBadge(mContext)
+                    relImgFourDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getReportsBadge(mContext)
+                        .equals("0") && PreferenceManager.getReportsEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgFourDot.visibility = View.GONE
+                } else {
+                    relImgFourDot.visibility = View.GONE
+                }
+            } else if (PreferenceManager.getbuttonfourtabid(mContext)
+                    .equals(ConstantWords.TAB_PAYMENTS)
+            ) {
+                if (!PreferenceManager.getPaymentitem_badge(mContext)
+                        .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgFourDot.visibility = View.VISIBLE
+                    relImgFourDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                    relImgFourDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getPaymentitem_badge(mContext)
+                        .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgFourDot.visibility = View.VISIBLE
+                    relImgFourDot.text =
+                        PreferenceManager.getPaymentitem_edit_badge(mContext)
+                    relImgFourDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getPaymentitem_badge(mContext)
+                        .equals("0") && PreferenceManager.getPaymentitem_edit_badge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgFourDot.visibility = View.VISIBLE
+                    relImgFourDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                    relImgFourDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgFourDot.visibility = View.GONE
+                }
+            } else if (PreferenceManager.getbuttonfourtabid(mContext)
+                    .equals(ConstantWords.TAB_ENRICHMENT)
+            ) {
+                if (!PreferenceManager.getCcaBadge(mContext)
+                        .equals("0") && !PreferenceManager.getCcaEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgFourDot.visibility = View.VISIBLE
+                    relImgFourDot.text = PreferenceManager.getCcaBadge(mContext)
+                    relImgFourDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getCcaBadge(mContext)
+                        .equals("0") && !PreferenceManager.getCcaEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgFourDot.visibility = View.VISIBLE
+                    relImgFourDot.text = PreferenceManager.getCcaEditedBadge(mContext)
+                    relImgFourDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getCcaBadge(mContext)
+                        .equals("0") && PreferenceManager.getCcaEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgFourDot.visibility = View.VISIBLE
+                    relImgFourDot.text = PreferenceManager.getCcaBadge(mContext)
+                    relImgFourDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgFourDot.visibility = View.GONE
+                }
+            }   else if (PreferenceManager.getbuttonfourtabid(mContext)
+                    .equals(ConstantWords.TAB_COMMUNICATION)
+            ) {
+                if (!PreferenceManager.getNoticeBadge(mContext)
+                        .equals("0") && !PreferenceManager.getNoticeEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgFourDot.visibility = View.VISIBLE
+                    relImgFourDot.text = PreferenceManager.getNoticeBadge(mContext)
+                    relImgFourDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getNoticeBadge(mContext)
+                        .equals("0") && !PreferenceManager.getNoticeEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgTwoDot.visibility = View.VISIBLE
+                    relImgTwoDot.text = PreferenceManager.getNoticeEditedBadge(mContext)
+                    relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getNoticeBadge(mContext)
+                        .equals("0") && PreferenceManager.getNoticeEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgFourDot.visibility = View.VISIBLE
+                    relImgFourDot.text = PreferenceManager.getNoticeBadge(mContext)
+                    relImgFourDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgFourDot.visibility = View.GONE
+                }
+            } else {
+                relImgFourDot.visibility = View.GONE
+            }
+
+
         }
 
 
@@ -1432,6 +2305,204 @@ class HomeFragment : Fragment(), View.OnClickListener {
             relfive.setBackgroundColor(
                 PreferenceManager.getButtonfiveGuestBg(mContext)
             )
+
+            if (PreferenceManager.getbuttonfivetabid(mContext)
+                    .equals(ConstantWords.TAB_CALENDAR)
+            ) {
+                if (!PreferenceManager.getCalenderhomeBadge(mContext)
+                        .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgFiveDot.visibility = View.VISIBLE
+                    relImgFiveDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                    relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getCalenderhomeBadge(mContext)
+                        .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgFiveDot.visibility = View.VISIBLE
+                    relImgFiveDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                    relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
+                        .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgFiveDot.visibility = View.VISIBLE
+                    relImgFiveDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                    relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgFiveDot.visibility = View.GONE
+                }
+            } else if (PreferenceManager.getbuttonfivetabid(mContext)
+                    .equals(ConstantWords.TAB_NOTIFICATIONS)
+            ) {
+                if (!PreferenceManager.getNotificationBadge(mContext)
+                        .equals("0") && !PreferenceManager.getNotificationEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgFiveDot.visibility = View.VISIBLE
+                    relImgFiveDot.text = PreferenceManager.getNotificationBadge(mContext)
+                    relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getNotificationBadge(mContext)
+                        .equals("0") && !PreferenceManager.getNotificationEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgFiveDot.visibility = View.VISIBLE
+                    relImgFiveDot.text =
+                        PreferenceManager.getNotificationEditedBadge(mContext)
+                    relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getNotificationBadge(mContext)
+                        .equals("0") && PreferenceManager.getNotificationEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgFiveDot.visibility = View.VISIBLE
+                    relImgFiveDot.text = PreferenceManager.getNotificationBadge(mContext)
+                    relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgFiveDot.visibility = View.GONE
+                }
+            } else if (PreferenceManager.getbuttonfivetabid(mContext)
+                    .equals(ConstantWords.TAB_REPORTS)
+            ) {
+                if (!PreferenceManager.getReportsBadge(mContext)
+                        .equals("0") && !PreferenceManager.getReportsEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgFiveDot.visibility = View.VISIBLE
+                    relImgFiveDot.text = PreferenceManager.getReportsBadge(mContext)
+                    relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getReportsBadge(mContext)
+                        .equals("0") && !PreferenceManager.getReportsEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgFiveDot.visibility = View.VISIBLE
+                    relImgFiveDot.text = PreferenceManager.getReportsEditedBadge(mContext)
+                    relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getReportsBadge(mContext)
+                        .equals("0") && PreferenceManager.getReportsEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgFiveDot.visibility = View.VISIBLE
+                    relImgFiveDot.text = PreferenceManager.getReportsBadge(mContext)
+                    relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getReportsBadge(mContext)
+                        .equals("0") && PreferenceManager.getReportsEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgFiveDot.visibility = View.GONE
+                } else {
+                    relImgFiveDot.visibility = View.GONE
+                }
+            } else if (PreferenceManager.getbuttonfivetabid(mContext)
+                    .equals(ConstantWords.TAB_PAYMENTS)
+            ) {
+                if (!PreferenceManager.getPaymentitem_badge(mContext)
+                        .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgFiveDot.visibility = View.VISIBLE
+                    relImgFiveDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                    relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getPaymentitem_badge(mContext)
+                        .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgFiveDot.visibility = View.VISIBLE
+                    relImgFiveDot.text =
+                        PreferenceManager.getPaymentitem_edit_badge(mContext)
+                    relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getPaymentitem_badge(mContext)
+                        .equals("0") && PreferenceManager.getPaymentitem_edit_badge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgFiveDot.visibility = View.VISIBLE
+                    relImgFiveDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                    relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgFiveDot.visibility = View.GONE
+                }
+            } else if (PreferenceManager.getbuttonfivetabid(mContext)
+                    .equals(ConstantWords.TAB_ENRICHMENT)
+            ) {
+                if (!PreferenceManager.getCcaBadge(mContext)
+                        .equals("0") && !PreferenceManager.getCcaEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgFiveDot.visibility = View.VISIBLE
+                    relImgFiveDot.text = PreferenceManager.getCcaBadge(mContext)
+                    relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getCcaBadge(mContext)
+                        .equals("0") && !PreferenceManager.getCcaEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgFiveDot.visibility = View.VISIBLE
+                    relImgFiveDot.text = PreferenceManager.getCcaEditedBadge(mContext)
+                    relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getCcaBadge(mContext)
+                        .equals("0") && PreferenceManager.getCcaEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgFiveDot.visibility = View.VISIBLE
+                    relImgFiveDot.text = PreferenceManager.getCcaBadge(mContext)
+                    relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgFiveDot.visibility = View.GONE
+                }
+            }   else if (PreferenceManager.getbuttonfivetabid(mContext)
+                    .equals(ConstantWords.TAB_COMMUNICATION)
+            ) {
+                if (!PreferenceManager.getNoticeBadge(mContext)
+                        .equals("0") && !PreferenceManager.getNoticeEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgFiveDot.visibility = View.VISIBLE
+                    relImgFiveDot.text = PreferenceManager.getNoticeBadge(mContext)
+                    relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getNoticeBadge(mContext)
+                        .equals("0") && !PreferenceManager.getNoticeEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgFiveDot.visibility = View.VISIBLE
+                    relImgFiveDot.text = PreferenceManager.getNoticeEditedBadge(mContext)
+                    relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getNoticeBadge(mContext)
+                        .equals("0") && PreferenceManager.getNoticeEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgFiveDot.visibility = View.VISIBLE
+                    relImgFiveDot.text = PreferenceManager.getNoticeBadge(mContext)
+                    relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgFiveDot.visibility = View.GONE
+                }
+            } else {
+                relImgFiveDot.visibility = View.GONE
+            }
+
+
+
+
+
+
         }
         if (PreferenceManager.getbuttonsixtextimage(mContext)!!.toInt() != 0) {
             relImgsix.setImageDrawable(
@@ -1449,6 +2520,199 @@ class HomeFragment : Fragment(), View.OnClickListener {
             relsix.setBackgroundColor(
                 PreferenceManager.getButtonsixGuestBg(mContext)
             )
+
+
+            if (PreferenceManager.getbuttonsixtabid(mContext)
+                    .equals(ConstantWords.TAB_CALENDAR)
+            ) {
+                if (!PreferenceManager.getCalenderhomeBadge(mContext)
+                        .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgSixDot.visibility = View.VISIBLE
+                    relImgSixDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                    relImgSixDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getCalenderhomeBadge(mContext)
+                        .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgSixDot.visibility = View.VISIBLE
+                    relImgSixDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                    relImgSixDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
+                        .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgSixDot.visibility = View.VISIBLE
+                    relImgSixDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                    relImgSixDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgSixDot.visibility = View.GONE
+                }
+            } else if (PreferenceManager.getbuttonsixtabid(mContext)
+                    .equals(ConstantWords.TAB_NOTIFICATIONS)
+            ) {
+                if (!PreferenceManager.getNotificationBadge(mContext)
+                        .equals("0") && !PreferenceManager.getNotificationEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgSixDot.visibility = View.VISIBLE
+                    relImgSixDot.text = PreferenceManager.getNotificationBadge(mContext)
+                    relImgSixDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getNotificationBadge(mContext)
+                        .equals("0") && !PreferenceManager.getNotificationEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgSixDot.visibility = View.VISIBLE
+                    relImgSixDot.text =
+                        PreferenceManager.getNotificationEditedBadge(mContext)
+                    relImgSixDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getNotificationBadge(mContext)
+                        .equals("0") && PreferenceManager.getNotificationEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgSixDot.visibility = View.VISIBLE
+                    relImgSixDot.text = PreferenceManager.getNotificationBadge(mContext)
+                    relImgSixDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgSixDot.visibility = View.GONE
+                }
+            } else if (PreferenceManager.getbuttonsixtabid(mContext)
+                    .equals(ConstantWords.TAB_REPORTS)
+            ) {
+                if (!PreferenceManager.getReportsBadge(mContext)
+                        .equals("0") && !PreferenceManager.getReportsEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgSixDot.visibility = View.VISIBLE
+                    relImgSixDot.text = PreferenceManager.getReportsBadge(mContext)
+                    relImgSixDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getReportsBadge(mContext)
+                        .equals("0") && !PreferenceManager.getReportsEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgSixDot.visibility = View.VISIBLE
+                    relImgSixDot.text = PreferenceManager.getReportsEditedBadge(mContext)
+                    relImgSixDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getReportsBadge(mContext)
+                        .equals("0") && PreferenceManager.getReportsEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgSixDot.visibility = View.VISIBLE
+                    relImgSixDot.text = PreferenceManager.getReportsBadge(mContext)
+                    relImgSixDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getReportsBadge(mContext)
+                        .equals("0") && PreferenceManager.getReportsEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgSixDot.visibility = View.GONE
+                } else {
+                    relImgSixDot.visibility = View.GONE
+                }
+            } else if (PreferenceManager.getbuttonsixtabid(mContext)
+                    .equals(ConstantWords.TAB_PAYMENTS)
+            ) {
+                if (!PreferenceManager.getPaymentitem_badge(mContext)
+                        .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgSixDot.visibility = View.VISIBLE
+                    relImgSixDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                    relImgSixDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getPaymentitem_badge(mContext)
+                        .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgSixDot.visibility = View.VISIBLE
+                    relImgSixDot.text =
+                        PreferenceManager.getPaymentitem_edit_badge(mContext)
+                    relImgSixDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getPaymentitem_badge(mContext)
+                        .equals("0") && PreferenceManager.getPaymentitem_edit_badge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgSixDot.visibility = View.VISIBLE
+                    relImgSixDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                    relImgSixDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgSixDot.visibility = View.GONE
+                }
+            } else if (PreferenceManager.getbuttonsixtabid(mContext)
+                    .equals(ConstantWords.TAB_ENRICHMENT)
+            ) {
+                if (!PreferenceManager.getCcaBadge(mContext)
+                        .equals("0") && !PreferenceManager.getCcaEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgSixDot.visibility = View.VISIBLE
+                    relImgSixDot.text = PreferenceManager.getCcaBadge(mContext)
+                    relImgSixDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getCcaBadge(mContext)
+                        .equals("0") && !PreferenceManager.getCcaEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgSixDot.visibility = View.VISIBLE
+                    relImgSixDot.text = PreferenceManager.getCcaEditedBadge(mContext)
+                    relImgSixDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getCcaBadge(mContext)
+                        .equals("0") && PreferenceManager.getCcaEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgSixDot.visibility = View.VISIBLE
+                    relImgSixDot.text = PreferenceManager.getCcaBadge(mContext)
+                    relImgSixDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgSixDot.visibility = View.GONE
+                }
+            }   else if (PreferenceManager.getbuttonsixtabid(mContext)
+                    .equals(ConstantWords.TAB_COMMUNICATION)
+            ) {
+                if (!PreferenceManager.getNoticeBadge(mContext)
+                        .equals("0") && !PreferenceManager.getNoticeEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgSixDot.visibility = View.VISIBLE
+                    relImgSixDot.text = PreferenceManager.getNoticeBadge(mContext)
+                    relImgSixDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getNoticeBadge(mContext)
+                        .equals("0") && !PreferenceManager.getNoticeEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgSixDot.visibility = View.VISIBLE
+                    relImgSixDot.text = PreferenceManager.getNoticeEditedBadge(mContext)
+                    relImgSixDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getNoticeBadge(mContext)
+                        .equals("0") && PreferenceManager.getNoticeEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgSixDot.visibility = View.VISIBLE
+                    relImgSixDot.text = PreferenceManager.getNoticeBadge(mContext)
+                    relImgSixDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgSixDot.visibility = View.GONE
+                }
+            } else {
+                relImgSixDot.visibility = View.GONE
+            }
         }
         if (PreferenceManager.getbuttonseventextimage(mContext)!!.toInt() != 0) {
             relImgseven.setImageDrawable(
@@ -1466,6 +2730,202 @@ class HomeFragment : Fragment(), View.OnClickListener {
             relseven.setBackgroundColor(
                 PreferenceManager.getButtonsevenGuestBg(mContext)
             )
+
+
+
+            if (PreferenceManager.getbuttonseventabid(mContext)
+                    .equals(ConstantWords.TAB_CALENDAR)
+            ) {
+                if (!PreferenceManager.getCalenderhomeBadge(mContext)
+                        .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgSevenDot.visibility = View.VISIBLE
+                    relImgSevenDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                    relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getCalenderhomeBadge(mContext)
+                        .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgSevenDot.visibility = View.VISIBLE
+                    relImgSevenDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                    relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
+                        .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgSevenDot.visibility = View.VISIBLE
+                    relImgSevenDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                    relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgSevenDot.visibility = View.GONE
+                }
+            } else if (PreferenceManager.getbuttonseventabid(mContext)
+                    .equals(ConstantWords.TAB_NOTIFICATIONS)
+            ) {
+                if (!PreferenceManager.getNotificationBadge(mContext)
+                        .equals("0") && !PreferenceManager.getNotificationEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgSevenDot.visibility = View.VISIBLE
+                    relImgSevenDot.text = PreferenceManager.getNotificationBadge(mContext)
+                    relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getNotificationBadge(mContext)
+                        .equals("0") && !PreferenceManager.getNotificationEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgSevenDot.visibility = View.VISIBLE
+                    relImgSevenDot.text =
+                        PreferenceManager.getNotificationEditedBadge(mContext)
+                    relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getNotificationBadge(mContext)
+                        .equals("0") && PreferenceManager.getNotificationEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgSevenDot.visibility = View.VISIBLE
+                    relImgSevenDot.text = PreferenceManager.getNotificationBadge(mContext)
+                    relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgSevenDot.visibility = View.GONE
+                }
+            } else if (PreferenceManager.getbuttonseventabid(mContext)
+                    .equals(ConstantWords.TAB_REPORTS)
+            ) {
+                if (!PreferenceManager.getReportsBadge(mContext)
+                        .equals("0") && !PreferenceManager.getReportsEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgSevenDot.visibility = View.VISIBLE
+                    relImgSevenDot.text = PreferenceManager.getReportsBadge(mContext)
+                    relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getReportsBadge(mContext)
+                        .equals("0") && !PreferenceManager.getReportsEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgSevenDot.visibility = View.VISIBLE
+                    relImgSevenDot.text = PreferenceManager.getReportsEditedBadge(mContext)
+                    relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getReportsBadge(mContext)
+                        .equals("0") && PreferenceManager.getReportsEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgSevenDot.visibility = View.VISIBLE
+                    relImgSevenDot.text = PreferenceManager.getReportsBadge(mContext)
+                    relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getReportsBadge(mContext)
+                        .equals("0") && PreferenceManager.getReportsEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgSevenDot.visibility = View.GONE
+                } else {
+                    relImgSevenDot.visibility = View.GONE
+                }
+            } else if (PreferenceManager.getbuttonseventabid(mContext)
+                    .equals(ConstantWords.TAB_PAYMENTS)
+            ) {
+                if (!PreferenceManager.getPaymentitem_badge(mContext)
+                        .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgSevenDot.visibility = View.VISIBLE
+                    relImgSevenDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                    relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getPaymentitem_badge(mContext)
+                        .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgSevenDot.visibility = View.VISIBLE
+                    relImgSevenDot.text =
+                        PreferenceManager.getPaymentitem_edit_badge(mContext)
+                    relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getPaymentitem_badge(mContext)
+                        .equals("0") && PreferenceManager.getPaymentitem_edit_badge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgSevenDot.visibility = View.VISIBLE
+                    relImgSevenDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                    relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgSevenDot.visibility = View.GONE
+                }
+            } else if (PreferenceManager.getbuttonseventabid(mContext)
+                    .equals(ConstantWords.TAB_ENRICHMENT)
+            ) {
+                if (!PreferenceManager.getCcaBadge(mContext)
+                        .equals("0") && !PreferenceManager.getCcaEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgSevenDot.visibility = View.VISIBLE
+                    relImgSevenDot.text = PreferenceManager.getCcaBadge(mContext)
+                    relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getCcaBadge(mContext)
+                        .equals("0") && !PreferenceManager.getCcaEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgSevenDot.visibility = View.VISIBLE
+                    relImgSevenDot.text = PreferenceManager.getCcaEditedBadge(mContext)
+                    relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getCcaBadge(mContext)
+                        .equals("0") && PreferenceManager.getCcaEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgSevenDot.visibility = View.VISIBLE
+                    relImgSevenDot.text = PreferenceManager.getCcaBadge(mContext)
+                    relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgSevenDot.visibility = View.GONE
+                }
+            }   else if (PreferenceManager.getbuttonseventabid(mContext)
+                    .equals(ConstantWords.TAB_COMMUNICATION)
+            ) {
+                if (!PreferenceManager.getNoticeBadge(mContext)
+                        .equals("0") && !PreferenceManager.getNoticeEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgSevenDot.visibility = View.VISIBLE
+                    relImgSevenDot.text = PreferenceManager.getNoticeBadge(mContext)
+                    relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getNoticeBadge(mContext)
+                        .equals("0") && !PreferenceManager.getNoticeEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgSevenDot.visibility = View.VISIBLE
+                    relImgSevenDot.text = PreferenceManager.getNoticeEditedBadge(mContext)
+                    relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getNoticeBadge(mContext)
+                        .equals("0") && PreferenceManager.getNoticeEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgSevenDot.visibility = View.VISIBLE
+                    relImgSevenDot.text = PreferenceManager.getNoticeBadge(mContext)
+                    relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgSevenDot.visibility = View.GONE
+                }
+            } else {
+                relImgSevenDot.visibility = View.GONE
+            }
+
+
         }
         if (PreferenceManager.getbuttoneighttextimage(mContext)!!.toInt() != 0) {
             relImgeight.setImageDrawable(
@@ -1483,6 +2943,199 @@ class HomeFragment : Fragment(), View.OnClickListener {
             releight.setBackgroundColor(
                 PreferenceManager.getButtoneightGuestBg(mContext)
             )
+
+
+            if (PreferenceManager.getbuttoneighttabid(mContext)
+                    .equals(ConstantWords.TAB_CALENDAR)
+            ) {
+                if (!PreferenceManager.getCalenderhomeBadge(mContext)
+                        .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgEightDot.visibility = View.VISIBLE
+                    relImgEightDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                    relImgEightDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getCalenderhomeBadge(mContext)
+                        .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgEightDot.visibility = View.VISIBLE
+                    relImgEightDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                    relImgEightDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
+                        .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgEightDot.visibility = View.VISIBLE
+                    relImgEightDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                    relImgEightDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgEightDot.visibility = View.GONE
+                }
+            } else if (PreferenceManager.getbuttoneighttabid(mContext)
+                    .equals(ConstantWords.TAB_NOTIFICATIONS)
+            ) {
+                if (!PreferenceManager.getNotificationBadge(mContext)
+                        .equals("0") && !PreferenceManager.getNotificationEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgEightDot.visibility = View.VISIBLE
+                    relImgEightDot.text = PreferenceManager.getNotificationBadge(mContext)
+                    relImgEightDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getNotificationBadge(mContext)
+                        .equals("0") && !PreferenceManager.getNotificationEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgEightDot.visibility = View.VISIBLE
+                    relImgEightDot.text =
+                        PreferenceManager.getNotificationEditedBadge(mContext)
+                    relImgEightDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getNotificationBadge(mContext)
+                        .equals("0") && PreferenceManager.getNotificationEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgEightDot.visibility = View.VISIBLE
+                    relImgEightDot.text = PreferenceManager.getNotificationBadge(mContext)
+                    relImgEightDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgEightDot.visibility = View.GONE
+                }
+            } else if (PreferenceManager.getbuttoneighttabid(mContext)
+                    .equals(ConstantWords.TAB_REPORTS)
+            ) {
+                if (!PreferenceManager.getReportsBadge(mContext)
+                        .equals("0") && !PreferenceManager.getReportsEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgEightDot.visibility = View.VISIBLE
+                    relImgEightDot.text = PreferenceManager.getReportsBadge(mContext)
+                    relImgEightDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getReportsBadge(mContext)
+                        .equals("0") && !PreferenceManager.getReportsEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgEightDot.visibility = View.VISIBLE
+                    relImgEightDot.text = PreferenceManager.getReportsEditedBadge(mContext)
+                    relImgEightDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getReportsBadge(mContext)
+                        .equals("0") && PreferenceManager.getReportsEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgEightDot.visibility = View.VISIBLE
+                    relImgEightDot.text = PreferenceManager.getReportsBadge(mContext)
+                    relImgEightDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getReportsBadge(mContext)
+                        .equals("0") && PreferenceManager.getReportsEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgEightDot.visibility = View.GONE
+                } else {
+                    relImgEightDot.visibility = View.GONE
+                }
+            } else if (PreferenceManager.getbuttoneighttabid(mContext)
+                    .equals(ConstantWords.TAB_PAYMENTS)
+            ) {
+                if (!PreferenceManager.getPaymentitem_badge(mContext)
+                        .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgEightDot.visibility = View.VISIBLE
+                    relImgEightDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                    relImgEightDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getPaymentitem_badge(mContext)
+                        .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgEightDot.visibility = View.VISIBLE
+                    relImgEightDot.text =
+                        PreferenceManager.getPaymentitem_edit_badge(mContext)
+                    relImgEightDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getPaymentitem_badge(mContext)
+                        .equals("0") && PreferenceManager.getPaymentitem_edit_badge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgEightDot.visibility = View.VISIBLE
+                    relImgEightDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                    relImgEightDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgEightDot.visibility = View.GONE
+                }
+            } else if (PreferenceManager.getbuttoneighttabid(mContext)
+                    .equals(ConstantWords.TAB_ENRICHMENT)
+            ) {
+                if (!PreferenceManager.getCcaBadge(mContext)
+                        .equals("0") && !PreferenceManager.getCcaEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgEightDot.visibility = View.VISIBLE
+                    relImgEightDot.text = PreferenceManager.getCcaBadge(mContext)
+                    relImgEightDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getCcaBadge(mContext)
+                        .equals("0") && !PreferenceManager.getCcaEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgEightDot.visibility = View.VISIBLE
+                    relImgEightDot.text = PreferenceManager.getCcaEditedBadge(mContext)
+                    relImgEightDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getCcaBadge(mContext)
+                        .equals("0") && PreferenceManager.getCcaEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgEightDot.visibility = View.VISIBLE
+                    relImgEightDot.text = PreferenceManager.getCcaBadge(mContext)
+                    relImgEightDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgEightDot.visibility = View.GONE
+                }
+            }   else if (PreferenceManager.getbuttoneighttabid(mContext)
+                    .equals(ConstantWords.TAB_COMMUNICATION)
+            ) {
+                if (!PreferenceManager.getNoticeBadge(mContext)
+                        .equals("0") && !PreferenceManager.getNoticeEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgEightDot.visibility = View.VISIBLE
+                    relImgEightDot.text = PreferenceManager.getNoticeBadge(mContext)
+                    relImgEightDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getNoticeBadge(mContext)
+                        .equals("0") && !PreferenceManager.getNoticeEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgEightDot.visibility = View.VISIBLE
+                    relImgEightDot.text = PreferenceManager.getNoticeEditedBadge(mContext)
+                    relImgEightDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getNoticeBadge(mContext)
+                        .equals("0") && PreferenceManager.getNoticeEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgEightDot.visibility = View.VISIBLE
+                    relImgEightDot.text = PreferenceManager.getNoticeBadge(mContext)
+                    relImgEightDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgEightDot.visibility = View.GONE
+                }
+            } else {
+                relImgEightDot.visibility = View.GONE
+            }
         }
         if (PreferenceManager.getbuttonninetextimage(mContext)!!.toInt() != 0) {
             relImgnine.setImageDrawable(
@@ -1500,6 +3153,198 @@ class HomeFragment : Fragment(), View.OnClickListener {
             relnine.setBackgroundColor(
                 PreferenceManager.getButtonnineGuestBg(mContext)
             )
+
+            if (PreferenceManager.getbuttonninetabid(mContext)
+                    .equals(ConstantWords.TAB_CALENDAR)
+            ) {
+                if (!PreferenceManager.getCalenderhomeBadge(mContext)
+                        .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgNineDot.visibility = View.VISIBLE
+                    relImgNineDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                    relImgNineDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getCalenderhomeBadge(mContext)
+                        .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgNineDot.visibility = View.VISIBLE
+                    relImgNineDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                    relImgNineDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
+                        .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgNineDot.visibility = View.VISIBLE
+                    relImgNineDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                    relImgNineDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgNineDot.visibility = View.GONE
+                }
+            } else if (PreferenceManager.getbuttonninetabid(mContext)
+                    .equals(ConstantWords.TAB_NOTIFICATIONS)
+            ) {
+                if (!PreferenceManager.getNotificationBadge(mContext)
+                        .equals("0") && !PreferenceManager.getNotificationEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgNineDot.visibility = View.VISIBLE
+                    relImgNineDot.text = PreferenceManager.getNotificationBadge(mContext)
+                    relImgNineDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getNotificationBadge(mContext)
+                        .equals("0") && !PreferenceManager.getNotificationEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgNineDot.visibility = View.VISIBLE
+                    relImgNineDot.text =
+                        PreferenceManager.getNotificationEditedBadge(mContext)
+                    relImgNineDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getNotificationBadge(mContext)
+                        .equals("0") && PreferenceManager.getNotificationEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgNineDot.visibility = View.VISIBLE
+                    relImgNineDot.text = PreferenceManager.getNotificationBadge(mContext)
+                    relImgNineDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgNineDot.visibility = View.GONE
+                }
+            } else if (PreferenceManager.getbuttonninetabid(mContext)
+                    .equals(ConstantWords.TAB_REPORTS)
+            ) {
+                if (!PreferenceManager.getReportsBadge(mContext)
+                        .equals("0") && !PreferenceManager.getReportsEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgNineDot.visibility = View.VISIBLE
+                    relImgNineDot.text = PreferenceManager.getReportsBadge(mContext)
+                    relImgNineDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getReportsBadge(mContext)
+                        .equals("0") && !PreferenceManager.getReportsEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgNineDot.visibility = View.VISIBLE
+                    relImgNineDot.text = PreferenceManager.getReportsEditedBadge(mContext)
+                    relImgNineDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getReportsBadge(mContext)
+                        .equals("0") && PreferenceManager.getReportsEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgNineDot.visibility = View.VISIBLE
+                    relImgNineDot.text = PreferenceManager.getReportsBadge(mContext)
+                    relImgNineDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getReportsBadge(mContext)
+                        .equals("0") && PreferenceManager.getReportsEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgNineDot.visibility = View.GONE
+                } else {
+                    relImgNineDot.visibility = View.GONE
+                }
+            } else if (PreferenceManager.getbuttonninetabid(mContext)
+                    .equals(ConstantWords.TAB_PAYMENTS)
+            ) {
+                if (!PreferenceManager.getPaymentitem_badge(mContext)
+                        .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgNineDot.visibility = View.VISIBLE
+                    relImgNineDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                    relImgNineDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getPaymentitem_badge(mContext)
+                        .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgNineDot.visibility = View.VISIBLE
+                    relImgNineDot.text =
+                        PreferenceManager.getPaymentitem_edit_badge(mContext)
+                    relImgNineDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getPaymentitem_badge(mContext)
+                        .equals("0") && PreferenceManager.getPaymentitem_edit_badge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgNineDot.visibility = View.VISIBLE
+                    relImgNineDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                    relImgNineDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgNineDot.visibility = View.GONE
+                }
+            } else if (PreferenceManager.getbuttonninetabid(mContext)
+                    .equals(ConstantWords.TAB_ENRICHMENT)
+            ) {
+                if (!PreferenceManager.getCcaBadge(mContext)
+                        .equals("0") && !PreferenceManager.getCcaEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgNineDot.visibility = View.VISIBLE
+                    relImgNineDot.text = PreferenceManager.getCcaBadge(mContext)
+                    relImgNineDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getCcaBadge(mContext)
+                        .equals("0") && !PreferenceManager.getCcaEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgNineDot.visibility = View.VISIBLE
+                    relImgNineDot.text = PreferenceManager.getCcaEditedBadge(mContext)
+                    relImgNineDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getCcaBadge(mContext)
+                        .equals("0") && PreferenceManager.getCcaEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgNineDot.visibility = View.VISIBLE
+                    relImgNineDot.text = PreferenceManager.getCcaBadge(mContext)
+                    relImgNineDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgNineDot.visibility = View.GONE
+                }
+            }   else if (PreferenceManager.getbuttonninetabid(mContext)
+                    .equals(ConstantWords.TAB_COMMUNICATION)
+            ) {
+                if (!PreferenceManager.getNoticeBadge(mContext)
+                        .equals("0") && !PreferenceManager.getNoticeEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgNineDot.visibility = View.VISIBLE
+                    relImgNineDot.text = PreferenceManager.getNoticeBadge(mContext)
+                    relImgNineDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else if (PreferenceManager.getNoticeBadge(mContext)
+                        .equals("0") && !PreferenceManager.getNoticeEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgNineDot.visibility = View.VISIBLE
+                    relImgNineDot.text = PreferenceManager.getNoticeEditedBadge(mContext)
+                    relImgNineDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                } else if (!PreferenceManager.getNoticeBadge(mContext)
+                        .equals("0") && PreferenceManager.getNoticeEditedBadge(
+                        mContext
+                    ).equals("0")
+                ) {
+                    relImgNineDot.visibility = View.VISIBLE
+                    relImgNineDot.text = PreferenceManager.getNoticeBadge(mContext)
+                    relImgNineDot.setBackgroundResource(R.drawable.shape_circle_red)
+                } else {
+                    relImgNineDot.visibility = View.GONE
+                }
+            } else {
+                relImgNineDot.visibility = View.GONE
+            }
         }
 
 
@@ -1591,6 +3436,197 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     //setBackgroundColorForView(appController.listitemArrays[sPosition], relone)
                     setBackgroundColorForView(listitems[sPosition], relone)
                     PreferenceManager.setbuttononetextimage(mContext, sPosition.toString())
+
+                    if (PreferenceManager.getbuttononetabid(mContext).equals(ConstantWords.TAB_CALENDAR)
+                    ) {
+                        if (!PreferenceManager.getCalenderhomeBadge(mContext)
+                                .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgOneDot.setVisibility(View.VISIBLE)
+                            relImgOneDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgOneDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getCalenderhomeBadge(mContext)
+                                .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgOneDot.setVisibility(View.VISIBLE)
+                            relImgOneDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                            relImgOneDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
+                                .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgOneDot.setVisibility(View.VISIBLE)
+                            relImgOneDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgOneDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgOneDot.setVisibility(View.GONE)
+                        }
+                    } else if (PreferenceManager.getbuttononetabid(mContext)
+                            .equals(ConstantWords.TAB_NOTIFICATIONS)
+                    ) {
+                        if (!PreferenceManager.getNotificationBadge(mContext)
+                                .equals("0") && !PreferenceManager.getNotificationEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgOneDot.setVisibility(View.VISIBLE)
+                            relImgOneDot.setText(PreferenceManager.getNotificationBadge(mContext))
+                            relImgOneDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getNotificationBadge(mContext)
+                                .equals("0") && !PreferenceManager.getNotificationEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgOneDot.setVisibility(View.VISIBLE)
+                            relImgOneDot.setText(
+                                PreferenceManager.getNotificationEditedBadge(
+                                    mContext
+                                )
+                            )
+                            relImgOneDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getNotificationBadge(mContext)
+                                .equals("0") && PreferenceManager.getNotificationEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgOneDot.setVisibility(View.VISIBLE)
+                            relImgOneDot.setText(PreferenceManager.getNotificationBadge(mContext))
+                            relImgOneDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgOneDot.setVisibility(View.GONE)
+                        }
+                    } else if (PreferenceManager.getbuttononetabid(mContext)
+                            .equals(ConstantWords.TAB_PAYMENTS)
+                    ) {
+                        if (!PreferenceManager.getPaymentitem_badge(mContext)
+                                .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgOneDot.setVisibility(View.VISIBLE)
+                            relImgOneDot.setText(PreferenceManager.getPaymentitem_badge(mContext))
+                            relImgOneDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getPaymentitem_badge(mContext)
+                                .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgOneDot.setVisibility(View.VISIBLE)
+                            relImgOneDot.setText(
+                                PreferenceManager.getPaymentitem_edit_badge(
+                                    mContext
+                                )
+                            )
+                            relImgOneDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getPaymentitem_badge(mContext)
+                                .equals("0") && PreferenceManager.getPaymentitem_edit_badge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgOneDot.setVisibility(View.VISIBLE)
+                            relImgOneDot.setText(PreferenceManager.getPaymentitem_badge(mContext))
+                            relImgOneDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgOneDot.setVisibility(View.GONE)
+                        }
+                    } else if (PreferenceManager.getbuttononetabid(mContext)
+                            .equals(ConstantWords.TAB_REPORTS)
+                    ) {
+                        if (!PreferenceManager.getReportsBadge(mContext)
+                                .equals("0") && !PreferenceManager.getReportsEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgOneDot.setVisibility(View.VISIBLE)
+                            relImgOneDot.setText(PreferenceManager.getReportsBadge(mContext))
+                            relImgOneDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getReportsBadge(mContext)
+                                .equals("0") && !PreferenceManager.getReportsEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgOneDot.setVisibility(View.VISIBLE)
+                            relImgOneDot.setText(PreferenceManager.getReportsEditedBadge(mContext))
+                            relImgOneDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getReportsBadge(mContext)
+                                .equals("0") && PreferenceManager.getReportsEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgOneDot.setVisibility(View.VISIBLE)
+                            relImgOneDot.setText(PreferenceManager.getReportsBadge(mContext))
+                            relImgOneDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgOneDot.setVisibility(View.GONE)
+                        }
+                    } else if (PreferenceManager.getbuttononetabid(mContext)
+                            .equals(ConstantWords.TAB_ENRICHMENT)
+                    ) {
+                        if (!PreferenceManager.getCcaBadge(mContext)
+                                .equals("0") && !PreferenceManager.getCcaEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgOneDot.setVisibility(View.VISIBLE)
+                            relImgOneDot.setText(PreferenceManager.getCcaBadge(mContext))
+                            relImgOneDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getCcaBadge(mContext)
+                                .equals("0") && !PreferenceManager.getCcaEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgOneDot.setVisibility(View.VISIBLE)
+                            relImgOneDot.setText(PreferenceManager.getCcaEditedBadge(mContext))
+                            relImgOneDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getCcaBadge(mContext)
+                                .equals("0") && PreferenceManager.getCcaEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgOneDot.setVisibility(View.VISIBLE)
+                            relImgOneDot.setText(PreferenceManager.getCcaBadge(mContext))
+                            relImgOneDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgOneDot.setVisibility(View.GONE)
+                        }
+                    }   else if (PreferenceManager.getbuttononetabid(mContext)
+                            .equals(ConstantWords.TAB_COMMUNICATION)
+                    ) {
+                        if (!PreferenceManager.getNoticeBadge(mContext)
+                                .equals("0") && !PreferenceManager.getNoticeEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgOneDot.setVisibility(View.VISIBLE)
+                            relImgOneDot.setText(PreferenceManager.getNoticeBadge(mContext))
+                            relImgOneDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getNoticeBadge(mContext)
+                                .equals("0") && !PreferenceManager.getNoticeEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgOneDot.setVisibility(View.VISIBLE)
+                            relImgOneDot.setText(PreferenceManager.getNoticeEditedBadge(mContext))
+                            relImgOneDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getNoticeBadge(mContext)
+                                .equals("0") && PreferenceManager.getNoticeEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgOneDot.setVisibility(View.VISIBLE)
+                            relImgOneDot.setText(PreferenceManager.getNoticeBadge(mContext))
+                            relImgOneDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgOneDot.setVisibility(View.GONE)
+                        }
+                    } else {
+                        relImgOneDot.setVisibility(View.GONE)
+                    }
                 } else if (touchedView == reltwo) {
                     relImgtwo.setImageDrawable(mListImgArrays.getDrawable(sPosition))
                     val relstring: String
@@ -1606,6 +3642,198 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     PreferenceManager.setbuttontwotabid(mContext, TAB_ID)
                     setBackgroundColorForView(listitems[sPosition], reltwo)
                     PreferenceManager.setbuttontwotextimage(mContext, sPosition.toString())
+
+                    if (PreferenceManager.getbuttontwotabid(mContext)
+                            .equals(ConstantWords.TAB_CALENDAR)
+                    ) {
+                        if (!PreferenceManager.getCalenderhomeBadge(mContext)
+                                .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getCalenderhomeBadge(mContext)
+                                .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
+                                .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    } else if (PreferenceManager.getbuttontwotabid(mContext)
+                            .equals(ConstantWords.TAB_NOTIFICATIONS)
+                    ) {
+                        if (!PreferenceManager.getNotificationBadge(mContext)
+                                .equals("0") && !PreferenceManager.getNotificationEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getNotificationBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getNotificationBadge(mContext)
+                                .equals("0") && !PreferenceManager.getNotificationEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text =
+                                PreferenceManager.getNotificationEditedBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getNotificationBadge(mContext)
+                                .equals("0") && PreferenceManager.getNotificationEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getNotificationBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    } else if (PreferenceManager.getbuttontwotabid(mContext)
+                            .equals(ConstantWords.TAB_REPORTS)
+                    ) {
+                        if (!PreferenceManager.getReportsBadge(mContext)
+                                .equals("0") && !PreferenceManager.getReportsEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getReportsBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getReportsBadge(mContext)
+                                .equals("0") && !PreferenceManager.getReportsEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getReportsEditedBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getReportsBadge(mContext)
+                                .equals("0") && PreferenceManager.getReportsEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getReportsBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getReportsBadge(mContext)
+                                .equals("0") && PreferenceManager.getReportsEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgOneDot.visibility = View.GONE
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    } else if (PreferenceManager.getbuttontwotabid(mContext)
+                            .equals(ConstantWords.TAB_PAYMENTS)
+                    ) {
+                        if (!PreferenceManager.getPaymentitem_badge(mContext)
+                                .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getPaymentitem_badge(mContext)
+                                .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text =
+                                PreferenceManager.getPaymentitem_edit_badge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getPaymentitem_badge(mContext)
+                                .equals("0") && PreferenceManager.getPaymentitem_edit_badge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    } else if (PreferenceManager.getbuttontwotabid(mContext)
+                            .equals(ConstantWords.TAB_ENRICHMENT)
+                    ) {
+                        if (!PreferenceManager.getCcaBadge(mContext)
+                                .equals("0") && !PreferenceManager.getCcaEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getCcaBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getCcaBadge(mContext)
+                                .equals("0") && !PreferenceManager.getCcaEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getCcaEditedBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getCcaBadge(mContext)
+                                .equals("0") && PreferenceManager.getCcaEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getCcaBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    }   else if (PreferenceManager.getbuttontwotabid(mContext)
+                            .equals(ConstantWords.TAB_COMMUNICATION)
+                    ) {
+                        if (!PreferenceManager.getNoticeBadge(mContext)
+                                .equals("0") && !PreferenceManager.getNoticeEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getNoticeBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getNoticeBadge(mContext)
+                                .equals("0") && !PreferenceManager.getNoticeEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getNoticeEditedBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getNoticeBadge(mContext)
+                                .equals("0") && PreferenceManager.getNoticeEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getNoticeBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    } else {
+                        relImgTwoDot.visibility = View.GONE
+                    }
                 } else if (touchedView == relthree) {
                     relImgthree.setImageDrawable(mListImgArrays.getDrawable(sPosition))
                     val relstring: String
@@ -1621,6 +3849,199 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     PreferenceManager.setbuttonthreetabid(mContext, TAB_ID)
                     setBackgroundColorForView(listitems[sPosition], relthree)
                     PreferenceManager.setbuttonthreetextimage(mContext, sPosition.toString())
+
+
+                    if (PreferenceManager.getbuttonthreetabid(mContext)
+                            .equals(ConstantWords.TAB_CALENDAR)
+                    ) {
+                        if (!PreferenceManager.getCalenderhomeBadge(mContext)
+                                .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getCalenderhomeBadge(mContext)
+                                .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
+                                .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    } else if (PreferenceManager.getbuttonthreetabid(mContext)
+                            .equals(ConstantWords.TAB_NOTIFICATIONS)
+                    ) {
+                        if (!PreferenceManager.getNotificationBadge(mContext)
+                                .equals("0") && !PreferenceManager.getNotificationEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getNotificationBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getNotificationBadge(mContext)
+                                .equals("0") && !PreferenceManager.getNotificationEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text =
+                                PreferenceManager.getNotificationEditedBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getNotificationBadge(mContext)
+                                .equals("0") && PreferenceManager.getNotificationEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getNotificationBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    } else if (PreferenceManager.getbuttonthreetabid(mContext)
+                            .equals(ConstantWords.TAB_REPORTS)
+                    ) {
+                        if (!PreferenceManager.getReportsBadge(mContext)
+                                .equals("0") && !PreferenceManager.getReportsEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getReportsBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getReportsBadge(mContext)
+                                .equals("0") && !PreferenceManager.getReportsEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getReportsEditedBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getReportsBadge(mContext)
+                                .equals("0") && PreferenceManager.getReportsEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getReportsBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getReportsBadge(mContext)
+                                .equals("0") && PreferenceManager.getReportsEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgOneDot.visibility = View.GONE
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    } else if (PreferenceManager.getbuttonthreetabid(mContext)
+                            .equals(ConstantWords.TAB_PAYMENTS)
+                    ) {
+                        if (!PreferenceManager.getPaymentitem_badge(mContext)
+                                .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getPaymentitem_badge(mContext)
+                                .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text =
+                                PreferenceManager.getPaymentitem_edit_badge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getPaymentitem_badge(mContext)
+                                .equals("0") && PreferenceManager.getPaymentitem_edit_badge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    } else if (PreferenceManager.getbuttonthreetabid(mContext)
+                            .equals(ConstantWords.TAB_ENRICHMENT)
+                    ) {
+                        if (!PreferenceManager.getCcaBadge(mContext)
+                                .equals("0") && !PreferenceManager.getCcaEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getCcaBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getCcaBadge(mContext)
+                                .equals("0") && !PreferenceManager.getCcaEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getCcaEditedBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getCcaBadge(mContext)
+                                .equals("0") && PreferenceManager.getCcaEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getCcaBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    }   else if (PreferenceManager.getbuttonthreetabid(mContext)
+                            .equals(ConstantWords.TAB_COMMUNICATION)
+                    ) {
+                        if (!PreferenceManager.getNoticeBadge(mContext)
+                                .equals("0") && !PreferenceManager.getNoticeEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getNoticeBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getNoticeBadge(mContext)
+                                .equals("0") && !PreferenceManager.getNoticeEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getNoticeEditedBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getNoticeBadge(mContext)
+                                .equals("0") && PreferenceManager.getNoticeEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getNoticeBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    } else {
+                        relImgTwoDot.visibility = View.GONE
+                    }
                 } else if (touchedView == relfour) {
                     relImgfour.setImageDrawable(mListImgArrays.getDrawable(sPosition))
                     val relstring: String
@@ -1636,6 +4057,198 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     PreferenceManager.setbuttonfourtabid(mContext, TAB_ID)
                     setBackgroundColorForView(listitems[sPosition], relfour)
                     PreferenceManager.setbuttonfourtextimage(mContext, sPosition.toString())
+
+                    if (PreferenceManager.getbuttonfourtabid(mContext)
+                            .equals(ConstantWords.TAB_CALENDAR)
+                    ) {
+                        if (!PreferenceManager.getCalenderhomeBadge(mContext)
+                                .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getCalenderhomeBadge(mContext)
+                                .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
+                                .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    } else if (PreferenceManager.getbuttonfourtabid(mContext)
+                            .equals(ConstantWords.TAB_NOTIFICATIONS)
+                    ) {
+                        if (!PreferenceManager.getNotificationBadge(mContext)
+                                .equals("0") && !PreferenceManager.getNotificationEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getNotificationBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getNotificationBadge(mContext)
+                                .equals("0") && !PreferenceManager.getNotificationEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text =
+                                PreferenceManager.getNotificationEditedBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getNotificationBadge(mContext)
+                                .equals("0") && PreferenceManager.getNotificationEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getNotificationBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    } else if (PreferenceManager.getbuttonfourtabid(mContext)
+                            .equals(ConstantWords.TAB_REPORTS)
+                    ) {
+                        if (!PreferenceManager.getReportsBadge(mContext)
+                                .equals("0") && !PreferenceManager.getReportsEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getReportsBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getReportsBadge(mContext)
+                                .equals("0") && !PreferenceManager.getReportsEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getReportsEditedBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getReportsBadge(mContext)
+                                .equals("0") && PreferenceManager.getReportsEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getReportsBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getReportsBadge(mContext)
+                                .equals("0") && PreferenceManager.getReportsEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgOneDot.visibility = View.GONE
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    } else if (PreferenceManager.getbuttonfourtabid(mContext)
+                            .equals(ConstantWords.TAB_PAYMENTS)
+                    ) {
+                        if (!PreferenceManager.getPaymentitem_badge(mContext)
+                                .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getPaymentitem_badge(mContext)
+                                .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text =
+                                PreferenceManager.getPaymentitem_edit_badge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getPaymentitem_badge(mContext)
+                                .equals("0") && PreferenceManager.getPaymentitem_edit_badge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    } else if (PreferenceManager.getbuttonfourtabid(mContext)
+                            .equals(ConstantWords.TAB_ENRICHMENT)
+                    ) {
+                        if (!PreferenceManager.getCcaBadge(mContext)
+                                .equals("0") && !PreferenceManager.getCcaEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getCcaBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getCcaBadge(mContext)
+                                .equals("0") && !PreferenceManager.getCcaEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getCcaEditedBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getCcaBadge(mContext)
+                                .equals("0") && PreferenceManager.getCcaEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getCcaBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    }   else if (PreferenceManager.getbuttonfourtabid(mContext)
+                            .equals(ConstantWords.TAB_COMMUNICATION)
+                    ) {
+                        if (!PreferenceManager.getNoticeBadge(mContext)
+                                .equals("0") && !PreferenceManager.getNoticeEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getNoticeBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getNoticeBadge(mContext)
+                                .equals("0") && !PreferenceManager.getNoticeEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getNoticeEditedBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getNoticeBadge(mContext)
+                                .equals("0") && PreferenceManager.getNoticeEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getNoticeBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    } else {
+                        relImgTwoDot.visibility = View.GONE
+                    }
                 } else if (touchedView == relfive) {
                     relImgfive.setImageDrawable(mListImgArrays.getDrawable(sPosition))
                     val relstring: String
@@ -1651,6 +4264,198 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     PreferenceManager.setbuttonfivetabid(mContext, TAB_ID)
                     setBackgroundColorForView(listitems[sPosition], relfive)
                     PreferenceManager.setbuttonfivetextimage(mContext, sPosition.toString())
+
+                    if (PreferenceManager.getbuttonfivetabid(mContext)
+                            .equals(ConstantWords.TAB_CALENDAR)
+                    ) {
+                        if (!PreferenceManager.getCalenderhomeBadge(mContext)
+                                .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getCalenderhomeBadge(mContext)
+                                .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
+                                .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    } else if (PreferenceManager.getbuttonfivetabid(mContext)
+                            .equals(ConstantWords.TAB_NOTIFICATIONS)
+                    ) {
+                        if (!PreferenceManager.getNotificationBadge(mContext)
+                                .equals("0") && !PreferenceManager.getNotificationEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getNotificationBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getNotificationBadge(mContext)
+                                .equals("0") && !PreferenceManager.getNotificationEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text =
+                                PreferenceManager.getNotificationEditedBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getNotificationBadge(mContext)
+                                .equals("0") && PreferenceManager.getNotificationEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getNotificationBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    } else if (PreferenceManager.getbuttonfivetabid(mContext)
+                            .equals(ConstantWords.TAB_REPORTS)
+                    ) {
+                        if (!PreferenceManager.getReportsBadge(mContext)
+                                .equals("0") && !PreferenceManager.getReportsEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getReportsBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getReportsBadge(mContext)
+                                .equals("0") && !PreferenceManager.getReportsEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getReportsEditedBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getReportsBadge(mContext)
+                                .equals("0") && PreferenceManager.getReportsEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getReportsBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getReportsBadge(mContext)
+                                .equals("0") && PreferenceManager.getReportsEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgOneDot.visibility = View.GONE
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    } else if (PreferenceManager.getbuttonfivetabid(mContext)
+                            .equals(ConstantWords.TAB_PAYMENTS)
+                    ) {
+                        if (!PreferenceManager.getPaymentitem_badge(mContext)
+                                .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getPaymentitem_badge(mContext)
+                                .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text =
+                                PreferenceManager.getPaymentitem_edit_badge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getPaymentitem_badge(mContext)
+                                .equals("0") && PreferenceManager.getPaymentitem_edit_badge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    } else if (PreferenceManager.getbuttonfivetabid(mContext)
+                            .equals(ConstantWords.TAB_ENRICHMENT)
+                    ) {
+                        if (!PreferenceManager.getCcaBadge(mContext)
+                                .equals("0") && !PreferenceManager.getCcaEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getCcaBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getCcaBadge(mContext)
+                                .equals("0") && !PreferenceManager.getCcaEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getCcaEditedBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getCcaBadge(mContext)
+                                .equals("0") && PreferenceManager.getCcaEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getCcaBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    }   else if (PreferenceManager.getbuttonfivetabid(mContext)
+                            .equals(ConstantWords.TAB_COMMUNICATION)
+                    ) {
+                        if (!PreferenceManager.getNoticeBadge(mContext)
+                                .equals("0") && !PreferenceManager.getNoticeEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getNoticeBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getNoticeBadge(mContext)
+                                .equals("0") && !PreferenceManager.getNoticeEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getNoticeEditedBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getNoticeBadge(mContext)
+                                .equals("0") && PreferenceManager.getNoticeEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getNoticeBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    } else {
+                        relImgTwoDot.visibility = View.GONE
+                    }
                 } else if (touchedView == relsix) {
                     relImgsix.setImageDrawable(mListImgArrays.getDrawable(sPosition))
                     val relstring: String
@@ -1666,6 +4471,198 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     PreferenceManager.setbuttonsixtabid(mContext, TAB_ID)
                     setBackgroundColorForView(listitems[sPosition], relsix)
                     PreferenceManager.setbuttonsixtextimage(mContext, sPosition.toString())
+
+                    if (PreferenceManager.getbuttonsixtabid(mContext)
+                            .equals(ConstantWords.TAB_CALENDAR)
+                    ) {
+                        if (!PreferenceManager.getCalenderhomeBadge(mContext)
+                                .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getCalenderhomeBadge(mContext)
+                                .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
+                                .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    } else if (PreferenceManager.getbuttonsixtabid(mContext)
+                            .equals(ConstantWords.TAB_NOTIFICATIONS)
+                    ) {
+                        if (!PreferenceManager.getNotificationBadge(mContext)
+                                .equals("0") && !PreferenceManager.getNotificationEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getNotificationBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getNotificationBadge(mContext)
+                                .equals("0") && !PreferenceManager.getNotificationEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text =
+                                PreferenceManager.getNotificationEditedBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getNotificationBadge(mContext)
+                                .equals("0") && PreferenceManager.getNotificationEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getNotificationBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    } else if (PreferenceManager.getbuttonsixtabid(mContext)
+                            .equals(ConstantWords.TAB_REPORTS)
+                    ) {
+                        if (!PreferenceManager.getReportsBadge(mContext)
+                                .equals("0") && !PreferenceManager.getReportsEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getReportsBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getReportsBadge(mContext)
+                                .equals("0") && !PreferenceManager.getReportsEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getReportsEditedBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getReportsBadge(mContext)
+                                .equals("0") && PreferenceManager.getReportsEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getReportsBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getReportsBadge(mContext)
+                                .equals("0") && PreferenceManager.getReportsEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgOneDot.visibility = View.GONE
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    } else if (PreferenceManager.getbuttonsixtabid(mContext)
+                            .equals(ConstantWords.TAB_PAYMENTS)
+                    ) {
+                        if (!PreferenceManager.getPaymentitem_badge(mContext)
+                                .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getPaymentitem_badge(mContext)
+                                .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text =
+                                PreferenceManager.getPaymentitem_edit_badge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getPaymentitem_badge(mContext)
+                                .equals("0") && PreferenceManager.getPaymentitem_edit_badge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    } else if (PreferenceManager.getbuttonsixtabid(mContext)
+                            .equals(ConstantWords.TAB_ENRICHMENT)
+                    ) {
+                        if (!PreferenceManager.getCcaBadge(mContext)
+                                .equals("0") && !PreferenceManager.getCcaEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getCcaBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getCcaBadge(mContext)
+                                .equals("0") && !PreferenceManager.getCcaEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getCcaEditedBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getCcaBadge(mContext)
+                                .equals("0") && PreferenceManager.getCcaEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getCcaBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    }   else if (PreferenceManager.getbuttonsixtabid(mContext)
+                            .equals(ConstantWords.TAB_COMMUNICATION)
+                    ) {
+                        if (!PreferenceManager.getNoticeBadge(mContext)
+                                .equals("0") && !PreferenceManager.getNoticeEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getNoticeBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getNoticeBadge(mContext)
+                                .equals("0") && !PreferenceManager.getNoticeEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getNoticeEditedBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getNoticeBadge(mContext)
+                                .equals("0") && PreferenceManager.getNoticeEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getNoticeBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    } else {
+                        relImgTwoDot.visibility = View.GONE
+                    }
                 } else if (touchedView == relseven) {
                     relImgseven.setImageDrawable(mListImgArrays.getDrawable(sPosition))
                     val relstring: String
@@ -1681,6 +4678,198 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     PreferenceManager.setbuttonseventabid(mContext, TAB_ID)
                     setBackgroundColorForView(listitems[sPosition], relseven)
                     PreferenceManager.setbuttonseventextimage(mContext, sPosition.toString())
+
+                    if (PreferenceManager.getbuttonseventabid(mContext)
+                            .equals(ConstantWords.TAB_CALENDAR)
+                    ) {
+                        if (!PreferenceManager.getCalenderhomeBadge(mContext)
+                                .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getCalenderhomeBadge(mContext)
+                                .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
+                                .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    } else if (PreferenceManager.getbuttonseventabid(mContext)
+                            .equals(ConstantWords.TAB_NOTIFICATIONS)
+                    ) {
+                        if (!PreferenceManager.getNotificationBadge(mContext)
+                                .equals("0") && !PreferenceManager.getNotificationEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getNotificationBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getNotificationBadge(mContext)
+                                .equals("0") && !PreferenceManager.getNotificationEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text =
+                                PreferenceManager.getNotificationEditedBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getNotificationBadge(mContext)
+                                .equals("0") && PreferenceManager.getNotificationEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getNotificationBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    } else if (PreferenceManager.getbuttonseventabid(mContext)
+                            .equals(ConstantWords.TAB_REPORTS)
+                    ) {
+                        if (!PreferenceManager.getReportsBadge(mContext)
+                                .equals("0") && !PreferenceManager.getReportsEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getReportsBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getReportsBadge(mContext)
+                                .equals("0") && !PreferenceManager.getReportsEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getReportsEditedBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getReportsBadge(mContext)
+                                .equals("0") && PreferenceManager.getReportsEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getReportsBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getReportsBadge(mContext)
+                                .equals("0") && PreferenceManager.getReportsEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgOneDot.visibility = View.GONE
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    } else if (PreferenceManager.getbuttonseventabid(mContext)
+                            .equals(ConstantWords.TAB_PAYMENTS)
+                    ) {
+                        if (!PreferenceManager.getPaymentitem_badge(mContext)
+                                .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getPaymentitem_badge(mContext)
+                                .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text =
+                                PreferenceManager.getPaymentitem_edit_badge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getPaymentitem_badge(mContext)
+                                .equals("0") && PreferenceManager.getPaymentitem_edit_badge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    } else if (PreferenceManager.getbuttonseventabid(mContext)
+                            .equals(ConstantWords.TAB_ENRICHMENT)
+                    ) {
+                        if (!PreferenceManager.getCcaBadge(mContext)
+                                .equals("0") && !PreferenceManager.getCcaEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getCcaBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getCcaBadge(mContext)
+                                .equals("0") && !PreferenceManager.getCcaEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getCcaEditedBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getCcaBadge(mContext)
+                                .equals("0") && PreferenceManager.getCcaEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getCcaBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    }   else if (PreferenceManager.getbuttonseventabid(mContext)
+                            .equals(ConstantWords.TAB_COMMUNICATION)
+                    ) {
+                        if (!PreferenceManager.getNoticeBadge(mContext)
+                                .equals("0") && !PreferenceManager.getNoticeEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getNoticeBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getNoticeBadge(mContext)
+                                .equals("0") && !PreferenceManager.getNoticeEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getNoticeEditedBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getNoticeBadge(mContext)
+                                .equals("0") && PreferenceManager.getNoticeEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getNoticeBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    } else {
+                        relImgTwoDot.visibility = View.GONE
+                    }
                 } else if (touchedView == releight) {
                     relImgeight.setImageDrawable(mListImgArrays.getDrawable(sPosition))
                     val relstring: String
@@ -1696,6 +4885,198 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     PreferenceManager.setbuttoneighttabid(mContext, TAB_ID)
                     setBackgroundColorForView(listitems[sPosition], releight)
                     PreferenceManager.setbuttoneighttextimage(mContext, sPosition.toString())
+
+                    if (PreferenceManager.getbuttoneighttabid(mContext)
+                            .equals(ConstantWords.TAB_CALENDAR)
+                    ) {
+                        if (!PreferenceManager.getCalenderhomeBadge(mContext)
+                                .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getCalenderhomeBadge(mContext)
+                                .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
+                                .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    } else if (PreferenceManager.getbuttoneighttabid(mContext)
+                            .equals(ConstantWords.TAB_NOTIFICATIONS)
+                    ) {
+                        if (!PreferenceManager.getNotificationBadge(mContext)
+                                .equals("0") && !PreferenceManager.getNotificationEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getNotificationBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getNotificationBadge(mContext)
+                                .equals("0") && !PreferenceManager.getNotificationEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text =
+                                PreferenceManager.getNotificationEditedBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getNotificationBadge(mContext)
+                                .equals("0") && PreferenceManager.getNotificationEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getNotificationBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    } else if (PreferenceManager.getbuttoneighttabid(mContext)
+                            .equals(ConstantWords.TAB_REPORTS)
+                    ) {
+                        if (!PreferenceManager.getReportsBadge(mContext)
+                                .equals("0") && !PreferenceManager.getReportsEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getReportsBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getReportsBadge(mContext)
+                                .equals("0") && !PreferenceManager.getReportsEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getReportsEditedBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getReportsBadge(mContext)
+                                .equals("0") && PreferenceManager.getReportsEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getReportsBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getReportsBadge(mContext)
+                                .equals("0") && PreferenceManager.getReportsEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgOneDot.visibility = View.GONE
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    } else if (PreferenceManager.getbuttoneighttabid(mContext)
+                            .equals(ConstantWords.TAB_PAYMENTS)
+                    ) {
+                        if (!PreferenceManager.getPaymentitem_badge(mContext)
+                                .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getPaymentitem_badge(mContext)
+                                .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text =
+                                PreferenceManager.getPaymentitem_edit_badge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getPaymentitem_badge(mContext)
+                                .equals("0") && PreferenceManager.getPaymentitem_edit_badge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    } else if (PreferenceManager.getbuttoneighttabid(mContext)
+                            .equals(ConstantWords.TAB_ENRICHMENT)
+                    ) {
+                        if (!PreferenceManager.getCcaBadge(mContext)
+                                .equals("0") && !PreferenceManager.getCcaEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getCcaBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getCcaBadge(mContext)
+                                .equals("0") && !PreferenceManager.getCcaEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getCcaEditedBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getCcaBadge(mContext)
+                                .equals("0") && PreferenceManager.getCcaEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getCcaBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    }   else if (PreferenceManager.getbuttoneighttabid(mContext)
+                            .equals(ConstantWords.TAB_COMMUNICATION)
+                    ) {
+                        if (!PreferenceManager.getNoticeBadge(mContext)
+                                .equals("0") && !PreferenceManager.getNoticeEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getNoticeBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getNoticeBadge(mContext)
+                                .equals("0") && !PreferenceManager.getNoticeEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getNoticeEditedBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getNoticeBadge(mContext)
+                                .equals("0") && PreferenceManager.getNoticeEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getNoticeBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    } else {
+                        relImgTwoDot.visibility = View.GONE
+                    }
                 } else if (touchedView == relnine) {
                     relImgnine.setImageDrawable(mListImgArrays.getDrawable(sPosition))
                     val relstring: String
@@ -1711,6 +5092,198 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     PreferenceManager.setbuttonninetabid(mContext, TAB_ID)
                     setBackgroundColorForView(listitems[sPosition], relnine)
                     PreferenceManager.setbuttonninetextimage(mContext, sPosition.toString())
+
+                    if (PreferenceManager.getbuttonninetabid(mContext)
+                            .equals(ConstantWords.TAB_CALENDAR)
+                    ) {
+                        if (!PreferenceManager.getCalenderhomeBadge(mContext)
+                                .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getCalenderhomeBadge(mContext)
+                                .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
+                                .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    } else if (PreferenceManager.getbuttonninetabid(mContext)
+                            .equals(ConstantWords.TAB_NOTIFICATIONS)
+                    ) {
+                        if (!PreferenceManager.getNotificationBadge(mContext)
+                                .equals("0") && !PreferenceManager.getNotificationEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getNotificationBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getNotificationBadge(mContext)
+                                .equals("0") && !PreferenceManager.getNotificationEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text =
+                                PreferenceManager.getNotificationEditedBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getNotificationBadge(mContext)
+                                .equals("0") && PreferenceManager.getNotificationEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getNotificationBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    } else if (PreferenceManager.getbuttonninetabid(mContext)
+                            .equals(ConstantWords.TAB_REPORTS)
+                    ) {
+                        if (!PreferenceManager.getReportsBadge(mContext)
+                                .equals("0") && !PreferenceManager.getReportsEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getReportsBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getReportsBadge(mContext)
+                                .equals("0") && !PreferenceManager.getReportsEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getReportsEditedBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getReportsBadge(mContext)
+                                .equals("0") && PreferenceManager.getReportsEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getReportsBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getReportsBadge(mContext)
+                                .equals("0") && PreferenceManager.getReportsEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgOneDot.visibility = View.GONE
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    } else if (PreferenceManager.getbuttonninetabid(mContext)
+                            .equals(ConstantWords.TAB_PAYMENTS)
+                    ) {
+                        if (!PreferenceManager.getPaymentitem_badge(mContext)
+                                .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getPaymentitem_badge(mContext)
+                                .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text =
+                                PreferenceManager.getPaymentitem_edit_badge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getPaymentitem_badge(mContext)
+                                .equals("0") && PreferenceManager.getPaymentitem_edit_badge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    } else if (PreferenceManager.getbuttonninetabid(mContext)
+                            .equals(ConstantWords.TAB_ENRICHMENT)
+                    ) {
+                        if (!PreferenceManager.getCcaBadge(mContext)
+                                .equals("0") && !PreferenceManager.getCcaEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getCcaBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getCcaBadge(mContext)
+                                .equals("0") && !PreferenceManager.getCcaEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getCcaEditedBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getCcaBadge(mContext)
+                                .equals("0") && PreferenceManager.getCcaEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getCcaBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    }   else if (PreferenceManager.getbuttonninetabid(mContext)
+                            .equals(ConstantWords.TAB_COMMUNICATION)
+                    ) {
+                        if (!PreferenceManager.getNoticeBadge(mContext)
+                                .equals("0") && !PreferenceManager.getNoticeEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getNoticeBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else if (PreferenceManager.getNoticeBadge(mContext)
+                                .equals("0") && !PreferenceManager.getNoticeEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getNoticeEditedBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                        } else if (!PreferenceManager.getNoticeBadge(mContext)
+                                .equals("0") && PreferenceManager.getNoticeEditedBadge(
+                                mContext
+                            ).equals("0")
+                        ) {
+                            relImgTwoDot.visibility = View.VISIBLE
+                            relImgTwoDot.text = PreferenceManager.getNoticeBadge(mContext)
+                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                        } else {
+                            relImgTwoDot.visibility = View.GONE
+                        }
+                    } else {
+                        relImgTwoDot.visibility = View.GONE
+                    }
                 }
 
             }
@@ -1982,6 +5555,17 @@ class HomeFragment : Fragment(), View.OnClickListener {
         relImgnine = view!!.findViewById(R.id.relImgNine) as ImageView
         mSectionText = arrayOfNulls(9)
 
+
+        /**************Badge Setting aparna 05Dec2018 */
+        relImgOneDot = view!!.findViewById<TextView>(R.id.relImgOneDot)
+        relImgTwoDot = view!!.findViewById<TextView>(R.id.relImgTwoDot)
+        relImgThreeDot = view!!.findViewById<TextView>(R.id.relImgThreeDot)
+        relImgFourDot = view!!.findViewById<TextView>(R.id.relImgFourDot)
+        relImgFiveDot = view!!.findViewById<TextView>(R.id.relImgFiveDot)
+        relImgSixDot = view!!.findViewById<TextView>(R.id.relImgSixDot)
+        relImgSevenDot = view!!.findViewById<TextView>(R.id.relImgSevenDot)
+        relImgEightDot = view!!.findViewById<TextView>(R.id.relImgEightDot)
+        relImgNineDot = view!!.findViewById<TextView>(R.id.relImgNineDot)
         pager_rel = view!!.findViewById(R.id.pager_rel)
         updatedata()
 

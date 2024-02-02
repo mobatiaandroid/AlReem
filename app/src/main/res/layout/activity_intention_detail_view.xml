@@ -118,6 +118,7 @@
                     android:background="@drawable/textfield_bg"
                     android:hint="email@gmail.com"
                     android:padding="8dp"
+                    android:text=""
                     android:editable="false"
                     android:textColor="@color/black"
                     android:textColorHint="@color/dark_grey1" />

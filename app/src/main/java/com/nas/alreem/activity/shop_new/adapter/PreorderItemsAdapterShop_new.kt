@@ -10,13 +10,11 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
 import com.nas.alreem.R
 import com.nas.alreem.activity.ProgressBarDialog
@@ -77,7 +75,7 @@ class PreorderItemsAdapterShop_new(
         holder.itemNameTxt.text=itemlist[position].description
         holder.price.text=itemlist[position].price + " AED"
         var url:String?=""
-        url=itemlist[position].item_image
+        url=itemlist[position].item_image.get(0)
         if (url.equals("")) {
             holder.itemImg.setBackgroundResource(R.drawable.default_banner)
 
@@ -95,9 +93,8 @@ class PreorderItemsAdapterShop_new(
         {
             holder.multiLinear.visibility = View.GONE
             holder.addLinear.visibility = View.GONE
-            holder.slugNameTxt.setTextColor(R.color.dark_grey1)
-            holder.itemNameTxt.setTextColor(R.color.dark_grey1)
-            holder.price.setTextColor(R.color.dark_grey1)
+           holder. gradeoutrelative.alpha=0.5f
+
         }
         else {
             /*if (itemlist[position].item_already_ordered == 0) {
@@ -108,6 +105,7 @@ class PreorderItemsAdapterShop_new(
             if (itemlist[position].isItemCart) {
                 holder.multiLinear.visibility = View.VISIBLE
                 holder.addLinear.visibility = View.GONE
+                Log.e("quantityCart",itemlist.get(position).quantityCart.toString())
                 holder.itemCount.setNumber(itemlist.get(position).quantityCart.toString())
                 holder.itemCount.setRange(
                     0,
@@ -136,14 +134,16 @@ class PreorderItemsAdapterShop_new(
 
 
                 //  canteen_cart_id = cart_list[cartPos].items.get(position).id
+
                 quantity = newValue.toString()
+                Log.e("quantityoutside",quantity)
                 if (newValue != 0) {
                     //progressDialogP.visibility=View.VISIBLE
                     updateCart(
                         itemlist[position].id,
                         position,
                         quantity,
-                        holder.multiLinear
+                        holder.multiLinear,holder.gradeoutrelative
                     )
                     //  Log.e("amout",cart_list[position].item_total.toString())
                     //   holder.amountTxt.text = cart_list[position].item_total.toString() + " AED"
@@ -188,6 +188,7 @@ class PreorderItemsAdapterShop_new(
         lateinit var addLinear: LinearLayout
         lateinit var multiLinear: LinearLayout
         lateinit var itemCount: ElegantNumberButton
+        var gradeoutrelative : RelativeLayout
        // lateinit var bannerImagePager: ViewPager
 
         init {
@@ -201,6 +202,7 @@ class PreorderItemsAdapterShop_new(
            // soldout = itemView.findViewById(R.id.soldout) as LinearLayout
             multiLinear = itemView.findViewById(R.id.multiLinear) as LinearLayout
             itemCount = itemView.findViewById(R.id.itemCount)
+            gradeoutrelative = itemView.findViewById(R.id.gradeoutrelative)
          //   itemDescription = itemView.findViewById(R.id.itemDescription)
            // confirmedTxt = itemView.findViewById(R.id.confirmedTxt)
           //  bannerImagePager = itemView.findViewById(R.id.bannerImagePager) as ViewPager
@@ -302,7 +304,8 @@ class PreorderItemsAdapterShop_new(
         id: String,
         position: Int,
         quant: String,
-        multiLinear: LinearLayout
+        multiLinear: LinearLayout,
+        gradeoutrelative: RelativeLayout
     ){
         progressDialogP.show()
         // progressDialogP.show()
@@ -342,7 +345,7 @@ class PreorderItemsAdapterShop_new(
                     if(responsedata!!.status==300)
                     {
                         multiLinear.visibility= View.GONE
-
+                        gradeoutrelative.alpha=0.5f
                     }
                     //  DialogFunctions.commonErrorAlertDialog(mcontext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), mcontext)
                 }

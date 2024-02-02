@@ -2,6 +2,7 @@ package com.nas.alreem.activity.shop_new.adapter
 
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,14 +12,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nas.alreem.R
 import com.nas.alreem.activity.shop_new.model.PaymentShopWalletHistoryModel
+import com.nas.alreem.activity.shop_new.model.ShopItemHistoryModel
 import com.nas.alreem.activity.shop_new.model.ShopModel
 import com.nas.alreem.constants.ConstantFunctions
 
 
 class PreorderDatesAdapter_new(
-    val preorderhis_list: ArrayList<PaymentShopWalletHistoryModel>,
     var mcontext: Context,
-    var order_summery: ArrayList<ShopModel>
+    var order_summery: ArrayList<ShopItemHistoryModel>
 ) :
     RecyclerView.Adapter<PreorderDatesAdapter_new.ViewHolder>() {
 
@@ -32,15 +33,16 @@ class PreorderDatesAdapter_new(
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
 
 
-        viewHolder.date.text= ConstantFunctions.dateParsingToddMMMyyyyBasket(preorderhis_list.get(position).created_on)
+        viewHolder.date.text= ConstantFunctions.dateParsingToddMMMyyyyBasket(order_summery.get(position).order_date)
         viewHolder.recyclerview.layoutManager = LinearLayoutManager(mcontext)
-        var adapter = OrderHistoryPreorderDetailsAdapter_new(preorderhis_list.get(position).order_summery, mcontext)
+        var adapter = OrderHistoryPreorderDetailsAdapter_new(order_summery, mcontext)
         viewHolder.recyclerview.adapter=adapter
 
     }
 
     override fun getItemCount(): Int {
-        return preorderhis_list.size
+        Log.e("size", order_summery.size.toString())
+        return order_summery.size
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

@@ -9,7 +9,7 @@ class ShopCartResModel (
     @SerializedName("quantity") var quantity: Int,
     @SerializedName("price") val price: String,
     @SerializedName("item_name") val item_name: String,
-    @SerializedName("item_image") val item_image: String,
+    @SerializedName("item_image") val item_image:  ArrayList<String>,
     @SerializedName("item_total") val item_total: Int,
     @SerializedName("description") val description: String
 )

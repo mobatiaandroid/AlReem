@@ -287,8 +287,9 @@ class PerformingArtsFragment : Fragment
                         Log.e("arraysize", response.body()!!.getResponse()!!.data!!.size.toString());
 
                         if (response.body()!!.getResponse()!!.data!!.size > 0) {
-                                for (i in 0 until response.body()!!.getResponse()!!.data!!.size) {
-                                    val item: SecondaryModel=
+                            mListViewArray.addAll(response.body()!!.getResponse()!!.data)
+                              //  for (i in 0 until response.body()!!.getResponse()!!.data!!.size) {
+                                   /* val item: SecondaryModel=
                                         response.body()!!.getResponse()!!.data!!.get(i)
                                     val gson = Gson()
                                     val eventJson = gson.toJson(item)
@@ -298,8 +299,8 @@ class PerformingArtsFragment : Fragment
                                         //  Log.e("array", String.valueOf(mCCAmodelArrayList));
                                     } catch (e: JSONException) {
                                         e.printStackTrace()
-                                    }
-                                }
+                                    }*/
+                            //    }
                                 //											mListView.setAdapter(new CustomSecondaryAdapter(getActivity(), mListViewArray));
                                 mListView!!.adapter =
                                     PerformingArtsListAdapter(mContext, mListViewArray)

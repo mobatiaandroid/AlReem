@@ -1048,27 +1048,27 @@ class PreferenceManager {
             return gson.fromJson(json, type)
         }
 
-        fun setCcaOptionBadge(context: Context, cca_option_badge: Int) {
+        fun setCcaOptionCCABadge(context: Context, cca_option_badge: Int) {
             val prefs = context.getSharedPreferences(
                 "ALGUBRA",
                 Context.MODE_PRIVATE
             )
             val editor = prefs.edit()
-            editor.putInt("cca_option_badge", cca_option_badge)
+            editor.putInt("cca_option_cca_badge", cca_option_badge)
             editor.commit()
         }
 
-        fun getCcaOptionBadge(context: Context): Int {
+        fun getCcaoptionCCaBadge(context: Context): Int {
             var cca_option_badge = 0
             val prefs = context.getSharedPreferences(
                 "ALGUBRA",
                 Context.MODE_PRIVATE
             )
-            cca_option_badge = prefs.getInt("cca_option_badge", 0)
+            cca_option_badge = prefs.getInt("cca_option_cca_badge", 0)
             return cca_option_badge
         }
 
-        fun setCcaOptionEditedBadge(context: Context, cca_option_edited_badge: Int) {
+        fun setCcaOptionEditedCCaBadge(context: Context, cca_option_edited_badge: Int) {
             val prefs = context.getSharedPreferences(
                 "ALGUBRA",
                 Context.MODE_PRIVATE
@@ -1078,7 +1078,7 @@ class PreferenceManager {
             editor.commit()
         }
 
-        fun getCcaOptionEditedBadge(context: Context): Int{
+        fun getCcaoptionEditedCCaBadge(context: Context): Int{
             var cca_option_edited_badge = 0
             val prefs = context.getSharedPreferences(
                 "ALGUBRA",
@@ -1324,6 +1324,341 @@ class PreferenceManager {
                 Context.MODE_PRIVATE
             )
             return prefs.getString("back", "")
+        }
+        fun setCalendarHomeBadge(context: Context, calendar_badge: String?) {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            val editor = prefs.edit()
+            editor.putString("calendar_home_badge", calendar_badge)
+            editor.commit()
+        }
+
+        fun getCalenderhomeBadge(context: Context): String? {
+            var notification_badge = ""
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            notification_badge = prefs.getString("calendar_home_badge", "0")!!
+            return notification_badge
+        }
+
+        fun setCalendarEditedhomeBadge(context: Context, calendar_edited_badge: String?) {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            val editor = prefs.edit()
+            editor.putString("calendar_edited_home_badge", calendar_edited_badge)
+            editor.commit()
+        }
+
+        fun getCalenderEditedhomeBadge(context: Context): String? {
+            var notification_badge = ""
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            notification_badge = prefs.getString("calendar_edited_home_badge", "0")!!
+            return notification_badge
+        }
+
+        fun setNotificationBadge(context: Context, notification_badge: String?) {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            val editor = prefs.edit()
+            editor.putString("notification_badge", notification_badge)
+            editor.commit()
+        }
+
+        fun getNotificationBadge(context: Context): String? {
+            var notification_badge = ""
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            notification_badge = prefs.getString("notification_badge", "0")!!
+            return notification_badge
+        }
+
+        fun setNotificationEditedBadge(context: Context, notification_edited_badge: String?) {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            val editor = prefs.edit()
+            editor.putString("notification_edited_badge", notification_edited_badge)
+            editor.commit()
+        }
+
+        fun getNotificationEditedBadge(context: Context): String? {
+            var notification_edited_badge = ""
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            notification_edited_badge = prefs.getString("notification_edited_badge", "0")!!
+            return notification_edited_badge
+        }
+
+        fun setNoticeBadge(context: Context, whole_school_coming_up_badge: String?) {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            val editor = prefs.edit()
+            editor.putString("whole_school_coming_up_badge", whole_school_coming_up_badge)
+            editor.commit()
+        }
+
+        fun getNoticeBadge(context: Context): String? {
+            var whole_school_coming_up_badge = ""
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            whole_school_coming_up_badge = prefs.getString("whole_school_coming_up_badge", "0")!!
+            return whole_school_coming_up_badge
+        }
+
+        fun setNoticeEditedBadge(context: Context, whole_school_coming_up_edited_badge: String?) {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            val editor = prefs.edit()
+            editor.putString(
+                "whole_school_coming_up_edited_badge",
+                whole_school_coming_up_edited_badge
+            )
+            editor.commit()
+        }
+
+        fun getNoticeEditedBadge(context: Context): String? {
+            var whole_school_coming_up_edited_badge = ""
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            whole_school_coming_up_edited_badge =
+                prefs.getString("whole_school_coming_up_edited_badge", "0")!!
+            return whole_school_coming_up_edited_badge
+        }
+
+        fun setPaymentitem_badge(context: Context, paymentitem_badge: String?) {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            val editor = prefs.edit()
+            editor.putString("paymentitem_badge", paymentitem_badge)
+            editor.commit()
+        }
+
+        fun getPaymentitem_badge(context: Context): String? {
+            var paymentitem_badge = ""
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            paymentitem_badge = prefs.getString("paymentitem_badge", "0")!!
+            return paymentitem_badge
+        }
+
+        fun setPaymentitem_edit_badge(context: Context, paymentitem_edit_badge: String?) {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            val editor = prefs.edit()
+            editor.putString("paymentitem_edit_badge", paymentitem_edit_badge)
+            editor.commit()
+        }
+
+        fun getPaymentitem_edit_badge(context: Context): String? {
+            var paymentitem_edit_badge = ""
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            paymentitem_edit_badge = prefs.getString("paymentitem_edit_badge", "0")!!
+            return paymentitem_edit_badge
+        }
+
+
+
+        fun setReportsBadge(context: Context, reports_badge: String?) {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            val editor = prefs.edit()
+            editor.putString("reports_badge", reports_badge)
+            editor.commit()
+        }
+
+        fun getReportsBadge(context: Context): String? {
+            var reports_badge = ""
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            reports_badge = prefs.getString("reports_badge", "0")!!
+            return reports_badge
+        }
+
+        fun setReportsEditedBadge(context: Context, reports_edited_badge: String?) {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            val editor = prefs.edit()
+            editor.putString("reports_edited_badge", reports_edited_badge)
+            editor.commit()
+        }
+
+        fun getReportsEditedBadge(context: Context): String? {
+            var reports_edited_badge = ""
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            reports_edited_badge = prefs.getString("reports_edited_badge", "0")!!
+            return reports_edited_badge
+        }
+
+        fun setCcaBadge(context: Context, cca_badge: String?) {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            val editor = prefs.edit()
+            editor.putString("cca_badge", cca_badge)
+            editor.commit()
+        }
+
+        fun getCcaBadge(context: Context): String? {
+            var cca_badge = ""
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            cca_badge = prefs.getString("cca_badge", "0")!!
+            return cca_badge
+        }
+
+        fun setCcaEditedBadge(context: Context, cca_edited_badge: String?) {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            val editor = prefs.edit()
+            editor.putString("cca_edited_badge", cca_edited_badge)
+            editor.commit()
+        }
+
+        fun getCcaEditedBadge(context: Context): String? {
+            var cca_edited_badge = ""
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            cca_edited_badge = prefs.getString("cca_edited_badge", "0")!!
+            return cca_edited_badge
+        }
+
+        fun setCcaOptionBadge(context: Context, cca_option_badge: String?) {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            val editor = prefs.edit()
+            editor.putString("cca_option_badge", cca_option_badge)
+            editor.commit()
+        }
+
+        fun getCcaOptionBadge(context: Context): String? {
+            var cca_option_badge = ""
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            cca_option_badge = prefs.getString("cca_option_badge", "0")!!
+            return cca_option_badge
+        }
+
+        fun setCcaOptionEditedBadge(context: Context, cca_option_edited_badge: String?) {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            val editor = prefs.edit()
+            editor.putString("cca_option_edited_badge", cca_option_edited_badge)
+            editor.commit()
+        }
+
+        fun getCcaOptionEditedBadge(context: Context): String? {
+            var cca_option_edited_badge = ""
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            cca_option_edited_badge = prefs.getString("cca_option_edited_badge", "0")!!
+            return cca_option_edited_badge
+        }
+
+        fun setCommunicationWholeSchoolEditedBadge(
+            context: Context,
+            communication_whole_school_edited_badge: String?
+        ) {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            val editor = prefs.edit()
+            editor.putString(
+                "whole_school_coming_up_edited_badge",
+                communication_whole_school_edited_badge
+            )
+            editor.commit()
+        }
+
+        fun getCommunicationWholeSchoolEditedBadge(context: Context): String? {
+            var communication_whole_school_edited_badge = ""
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            communication_whole_school_edited_badge =
+                prefs.getString("whole_school_coming_up_edited_badge", "0")!!
+            return communication_whole_school_edited_badge
+        }
+
+        fun setCommunicationWholeSchooldBadge(
+            context: Context,
+            communication_whole_school_badge: String?
+        ) {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            val editor = prefs.edit()
+            editor.putString("whole_school_coming_up_badge", communication_whole_school_badge)
+            editor.commit()
+        }
+
+        fun getCommunicationWholeSchoolBadge(context: Context): String? {
+            var communication_whole_school_badge = ""
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            communication_whole_school_badge = prefs.getString("whole_school_coming_up_badge", "0")!!
+            return communication_whole_school_badge
         }
 
     }

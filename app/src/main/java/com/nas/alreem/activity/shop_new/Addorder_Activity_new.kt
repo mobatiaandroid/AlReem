@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.Window
 import android.widget.Button
@@ -31,6 +32,7 @@ import com.nas.alreem.activity.lost_card.model.GetShopCartResponseModel
 import com.nas.alreem.activity.lost_card.model.ShopCartResModel
 import com.nas.alreem.activity.payments.model.StudentList
 import com.nas.alreem.activity.payments.model.StudentListModel
+import com.nas.alreem.activity.shop_new.adapter.ItemCategoriesAdapter_new
 import com.nas.alreem.activity.shop_new.adapter.PreorderItemsAdapterShop_new
 import com.nas.alreem.activity.shop_new.model.ShopItemsApiModel
 import com.nas.alreem.constants.ApiClient
@@ -55,15 +57,12 @@ class Addorder_Activity_new : AppCompatActivity()  {
     lateinit var cart_items_list: ArrayList<CartItemsListModel>
     private var id: String? = null
     lateinit var date_title: TextView
-    // lateinit var date_list: ArrayList<DateModel>
     lateinit var recyclerview_item: RecyclerView
     var studentListArrayList = ArrayList<StudentList>()
 
-    //lateinit var selected:ImageView
-    // lateinit var progress: RelativeLayout
+
     lateinit var title: TextView
     lateinit var cart_empty: ImageView
-    // lateinit var progressDialog: ProgressBar
     lateinit var progressDialogP: ProgressBarDialog
     lateinit var category_list: ArrayList<CategoryListModel>
     lateinit var item_list: ArrayList<CatItemsListModel>
@@ -86,11 +85,10 @@ class Addorder_Activity_new : AppCompatActivity()  {
         setContentView(R.layout.shop_addorder)
         firstVisit = true
         initfn()
-        //  setdate()
-        //progressDialog.visibility=View.VISIBLE
+
+
         if (ConstantFunctions.internetCheck(nContext)) {
-//            progressDialog.visibility= View.VISIBLE
-            //callStudentListApi()
+
 
         } else {
             DialogFunctions.showInternetAlertDialog(nContext)
@@ -107,37 +105,16 @@ class Addorder_Activity_new : AppCompatActivity()  {
         title = findViewById(R.id.titleTextView)
         id = PreferenceManager.getStudentID(nContext).toString()
         date_title = findViewById(R.id.date_title)
-        // progress=findViewById(R.id.progressDialog)
         title.text = "Shop-Order"
         cart_empty = findViewById(R.id.item_empty)
-        // progressDialog = findViewById(R.id.progressDialogM)
         progressDialogP= ProgressBarDialog(nContext)
 
 
-        //   val aniRotate: Animation =
-        //  AnimationUtils.loadAnimation(nContext, R.anim.linear_interpolator)
-        // progress.startAnimation(aniRotate)
+
         category_list = ArrayList()
         cart_list = ArrayList()
         cart_items_list = ArrayList()
-        // date_list = intent.getSerializableExtra("date_list") as ArrayList<DateModel>
-        //date_list=PreferenceManager().getdate_list(nContext)
-        //   var year = date_list[0].year
-        /*var strCurrentDate = ""
-        var format = SimpleDateFormat("MMM", Locale.ENGLISH)
-        var newDate: Date? = null
-        try {
-          //  newDate = format.parse(date_list[0].month)
-        } catch (e: ParseException) {
-            e.printStackTrace()
-        }
-        format = SimpleDateFormat("MM", Locale.ENGLISH)
-        strCurrentDate = format.format(newDate)
-        var month=strCurrentDate*/
-        //var month = CommonMethods.dateParsingTommm(date_list[0].month)
-        //  var date = date_list[0].numberDate
-        //  date_string = date_list[0].numberDate
-        // date_selected = date_string.toString()
+
         total_items = findViewById(R.id.itemCount)
         total_price = findViewById(R.id.totalAmount)
         bottomview = findViewById(R.id.cartLinear)
@@ -154,7 +131,7 @@ class Addorder_Activity_new : AppCompatActivity()  {
 
 
         back.setOnClickListener {
-finish()
+               finish()
         }
         basketbtn.setOnClickListener {
             finish()
@@ -171,7 +148,7 @@ finish()
         })
         recyclerview_item.addOnItemClickListener(object: OnItemClickListener {
             override fun onItemClicked(position: Int, view: View) {
-                // Your logic
+
                 val intent =Intent(nContext, ProductDetailsPage::class.java)
                 intent.putExtra("item_name",item_list.get(position).item_name)
                 intent.putExtra("item_desc",item_list.get(position).description)
@@ -180,68 +157,19 @@ finish()
                 intent.putExtra("quantity_cart",item_list.get(position).quantityCart)
                 intent.putExtra("item_cart",item_list.get(position).isItemCart)
                 intent.putExtra("id",item_list.get(position).id)
+                intent.putExtra("size_chart",item_list.get(position).size_chart)
                 intent.putExtra("cart_id",item_list.get(position).cartId)
-
+                intent.putExtra("available_quantity",item_list.get(position).available_quantity)
+                intent.putStringArrayListExtra(
+                    "array_list",
+                    item_list[position].item_image
+                )
+                Log.e("arraysize", item_list[position].item_image.size.toString())
                 startActivity(intent)
             }
         })
     }
-    private fun setdate(){
-        /*var one_date=date_list[0].day+","+date_list[0].date+" "+date_list[0].month+" "+date_list[0].year
-        if (date_list.size==1){
-            date_title.visibility = View.VISIBLE
-            date_title.text = one_date
-        }
-        else {
-            var first_date=date_list[0].numberDate
-            date_title.visibility = View.GONE
-            for (i in date_list.indices) {
-                date_list.get(i).isDateSelected = date_list.get(i).numberDate.equals(first_date)
-            }
-            recyclerview_date.visibility = View.VISIBLE
-            var llm2 = (LinearLayoutManager(nContext))
-            llm2.orientation = LinearLayoutManager.HORIZONTAL
-            recyclerview_date.layoutManager = llm2
-            recyclerview_date.adapter = DateAdapter(date_list, nContext)
 
-            recyclerview_date.addOnItemClickListener(object : OnItemClickListener {
-                override fun onItemClicked(position: Int, view: View) {
-                    date_list.get(0).isDateSelected=false
-                    date_selected=date_list[position].numberDate
-                    var foundPosition = -1
-                    var isFound: Boolean = false
-
-
-                    for (i in 0..date_list.size-1) {
-                        if (date_list.get(i).isDateSelected) {
-                            foundPosition = i
-                            isFound = true
-                            date_selected=date_list.get(position).numberDate
-                            items_onclick()
-                        }
-                    }
-                    if (isFound) {
-                        if (position == foundPosition) {
-                            date_list.get(foundPosition).isDateSelected = true
-                            recyclerview_date.adapter = DateAdapter(date_list, nContext)
-                        } else {
-                            date_list.get(foundPosition).isDateSelected = false
-                            date_list.get(position).isDateSelected = true
-                            date_selected=date_list.get(position).numberDate
-                            items_onclick()
-                            recyclerview_date.adapter = DateAdapter(date_list, nContext)
-                        }
-                    } else {
-                        date_list.get(position).isDateSelected = true
-                        date_selected=date_list.get(position).numberDate
-                        items_onclick()
-                        recyclerview_date.adapter = DateAdapter(date_list, nContext)
-                    }
-                    //items_onclick()
-                }
-            })
-        }*/
-    }
 
 
     private fun item_categories(){
@@ -269,7 +197,7 @@ finish()
                     var llm = (LinearLayoutManager(nContext))
                     llm.orientation = LinearLayoutManager.HORIZONTAL
                     recyclerview_category.layoutManager = llm
-                    recyclerview_category.adapter = ItemCategoriesAdapter(category_list, nContext)
+                    recyclerview_category.adapter = ItemCategoriesAdapter_new(category_list, nContext)
                     // progressDialogP.visibility=View.VISIBLE
                     items()
 
@@ -307,21 +235,21 @@ finish()
                     if (position == foundPosition) {
                         category_list.get(foundPosition).isItemSelected = true
                         recyclerview_category.adapter =
-                            ItemCategoriesAdapter(category_list, nContext)
+                            ItemCategoriesAdapter_new(category_list, nContext)
                     } else {
                         category_list.get(foundPosition).isItemSelected = false
                         category_list.get(position).isItemSelected = true
                         cat_selected= category_list.get(position).id
 
                         recyclerview_category.adapter =
-                            ItemCategoriesAdapter(category_list, nContext)
+                            ItemCategoriesAdapter_new(category_list, nContext)
                         items_onclick()
                     }
                 } else {
                     category_list.get(position).isItemSelected = true
                     cat_selected= category_list.get(position).id
 
-                    recyclerview_category.adapter = ItemCategoriesAdapter(category_list, nContext)
+                    recyclerview_category.adapter = ItemCategoriesAdapter_new(category_list, nContext)
                     items_onclick()
                 }
                 // items_onclick()

@@ -294,6 +294,19 @@ class CommunicationFragment : Fragment() {
                         val bannerImage: String = response.body()!!.responseArray.bannerImage
                         val description: String = response.body()!!.responseArray.description
                         contactEmail = response.body()!!.responseArray.contactEmail
+                        val whole_school_coming_up_badge: String =
+                            response.body()!!.responseArray.wholeSchoolComingUpBadge
+
+                        PreferenceManager.setCommunicationWholeSchooldBadge(
+                            mContext,
+                            whole_school_coming_up_badge
+                        )
+                        val whole_school_coming_up_edited_badge: String =
+                            response.body()!!.responseArray.wholeSchoolComingUpEditedBadge
+                        PreferenceManager.setCommunicationWholeSchoolEditedBadge(
+                            mContext,
+                            whole_school_coming_up_edited_badge
+                        )
                         if (bannerImage != "") {
 
                             Glide.with(mContext) //1

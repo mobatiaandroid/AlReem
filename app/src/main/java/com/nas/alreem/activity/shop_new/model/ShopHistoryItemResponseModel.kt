@@ -1,0 +1,9 @@
+package com.nas.alreem.activity.shop_new.model
+
+import com.google.gson.annotations.SerializedName
+import com.nas.alreem.activity.shop_new.model.ResponseShopHistory
+
+class ShopHistoryItemResponseModel (
+    @SerializedName("status") val status: Int,
+    @SerializedName("responseArray") val response: ResponseShopItemHistory
+)

@@ -24,7 +24,7 @@ class PerformingResponseModel  {
 
     class ResponseData {
         lateinit var banner_image: String
-        var data: ArrayList<SecondaryModel>? = null
+        lateinit var data: ArrayList<SecondaryModel>
 
 
     }

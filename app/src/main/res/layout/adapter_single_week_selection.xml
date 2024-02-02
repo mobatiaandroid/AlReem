@@ -47,7 +47,7 @@
                 android:singleLine="false"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:textColor="@color/black" />
+                android:textColor="@color/grey" />
             <com.nas.alreem.commonviews.CustomFontSansProTextBlack
                 android:id="@+id/timeAPTxt"
                 style="@style/textstyletimetablesingle"

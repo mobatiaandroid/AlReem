@@ -58,8 +58,7 @@ class ShopCardHistoryAdapter(
         // holder.imageIcon.setVisibility(View.GONE);
         Log.e("date",mnNewsLetterModelArrayList[position].created_on)
         holder.tripsDateTxt.setText(ConstantFunctions().dateConversionYYY(mnNewsLetterModelArrayList[position].created_on))
-        holder.tripsAmountTxt.text =
-            "Credit " + mnNewsLetterModelArrayList[position].order_total + " " + "AED"
+        holder.tripsAmountTxt.text = mnNewsLetterModelArrayList[position].order_total + " " + "AED"
         /*  if (mnNewsLetterModelArrayList.get(position).getCompleted_date().equalsIgnoreCase("") && mnNewsLetterModelArrayList.get(position).getLast_payment_status().equalsIgnoreCase("0")) {
             holder.mainRelative.setBackgroundColor(mContext.getResources().getColor(R.color.term_button_bg));
         } else if (mnNewsLetterModelArrayList.get(position).getCompleted_date().equalsIgnoreCase("") && mnNewsLetterModelArrayList.get(position).getLast_payment_status().equalsIgnoreCase("1")) {

@@ -16,13 +16,26 @@
         app:cardUseCompatPadding="true"
         card_view:cardUseCompatPadding="true"
         android:background="@color/canteen_item_bg">
+        <RelativeLayout
+            android:id="@+id/basketRelative"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/itemImg"
+            android:layout_width="100dp"
+            android:layout_height="130dp"
+            android:scaleType="centerInside"
+            android:layout_alignParentLeft="true"
+            android:src="@drawable/default_banner"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:weightSum="100"
             android:id="@+id/linearlayout"
-            android:background="@color/canteen_item_bg">
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/itemImg"
+            android:background="@color/white">
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -230,7 +243,7 @@
             </RelativeLayout>
 
         </LinearLayout>
-
+        </RelativeLayout>
 
     </androidx.cardview.widget.CardView>
 </RelativeLayout>
