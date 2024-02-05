@@ -88,14 +88,14 @@ class Addorder_Activity_new : AppCompatActivity()  {
 
 
         if (ConstantFunctions.internetCheck(nContext)) {
-
+            item_categories()
+            getcanteen_cart()
 
         } else {
             DialogFunctions.showInternetAlertDialog(nContext)
         }
 
-        item_categories()
-        getcanteen_cart()
+
     }
 
     private fun initfn() {
@@ -148,6 +148,7 @@ class Addorder_Activity_new : AppCompatActivity()  {
         })
         recyclerview_item.addOnItemClickListener(object: OnItemClickListener {
             override fun onItemClicked(position: Int, view: View) {
+                //item_categories()
 
                 val intent =Intent(nContext, ProductDetailsPage::class.java)
                 intent.putExtra("item_name",item_list.get(position).item_name)
@@ -190,6 +191,8 @@ class Addorder_Activity_new : AppCompatActivity()  {
 
                     category_list.addAll(response.body()!!.responseArray.data)
                     def_cat_id=category_list[0].id
+                    PreferenceManager.setcategoriid(nContext,def_cat_id)
+
                     cat_selected=def_cat_id
                     for (i in category_list.indices) {
                         category_list.get(i).isItemSelected = category_list.get(i).id.equals(def_cat_id)
@@ -228,6 +231,7 @@ class Addorder_Activity_new : AppCompatActivity()  {
                         foundPosition = i
                         isFound = true
                         cat_selected= category_list.get(position).id
+                        PreferenceManager.setcategoriid(nContext,cat_selected)
                         items_onclick()
                     }
                 }

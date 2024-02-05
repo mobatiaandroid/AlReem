@@ -1,10 +1,12 @@
 package com.nas.alreem.activity.communication.socialmedia
 
 import android.app.Dialog
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -33,7 +35,7 @@ class SocialMediaActivity : AppCompatActivity(){
     lateinit var heading: TextView
     lateinit var logoClickImgView: ImageView
     lateinit var facebookButton: ImageView
-    lateinit var twitterButton: ImageView
+    lateinit var twitterButton: RelativeLayout
     lateinit var instagramButton: ImageView
     lateinit var bannerImagePager: ImageView
     var bannner_img: String? = null
@@ -168,10 +170,28 @@ class SocialMediaActivity : AppCompatActivity(){
                 showSocialMedialPopup(mSocialMediaArraylistFacebook,"facebook",mContext)
             }
             else{
-                val intent = Intent(mContext, WebLinkActivity::class.java)
+                val facebookAppIntent: Intent
+                try {
+                    facebookAppIntent = Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse("fb://page/${mSocialMediaArraylistFacebook.get(0).pageid}")
+                    )
+                    startActivity(facebookAppIntent)
+                } catch (e: ActivityNotFoundException) {
+
+                   //
+                    //
+                    // val url = mSocialMediaArraylistFacebook[position].url
+                    val intent = Intent(mContext, WebLinkActivity::class.java)
+                    intent.putExtra("url",mSocialMediaArraylistFacebook.get(0).url.toString())
+                    intent.putExtra("heading","FaceBook")
+                    startActivity(intent)
+
+                }
+                /*val intent = Intent(mContext, WebLinkActivity::class.java)
                 intent.putExtra("url",mSocialMediaArraylistFacebook.get(0).url.toString())
                 intent.putExtra("heading","FaceBook")
-                startActivity(intent)
+                startActivity(intent)*/
             }
 
         })
@@ -185,7 +205,7 @@ class SocialMediaActivity : AppCompatActivity(){
             else{
                 val intent = Intent(mContext, WebLinkActivity::class.java)
                 intent.putExtra("url",mSocialMediaArraylistTwitter.get(0).url.toString())
-                intent.putExtra("heading","Twitter")
+                intent.putExtra("heading","X")
                 startActivity(intent)
             }
         })

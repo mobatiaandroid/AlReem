@@ -271,20 +271,20 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                   7->
                   {
                       //Early years
-                      mFragment = EarlyYearsFragment()
-                      replaceFragmentsSelected(position)
+                      DialogFunctions.commonErrorAlertDialog(context.resources.getString(R.string.alert),context.resources.getString(R.string.feature_only_for_registered_user),context)
+
                   }
                   8->
                   {
                       //Primary
-                      mFragment = PrimaryFragment()
-                      replaceFragmentsSelected(position)
+                      DialogFunctions.commonErrorAlertDialog(context.resources.getString(R.string.alert),context.resources.getString(R.string.feature_only_for_registered_user),context)
+
                   }
                   9->
                   {
                       //Secondary
-                      mFragment = SecondaryFragment()
-                      replaceFragmentsSelected(position)
+                      DialogFunctions.commonErrorAlertDialog(context.resources.getString(R.string.alert),context.resources.getString(R.string.feature_only_for_registered_user),context)
+
                   }
                   10->
                   {
@@ -315,6 +315,42 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                   }
                   14->
                   {
+                      //Gallery
+                      DialogFunctions.commonErrorAlertDialog(context.resources.getString(R.string.alert),context.resources.getString(R.string.feature_only_for_registered_user),context)
+
+                  }
+                  15->
+                  {
+                      //Gallery
+                      DialogFunctions.commonErrorAlertDialog(context.resources.getString(R.string.alert),context.resources.getString(R.string.feature_only_for_registered_user),context)
+
+                  }
+                  16->
+                  {
+                      //Gallery
+                      DialogFunctions.commonErrorAlertDialog(context.resources.getString(R.string.alert),context.resources.getString(R.string.feature_only_for_registered_user),context)
+
+                  }
+                  17->
+                  {
+                      //Gallery
+                      DialogFunctions.commonErrorAlertDialog(context.resources.getString(R.string.alert),context.resources.getString(R.string.feature_only_for_registered_user),context)
+
+                  }
+                  18->
+                  {
+                      //Gallery
+                      DialogFunctions.commonErrorAlertDialog(context.resources.getString(R.string.alert),context.resources.getString(R.string.feature_only_for_registered_user),context)
+
+                  }
+                  19->
+                  {
+                      //Gallery
+                      DialogFunctions.commonErrorAlertDialog(context.resources.getString(R.string.alert),context.resources.getString(R.string.feature_only_for_registered_user),context)
+
+                  }
+                  20->
+                  {
                       //About Us
 
 
@@ -340,7 +376,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                           replaceFragmentsSelected(position)
                       }
                   }
-                  15->
+                  21->
                   {
                       // Contact Us
                       mFragment = AboutUsFragment()

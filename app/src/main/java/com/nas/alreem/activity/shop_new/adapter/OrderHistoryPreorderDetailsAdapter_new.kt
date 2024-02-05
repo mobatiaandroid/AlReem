@@ -14,6 +14,8 @@ import com.nas.alreem.R
 import com.nas.alreem.activity.canteen.model.order_history.OrderCanteenPreOrderItems
 import com.nas.alreem.activity.shop_new.model.ShopItemHistoryModel
 import com.nas.alreem.activity.shop_new.model.ShopModel
+import com.nas.alreem.constants.ConstantFunctions
+import kotlinx.android.synthetic.main.dialog_send_email.view.text
 
 
 class OrderHistoryPreorderDetailsAdapter_new ( val preorderhis_list: ArrayList<ShopItemHistoryModel>, var mcontext: Context) :
@@ -29,6 +31,7 @@ class OrderHistoryPreorderDetailsAdapter_new ( val preorderhis_list: ArrayList<S
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
 
         viewHolder.itemNameTxt.text=preorderhis_list.get(position).item_name
+        viewHolder.date_item.text= ConstantFunctions.dateParsingToddMMMyyyyBasket(preorderhis_list.get(position).order_date)
         viewHolder.itemDescription.text=preorderhis_list.get(position).description
         var url:String?=""
         url=preorderhis_list[position].item_image.get(0)
@@ -73,6 +76,7 @@ class OrderHistoryPreorderDetailsAdapter_new ( val preorderhis_list: ArrayList<S
         var status: TextView
         var orderbadge: TextView
         var itemImg : ImageView
+        var date_item : TextView
         init {
             itemNameTxt = itemView.findViewById(R.id.itemNameTxt)
             itemDescription = itemView.findViewById(R.id.itemDescription)
@@ -81,6 +85,7 @@ class OrderHistoryPreorderDetailsAdapter_new ( val preorderhis_list: ArrayList<S
             status = itemView.findViewById(R.id.status)
             orderbadge=itemView.findViewById(R.id.orderbadge)
             itemImg = itemView.findViewById(R.id.itemImg)
+            date_item = itemView.findViewById(R.id.date)
         }
     }
 

@@ -3859,27 +3859,27 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgThreeDot.visibility = View.VISIBLE
+                            relImgThreeDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getCalenderhomeBadge(mContext)
                                 .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            relImgThreeDot.visibility = View.VISIBLE
+                            relImgThreeDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                            relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
                                 .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgThreeDot.visibility = View.VISIBLE
+                            relImgThreeDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
-                            relImgTwoDot.visibility = View.GONE
+                            relImgThreeDot.visibility = View.GONE
                         }
                     } else if (PreferenceManager.getbuttonthreetabid(mContext)
                             .equals(ConstantWords.TAB_NOTIFICATIONS)
@@ -3889,28 +3889,28 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getNotificationBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgThreeDot.visibility = View.VISIBLE
+                            relImgThreeDot.text = PreferenceManager.getNotificationBadge(mContext)
+                            relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getNotificationBadge(mContext)
                                 .equals("0") && !PreferenceManager.getNotificationEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text =
+                            relImgThreeDot.visibility = View.VISIBLE
+                            relImgThreeDot.text =
                                 PreferenceManager.getNotificationEditedBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getNotificationBadge(mContext)
                                 .equals("0") && PreferenceManager.getNotificationEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getNotificationBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgThreeDot.visibility = View.VISIBLE
+                            relImgThreeDot.text = PreferenceManager.getNotificationBadge(mContext)
+                            relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
-                            relImgTwoDot.visibility = View.GONE
+                            relImgThreeDot.visibility = View.GONE
                         }
                     } else if (PreferenceManager.getbuttonthreetabid(mContext)
                             .equals(ConstantWords.TAB_REPORTS)
@@ -3920,33 +3920,33 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getReportsBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgThreeDot.visibility = View.VISIBLE
+                            relImgThreeDot.text = PreferenceManager.getReportsBadge(mContext)
+                            relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getReportsBadge(mContext)
                                 .equals("0") && !PreferenceManager.getReportsEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getReportsEditedBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            relImgThreeDot.visibility = View.VISIBLE
+                            relImgThreeDot.text = PreferenceManager.getReportsEditedBadge(mContext)
+                            relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getReportsBadge(mContext)
                                 .equals("0") && PreferenceManager.getReportsEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getReportsBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgThreeDot.visibility = View.VISIBLE
+                            relImgThreeDot.text = PreferenceManager.getReportsBadge(mContext)
+                            relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getReportsBadge(mContext)
                                 .equals("0") && PreferenceManager.getReportsEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgOneDot.visibility = View.GONE
+                            relImgThreeDot.visibility = View.GONE
                         } else {
-                            relImgTwoDot.visibility = View.GONE
+                            relImgThreeDot.visibility = View.GONE
                         }
                     } else if (PreferenceManager.getbuttonthreetabid(mContext)
                             .equals(ConstantWords.TAB_PAYMENTS)
@@ -3956,28 +3956,28 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getPaymentitem_badge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgThreeDot.visibility = View.VISIBLE
+                            relImgThreeDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                            relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getPaymentitem_badge(mContext)
                                 .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text =
+                            relImgThreeDot.visibility = View.VISIBLE
+                            relImgThreeDot.text =
                                 PreferenceManager.getPaymentitem_edit_badge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getPaymentitem_badge(mContext)
                                 .equals("0") && PreferenceManager.getPaymentitem_edit_badge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getPaymentitem_badge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgThreeDot.visibility = View.VISIBLE
+                            relImgThreeDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                            relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
-                            relImgTwoDot.visibility = View.GONE
+                            relImgThreeDot.visibility = View.GONE
                         }
                     } else if (PreferenceManager.getbuttonthreetabid(mContext)
                             .equals(ConstantWords.TAB_ENRICHMENT)
@@ -3987,27 +3987,27 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getCcaBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgThreeDot.visibility = View.VISIBLE
+                            relImgThreeDot.text = PreferenceManager.getCcaBadge(mContext)
+                            relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getCcaBadge(mContext)
                                 .equals("0") && !PreferenceManager.getCcaEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getCcaEditedBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            relImgThreeDot.visibility = View.VISIBLE
+                            relImgThreeDot.text = PreferenceManager.getCcaEditedBadge(mContext)
+                            relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getCcaBadge(mContext)
                                 .equals("0") && PreferenceManager.getCcaEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getCcaBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgThreeDot.visibility = View.VISIBLE
+                            relImgThreeDot.text = PreferenceManager.getCcaBadge(mContext)
+                            relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
-                            relImgTwoDot.visibility = View.GONE
+                            relImgThreeDot.visibility = View.GONE
                         }
                     }   else if (PreferenceManager.getbuttonthreetabid(mContext)
                             .equals(ConstantWords.TAB_COMMUNICATION)
@@ -4017,30 +4017,30 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getNoticeBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgThreeDot.visibility = View.VISIBLE
+                            relImgThreeDot.text = PreferenceManager.getNoticeBadge(mContext)
+                            relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getNoticeBadge(mContext)
                                 .equals("0") && !PreferenceManager.getNoticeEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getNoticeEditedBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            relImgThreeDot.visibility = View.VISIBLE
+                            relImgThreeDot.text = PreferenceManager.getNoticeEditedBadge(mContext)
+                            relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getNoticeBadge(mContext)
                                 .equals("0") && PreferenceManager.getNoticeEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getNoticeBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgThreeDot.visibility = View.VISIBLE
+                            relImgThreeDot.text = PreferenceManager.getNoticeBadge(mContext)
+                            relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
-                            relImgTwoDot.visibility = View.GONE
+                            relImgThreeDot.visibility = View.GONE
                         }
                     } else {
-                        relImgTwoDot.visibility = View.GONE
+                        relImgThreeDot.visibility = View.GONE
                     }
                 } else if (touchedView == relfour) {
                     relImgfour.setImageDrawable(mListImgArrays.getDrawable(sPosition))
@@ -4066,27 +4066,27 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgFourDot.visibility = View.VISIBLE
+                            relImgFourDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgFourDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getCalenderhomeBadge(mContext)
                                 .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            relImgFourDot.visibility = View.VISIBLE
+                            relImgFourDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                            relImgFourDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
                                 .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgFourDot.visibility = View.VISIBLE
+                            relImgFourDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgFourDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
-                            relImgTwoDot.visibility = View.GONE
+                            relImgFourDot.visibility = View.GONE
                         }
                     } else if (PreferenceManager.getbuttonfourtabid(mContext)
                             .equals(ConstantWords.TAB_NOTIFICATIONS)
@@ -4096,28 +4096,28 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getNotificationBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgFourDot.visibility = View.VISIBLE
+                            relImgFourDot.text = PreferenceManager.getNotificationBadge(mContext)
+                            relImgFourDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getNotificationBadge(mContext)
                                 .equals("0") && !PreferenceManager.getNotificationEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text =
+                            relImgFourDot.visibility = View.VISIBLE
+                            relImgFourDot.text =
                                 PreferenceManager.getNotificationEditedBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            relImgFourDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getNotificationBadge(mContext)
                                 .equals("0") && PreferenceManager.getNotificationEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getNotificationBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgFourDot.visibility = View.VISIBLE
+                            relImgFourDot.text = PreferenceManager.getNotificationBadge(mContext)
+                            relImgFourDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
-                            relImgTwoDot.visibility = View.GONE
+                            relImgFourDot.visibility = View.GONE
                         }
                     } else if (PreferenceManager.getbuttonfourtabid(mContext)
                             .equals(ConstantWords.TAB_REPORTS)
@@ -4127,33 +4127,33 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getReportsBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgFourDot.visibility = View.VISIBLE
+                            relImgFourDot.text = PreferenceManager.getReportsBadge(mContext)
+                            relImgFourDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getReportsBadge(mContext)
                                 .equals("0") && !PreferenceManager.getReportsEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getReportsEditedBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            relImgFourDot.visibility = View.VISIBLE
+                            relImgFourDot.text = PreferenceManager.getReportsEditedBadge(mContext)
+                            relImgFourDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getReportsBadge(mContext)
                                 .equals("0") && PreferenceManager.getReportsEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getReportsBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgFourDot.visibility = View.VISIBLE
+                            relImgFourDot.text = PreferenceManager.getReportsBadge(mContext)
+                            relImgFourDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getReportsBadge(mContext)
                                 .equals("0") && PreferenceManager.getReportsEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgOneDot.visibility = View.GONE
+                            relImgFourDot.visibility = View.GONE
                         } else {
-                            relImgTwoDot.visibility = View.GONE
+                            relImgFourDot.visibility = View.GONE
                         }
                     } else if (PreferenceManager.getbuttonfourtabid(mContext)
                             .equals(ConstantWords.TAB_PAYMENTS)
@@ -4163,28 +4163,28 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getPaymentitem_badge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgFourDot.visibility = View.VISIBLE
+                            relImgFourDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                            relImgFourDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getPaymentitem_badge(mContext)
                                 .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text =
+                            relImgFourDot.visibility = View.VISIBLE
+                            relImgFourDot.text =
                                 PreferenceManager.getPaymentitem_edit_badge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            relImgFourDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getPaymentitem_badge(mContext)
                                 .equals("0") && PreferenceManager.getPaymentitem_edit_badge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getPaymentitem_badge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgFourDot.visibility = View.VISIBLE
+                            relImgFourDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                            relImgFourDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
-                            relImgTwoDot.visibility = View.GONE
+                            relImgFourDot.visibility = View.GONE
                         }
                     } else if (PreferenceManager.getbuttonfourtabid(mContext)
                             .equals(ConstantWords.TAB_ENRICHMENT)
@@ -4194,27 +4194,27 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getCcaBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgFourDot.visibility = View.VISIBLE
+                            relImgFourDot.text = PreferenceManager.getCcaBadge(mContext)
+                            relImgFourDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getCcaBadge(mContext)
                                 .equals("0") && !PreferenceManager.getCcaEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getCcaEditedBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            relImgFourDot.visibility = View.VISIBLE
+                            relImgFourDot.text = PreferenceManager.getCcaEditedBadge(mContext)
+                            relImgFourDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getCcaBadge(mContext)
                                 .equals("0") && PreferenceManager.getCcaEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getCcaBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgFourDot.visibility = View.VISIBLE
+                            relImgFourDot.text = PreferenceManager.getCcaBadge(mContext)
+                            relImgFourDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
-                            relImgTwoDot.visibility = View.GONE
+                            relImgFourDot.visibility = View.GONE
                         }
                     }   else if (PreferenceManager.getbuttonfourtabid(mContext)
                             .equals(ConstantWords.TAB_COMMUNICATION)
@@ -4224,30 +4224,30 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getNoticeBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgFourDot.visibility = View.VISIBLE
+                            relImgFourDot.text = PreferenceManager.getNoticeBadge(mContext)
+                            relImgFourDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getNoticeBadge(mContext)
                                 .equals("0") && !PreferenceManager.getNoticeEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getNoticeEditedBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            relImgFourDot.visibility = View.VISIBLE
+                            relImgFourDot.text = PreferenceManager.getNoticeEditedBadge(mContext)
+                            relImgFourDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getNoticeBadge(mContext)
                                 .equals("0") && PreferenceManager.getNoticeEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getNoticeBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgFourDot.visibility = View.VISIBLE
+                            relImgFourDot.text = PreferenceManager.getNoticeBadge(mContext)
+                            relImgFourDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
-                            relImgTwoDot.visibility = View.GONE
+                            relImgFourDot.visibility = View.GONE
                         }
                     } else {
-                        relImgTwoDot.visibility = View.GONE
+                        relImgFourDot.visibility = View.GONE
                     }
                 } else if (touchedView == relfive) {
                     relImgfive.setImageDrawable(mListImgArrays.getDrawable(sPosition))
@@ -4273,27 +4273,27 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgFiveDot.visibility = View.VISIBLE
+                            relImgFiveDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getCalenderhomeBadge(mContext)
                                 .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            relImgFiveDot.visibility = View.VISIBLE
+                            relImgFiveDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                            relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
                                 .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgFiveDot.visibility = View.VISIBLE
+                            relImgFiveDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
-                            relImgTwoDot.visibility = View.GONE
+                            relImgFiveDot.visibility = View.GONE
                         }
                     } else if (PreferenceManager.getbuttonfivetabid(mContext)
                             .equals(ConstantWords.TAB_NOTIFICATIONS)
@@ -4303,28 +4303,28 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getNotificationBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgFiveDot.visibility = View.VISIBLE
+                            relImgFiveDot.text = PreferenceManager.getNotificationBadge(mContext)
+                            relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getNotificationBadge(mContext)
                                 .equals("0") && !PreferenceManager.getNotificationEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text =
+                            relImgFiveDot.visibility = View.VISIBLE
+                            relImgFiveDot.text =
                                 PreferenceManager.getNotificationEditedBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getNotificationBadge(mContext)
                                 .equals("0") && PreferenceManager.getNotificationEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getNotificationBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgFiveDot.visibility = View.VISIBLE
+                            relImgFiveDot.text = PreferenceManager.getNotificationBadge(mContext)
+                            relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
-                            relImgTwoDot.visibility = View.GONE
+                            relImgFiveDot.visibility = View.GONE
                         }
                     } else if (PreferenceManager.getbuttonfivetabid(mContext)
                             .equals(ConstantWords.TAB_REPORTS)
@@ -4334,33 +4334,33 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getReportsBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgFiveDot.visibility = View.VISIBLE
+                            relImgFiveDot.text = PreferenceManager.getReportsBadge(mContext)
+                            relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getReportsBadge(mContext)
                                 .equals("0") && !PreferenceManager.getReportsEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getReportsEditedBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            relImgFiveDot.visibility = View.VISIBLE
+                            relImgFiveDot.text = PreferenceManager.getReportsEditedBadge(mContext)
+                            relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getReportsBadge(mContext)
                                 .equals("0") && PreferenceManager.getReportsEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getReportsBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgFiveDot.visibility = View.VISIBLE
+                            relImgFiveDot.text = PreferenceManager.getReportsBadge(mContext)
+                            relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getReportsBadge(mContext)
                                 .equals("0") && PreferenceManager.getReportsEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgOneDot.visibility = View.GONE
+                            relImgFiveDot.visibility = View.GONE
                         } else {
-                            relImgTwoDot.visibility = View.GONE
+                            relImgFiveDot.visibility = View.GONE
                         }
                     } else if (PreferenceManager.getbuttonfivetabid(mContext)
                             .equals(ConstantWords.TAB_PAYMENTS)
@@ -4370,28 +4370,28 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getPaymentitem_badge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgFiveDot.visibility = View.VISIBLE
+                            relImgFiveDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                            relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getPaymentitem_badge(mContext)
                                 .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text =
+                            relImgFiveDot.visibility = View.VISIBLE
+                            relImgFiveDot.text =
                                 PreferenceManager.getPaymentitem_edit_badge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getPaymentitem_badge(mContext)
                                 .equals("0") && PreferenceManager.getPaymentitem_edit_badge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getPaymentitem_badge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgFiveDot.visibility = View.VISIBLE
+                            relImgFiveDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                            relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
-                            relImgTwoDot.visibility = View.GONE
+                            relImgFiveDot.visibility = View.GONE
                         }
                     } else if (PreferenceManager.getbuttonfivetabid(mContext)
                             .equals(ConstantWords.TAB_ENRICHMENT)
@@ -4401,27 +4401,27 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getCcaBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgFiveDot.visibility = View.VISIBLE
+                            relImgFiveDot.text = PreferenceManager.getCcaBadge(mContext)
+                            relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getCcaBadge(mContext)
                                 .equals("0") && !PreferenceManager.getCcaEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getCcaEditedBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            relImgFiveDot.visibility = View.VISIBLE
+                            relImgFiveDot.text = PreferenceManager.getCcaEditedBadge(mContext)
+                            relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getCcaBadge(mContext)
                                 .equals("0") && PreferenceManager.getCcaEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getCcaBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgFiveDot.visibility = View.VISIBLE
+                            relImgFiveDot.text = PreferenceManager.getCcaBadge(mContext)
+                            relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
-                            relImgTwoDot.visibility = View.GONE
+                            relImgFiveDot.visibility = View.GONE
                         }
                     }   else if (PreferenceManager.getbuttonfivetabid(mContext)
                             .equals(ConstantWords.TAB_COMMUNICATION)
@@ -4431,30 +4431,30 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getNoticeBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgFiveDot.visibility = View.VISIBLE
+                            relImgFiveDot.text = PreferenceManager.getNoticeBadge(mContext)
+                            relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getNoticeBadge(mContext)
                                 .equals("0") && !PreferenceManager.getNoticeEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getNoticeEditedBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            relImgFiveDot.visibility = View.VISIBLE
+                            relImgFiveDot.text = PreferenceManager.getNoticeEditedBadge(mContext)
+                            relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getNoticeBadge(mContext)
                                 .equals("0") && PreferenceManager.getNoticeEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getNoticeBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgFiveDot.visibility = View.VISIBLE
+                            relImgFiveDot.text = PreferenceManager.getNoticeBadge(mContext)
+                            relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
-                            relImgTwoDot.visibility = View.GONE
+                            relImgFiveDot.visibility = View.GONE
                         }
                     } else {
-                        relImgTwoDot.visibility = View.GONE
+                        relImgFiveDot.visibility = View.GONE
                     }
                 } else if (touchedView == relsix) {
                     relImgsix.setImageDrawable(mListImgArrays.getDrawable(sPosition))
@@ -4480,27 +4480,27 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgSixDot.visibility = View.VISIBLE
+                            relImgSixDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgSixDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getCalenderhomeBadge(mContext)
                                 .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            relImgSixDot.visibility = View.VISIBLE
+                            relImgSixDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                            relImgSixDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
                                 .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgSixDot.visibility = View.VISIBLE
+                            relImgSixDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgSixDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
-                            relImgTwoDot.visibility = View.GONE
+                            relImgSixDot.visibility = View.GONE
                         }
                     } else if (PreferenceManager.getbuttonsixtabid(mContext)
                             .equals(ConstantWords.TAB_NOTIFICATIONS)
@@ -4510,28 +4510,28 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getNotificationBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgSixDot.visibility = View.VISIBLE
+                            relImgSixDot.text = PreferenceManager.getNotificationBadge(mContext)
+                            relImgSixDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getNotificationBadge(mContext)
                                 .equals("0") && !PreferenceManager.getNotificationEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text =
+                            relImgSixDot.visibility = View.VISIBLE
+                            relImgSixDot.text =
                                 PreferenceManager.getNotificationEditedBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            relImgSixDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getNotificationBadge(mContext)
                                 .equals("0") && PreferenceManager.getNotificationEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getNotificationBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgSixDot.visibility = View.VISIBLE
+                            relImgSixDot.text = PreferenceManager.getNotificationBadge(mContext)
+                            relImgSixDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
-                            relImgTwoDot.visibility = View.GONE
+                            relImgSixDot.visibility = View.GONE
                         }
                     } else if (PreferenceManager.getbuttonsixtabid(mContext)
                             .equals(ConstantWords.TAB_REPORTS)
@@ -4541,33 +4541,33 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getReportsBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgSixDot.visibility = View.VISIBLE
+                            relImgSixDot.text = PreferenceManager.getReportsBadge(mContext)
+                            relImgSixDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getReportsBadge(mContext)
                                 .equals("0") && !PreferenceManager.getReportsEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getReportsEditedBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            relImgSixDot.visibility = View.VISIBLE
+                            relImgSixDot.text = PreferenceManager.getReportsEditedBadge(mContext)
+                            relImgSixDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getReportsBadge(mContext)
                                 .equals("0") && PreferenceManager.getReportsEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getReportsBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgSixDot.visibility = View.VISIBLE
+                            relImgSixDot.text = PreferenceManager.getReportsBadge(mContext)
+                            relImgSixDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getReportsBadge(mContext)
                                 .equals("0") && PreferenceManager.getReportsEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgOneDot.visibility = View.GONE
+                            relImgSixDot.visibility = View.GONE
                         } else {
-                            relImgTwoDot.visibility = View.GONE
+                            relImgSixDot.visibility = View.GONE
                         }
                     } else if (PreferenceManager.getbuttonsixtabid(mContext)
                             .equals(ConstantWords.TAB_PAYMENTS)
@@ -4577,28 +4577,28 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getPaymentitem_badge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgSixDot.visibility = View.VISIBLE
+                            relImgSixDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                            relImgSixDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getPaymentitem_badge(mContext)
                                 .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text =
+                            relImgSixDot.visibility = View.VISIBLE
+                            relImgSixDot.text =
                                 PreferenceManager.getPaymentitem_edit_badge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            relImgSixDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getPaymentitem_badge(mContext)
                                 .equals("0") && PreferenceManager.getPaymentitem_edit_badge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getPaymentitem_badge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgSixDot.visibility = View.VISIBLE
+                            relImgSixDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                            relImgSixDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
-                            relImgTwoDot.visibility = View.GONE
+                            relImgSixDot.visibility = View.GONE
                         }
                     } else if (PreferenceManager.getbuttonsixtabid(mContext)
                             .equals(ConstantWords.TAB_ENRICHMENT)
@@ -4608,27 +4608,27 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getCcaBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgSixDot.visibility = View.VISIBLE
+                            relImgSixDot.text = PreferenceManager.getCcaBadge(mContext)
+                            relImgSixDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getCcaBadge(mContext)
                                 .equals("0") && !PreferenceManager.getCcaEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getCcaEditedBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            relImgSixDot.visibility = View.VISIBLE
+                            relImgSixDot.text = PreferenceManager.getCcaEditedBadge(mContext)
+                            relImgSixDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getCcaBadge(mContext)
                                 .equals("0") && PreferenceManager.getCcaEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getCcaBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgSixDot.visibility = View.VISIBLE
+                            relImgSixDot.text = PreferenceManager.getCcaBadge(mContext)
+                            relImgSixDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
-                            relImgTwoDot.visibility = View.GONE
+                            relImgSixDot.visibility = View.GONE
                         }
                     }   else if (PreferenceManager.getbuttonsixtabid(mContext)
                             .equals(ConstantWords.TAB_COMMUNICATION)
@@ -4638,30 +4638,30 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getNoticeBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgSixDot.visibility = View.VISIBLE
+                            relImgSixDot.text = PreferenceManager.getNoticeBadge(mContext)
+                            relImgSixDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getNoticeBadge(mContext)
                                 .equals("0") && !PreferenceManager.getNoticeEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getNoticeEditedBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            relImgSixDot.visibility = View.VISIBLE
+                            relImgSixDot.text = PreferenceManager.getNoticeEditedBadge(mContext)
+                            relImgSixDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getNoticeBadge(mContext)
                                 .equals("0") && PreferenceManager.getNoticeEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getNoticeBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgSixDot.visibility = View.VISIBLE
+                            relImgSixDot.text = PreferenceManager.getNoticeBadge(mContext)
+                            relImgSixDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
-                            relImgTwoDot.visibility = View.GONE
+                            relImgSixDot.visibility = View.GONE
                         }
                     } else {
-                        relImgTwoDot.visibility = View.GONE
+                        relImgSixDot.visibility = View.GONE
                     }
                 } else if (touchedView == relseven) {
                     relImgseven.setImageDrawable(mListImgArrays.getDrawable(sPosition))
@@ -4687,27 +4687,27 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgSevenDot.visibility = View.VISIBLE
+                            relImgSevenDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getCalenderhomeBadge(mContext)
                                 .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            relImgSevenDot.visibility = View.VISIBLE
+                            relImgSevenDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                            relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
                                 .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgSevenDot.visibility = View.VISIBLE
+                            relImgSevenDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
-                            relImgTwoDot.visibility = View.GONE
+                            relImgSevenDot.visibility = View.GONE
                         }
                     } else if (PreferenceManager.getbuttonseventabid(mContext)
                             .equals(ConstantWords.TAB_NOTIFICATIONS)
@@ -4717,28 +4717,28 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getNotificationBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgSevenDot.visibility = View.VISIBLE
+                            relImgSevenDot.text = PreferenceManager.getNotificationBadge(mContext)
+                            relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getNotificationBadge(mContext)
                                 .equals("0") && !PreferenceManager.getNotificationEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text =
+                            relImgSevenDot.visibility = View.VISIBLE
+                            relImgSevenDot.text =
                                 PreferenceManager.getNotificationEditedBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getNotificationBadge(mContext)
                                 .equals("0") && PreferenceManager.getNotificationEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getNotificationBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgSevenDot.visibility = View.VISIBLE
+                            relImgSevenDot.text = PreferenceManager.getNotificationBadge(mContext)
+                            relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
-                            relImgTwoDot.visibility = View.GONE
+                            relImgSevenDot.visibility = View.GONE
                         }
                     } else if (PreferenceManager.getbuttonseventabid(mContext)
                             .equals(ConstantWords.TAB_REPORTS)
@@ -4748,33 +4748,33 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getReportsBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgSevenDot.visibility = View.VISIBLE
+                            relImgSevenDot.text = PreferenceManager.getReportsBadge(mContext)
+                            relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getReportsBadge(mContext)
                                 .equals("0") && !PreferenceManager.getReportsEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getReportsEditedBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            relImgSevenDot.visibility = View.VISIBLE
+                            relImgSevenDot.text = PreferenceManager.getReportsEditedBadge(mContext)
+                            relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getReportsBadge(mContext)
                                 .equals("0") && PreferenceManager.getReportsEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getReportsBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgSevenDot.visibility = View.VISIBLE
+                            relImgSevenDot.text = PreferenceManager.getReportsBadge(mContext)
+                            relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getReportsBadge(mContext)
                                 .equals("0") && PreferenceManager.getReportsEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgOneDot.visibility = View.GONE
+                            relImgSevenDot.visibility = View.GONE
                         } else {
-                            relImgTwoDot.visibility = View.GONE
+                            relImgSevenDot.visibility = View.GONE
                         }
                     } else if (PreferenceManager.getbuttonseventabid(mContext)
                             .equals(ConstantWords.TAB_PAYMENTS)
@@ -4784,28 +4784,28 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getPaymentitem_badge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgSevenDot.visibility = View.VISIBLE
+                            relImgSevenDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                            relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getPaymentitem_badge(mContext)
                                 .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text =
+                            relImgSevenDot.visibility = View.VISIBLE
+                            relImgSevenDot.text =
                                 PreferenceManager.getPaymentitem_edit_badge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getPaymentitem_badge(mContext)
                                 .equals("0") && PreferenceManager.getPaymentitem_edit_badge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getPaymentitem_badge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgSevenDot.visibility = View.VISIBLE
+                            relImgSevenDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                            relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
-                            relImgTwoDot.visibility = View.GONE
+                            relImgSevenDot.visibility = View.GONE
                         }
                     } else if (PreferenceManager.getbuttonseventabid(mContext)
                             .equals(ConstantWords.TAB_ENRICHMENT)
@@ -4815,27 +4815,27 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getCcaBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgSevenDot.visibility = View.VISIBLE
+                            relImgSevenDot.text = PreferenceManager.getCcaBadge(mContext)
+                            relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getCcaBadge(mContext)
                                 .equals("0") && !PreferenceManager.getCcaEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getCcaEditedBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            relImgSevenDot.visibility = View.VISIBLE
+                            relImgSevenDot.text = PreferenceManager.getCcaEditedBadge(mContext)
+                            relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getCcaBadge(mContext)
                                 .equals("0") && PreferenceManager.getCcaEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getCcaBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgSevenDot.visibility = View.VISIBLE
+                            relImgSevenDot.text = PreferenceManager.getCcaBadge(mContext)
+                            relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
-                            relImgTwoDot.visibility = View.GONE
+                            relImgSevenDot.visibility = View.GONE
                         }
                     }   else if (PreferenceManager.getbuttonseventabid(mContext)
                             .equals(ConstantWords.TAB_COMMUNICATION)
@@ -4845,30 +4845,30 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getNoticeBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgSevenDot.visibility = View.VISIBLE
+                            relImgSevenDot.text = PreferenceManager.getNoticeBadge(mContext)
+                            relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getNoticeBadge(mContext)
                                 .equals("0") && !PreferenceManager.getNoticeEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getNoticeEditedBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            relImgSevenDot.visibility = View.VISIBLE
+                            relImgSevenDot.text = PreferenceManager.getNoticeEditedBadge(mContext)
+                            relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getNoticeBadge(mContext)
                                 .equals("0") && PreferenceManager.getNoticeEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getNoticeBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgSevenDot.visibility = View.VISIBLE
+                            relImgSevenDot.text = PreferenceManager.getNoticeBadge(mContext)
+                            relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
-                            relImgTwoDot.visibility = View.GONE
+                            relImgSevenDot.visibility = View.GONE
                         }
                     } else {
-                        relImgTwoDot.visibility = View.GONE
+                        relImgSevenDot.visibility = View.GONE
                     }
                 } else if (touchedView == releight) {
                     relImgeight.setImageDrawable(mListImgArrays.getDrawable(sPosition))
@@ -4894,27 +4894,27 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgEightDot.visibility = View.VISIBLE
+                            relImgEightDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgEightDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getCalenderhomeBadge(mContext)
                                 .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            relImgEightDot.visibility = View.VISIBLE
+                            relImgEightDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                            relImgEightDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
                                 .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgEightDot.visibility = View.VISIBLE
+                            relImgEightDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgEightDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
-                            relImgTwoDot.visibility = View.GONE
+                            relImgEightDot.visibility = View.GONE
                         }
                     } else if (PreferenceManager.getbuttoneighttabid(mContext)
                             .equals(ConstantWords.TAB_NOTIFICATIONS)
@@ -4924,28 +4924,28 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getNotificationBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgEightDot.visibility = View.VISIBLE
+                            relImgEightDot.text = PreferenceManager.getNotificationBadge(mContext)
+                            relImgEightDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getNotificationBadge(mContext)
                                 .equals("0") && !PreferenceManager.getNotificationEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text =
+                            relImgEightDot.visibility = View.VISIBLE
+                            relImgEightDot.text =
                                 PreferenceManager.getNotificationEditedBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            relImgEightDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getNotificationBadge(mContext)
                                 .equals("0") && PreferenceManager.getNotificationEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getNotificationBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgEightDot.visibility = View.VISIBLE
+                            relImgEightDot.text = PreferenceManager.getNotificationBadge(mContext)
+                            relImgEightDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
-                            relImgTwoDot.visibility = View.GONE
+                            relImgEightDot.visibility = View.GONE
                         }
                     } else if (PreferenceManager.getbuttoneighttabid(mContext)
                             .equals(ConstantWords.TAB_REPORTS)
@@ -4955,33 +4955,33 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getReportsBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgEightDot.visibility = View.VISIBLE
+                            relImgEightDot.text = PreferenceManager.getReportsBadge(mContext)
+                            relImgEightDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getReportsBadge(mContext)
                                 .equals("0") && !PreferenceManager.getReportsEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getReportsEditedBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            relImgEightDot.visibility = View.VISIBLE
+                            relImgEightDot.text = PreferenceManager.getReportsEditedBadge(mContext)
+                            relImgEightDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getReportsBadge(mContext)
                                 .equals("0") && PreferenceManager.getReportsEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getReportsBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgEightDot.visibility = View.VISIBLE
+                            relImgEightDot.text = PreferenceManager.getReportsBadge(mContext)
+                            relImgEightDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getReportsBadge(mContext)
                                 .equals("0") && PreferenceManager.getReportsEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgOneDot.visibility = View.GONE
+                            relImgEightDot.visibility = View.GONE
                         } else {
-                            relImgTwoDot.visibility = View.GONE
+                            relImgEightDot.visibility = View.GONE
                         }
                     } else if (PreferenceManager.getbuttoneighttabid(mContext)
                             .equals(ConstantWords.TAB_PAYMENTS)
@@ -4991,28 +4991,28 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getPaymentitem_badge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgEightDot.visibility = View.VISIBLE
+                            relImgEightDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                            relImgEightDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getPaymentitem_badge(mContext)
                                 .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text =
+                            relImgEightDot.visibility = View.VISIBLE
+                            relImgEightDot.text =
                                 PreferenceManager.getPaymentitem_edit_badge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            relImgEightDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getPaymentitem_badge(mContext)
                                 .equals("0") && PreferenceManager.getPaymentitem_edit_badge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getPaymentitem_badge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgEightDot.visibility = View.VISIBLE
+                            relImgEightDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                            relImgEightDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
-                            relImgTwoDot.visibility = View.GONE
+                            relImgEightDot.visibility = View.GONE
                         }
                     } else if (PreferenceManager.getbuttoneighttabid(mContext)
                             .equals(ConstantWords.TAB_ENRICHMENT)
@@ -5022,27 +5022,27 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getCcaBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgEightDot.visibility = View.VISIBLE
+                            relImgEightDot.text = PreferenceManager.getCcaBadge(mContext)
+                            relImgEightDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getCcaBadge(mContext)
                                 .equals("0") && !PreferenceManager.getCcaEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getCcaEditedBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            relImgEightDot.visibility = View.VISIBLE
+                            relImgEightDot.text = PreferenceManager.getCcaEditedBadge(mContext)
+                            relImgEightDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getCcaBadge(mContext)
                                 .equals("0") && PreferenceManager.getCcaEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getCcaBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgEightDot.visibility = View.VISIBLE
+                            relImgEightDot.text = PreferenceManager.getCcaBadge(mContext)
+                            relImgEightDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
-                            relImgTwoDot.visibility = View.GONE
+                            relImgEightDot.visibility = View.GONE
                         }
                     }   else if (PreferenceManager.getbuttoneighttabid(mContext)
                             .equals(ConstantWords.TAB_COMMUNICATION)
@@ -5052,30 +5052,30 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getNoticeBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgEightDot.visibility = View.VISIBLE
+                            relImgEightDot.text = PreferenceManager.getNoticeBadge(mContext)
+                            relImgEightDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getNoticeBadge(mContext)
                                 .equals("0") && !PreferenceManager.getNoticeEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getNoticeEditedBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            relImgEightDot.visibility = View.VISIBLE
+                            relImgEightDot.text = PreferenceManager.getNoticeEditedBadge(mContext)
+                            relImgEightDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getNoticeBadge(mContext)
                                 .equals("0") && PreferenceManager.getNoticeEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getNoticeBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgEightDot.visibility = View.VISIBLE
+                            relImgEightDot.text = PreferenceManager.getNoticeBadge(mContext)
+                            relImgEightDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
-                            relImgTwoDot.visibility = View.GONE
+                            relImgEightDot.visibility = View.GONE
                         }
                     } else {
-                        relImgTwoDot.visibility = View.GONE
+                        relImgEightDot.visibility = View.GONE
                     }
                 } else if (touchedView == relnine) {
                     relImgnine.setImageDrawable(mListImgArrays.getDrawable(sPosition))
@@ -5101,27 +5101,27 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgNineDot.visibility = View.VISIBLE
+                            relImgNineDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgNineDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getCalenderhomeBadge(mContext)
                                 .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            relImgNineDot.visibility = View.VISIBLE
+                            relImgNineDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                            relImgNineDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
                                 .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgNineDot.visibility = View.VISIBLE
+                            relImgNineDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgNineDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
-                            relImgTwoDot.visibility = View.GONE
+                            relImgNineDot.visibility = View.GONE
                         }
                     } else if (PreferenceManager.getbuttonninetabid(mContext)
                             .equals(ConstantWords.TAB_NOTIFICATIONS)
@@ -5131,28 +5131,28 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getNotificationBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgNineDot.visibility = View.VISIBLE
+                            relImgNineDot.text = PreferenceManager.getNotificationBadge(mContext)
+                            relImgNineDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getNotificationBadge(mContext)
                                 .equals("0") && !PreferenceManager.getNotificationEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text =
+                            relImgNineDot.visibility = View.VISIBLE
+                            relImgNineDot.text =
                                 PreferenceManager.getNotificationEditedBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            relImgNineDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getNotificationBadge(mContext)
                                 .equals("0") && PreferenceManager.getNotificationEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getNotificationBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgNineDot.visibility = View.VISIBLE
+                            relImgNineDot.text = PreferenceManager.getNotificationBadge(mContext)
+                            relImgNineDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
-                            relImgTwoDot.visibility = View.GONE
+                            relImgNineDot.visibility = View.GONE
                         }
                     } else if (PreferenceManager.getbuttonninetabid(mContext)
                             .equals(ConstantWords.TAB_REPORTS)
@@ -5162,33 +5162,33 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getReportsBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgNineDot.visibility = View.VISIBLE
+                            relImgNineDot.text = PreferenceManager.getReportsBadge(mContext)
+                            relImgNineDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getReportsBadge(mContext)
                                 .equals("0") && !PreferenceManager.getReportsEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getReportsEditedBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            relImgNineDot.visibility = View.VISIBLE
+                            relImgNineDot.text = PreferenceManager.getReportsEditedBadge(mContext)
+                            relImgNineDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getReportsBadge(mContext)
                                 .equals("0") && PreferenceManager.getReportsEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getReportsBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgNineDot.visibility = View.VISIBLE
+                            relImgNineDot.text = PreferenceManager.getReportsBadge(mContext)
+                            relImgNineDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getReportsBadge(mContext)
                                 .equals("0") && PreferenceManager.getReportsEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgOneDot.visibility = View.GONE
+                            relImgNineDot.visibility = View.GONE
                         } else {
-                            relImgTwoDot.visibility = View.GONE
+                            relImgNineDot.visibility = View.GONE
                         }
                     } else if (PreferenceManager.getbuttonninetabid(mContext)
                             .equals(ConstantWords.TAB_PAYMENTS)
@@ -5198,28 +5198,28 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getPaymentitem_badge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgNineDot.visibility = View.VISIBLE
+                            relImgNineDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                            relImgNineDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getPaymentitem_badge(mContext)
                                 .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text =
+                            relImgNineDot.visibility = View.VISIBLE
+                            relImgNineDot.text =
                                 PreferenceManager.getPaymentitem_edit_badge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            relImgNineDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getPaymentitem_badge(mContext)
                                 .equals("0") && PreferenceManager.getPaymentitem_edit_badge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getPaymentitem_badge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgNineDot.visibility = View.VISIBLE
+                            relImgNineDot.text = PreferenceManager.getPaymentitem_badge(mContext)
+                            relImgNineDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
-                            relImgTwoDot.visibility = View.GONE
+                            relImgNineDot.visibility = View.GONE
                         }
                     } else if (PreferenceManager.getbuttonninetabid(mContext)
                             .equals(ConstantWords.TAB_ENRICHMENT)
@@ -5229,27 +5229,27 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getCcaBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgNineDot.visibility = View.VISIBLE
+                            relImgNineDot.text = PreferenceManager.getCcaBadge(mContext)
+                            relImgNineDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getCcaBadge(mContext)
                                 .equals("0") && !PreferenceManager.getCcaEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getCcaEditedBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            relImgNineDot.visibility = View.VISIBLE
+                            relImgNineDot.text = PreferenceManager.getCcaEditedBadge(mContext)
+                            relImgNineDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getCcaBadge(mContext)
                                 .equals("0") && PreferenceManager.getCcaEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getCcaBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgNineDot.visibility = View.VISIBLE
+                            relImgNineDot.text = PreferenceManager.getCcaBadge(mContext)
+                            relImgNineDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
-                            relImgTwoDot.visibility = View.GONE
+                            relImgNineDot.visibility = View.GONE
                         }
                     }   else if (PreferenceManager.getbuttonninetabid(mContext)
                             .equals(ConstantWords.TAB_COMMUNICATION)
@@ -5259,30 +5259,30 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getNoticeBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgNineDot.visibility = View.VISIBLE
+                            relImgNineDot.text = PreferenceManager.getNoticeBadge(mContext)
+                            relImgNineDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getNoticeBadge(mContext)
                                 .equals("0") && !PreferenceManager.getNoticeEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getNoticeEditedBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
+                            relImgNineDot.visibility = View.VISIBLE
+                            relImgNineDot.text = PreferenceManager.getNoticeEditedBadge(mContext)
+                            relImgNineDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getNoticeBadge(mContext)
                                 .equals("0") && PreferenceManager.getNoticeEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getNoticeBadge(mContext)
-                            relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
+                            relImgNineDot.visibility = View.VISIBLE
+                            relImgNineDot.text = PreferenceManager.getNoticeBadge(mContext)
+                            relImgNineDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
-                            relImgTwoDot.visibility = View.GONE
+                            relImgNineDot.visibility = View.GONE
                         }
                     } else {
-                        relImgTwoDot.visibility = View.GONE
+                        relImgNineDot.visibility = View.GONE
                     }
                 }
 
@@ -5428,6 +5428,9 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
                 textdata.equals(ConstantWords.reports, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_REPORTS
+                }
+                textdata.equals(ConstantWords.reenrollment, ignoreCase = true) -> {
+                    TAB_ID = ConstantWords.TAB_REENROLMENT
                 }
             }
 

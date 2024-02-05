@@ -127,8 +127,10 @@ class RequestBusServiceActivity : AppCompatActivity() {
         val spinnerList =findViewById<Spinner>(R.id.spinnerlist)
         var dropDownList: java.util.ArrayList<String> = ArrayList<String>()
         optionsArray=ArrayList()
-        optionsArray.add(0,"Pick Up At Morning")
-        optionsArray.add(1,"Pick Up At Evening")
+        optionsArray.add(0,"Morning")
+        optionsArray.add(1,"" +
+                "" +
+                "Evening")
         dropDownList =ArrayList()
         dropDownList.add(0, "Pick up At")
         for (i in 1..optionsArray.size) {

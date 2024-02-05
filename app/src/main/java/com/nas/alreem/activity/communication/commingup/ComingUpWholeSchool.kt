@@ -178,7 +178,7 @@ class ComingUpWholeSchool : AppCompatActivity() {
 
     private fun callStatusChangeApi(ccaDaysId: String,event_position:Int, status: String) {
         progressDialogAdd.visibility=View.VISIBLE
-        comingUpArrayList= ArrayList()
+      //  comingUpArrayList= ArrayList()
         var token="Bearer "+PreferenceManager.getaccesstoken(mContext)
         var model= NotificationApiModel(0,500)
         val paramObject = JsonObject()

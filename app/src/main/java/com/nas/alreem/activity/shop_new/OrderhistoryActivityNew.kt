@@ -17,6 +17,7 @@ import com.nas.alreem.activity.canteen.model.order_history.OrderHistoryApiModel
 import com.nas.alreem.activity.canteen.model.order_history.OrderHistoryResponseModel
 import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.activity.lost_card.model.ShopHistoryModel
+import com.nas.alreem.activity.shop_new.adapter.OrderHistoryPreorderDetailsAdapter_new
 import com.nas.alreem.activity.shop_new.adapter.PreorderDatesAdapter_new
 import com.nas.alreem.activity.shop_new.model.PaymentShopWalletHistoryModel
 import com.nas.alreem.activity.shop_new.model.ShopHistoryItemResponseModel
@@ -111,7 +112,7 @@ class OrderhistoryActivityNew  : AppCompatActivity(){
                             if (response.body()!!.response.data.size > 0) {
 
                                     order_summery=response.body()!!.response.data
-                                recyclerview.adapter = PreorderDatesAdapter_new( nContext,order_summery)
+                                recyclerview.adapter = OrderHistoryPreorderDetailsAdapter_new( order_summery,nContext)
                             } else {
 
 

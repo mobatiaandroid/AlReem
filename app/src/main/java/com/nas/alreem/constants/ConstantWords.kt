@@ -90,7 +90,7 @@ var status_141="Please Submit Before 2 pm"
         var bus_service="Bus Service"
         var enrichment="Enrichment"
         var permission_forms="Forms"
-
+        var reenrollment = "Re-Enrolment"
 
         var absence="Absence"
         var earlypickup="Early Pickup"

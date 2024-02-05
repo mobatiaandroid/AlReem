@@ -13,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
 import com.nas.alreem.R
+import com.nas.alreem.activity.canteen.model.add_orders.CatItemsListModel
+import com.nas.alreem.activity.canteen.model.add_orders.ItemsListModel
 import com.nas.alreem.activity.canteen.model.add_to_cart.AddToCartCanteenModel
 import com.nas.alreem.activity.canteen.model.add_to_cart.CanteenCartRemoveModel
 import com.nas.alreem.activity.canteen.model.add_to_cart.CanteenCartUpdateModel
@@ -24,6 +26,7 @@ import com.nas.alreem.activity.shop_new.adapter.PageViewShop
 import com.nas.alreem.activity.shop_new.model.AddToCartShopApiModel
 import com.nas.alreem.activity.shop_new.model.ShopCartRemoveApiModel
 import com.nas.alreem.activity.shop_new.model.ShopCartUpdateApiModel
+import com.nas.alreem.activity.shop_new.model.ShopItemsApiModel
 import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.DialogFunctions
@@ -36,27 +39,28 @@ import java.util.Timer
 import java.util.TimerTask
 
 class ProductDetailsPage : AppCompatActivity() {
-    lateinit var price:String
-    lateinit var item_name:String
-    lateinit var item_desc:String
-    lateinit var productNameTxt:TextView
-    lateinit var price_text : TextView
-    lateinit var product_desc : TextView
+    lateinit var price: String
+    lateinit var item_name: String
+    lateinit var item_desc: String
+    lateinit var productNameTxt: TextView
+    lateinit var price_text: TextView
+    lateinit var product_desc: TextView
     lateinit var pager: ViewPager
     lateinit var cart_list: ArrayList<ShopCartResModel>
+    lateinit var item_list: ArrayList<CatItemsListModel>
 
-    lateinit var mContext : Context
+    lateinit var mContext: Context
     var currentPage: Int = 0
-    var position  : Int =0
-    var quantityCart:Int = 0
-     var isItemCart:Boolean=false
-    var available_quantity : Int=0
-    var cart_id :String=""
-    var id : String=""
-    var size_chart : String=""
+    var position: Int = 0
+    var quantityCart: Int = 0
+    var isItemCart: Boolean = false
+    var available_quantity: Int = 0
+    var cart_id: String = ""
+    var id: String = ""
+    var size_chart: String = ""
     lateinit var addLinear: LinearLayout
     lateinit var multiLinear: LinearLayout
-    lateinit var addLinear_cart : LinearLayout
+    lateinit var addLinear_cart: LinearLayout
     lateinit var backRelative: ImageView
     lateinit var heading: TextView
     lateinit var logoClickImgView: ImageView
@@ -64,41 +68,43 @@ class ProductDetailsPage : AppCompatActivity() {
     lateinit var itemCount: ElegantNumberButton
     var canteen_cart_id = ""
     var quantity = ""
-    lateinit var sacleImg : ImageView
-    lateinit var scaletextt : TextView
-    lateinit var basket : ImageView
+    lateinit var sacleImg: ImageView
+    lateinit var scaletextt: TextView
+    lateinit var basket: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.shop_item_details)
         mContext = this
+        items()
         initfn()
+
         getcanteen_cart()
+
     }
 
     private fun initfn() {
-        price=intent.getStringExtra("price").toString()
-        item_name=intent.getStringExtra("item_name").toString()
-        item_desc=intent.getStringExtra("item_desc").toString()
-        position= intent.getIntExtra("position",0)
-        quantityCart= intent.getIntExtra("quantity_cart",0)
-        isItemCart =  intent.getBooleanExtra("item_cart",false)
-        cart_id =intent.getStringExtra("cart_id").toString()
+        price = intent.getStringExtra("price").toString()
+        item_name = intent.getStringExtra("item_name").toString()
+        item_desc = intent.getStringExtra("item_desc").toString()
+        position = intent.getIntExtra("position", 0)
+        quantityCart = intent.getIntExtra("quantity_cart", 0)
+        isItemCart = intent.getBooleanExtra("item_cart", false)
+        cart_id = intent.getStringExtra("cart_id").toString()
         image_array = intent.getStringArrayListExtra("array_list")!!
         size_chart = intent.getStringExtra("size_chart").toString()
-        available_quantity = intent.getIntExtra("available_quantity",0)
-        Log.e("available_quantity", available_quantity.toString())
+        //available_quantity = intent.getIntExtra("available_quantity", 0)
 
-        Log.e("size_chart",size_chart)
-        id=intent.getStringExtra("id").toString()
-        Log.e("id",id)
-        heading=findViewById(R.id.textViewtitle)
-        heading.text= "Product Details"
+        Log.e("size_chart", size_chart)
+        id = intent.getStringExtra("id").toString()
+        Log.e("id", id)
+        heading = findViewById(R.id.textViewtitle)
+        heading.text = "Product Details"
         itemCount = findViewById(R.id.itemCount)
-        backRelative=findViewById(R.id.logoclick)
-        logoClickImgView=findViewById(R.id.relative_logo_header)
+        backRelative = findViewById(R.id.logoclick)
+        logoClickImgView = findViewById(R.id.relative_logo_header)
         basket = findViewById(R.id.basket)
-       pager = findViewById<ViewPager>(R.id.bannerImagePager)
+        pager = findViewById<ViewPager>(R.id.bannerImagePager)
         productNameTxt = findViewById(R.id.productNameTxt)
         price_text = findViewById(R.id.price)
         product_desc = findViewById(R.id.product_desc)
@@ -107,10 +113,11 @@ class ProductDetailsPage : AppCompatActivity() {
         addLinear = findViewById(R.id.addLinear) as LinearLayout
         multiLinear = findViewById(R.id.multiLinear) as LinearLayout
         addLinear_cart = findViewById(R.id.addLinear_cart)
-       // itemCount = findViewById(R.id.itemCount)
+        // itemCount = findViewById(R.id.itemCount)
         productNameTxt.setText(item_name)
         price_text.setText(price + " AED")
         product_desc.setText(item_desc)
+
         basket.setOnClickListener {
             val intent = Intent(mContext, Myorderbasket_Activity_new::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -148,39 +155,10 @@ class ProductDetailsPage : AppCompatActivity() {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)
         }
-        if(available_quantity==0)
-        {
-            addLinear_cart.visibility = View.GONE
-            addLinear.visibility = View.GONE
 
-        }
-        if (isItemCart) {
-           // holder.multiLinear.visibility = View.VISIBLE
-            if(available_quantity==0)
-            {
-                addLinear_cart.visibility = View.GONE
-                addLinear.visibility = View.GONE
 
-            }
-            else
-            {
-                addLinear.visibility = View.VISIBLE
-                addLinear_cart.visibility = View.GONE
-                itemCount.setNumber(quantityCart.toString())
-                itemCount.setRange(
-                    0,
-                    50
-                )
-            }
-
-        } else {
-           // holder.multiLinear.visibility = View.GONE
-            addLinear_cart.visibility = View.VISIBLE
-            itemCount.setNumber("1")
-            addLinear.visibility = View.GONE
-        }
         addLinear_cart.setOnClickListener {
-            addToCart(id, price, position,addLinear_cart,addLinear)
+            addToCart(id, price, position, addLinear_cart, addLinear)
         }
         itemCount.setOnValueChangeListener { view, oldValue, newValue ->
 
@@ -198,9 +176,10 @@ class ProductDetailsPage : AppCompatActivity() {
             if (newValue != 0) {
                 //progressDialogP.visibility=View.VISIBLE
                 updateCart(
-                   id,
+                    id,
                     position,
-                    quantity)
+                    quantity,addLinear,addLinear_cart
+                )
 
             } else {
 
@@ -227,14 +206,15 @@ class ProductDetailsPage : AppCompatActivity() {
         inseert()
 
     }
-    fun inseert()
-    {
+
+    fun inseert() {
         if (image_array.size > 0) {
-           pager.adapter = mContext?.let { PageViewShop(it, image_array) }
+            pager.adapter = mContext?.let { PageViewShop(it, image_array) }
         } else {
-           pager.setBackgroundResource(R.drawable.default_banner)
+            pager.setBackgroundResource(R.drawable.default_banner)
         }
     }
+
     fun updatedata() {
         val handler = Handler()
 
@@ -242,11 +222,11 @@ class ProductDetailsPage : AppCompatActivity() {
         val update = Runnable {
             if (currentPage == image_array.size) {
                 currentPage = 0
-               pager.setCurrentItem(
+                pager.setCurrentItem(
                     currentPage, true
                 )
             } else {
-               pager.setCurrentItem(currentPage++, true)
+                pager.setCurrentItem(currentPage++, true)
             }
         }
         val swipetimer = Timer()
@@ -262,41 +242,47 @@ class ProductDetailsPage : AppCompatActivity() {
     private fun updateCart(
         id: String,
         position: Int,
-        quant: String
+        quant: String,
+        addLinear: LinearLayout,
+        addLinear_cart: LinearLayout
 
-    ){
+    ) {
 
-        Log.e("Cart_id",id)
+        Log.e("Cart_id", id)
         val token = PreferenceManager.getaccesstoken(mContext)
-        var canteenadd= ShopCartUpdateApiModel(
-            PreferenceManager.getStudentID(mContext)!!,quant,
-            id,canteen_cart_id)
-        val call: Call<CanteenCartUpdateModel> = ApiClient.getClient.update_shop_cart(canteenadd,"Bearer "+token)
+        var canteenadd = ShopCartUpdateApiModel(
+            PreferenceManager.getStudentID(mContext)!!, quant,
+            id, canteen_cart_id
+        )
+        val call: Call<CanteenCartUpdateModel> =
+            ApiClient.getClient.update_shop_cart(canteenadd, "Bearer " + token)
         call.enqueue(object : Callback<CanteenCartUpdateModel> {
             override fun onFailure(call: Call<CanteenCartUpdateModel>, t: Throwable) {
-             //   progressDialogP.hide()
+                //   progressDialogP.hide()
 
                 //   progressDialogP.hide()
             }
-            override fun onResponse(call: Call<CanteenCartUpdateModel>, response: Response<CanteenCartUpdateModel>) {
+
+            override fun onResponse(
+                call: Call<CanteenCartUpdateModel>,
+                response: Response<CanteenCartUpdateModel>
+            ) {
                 val responsedata = response.body()
-               // progressDialogP.hide()
+                // progressDialogP.hide()
 
                 //progressDialogP.hide()
-                if (responsedata!!.status==100) {
-                   quantityCart=quant.toInt()
-                    isItemCart=true
-                    cart_id=canteen_cart_id
+                if (responsedata!!.status == 100) {
+                    quantityCart = quant.toInt()
+                    isItemCart = true
+                    cart_id = canteen_cart_id
                     getcanteen_cart()
 
 
-                }else
-                {
+                } else {
 
-                    if(responsedata!!.status==300)
-                    {
-                      //  multiLinear.visibility=View.GONE
-                     //   soldout.visibility=View.VISIBLE
+                    if (responsedata!!.status == 300) {
+                          addLinear_cart.visibility=View.GONE
+                          addLinear.visibility=View.GONE
 
                     }
                     //  DialogFunctions.commonErrorAlertDialog(mcontext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), mcontext)
@@ -306,33 +292,35 @@ class ProductDetailsPage : AppCompatActivity() {
         })
     }
 
-    private fun getcanteen_cart(){
-        cart_list= ArrayList()
+    private fun getcanteen_cart() {
+        cart_list = ArrayList()
 
         val token = PreferenceManager.getaccesstoken(mContext)
-        var canteenCart= CanteenCartApiModel( PreferenceManager.getStudentID(mContext)!!)
-        val call: Call<GetShopCartResponseModel> = ApiClient.getClient.get_shop_cart(canteenCart,"Bearer "+token)
+        var canteenCart = CanteenCartApiModel(PreferenceManager.getStudentID(mContext)!!)
+        val call: Call<GetShopCartResponseModel> =
+            ApiClient.getClient.get_shop_cart(canteenCart, "Bearer " + token)
         call.enqueue(object : Callback<GetShopCartResponseModel> {
             override fun onFailure(call: Call<GetShopCartResponseModel>, t: Throwable) {
-              //  progressDialogP.hide()
+                //  progressDialogP.hide()
             }
-            override fun onResponse(call: Call<GetShopCartResponseModel>, response: Response<GetShopCartResponseModel>) {
+
+            override fun onResponse(
+                call: Call<GetShopCartResponseModel>,
+                response: Response<GetShopCartResponseModel>
+            ) {
                 val responsedata = response.body()
-               // progressDialogP.hide()
-                if (responsedata!!.status==100) {
-                  //  bottomview.visibility= View.VISIBLE
+                // progressDialogP.hide()
+                if (responsedata!!.status == 100) {
+                    //  bottomview.visibility= View.VISIBLE
 
-                    cart_list=response!!.body()!!.responseArray.data
-                   // cartTotalAmount=0
-
-
-                  //  cartTotalAmount=cartTotalAmount + responsedata.responseArray.total_amount
+                    cart_list = response!!.body()!!.responseArray.data
+                    // cartTotalAmount=0
 
 
+                    //  cartTotalAmount=cartTotalAmount + responsedata.responseArray.total_amount
 
-                }
-                else
-                {
+
+                } else {
                     //bottomview.visibility= View.GONE
                 }
 //                else
@@ -345,36 +333,41 @@ class ProductDetailsPage : AppCompatActivity() {
         })
     }
 
-    private fun cancelCart(position: Int){
-       // progressDialogP.show()
+    private fun cancelCart(position: Int) {
+        // progressDialogP.show()
         // progressDialogP.show()
         val token = PreferenceManager.getaccesstoken(mContext)
-        var canteenadd= ShopCartRemoveApiModel(
-            PreferenceManager.getStudentID(mContext)!!,canteen_cart_id)
-        val call: Call<CanteenCartRemoveModel> = ApiClient.getClient.remove_shop_cart(canteenadd,"Bearer "+token)
+        var canteenadd = ShopCartRemoveApiModel(
+            PreferenceManager.getStudentID(mContext)!!, canteen_cart_id
+        )
+        val call: Call<CanteenCartRemoveModel> =
+            ApiClient.getClient.remove_shop_cart(canteenadd, "Bearer " + token)
         call.enqueue(object : Callback<CanteenCartRemoveModel> {
             override fun onFailure(call: Call<CanteenCartRemoveModel>, t: Throwable) {
-             //   progressDialogP.hide()
+                //   progressDialogP.hide()
 
                 //progressDialogP.hide()
             }
-            override fun onResponse(call: Call<CanteenCartRemoveModel>, response: Response<CanteenCartRemoveModel>) {
+
+            override fun onResponse(
+                call: Call<CanteenCartRemoveModel>,
+                response: Response<CanteenCartRemoveModel>
+            ) {
                 val responsedata = response.body()
-               // progressDialogP.hide()
+                // progressDialogP.hide()
 
                 //progressDialogP.hide()
-                if (responsedata!!.status==100) {
+                if (responsedata!!.status == 100) {
 
-                   isItemCart=false
-                   quantityCart=0
-                   cart_id=canteen_cart_id
+                    isItemCart = false
+                    quantityCart = 0
+                    cart_id = canteen_cart_id
                     addLinear.visibility = View.GONE
                     addLinear_cart.visibility = View.VISIBLE
                     getcanteen_cart()
 
 
-                }else
-                {
+                } else {
 
                     // DialogFunctions.commonErrorAlertDialog(mcontext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), mcontext)
                 }
@@ -389,40 +382,121 @@ class ProductDetailsPage : AppCompatActivity() {
         position: Int,
         addLinear_cart: LinearLayout,
         addLinear: LinearLayout
-    ){
-       // progressDialogP.show()
+    ) {
+        // progressDialogP.show()
         //   progressDialogP.show()
 
         val token = PreferenceManager.getaccesstoken(mContext)
-        var canteenadd= AddToCartShopApiModel(
-            PreferenceManager.getStudentID(mContext)!!,id,"1",price)
-        val call: Call<AddToCartCanteenModel> = ApiClient.getClient.add_to_shop_cart(canteenadd,"Bearer "+token)
+        var canteenadd = AddToCartShopApiModel(
+            PreferenceManager.getStudentID(mContext)!!, id, "1", price
+        )
+        val call: Call<AddToCartCanteenModel> =
+            ApiClient.getClient.add_to_shop_cart(canteenadd, "Bearer " + token)
         call.enqueue(object : Callback<AddToCartCanteenModel> {
             override fun onFailure(call: Call<AddToCartCanteenModel>, t: Throwable) {
-              //  progressDialogP.hide()
+                //  progressDialogP.hide()
                 // progressDialogP.hide()
             }
-            override fun onResponse(call: Call<AddToCartCanteenModel>, response: Response<AddToCartCanteenModel>) {
+
+            override fun onResponse(
+                call: Call<AddToCartCanteenModel>,
+                response: Response<AddToCartCanteenModel>
+            ) {
                 val responsedata = response.body()
                 //progressDialogP.visibility=View.GONE
-                if (responsedata!!.status==100) {
-                    quantityCart=1
-                    isItemCart=true
+                if (responsedata!!.status == 100) {
+                    quantityCart = 1
+                    isItemCart = true
 
-                    addLinear_cart.visibility=View.GONE
-                    addLinear.visibility=View.VISIBLE
+                    addLinear_cart.visibility = View.GONE
+                    addLinear.visibility = View.VISIBLE
                     //  Toast.makeText(mContext,"Item Successfully added to cart",Toast.LENGTH_SHORT).show();
 
                     getcanteen_cart()
 
 
-                }else
-                {
+                } else {
 
-                    DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), mContext)
+                    DialogFunctions.commonErrorAlertDialog(
+                        mContext.resources.getString(R.string.alert),
+                        ConstantFunctions.commonErrorString(response.body()!!.status),
+                        mContext
+                    )
                 }
             }
 
         })
+    }
+
+
+    private fun items() {
+        item_list = ArrayList()
+        //  progressDialogP.show()
+
+        val token = PreferenceManager.getaccesstoken(mContext)
+        var canteenItems = ShopItemsApiModel(
+            PreferenceManager.getStudentID(mContext)!!, PreferenceManager.getcategoriid(mContext)!!
+        )
+        val call: Call<ItemsListModel> =
+            ApiClient.getClient.get_shop_items(canteenItems, "Bearer " + token)
+        call.enqueue(object : Callback<ItemsListModel> {
+            override fun onFailure(call: Call<ItemsListModel>, t: Throwable) {
+                // progressDialogP.hide()
+            }
+
+            override fun onResponse(
+                call: Call<ItemsListModel>,
+                response: Response<ItemsListModel>
+            ) {
+                val responsedata = response.body()
+                //progressDialogP.hide()
+                if (responsedata!!.status == 100) {
+
+                    //bottomview.visibility=View.VISIBLE
+
+                    item_list = ArrayList()
+                    item_list.addAll(response.body()!!.responseArray.data)
+
+                        available_quantity=item_list.get(position).available_quantity
+                    Log.e("available_quantity", available_quantity.toString())
+
+                    if (isItemCart) {
+                        Log.e("available_quantity1", available_quantity.toString())
+
+                        // holder.multiLinear.visibility = View.VISIBLE
+                        if (available_quantity == 0) {
+                            addLinear_cart.visibility = View.GONE
+                            addLinear.visibility = View.GONE
+
+                        } else {
+                            addLinear.visibility = View.VISIBLE
+                            addLinear_cart.visibility = View.GONE
+                            itemCount.setNumber(quantityCart.toString())
+                            itemCount.setRange(
+                                0,
+                                50
+                            )
+                        }
+
+                    } else {
+                        // holder.multiLinear.visibility = View.GONE
+                        Log.e("available_quantity2", available_quantity.toString())
+                        if (available_quantity == 0) {
+                            addLinear_cart.visibility = View.GONE
+                            addLinear.visibility = View.GONE
+
+                        } else {
+                            addLinear_cart.visibility = View.VISIBLE
+                            itemCount.setNumber("1")
+                            addLinear.visibility = View.GONE
+                        }
+
+                    }
+
+                }
+            }
+        })
+
+
     }
 }

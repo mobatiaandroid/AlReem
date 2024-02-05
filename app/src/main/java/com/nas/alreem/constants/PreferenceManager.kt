@@ -1660,6 +1660,22 @@ class PreferenceManager {
             communication_whole_school_badge = prefs.getString("whole_school_coming_up_badge", "0")!!
             return communication_whole_school_badge
         }
+        fun setcategoriid(context: Context, result: String?) {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            val editor = prefs.edit()
+            editor.putString("categoriid", result)
+            editor.commit()
+        }
 
+        fun getcategoriid(context: Context): String? {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            return prefs.getString("categoriid", "")
+        }
     }
 }

@@ -7,4 +7,6 @@ class SocialMediaModel {
     @SerializedName("tab_type") var tab_type:String=""
     @SerializedName("url") var url:String=""
     @SerializedName("image") var image:String=""
+    @SerializedName("pageid") var pageid:String=""
+
 }

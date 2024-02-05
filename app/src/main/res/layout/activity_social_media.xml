@@ -59,13 +59,13 @@
                         android:id="@+id/badge"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:layout_centerInParent="true"
+                        android:layout_centerHorizontal="true"
                         android:layout_marginRight="5dp"
                         android:scaleType="fitCenter"
+                        android:layout_marginTop="20dp"
                         android:src="@drawable/x"
                         android:textColor="@color/white"
                         android:visibility="visible"
-                        android:layout_marginBottom="10dp"
                         app:siBorderColor="@color/white"
                         app:siBorderWidth="10dp" />
                     <TextView
@@ -77,6 +77,7 @@
                         android:scaleType="fitCenter"
                         android:text="X"
                         android:textSize="16dp"
+                        android:layout_marginTop="10dp"
                         android:layout_below="@+id/badge"
                         android:src="@drawable/x"
                         android:textColor="@color/white"

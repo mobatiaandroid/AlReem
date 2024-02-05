@@ -192,6 +192,12 @@ class ConstantFunctions {
         }
     }
 
+    fun replaceamdot(str: String): String? {
+        return str.replace("a.m.".toRegex(), " ")
+    }
+    fun replacepmdot(str: String): String? {
+        return str.replace("p.m.".toRegex(), " ")
+    }
     fun dateConversionYY(inputDate: String?): String? {
         var mDate = ""
         try {

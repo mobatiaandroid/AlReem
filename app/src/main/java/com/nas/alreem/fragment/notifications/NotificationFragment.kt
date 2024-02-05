@@ -3,6 +3,7 @@ package com.nas.alreem.fragment.notifications
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -119,14 +120,15 @@ class NotificationFragment : Fragment() {
         })
     }
 
-    private fun callStatusChangeApi(ccaDaysId: String,event_position:Int, status: String) {
+    private fun callStatusChangeApi(ccaDaysId: String,eventposition:Int, status: String) {
         progressDialogAdd.visibility=View.VISIBLE
-        notificationList= ArrayList()
+      //  notificationList= ArrayList()
         var token="Bearer "+PreferenceManager.getaccesstoken(mContext)
         var model=NotificationApiModel(0,500)
+        Log.e("id",ccaDaysId)
         val paramObject = JsonObject()
-        paramObject.addProperty("id", id)
-        paramObject.addProperty("type", "cca")
+        paramObject.addProperty("id", ccaDaysId)
+        paramObject.addProperty("type", "notification")
         val call: Call<StudentShopCardResponseModel> = ApiClient.getClient.status_changeAPI(token,paramObject)
         call.enqueue(object : Callback<StudentShopCardResponseModel> {
             override fun onFailure(call: Call<StudentShopCardResponseModel>, t: Throwable) {
@@ -144,7 +146,7 @@ class NotificationFragment : Fragment() {
                                 ignoreCase = true
                             )
                         ) {
-                            notificationList.get(event_position).read_unread_status="1"
+                            notificationList.get(eventposition).read_unread_status="1"
                             notificationAdapter.notifyDataSetChanged()
                         }
 
