@@ -1,11 +1,11 @@
 package com.nas.alreem.activity.parent_engagement.model;
 
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
-
-public class ParentAssociationResponseModel {
+public class ChatterBoxResponseModel {
     @SerializedName("status")
     private Integer responseCode;
 
@@ -38,6 +38,9 @@ public class ParentAssociationResponseModel {
         @SerializedName("banner_image")
         private String bannerImage;
 
+        @SerializedName("facebookurl")
+        private String facebookUrl;
+
         @SerializedName("description")
         private String description;
 
@@ -69,6 +72,14 @@ public class ParentAssociationResponseModel {
 
         public void setBannerImage(String bannerImage) {
             this.bannerImage = bannerImage;
+        }
+
+        public String getFacebookUrl() {
+            return facebookUrl;
+        }
+
+        public void setFacebookUrl(String facebookUrl) {
+            this.facebookUrl = facebookUrl;
         }
 
         public String getDescription() {
@@ -106,9 +117,6 @@ public class ParentAssociationResponseModel {
         @SerializedName("file")
         private String file;
 
-        @SerializedName("filename")
-        private String filename;
-
         public String getId() {
             return id;
         }
@@ -132,18 +140,10 @@ public class ParentAssociationResponseModel {
         public void setFile(String file) {
             this.file = file;
         }
-
-        public String getFilename() {
-            return filename;
-        }
-
-        public void setFilename(String filename) {
-            this.filename = filename;
-        }
     }
 
-}
 
+}
 
 
 

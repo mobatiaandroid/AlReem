@@ -26,11 +26,15 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.nas.alreem.R
 import com.nas.alreem.activity.home.HomeActivity
+import com.nas.alreem.activity.parent_engagement.model.ChatterBoxResponseModel
 import com.nas.alreem.activity.parent_engagement.model.ParentAssociationEventsModel
+import com.nas.alreem.activity.parent_engagement.model.ParentAssociationResponseModel
+import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.HeaderManager
 import com.nas.alreem.constants.PDFViewerActivity
+import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.constants.WebLinkActivity
 import com.nas.alreem.recyclermanager.DividerItemDecoration
 import com.nas.alreem.recyclermanager.ItemOffsetDecoration
@@ -41,7 +45,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-/*
 class ParentsAssociationSignUpActivity :AppCompatActivity(){
     lateinit var mContext: Context
     lateinit var relativeHeader: RelativeLayout
@@ -59,7 +62,7 @@ class ParentsAssociationSignUpActivity :AppCompatActivity(){
     var descriptionTitle: TextView? = null
     var bannerUrlImageArray: ArrayList<String>? = null
     var mtitle: RelativeLayout? = null
-    var bannerImagePager: ImageView? = null
+    lateinit var bannerImagePager: ImageView
 
     //    ViewPager bannerImagePager;
     var text_content: TextView? = null
@@ -78,6 +81,7 @@ class ParentsAssociationSignUpActivity :AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_parents_association_firstpage)
+        mContext=this
         initUI()
 
         if (ConstantFunctions.internetCheck(mContext)) {
@@ -110,12 +114,11 @@ class ParentsAssociationSignUpActivity :AppCompatActivity(){
       //  progressBarDialog = ProgressBarDialog(mContext, R.drawable.spinner)
         //mRecyclerView.addItemDecoration(new DividerItemDecoration(getResources().getDrawable(R.drawable.list_divider)));
         //mRecyclerView.setHasFixedSize(true);
-        */
-/* GridLayoutManager recyclerViewLayout= new GridLayoutManager(mContext, 4);
+ /*GridLayoutManager recyclerViewLayout= new GridLayoutManager(mContext, 4);
         int spacing = 5; // 50px
         ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(mContext,spacing);
         mRecyclerView.addItemDecoration(itemDecoration);
-        mRecyclerView.setLayoutManager(recyclerViewLayout);*//*
+        mRecyclerView.setLayoutManager(recyclerViewLayout);*/
 mRecyclerView!!.setHasFixedSize(true)
         val llm = LinearLayoutManager(mContext)
         llm.orientation = LinearLayoutManager.VERTICAL
@@ -256,7 +259,124 @@ mRecyclerView!!.setHasFixedSize(true)
     }
 
     private fun callStaffDirectoryList() {
-        */
+
+        val call: Call<ParentAssociationResponseModel> = ApiClient.getClient.parents_association("Bearer " + PreferenceManager.getaccesstoken(mContext))
+        call.enqueue(object : Callback<ParentAssociationResponseModel> {
+            override fun onFailure(call: Call<ParentAssociationResponseModel>, t: Throwable) {
+                // progressDialogAdd.visibility=View.GONE
+            }
+            override fun onResponse(call: Call<ParentAssociationResponseModel>, response: Response<ParentAssociationResponseModel>) {
+                val responsedata = response.body()
+                //  progressDialogAdd.visibility=View.GONE
+                if (response.isSuccessful()) {
+//                    Log.e("res", response.toString());
+                    val apiResponse: ParentAssociationResponseModel? = response.body()
+                    //                    Log.e("response", String.valueOf(apiResponse));
+//                    System.out.println("response" + apiResponse);
+                    val response_code: Int = (apiResponse!!.getResponseCode())
+                    if (response_code == 100) {
+                        val statuscode: String =
+                            java.lang.String.valueOf(response.body()!!.getResponse().getStatusCode())
+                        //                        Log.e("statuscode", statuscode);
+
+                            val bannerImage: String = response.body()!!.getResponse().getBannerImage()
+                            description = response.body()!!.getResponse().getDescription()
+                            contactEmail = response.body()!!.getResponse().getContactEmail()
+                            //                            System.out.println("banner img---" + bannerImage);
+                            if (!bannerImage.equals("", ignoreCase = true)) {
+//                                bannerUrlImageArray = new ArrayList<>();
+//                                bannerUrlImageArray.add(bannerImage);
+//                                bannerImagePager.setAdapter(new ImagePagerDrawableAdapter(bannerUrlImageArray, mContext));
+                                Glide.with(mContext).load(ConstantFunctions.replace(bannerImage))
+                                    .centerCrop().into(bannerImagePager)
+                            } else {
+                                bannerImagePager!!.setBackgroundResource(R.drawable.pabanner)
+                            }
+                            parentAssociationEventsModelsArrayList =
+                                ArrayList<ParentAssociationEventsModel>()
+                            if (response.body()!!.getResponse().getEventDataList().size > 0) {
+                                for (i in 0 until response.body()!!.getResponse().getEventDataList()
+                                    .size) {
+                                    val item: ParentAssociationResponseModel.EventData =
+                                        response.body()!!.getResponse().getEventDataList().get(i)
+                                    val gson = Gson()
+                                    val eventJson = gson.toJson(item)
+                                    //                                    Log.e("item", eventJson);
+                                    try {
+                                        val jsonObject = JSONObject(eventJson)
+                                        val parentAssociationEventsModel =
+                                            ParentAssociationEventsModel()
+                                        parentAssociationEventsModel.setPdfId(jsonObject.optString("id"))
+                                        parentAssociationEventsModel.setPdfTitle(
+                                            jsonObject.optString(
+                                                "title"
+                                            )
+                                        )
+                                        parentAssociationEventsModel.setPdfUrl(
+                                            jsonObject.optString(
+                                                "file"
+                                            )
+                                        )
+                                        parentAssociationEventsModelsArrayList.add(
+                                            parentAssociationEventsModel
+                                        )
+                                        //  Log.e("array", String.valueOf(mCCAmodelArrayList));
+                                    } catch (e: JSONException) {
+                                        e.printStackTrace()
+                                    }
+                                }
+                                val adapter = ParentsAssociationAdapter(
+                                    mContext,
+                                    parentAssociationEventsModelsArrayList
+                                )
+                                mRecyclerView!!.adapter = adapter
+                            } else {
+                                Toast.makeText(
+                                    this@ParentsAssociationSignUpActivity,
+                                    "No data found",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                            if (description.equals("", ignoreCase = true) && contactEmail.equals(
+                                    "",
+                                    ignoreCase = true
+                                )
+                            ) {
+                                mtitle!!.visibility = View.GONE
+                            } else {
+                                mtitle!!.visibility = View.VISIBLE
+                            }
+                            if (description.equals("", ignoreCase = true)) {
+                                descriptionTV!!.visibility = View.GONE
+                                descriptionTitle!!.visibility = View.GONE
+                            } else {
+                                descriptionTV!!.text = description
+                                descriptionTitle!!.visibility = View.GONE
+                                //			descriptionTitle.setVisibility(View.VISIBLE);
+                                descriptionTV!!.visibility = View.VISIBLE
+                                mtitle!!.visibility = View.VISIBLE
+                            }
+                            //                            System.out.println("contact email" + contactEmail);
+                            if (contactEmail.equals("", ignoreCase = true)) {
+                                sendEmail.setVisibility(View.GONE)
+                            } else {
+                                mtitle!!.visibility = View.VISIBLE
+                                sendEmail.setVisibility(View.VISIBLE)
+                            }
+
+                    }  else {
+                       /* AppUtils.showDialogAlertDismiss(
+                            mContext as Activity,
+                            "Alert",
+                            getString(R.string.common_error),
+                            R.drawable.exclamationicon,
+                            R.drawable.round
+                        )*/
+                    }
+                }
+            }
+
+        })
 /*val service: APIInterface = APIClient.getRetrofitInstance().create(APIInterface::class.java)
         val call: Call<ParentAssociationResponseModel> =
             service.postParentAssociation("Bearer " + PreferenceManager.getAccessToken(mContext))
@@ -414,13 +534,12 @@ mRecyclerView!!.setHasFixedSize(true)
                     R.drawable.round
                 )
             }
-        })*//*
+        })*/
 
     }
 
     private fun sendEmailToStaff(dialog: Dialog) {
-       */
-/* progressDialog!!.visibility = View.VISIBLE
+ /*progressDialog!!.visibility = View.VISIBLE
         val service: APIInterface = APIClient.getRetrofitInstance().create(APIInterface::class.java)
         val paramObject = JsonObject()
         paramObject.addProperty("email", contactEmail)
@@ -469,7 +588,7 @@ mRecyclerView!!.setHasFixedSize(true)
                     ), Toast.LENGTH_SHORT
                 )
             }
-        })*//*
+        })*/
 
     }
 
@@ -515,4 +634,4 @@ mRecyclerView!!.setHasFixedSize(true)
     }
 
 
-}*/
+}

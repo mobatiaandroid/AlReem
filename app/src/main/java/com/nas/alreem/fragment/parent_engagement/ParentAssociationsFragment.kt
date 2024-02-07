@@ -15,6 +15,9 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nas.alreem.R
+import com.nas.alreem.activity.parent_engagement.ChatterBoxActivityNew
+import com.nas.alreem.activity.parent_engagement.ClassRepresentativeActivity
+import com.nas.alreem.activity.parent_engagement.ParentsAssociationSignUpActivity
 import com.nas.alreem.recyclermanager.DividerItemDecoration
 import com.nas.alreem.recyclermanager.ItemOffsetDecoration
 import com.nas.alreem.recyclermanager.RecyclerItemListener
@@ -101,26 +104,26 @@ class ParentAssociationsFragment :  Fragment() {
                 object : RecyclerItemListener.RecyclerTouchListener{
                     override fun onClickItem(v: View?, position: Int) {
                         if (dataArrayStrings[position] == "Parents' Association") {
-                           /* val intent = Intent(
+                            val intent = Intent(
                                 mContext,
                                 ParentsAssociationSignUpActivity::class.java
                             )
                             intent.putExtra("tab_type", dataArrayStrings[position])
-                            mContext!!.startActivity(intent)*/
+                            mContext!!.startActivity(intent)
                         } else if (dataArrayStrings[position] == "Chatter Box Café") {
-                           /* val intent = Intent(
+                            val intent = Intent(
                                 mContext,
                                 ChatterBoxActivityNew::class.java
                             ) //ChatterBoxActivity
                             intent.putExtra("tab_type", dataArrayStrings[position])
-                            mContext!!.startActivity(intent)*/
+                            mContext!!.startActivity(intent)
                         } else if (dataArrayStrings[position] == "Class Representatives") {
-                           /* val intent = Intent(
+                            val intent = Intent(
                                 mContext,
                                 ClassRepresentativeActivity::class.java
                             ) //ClassRepresentativeActivity
                             intent.putExtra("tab_type", dataArrayStrings[position])
-                            mContext!!.startActivity(intent)*/
+                            mContext!!.startActivity(intent)
                         }
                     }
 

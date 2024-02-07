@@ -45,6 +45,11 @@ import com.nas.alreem.activity.lost_card.model.ShopHistoryModel
 import com.nas.alreem.activity.lost_card.model.StudentLostCardResponseModel
 import com.nas.alreem.activity.notifications.model.MessageDetailApiModel
 import com.nas.alreem.activity.notifications.model.MessageDetailModel
+import com.nas.alreem.activity.parent_engagement.model.ChatterBoxResponseModel
+import com.nas.alreem.activity.parent_engagement.model.ClassRepresentativeListResponseModel
+import com.nas.alreem.activity.parent_engagement.model.ParentAssociationEventResponseModel
+import com.nas.alreem.activity.parent_engagement.model.ParentAssociationResponseModel
+import com.nas.alreem.activity.parent_engagement.model.VolunteerSubmitResponseModel
 import com.nas.alreem.activity.parent_meetings.model.PtaConfirmApiModel
 import com.nas.alreem.activity.parent_meetings.model.PtaConfirmModel
 import com.nas.alreem.activity.parent_meetings.model.PtaDatesApiModel
@@ -929,19 +934,19 @@ interface ApiInterface {
     @GET("shop_banner")
     @Headers("Content-Type: application/json")
     fun shop_banner(
-        //@Body  ptaConfirmationModel: PtaConfirmationApiModel,
+
         @Header("Authorization") token:String
     ): Call<CanteenBannerResponseModel>
 
     @POST("badge_counts")
     @Headers("Content-Type: application/json")
     fun badge_counts(
-        //@Body  ptaConfirmationModel: PtaConfirmationApiModel,
+
         @Header("Authorization") token:String
     ): Call<BadgeResponseModel>
 
 
-    //enrollment
+
     @POST("status_changeAPI")
     @Headers("Content-Type: application/json")
     fun status_changeAPI(
@@ -949,4 +954,39 @@ interface ApiInterface {
         @Body json: JsonObject?
     ): Call<StudentShopCardResponseModel>
 
+    @POST("chatter_box")
+    @Headers("Content-Type: application/json")
+    fun chatter_box(
+        //@Body  ptaConfirmationModel: PtaConfirmationApiModel,
+        @Header("Authorization") token:String
+    ): Call<ChatterBoxResponseModel>
+
+    @POST("parents_association")
+    @Headers("Content-Type: application/json")
+    fun parents_association(
+        //@Body  ptaConfirmationModel: PtaConfirmationApiModel,
+        @Header("Authorization") token:String
+    ): Call<ParentAssociationResponseModel>
+
+
+    @POST("class_representative")
+    @Headers("Content-Type: application/json")
+    fun class_representative(
+        //@Body  ptaConfirmationModel: PtaConfirmationApiModel,
+        @Header("Authorization") token:String
+    ): Call<ClassRepresentativeListResponseModel>
+
+    @POST("parent_assoc_events")
+    @Headers("Content-Type: application/json")
+    fun parent_assoc_events(
+        @Header("Authorization") token:String,
+        @Body json: JsonObject?
+    ): Call<ParentAssociationEventResponseModel>
+
+    @POST("parent_assoc_events_attending_or_not_new")
+    @Headers("Content-Type: application/json")
+    fun parent_assoc_events_attending_or_not_new(
+        @Header("Authorization") token:String,
+        @Body json: JsonObject?
+    ): Call<VolunteerSubmitResponseModel>
 }

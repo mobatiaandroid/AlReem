@@ -20,8 +20,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.JsonObject
 import com.nas.alreem.R
+import com.nas.alreem.activity.parent_engagement.ParentsAssociationListActivity
 import com.nas.alreem.activity.parent_engagement.model.ParentAssociationEventItemsModel
 import com.nas.alreem.activity.parent_engagement.model.ParentAssociationEventsModel
+import com.nas.alreem.activity.parent_engagement.model.VolunteerSubmitResponseModel
+import com.nas.alreem.activity.shop_new.model.StudentShopCardResponseModel
+import com.nas.alreem.constants.ApiClient
+import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.recyclermanager.ItemOffsetDecoration
 import com.nas.alreem.recyclermanager.RecyclerItemListener
 import retrofit2.Call
@@ -29,8 +34,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-
-/*class ParentsAssociationMainRecyclerviewAdapter :
+class ParentsAssociationMainRecyclerviewAdapter :
     RecyclerView.Adapter<ParentsAssociationMainRecyclerviewAdapter.MyViewHolder> {
     private var mContext: Context
     private var mParentAssociationEventsModelArrayList: ArrayList<ParentAssociationEventsModel>
@@ -46,7 +50,93 @@ import retrofit2.Response
     var mListViewArrayPost: ArrayList<ParentAssociationEventItemsModel>? = null
    // var progressBarDialog: ProgressBarDialog? = null
     private fun postSelectedSlotVolunteer() {
-       *//* val service: APIInterface = APIClient.getRetrofitInstance().create(APIInterface::class.java)
+       val paramObject = JsonObject()
+       paramObject.addProperty(
+           "id",
+           mParentAssociationEventsModelArrayList[mainPosition].getEventItemList().get(mPosition)
+               .getEventItemStatusList().get(datePosition).getEventId()
+       )
+       val call: Call<VolunteerSubmitResponseModel> = ApiClient.getClient.parent_assoc_events_attending_or_not_new("Bearer " + PreferenceManager.getaccesstoken(mContext),
+           paramObject)
+       call.enqueue(object : Callback<VolunteerSubmitResponseModel> {
+           override fun onFailure(call: Call<VolunteerSubmitResponseModel>, t: Throwable) {
+           }
+           override fun onResponse(call: Call<VolunteerSubmitResponseModel>, response: Response<VolunteerSubmitResponseModel>) {
+               val responsedata = response.body()
+               if (response.isSuccessful()) {
+//                    Log.e("res", response.toString());
+                   val apiResponse: VolunteerSubmitResponseModel? = response.body()
+                   //                    Log.e("response", String.valueOf(apiResponse));
+//                                 System.out.println("response" + apiResponse);
+                   val response_code: Int = (apiResponse!!.getResponseCode())
+                   if (response_code == 100) {
+
+                       //                                     Log.e("statuscode", statuscode);
+
+                       ParentsAssociationListActivity().callListApis(
+                           mContext,
+                           mParentAssociationEventsModelArrayList,
+                           object : ParentsAssociationListActivity.GetPtaItemList {
+                               override val ptaItemData: Unit
+                                   get() {}
+                           })
+                       showDialogAlertSingleBtn(
+                           mContext as Activity,
+                           "Alert",
+                           "Your time slot has been booked successfully.",
+                           R.drawable.tick,
+                           R.drawable.round
+                       )
+                   }
+                        else if (response_code ==311) {
+                           ParentsAssociationListActivity().callListApis(
+                               mContext,
+                               mParentAssociationEventsModelArrayList,
+                               object : ParentsAssociationListActivity.GetPtaItemList {
+                                   override val ptaItemData: Unit
+                                       get() {}
+                               })
+                           showDialogAlertSingleBtn(
+                               mContext as Activity,
+                               "Alert",
+                               "Request cancelled successfully.",
+                               R.drawable.tick,
+                               R.drawable.round
+                           )
+
+//                                    getPtaAllotedDateList();
+                       } else if (response_code == 136) {
+//                                    ParentsAssociationListActivity.callListApis(mContext, mParentAssociationEventsModelArrayList ,new ParentsAssociationListActivity.GetPtaItemList() {
+//                                        @Override
+//                                        public void getPtaItemData() {
+//
+//                                        }
+//                                    });
+                           showDialogAlertSingleBtn(
+                               mContext as Activity,
+                               "Alert",
+                               "Slot is already booked by an another user.",
+                               R.drawable.exclamationicon,
+                               R.drawable.round
+                           )
+
+//                                    getPtaAllotedDateList();
+
+                   }  else {
+                      /* AppUtils.showDialogAlertDismiss(
+                           mContext as Activity,
+                           "Alert",
+                           mContext.getString(R.string.common_error),
+                           R.drawable.exclamationicon,
+                           R.drawable.round
+                       )*/
+                   }
+               }
+
+           }
+
+       })
+        /*val service: APIInterface = APIClient.getRetrofitInstance().create(APIInterface::class.java)
         val paramObject = JsonObject()
         paramObject.addProperty(
             "id",
@@ -165,7 +255,7 @@ import retrofit2.Response
                 Toast.makeText(mContext, "Failure", Toast.LENGTH_SHORT).show()
             }
         }
-        )*//*
+        )*/
     }
 
     constructor(
@@ -195,10 +285,7 @@ import retrofit2.Response
         return MyViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(
-        holder:MyViewHolder,
-        position: Int
-    ) {
+    override fun onBindViewHolder(holder:MyViewHolder, position: Int) {
 //        holder.phototakenDate.setText(mPhotosModelArrayList.get(position).getMonth() + " " + mPhotosModelArrayList.get(position).getDay() + "," + mPhotosModelArrayList.get(position).getYear());
 //        mPosition = position;
 //        holder.layout.getBackground().setAlpha(150);
@@ -308,12 +395,13 @@ import retrofit2.Response
         holder.mRecyclerViewItem.addOnItemTouchListener(
             RecyclerItemListener(mContext, holder.mRecyclerViewItem,
                 object : RecyclerItemListener.RecyclerTouchListener {
-                    fun onClickItem(v: View, p: Int) {
-//                        Log.e("positoin clikc", ""+v.getId());
+
+
+                    override fun onClickItem(v: View?, p: Int) {
                         datePosition = p
                         mainPosition = position
                         //                        Log.e("positoin mainPosition", ""+mainPosition);
-                        mPosition = v.id
+                        mPosition = v!!.id
                         //                        System.out.println("datePosition=" + datePosition);
                         if (mParentAssociationEventsModelArrayList[mainPosition].getEventItemList()
                                 .get(mPosition).getEventItemStatusList().get(p).status
@@ -405,9 +493,9 @@ import retrofit2.Response
         var eventName: TextView
         var eventDate: TextView
         var notAvailableTV: TextView
-        var gridClickRelative: LinearLayout
+        //var gridClickRelative: LinearLayout
         var layout: LinearLayout
-        var card_view: CardView
+       // var card_view: CardView
         var mRecyclerViewItemName: RecyclerView
         var mRecyclerViewItem: RecyclerView
 
@@ -420,8 +508,8 @@ import retrofit2.Response
             mRecyclerViewItemName =
                 view.findViewById<View>(R.id.mRecyclerViewItemName) as RecyclerView
             mRecyclerViewItem = view.findViewById<View>(R.id.mRecyclerViewItem) as RecyclerView
-            gridClickRelative = view.findViewById<View>(R.id.gridClickRelative) as LinearLayout
-            card_view = view.findViewById<View>(R.id.card_view) as CardView
+          //  gridClickRelative = view.findViewById<View>(R.id.gridClickRelative) as LinearLayout
+           // card_view = view.findViewById<View>(R.id.card_view) as CardView
             layout = view.findViewById<View>(R.id.layout) as LinearLayout
             mainPosition = adapterPosition
             //            System.out.println("mainPosition=" + getAdapterPosition());
@@ -460,4 +548,4 @@ import retrofit2.Response
 //		});
         dialog.show()
     }
-}*/
+}

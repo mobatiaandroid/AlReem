@@ -41,11 +41,13 @@
                 android:layout_marginTop="10dp"
                 android:layout_height="wrap_content">
                 <ImageView
-                    android:id="@+id/facebookButton"
+                    android:id="@+id/instagramButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="50"
-                    android:background="@drawable/facebook"/>
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/instagram"/>
+
 
                 <RelativeLayout
                     android:id="@+id/twitterButton"
@@ -86,14 +88,14 @@
                         app:siBorderWidth="10dp" />
                 </RelativeLayout>
             </LinearLayout>
-
             <ImageView
-                android:id="@+id/instagramButton"
+                android:id="@+id/facebookButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:layout_gravity="center_horizontal"
-                android:background="@drawable/instagram"/>
+                android:background="@drawable/facebook"/>
+
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

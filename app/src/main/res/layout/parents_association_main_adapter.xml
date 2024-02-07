@@ -10,18 +10,19 @@
         android:weightSum="100"
         android:orientation="vertical"
         android:background="@color/parents_association_titleclr">
-        <com.mobatia.naisapp.manager.CustomFontBoldWithoutColor
+        <com.nas.alreem.commonviews.CustomTextViewRegular
             android:id="@+id/eventName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:textStyle="bold"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:text="hjhj"
             />
-        <com.mobatia.naisapp.manager.CustomFontSansProTextWhite
+        <com.nas.alreem.commonviews.CustomTextViewRegular
             android:id="@+id/eventDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -73,7 +74,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:layout_height="1dp"/>-->
-    <com.mobatia.naisapp.manager.CustomFontSansProTextBlack
+    <com.nas.alreem.commonviews.CustomFontSansProTextBlack
         android:id="@+id/selectItemTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -118,7 +119,7 @@
         android:clipToPadding="false"
         android:scrollbars="vertical"
         android:background="@color/white"/>
-    <com.mobatia.naisapp.manager.CustomFontSansProTextBoldWithoutColor
+    <com.nas.alreem.commonviews.CustomTextViewRegular
         android:id="@+id/notAvailableTV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

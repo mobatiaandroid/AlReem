@@ -75,6 +75,7 @@ import com.nas.alreem.fragment.home.re_enrollment.ReEnrollmentStatusResponseMode
 import com.nas.alreem.fragment.home.re_enrollment.StudentEnrollList
 import com.nas.alreem.fragment.intention.Intentionfragment
 import com.nas.alreem.fragment.notifications.NotificationFragment
+import com.nas.alreem.fragment.parent_engagement.ParentAssociationsFragment
 import com.nas.alreem.fragment.parent_meetings.ParentMeetingsFragment
 import com.nas.alreem.fragment.parents_essentials.ParentsEssentialFragment
 import com.nas.alreem.fragment.payments.PaymentFragment
@@ -390,7 +391,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                 {
                     0->
                     {
-                        mFragment = HomeFragment()
+                        mFragment = ParentAssociationsFragment()
                         replaceFragmentsSelected(position)
                     }
                     1->

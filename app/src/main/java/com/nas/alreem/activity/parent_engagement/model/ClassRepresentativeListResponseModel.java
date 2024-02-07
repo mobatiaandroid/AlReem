@@ -1,11 +1,11 @@
 package com.nas.alreem.activity.parent_engagement.model;
 
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
-
-public class ParentAssociationResponseModel {
+public class ClassRepresentativeListResponseModel {
     @SerializedName("status")
     private Integer responseCode;
 
@@ -106,9 +106,6 @@ public class ParentAssociationResponseModel {
         @SerializedName("file")
         private String file;
 
-        @SerializedName("filename")
-        private String filename;
-
         public String getId() {
             return id;
         }
@@ -132,17 +129,11 @@ public class ParentAssociationResponseModel {
         public void setFile(String file) {
             this.file = file;
         }
-
-        public String getFilename() {
-            return filename;
-        }
-
-        public void setFilename(String filename) {
-            this.filename = filename;
-        }
     }
 
+
 }
+
 
 
 

@@ -1677,5 +1677,23 @@ class PreferenceManager {
             )
             return prefs.getString("categoriid", "")
         }
+
+        /*fun getIsFirstTimeInPA(context: Context): Boolean {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            return prefs.getBoolean("is_first_pa", true)
+        }
+
+        fun setIsFirstTimeInPE(context: Context, result: Boolean) {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            val editor = prefs.edit()
+            editor.putBoolean("is_first_pe", result)
+            editor.commit()
+        }*/
     }
 }

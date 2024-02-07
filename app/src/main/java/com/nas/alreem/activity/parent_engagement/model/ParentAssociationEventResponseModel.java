@@ -5,17 +5,17 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 
 public class ParentAssociationEventResponseModel {
-    @SerializedName("responsecode")
-    private String responseCode;
+    @SerializedName("status")
+    private Integer responseCode;
 
-    @SerializedName("response")
+    @SerializedName("responseArray")
     private Response response;
 
-    public String getResponseCode() {
+    public Integer getResponseCode() {
         return responseCode;
     }
 
-    public void setResponseCode(String responseCode) {
+    public void setResponseCode(Integer responseCode) {
         this.responseCode = responseCode;
     }
 
