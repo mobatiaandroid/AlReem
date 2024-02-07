@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,24 +15,31 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.nas.alreem.R
 import com.nas.alreem.activity.parent_engagement.ParentsAssociationListActivity
 import com.nas.alreem.activity.parent_engagement.model.ParentAssociationEventItemsModel
+import com.nas.alreem.activity.parent_engagement.model.ParentAssociationEventResponseModel
 import com.nas.alreem.activity.parent_engagement.model.ParentAssociationEventsModel
 import com.nas.alreem.activity.parent_engagement.model.VolunteerSubmitResponseModel
-import com.nas.alreem.activity.shop_new.model.StudentShopCardResponseModel
 import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.recyclermanager.ItemOffsetDecoration
 import com.nas.alreem.recyclermanager.RecyclerItemListener
+import org.json.JSONException
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.text.DateFormat
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 
 class ParentsAssociationMainRecyclerviewAdapter :
@@ -48,7 +56,11 @@ class ParentsAssociationMainRecyclerviewAdapter :
     var datePosition = 0
     var alreadyslotBookedByUser = false
     var mListViewArrayPost: ArrayList<ParentAssociationEventItemsModel>? = null
-   // var progressBarDialog: ProgressBarDialog? = null
+    var mListViewArray: ArrayList<ParentAssociationEventsModel>? = null
+    var myFormatCalender = "yyyy-MM-dd"
+    var sdfcalender: SimpleDateFormat? = null
+lateinit var rec: RecyclerView
+    // var progressBarDialog: ProgressBarDialog? = null
     private fun postSelectedSlotVolunteer() {
        val paramObject = JsonObject()
        paramObject.addProperty(
@@ -73,13 +85,15 @@ class ParentsAssociationMainRecyclerviewAdapter :
 
                        //                                     Log.e("statuscode", statuscode);
 
-                       ParentsAssociationListActivity().callListApis(
+                       callListApis(mContext,
+                           mParentAssociationEventsModelArrayList)
+                       /*ParentsAssociationListActivity().callListApis(
                            mContext,
                            mParentAssociationEventsModelArrayList,
                            object : ParentsAssociationListActivity.GetPtaItemList {
                                override val ptaItemData: Unit
                                    get() {}
-                           })
+                           })*/
                        showDialogAlertSingleBtn(
                            mContext as Activity,
                            "Alert",
@@ -89,13 +103,9 @@ class ParentsAssociationMainRecyclerviewAdapter :
                        )
                    }
                         else if (response_code ==311) {
-                           ParentsAssociationListActivity().callListApis(
+                           callListApis(
                                mContext,
-                               mParentAssociationEventsModelArrayList,
-                               object : ParentsAssociationListActivity.GetPtaItemList {
-                                   override val ptaItemData: Unit
-                                       get() {}
-                               })
+                               mParentAssociationEventsModelArrayList)
                            showDialogAlertSingleBtn(
                                mContext as Activity,
                                "Alert",
@@ -269,11 +279,11 @@ class ParentsAssociationMainRecyclerviewAdapter :
     constructor(
         mContext: Context,
         mParentAssociationEventsModelArrayList: ArrayList<ParentAssociationEventsModel>,
-        photo_id: String
+        photo_id: RecyclerView?
     ) {
         this.mContext = mContext
         this.mParentAssociationEventsModelArrayList = mParentAssociationEventsModelArrayList
-        this.photo_id = photo_id
+        this.rec = photo_id!!
     }
 
     override fun onCreateViewHolder(
@@ -548,4 +558,173 @@ class ParentsAssociationMainRecyclerviewAdapter :
 //		});
         dialog.show()
     }
+
+    fun callListApis(
+        context: Context,
+        parentAssociationEventsModelsArrayList: ArrayList<ParentAssociationEventsModel>?
+    ) {
+        myFormatCalender = "yyyy-MM-dd"
+        sdfcalender = SimpleDateFormat(myFormatCalender)
+        // mRecyclerView = findViewById<View>(R.id.mRecyclerView) as RecyclerView
+
+
+        mListViewArray = ArrayList<ParentAssociationEventsModel>()
+        parentAssociationEventsModelsArrayList
+        val paramObject = JsonObject()
+        paramObject.addProperty("student_id", PreferenceManager.getStudentID(context))
+        val call: Call<ParentAssociationEventResponseModel> = ApiClient.getClient.parent_assoc_events(
+            "Bearer " + PreferenceManager.getaccesstoken(context),
+            paramObject
+        )
+        call.enqueue(object : Callback<ParentAssociationEventResponseModel> {
+            override fun onFailure(call: Call<ParentAssociationEventResponseModel>, t: Throwable) {
+            }
+            override fun onResponse(call: Call<ParentAssociationEventResponseModel>, response: Response<ParentAssociationEventResponseModel>) {
+                val responsedata = response.body()
+                if (response.isSuccessful()) {
+//                    Log.e("res", response.toString());
+                    val apiResponse: ParentAssociationEventResponseModel? = response.body()
+                    //                    Log.e("response", String.valueOf(apiResponse));
+//                    System.out.println("response" + apiResponse);
+                    val response_code: String =
+                        java.lang.String.valueOf(apiResponse!!.getResponseCode())
+                    //                    Log.e("errorh", response.body().getResponseCode());
+                    if (response.body() != null) {
+                        if (response.body()!!.getResponseCode()==100) {
+                            val statuscode: String = java.lang.String.valueOf(
+                                response.body()!!.getResponse().getStatusCode()
+                            )
+                            //    Log.e("statuscode", statuscode);
+
+                            if (apiResponse.getResponse().getEventDataList().size > 0) {
+                                for (i in 0 until apiResponse.getResponse().getEventDataList()
+                                    .size) {
+                                    val item: ParentAssociationEventResponseModel.EventData =
+                                        response.body()!!.getResponse().getEventDataList().get(i)
+                                    //Log.e("item name", item.getEvent());
+                                    val gson = Gson()
+                                    val eventJson = gson.toJson(item)
+                                    //  Log.e("item", eventJson);
+                                    try {
+                                        val jsonObject = JSONObject(eventJson)
+                                        Log.e("parent_assoc", jsonObject.toString())
+                                        // JSONObject eventJSONdata = dataArray.optJSONObject(i);
+                                        mListViewArray!!.add(
+                                            getParentAssociationEventValues(
+                                                jsonObject,
+                                                parentAssociationEventsModelsArrayList!![i].getPosition()
+                                            )
+                                        )
+                                    } catch (e: JSONException) {
+                                        e.printStackTrace()
+                                    }
+                                }
+                                val mParentsAssociationMainRecyclerviewAdapter = ParentsAssociationMainRecyclerviewAdapter(
+                                    context,
+                                    mListViewArray!!
+                                )
+                                rec!!.adapter =
+                                    mParentsAssociationMainRecyclerviewAdapter
+                            } else {
+                                //CustomStatusDialog();
+                                Toast.makeText(context, "Failure", Toast.LENGTH_SHORT).show()
+                            }
+
+                        }   else {
+                           /* AppUtils.showDialogAlertDismiss(
+                                context as Activity,
+                                "Alert",
+                                context.getString(R.string.common_error),
+                                R.drawable.exclamationicon,
+                                R.drawable.round
+                            )*/
+                        }
+                    } else {
+                        /*AppUtils.showDialogAlertDismiss(
+                            context as Activity,
+                            "Alert",
+                            context.getString(R.string.common_error),
+                            R.drawable.exclamationicon,
+                            R.drawable.round
+                        )*/
+                    }
+                }
+            }
+        })
+    }
+    @Throws(JSONException::class)
+    private fun getParentAssociationEventValues(
+        mEventJSONdata: JSONObject, postion: Int
+    ): ParentAssociationEventsModel {
+        val mParentAssociationEventsModel = ParentAssociationEventsModel()
+        mParentAssociationEventsModel.setEvenId(mEventJSONdata.optString("even_id"))
+        mParentAssociationEventsModel.setEventName(mEventJSONdata.optString("event"))
+        mParentAssociationEventsModel.setEventDate(mEventJSONdata.optString("date"))
+        mParentAssociationEventsModel.setPosition(postion)
+        val mDate: String = mParentAssociationEventsModel.getEventDate()
+        Log.e("mDate",mDate)
+        var mEventDate: Date? = Date()
+        try {
+            mEventDate = sdfcalender!!.parse(mDate)
+            Log.e("mEventDate2", mEventDate.toString())
+
+        } catch (ex: ParseException) {
+            // Log.e("Date", "Parsing error");
+        }
+        val dayOfTheWeek =
+            android.text.format.DateFormat.format("EEEE", mEventDate) as String // Thursday
+        val day = android.text.format.DateFormat.format("dd", mEventDate) as String // 20
+        val monthString =
+            android.text.format.DateFormat.format("MMMM", mEventDate) as String // June
+        val monthNumber = android.text.format.DateFormat.format("MM", mEventDate) as String // 06
+        val year = android.text.format.DateFormat.format("yyyy", mEventDate) as String // 2013
+        mParentAssociationEventsModel.setDayOfTheWeek(dayOfTheWeek)
+        mParentAssociationEventsModel.setDay(day)
+        mParentAssociationEventsModel.setMonthString(monthString)
+        mParentAssociationEventsModel.setMonthNumber(monthNumber)
+        mParentAssociationEventsModel.setYear(year)
+        val mParentAssociationItemsArrayList: ArrayList<ParentAssociationEventsModel> =
+            ArrayList<ParentAssociationEventsModel>()
+        val itemData = mEventJSONdata.optJSONArray("items")
+        for (i in 0 until itemData.length()) {
+            val mItemJsonObject = itemData.optJSONObject(i)
+            val mItemModel = ParentAssociationEventsModel()
+            mItemModel.setItemName(mItemJsonObject.optString("name"))
+            //            mItemModel.setItemSelected(false);
+//            if (i==0)
+//            {
+//                mItemModel.setItemSelected(true);
+//            }
+            val itemDataEvent = mItemJsonObject.optJSONArray("timeslots")
+            val mParentAssociationEventItemsArraList: ArrayList<ParentAssociationEventItemsModel> =
+                ArrayList<ParentAssociationEventItemsModel>()
+            for (j in 0 until itemDataEvent.length()) {
+                val mEventItemJsonObject = itemDataEvent.optJSONObject(j)
+                val mParentAssociationEventItemsModel = ParentAssociationEventItemsModel()
+                mParentAssociationEventItemsModel.setUserName(mEventItemJsonObject.optString("user_name"))
+                mParentAssociationEventItemsModel.setStatus(mEventItemJsonObject.optString("status"))
+                mParentAssociationEventItemsModel.setStart_time(mEventItemJsonObject.optString("start_time"))
+                mParentAssociationEventItemsModel.setEnd_time(mEventItemJsonObject.optString("end_time"))
+                mParentAssociationEventItemsModel.setEventId(mEventItemJsonObject.optString("id"))
+                val format1: DateFormat = SimpleDateFormat("HH:mm:ss", Locale.ENGLISH)
+                try {
+                    val dateStart = format1.parse(mEventItemJsonObject.optString("start_time"))
+                    val format2 = SimpleDateFormat("hh:mm a", Locale.ENGLISH)
+                    val startTime = format2.format(dateStart)
+                    mParentAssociationEventItemsModel.setFrom_time(startTime)
+                    val dateEndTime = format1.parse(mEventItemJsonObject.optString("end_time"))
+                    val endTime = format2.format(dateEndTime)
+                    mParentAssociationEventItemsModel.setTo_time(endTime)
+                } catch (e: ParseException) {
+                    e.printStackTrace()
+                }
+                mParentAssociationEventItemsArraList.add(mParentAssociationEventItemsModel)
+            }
+            mItemModel.setEventItemStatusList(mParentAssociationEventItemsArraList)
+            mParentAssociationItemsArrayList.add(mItemModel)
+        }
+        mParentAssociationEventsModel.setEventItemList(mParentAssociationItemsArrayList)
+        return mParentAssociationEventsModel
+    }
+
 }

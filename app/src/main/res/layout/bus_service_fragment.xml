@@ -8,10 +8,7 @@
 
     <include
         android:id="@+id/includeRel"
-        layout="@layout/header_bar_fragment"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        layout="@layout/layout_activity_header" />
 
     <LinearLayout
         android:id="@+id/studentSpinner"

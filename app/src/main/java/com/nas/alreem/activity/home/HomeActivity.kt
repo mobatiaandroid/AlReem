@@ -56,6 +56,7 @@ import com.nas.alreem.constants.WebViewTextActivity
 import com.nas.alreem.fragment.about_us.AboutUsFragment
 import com.nas.alreem.fragment.absence.AbsenceFragment
 import com.nas.alreem.fragment.bus_service.BusServiceFragment
+import com.nas.alreem.fragment.bus_service.BusServiceFragmentNew
 import com.nas.alreem.fragment.calendar.CalendarFragment
 import com.nas.alreem.fragment.canteen.CanteenFragment
 import com.nas.alreem.fragment.cca.CCAFragment
@@ -623,7 +624,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                     {
                         //Permission_form
                         PreferenceManager.setStudentID(context,"")
-                        mFragment = BusServiceFragment()
+                        mFragment = BusServiceFragmentNew()
                         replaceFragmentsSelected(position)
 
                     }

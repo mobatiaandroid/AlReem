@@ -19,7 +19,6 @@ import com.nas.alreem.activity.parent_engagement.adapter.ParentsAssociationMainR
 import com.nas.alreem.activity.parent_engagement.model.ParentAssociationEventItemsModel
 import com.nas.alreem.activity.parent_engagement.model.ParentAssociationEventResponseModel
 import com.nas.alreem.activity.parent_engagement.model.ParentAssociationEventsModel
-import com.nas.alreem.activity.shop_new.model.StudentShopCardResponseModel
 import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.DialogFunctions
@@ -43,7 +42,7 @@ class ParentsAssociationListActivity : AppCompatActivity() {
     lateinit var relativeHeader: RelativeLayout
     lateinit var headermanager: HeaderManager
     lateinit var mContext: Context
-    lateinit var mRecyclerView: RecyclerView
+     var mRecyclerView: RecyclerView? = null
     var extras: Bundle? = null
     var mListViewArray: ArrayList<ParentAssociationEventsModel>? = null
     var myFormatCalender = "yyyy-MM-dd"
@@ -64,8 +63,10 @@ class ParentsAssociationListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.parentsactivityrecyclerview)
         mContext = this
+
         myFormatCalender = "yyyy-MM-dd"
         sdfcalender = SimpleDateFormat(myFormatCalender)
+
         initialiseUI()
         //        AppUtils.showDialogAlertDismiss((Activity) mContext, "Alert", "Work In Progress", R.drawable.exclamationicon, R.drawable.round);
         if (PreferenceManager.getIsFirstTimeInPE(mContext)) {
@@ -99,6 +100,9 @@ class ParentsAssociationListActivity : AppCompatActivity() {
         back = headermanager.leftButton!!
         fbShare = headermanager.rightButton!!
         infoImg = headermanager.infoButton!!
+        val llm = LinearLayoutManager(this)
+        llm.orientation = LinearLayoutManager.VERTICAL
+        mRecyclerView!!.layoutManager = llm
         headermanager.setButtonLeftSelector(
             R.drawable.back,
             R.drawable.back
@@ -128,9 +132,7 @@ class ParentsAssociationListActivity : AppCompatActivity() {
           /*  val mintent = Intent(mContext, PTAinfoActivity::class.java)
             startActivity(mintent)*/
         })
-        val llm = LinearLayoutManager(this)
-        llm.orientation = LinearLayoutManager.VERTICAL
-        mRecyclerView!!.layoutManager = llm
+
 
 //        mRecyclerView.addOnItemTouchListener(new RecyclerItemListener(getApplicationContext(), mRecyclerView,
 //                new RecyclerItemListener.RecyclerTouchListener() {
@@ -206,7 +208,7 @@ class ParentsAssociationListActivity : AppCompatActivity() {
                                     val mParentsAssociationMainRecyclerviewAdapter =
                                         ParentsAssociationMainRecyclerviewAdapter(
                                             mContext,
-                                            mListViewArray!!
+                                            mListViewArray!!,mRecyclerView
                                         )
                                     mRecyclerView!!.adapter =
                                         mParentsAssociationMainRecyclerviewAdapter
@@ -539,12 +541,12 @@ class ParentsAssociationListActivity : AppCompatActivity() {
 
     fun callListApis(
         context: Context,
-        parentAssociationEventsModelsArrayList: ArrayList<ParentAssociationEventsModel>?,
-        mPtaItemList: GetPtaItemList?
+        parentAssociationEventsModelsArrayList: ArrayList<ParentAssociationEventsModel>?
     ) {
-        myFormatCalender = "yyyy-MM-dd"
-        sdfcalender = SimpleDateFormat(myFormatCalender)
-        PtaItemList = mPtaItemList
+
+       // mRecyclerView = findViewById<View>(R.id.mRecyclerView) as RecyclerView
+intfn()
+
         mListViewArray = ArrayList<ParentAssociationEventsModel>()
         mParentAssociationEventsModelsArrayList = parentAssociationEventsModelsArrayList
         val paramObject = JsonObject()
@@ -596,10 +598,9 @@ class ParentsAssociationListActivity : AppCompatActivity() {
                                             e.printStackTrace()
                                         }
                                     }
-                                    val mParentsAssociationMainRecyclerviewAdapter =
-                                        ParentsAssociationMainRecyclerviewAdapter(
+                                    val mParentsAssociationMainRecyclerviewAdapter = ParentsAssociationMainRecyclerviewAdapter(
                                             context,
-                                            mListViewArray!!
+                                            mListViewArray!!,mRecyclerView
                                         )
                                     mRecyclerView!!.adapter =
                                         mParentsAssociationMainRecyclerviewAdapter
@@ -630,106 +631,108 @@ class ParentsAssociationListActivity : AppCompatActivity() {
             }
         })
             }
-        /*PtaItemList = mPtaItemList
-        mListViewArray = ArrayList<ParentAssociationEventsModel>()
-        mParentAssociationEventsModelsArrayList = parentAssociationEventsModelsArrayList
-        val service: APIInterface = APIClient.getRetrofitInstance().create(APIInterface::class.java)
-        val paramObject = JsonObject()
-        paramObject.addProperty("student_id", PreferenceManager.getStudentID(context))
-        val call: Call<ParentAssociationEventResponseModel> = service.postParentAssociationEvents(
-            "Bearer " + PreferenceManager.getAccessToken(context),
-            paramObject
-        )
-        // progressBarDialog.show();
-        call.enqueue(object : Callback<ParentAssociationEventResponseModel?> {
-            override fun onResponse(
-                call: Call<ParentAssociationEventResponseModel?>,
-                response: Response<ParentAssociationEventResponseModel?>
-            ) {
-                //progressBarDialog.hide();
-                if (response.isSuccessful()) {
+
+    private fun intfn() {
+        myFormatCalender = "yyyy-MM-dd"
+        sdfcalender = SimpleDateFormat(myFormatCalender)
+
+        mRecyclerView = findViewById<View>(R.id.mRecyclerView) as RecyclerView
+        mRecyclerView!!.setHasFixedSize(true)
+        val llm = LinearLayoutManager(this)
+        llm.orientation = LinearLayoutManager.VERTICAL
+        mRecyclerView!!.layoutManager = llm
+    }
+    /*PtaItemList = mPtaItemList
+    mListViewArray = ArrayList<ParentAssociationEventsModel>()
+    mParentAssociationEventsModelsArrayList = parentAssociationEventsModelsArrayList
+    val service: APIInterface = APIClient.getRetrofitInstance().create(APIInterface::class.java)
+    val paramObject = JsonObject()
+    paramObject.addProperty("student_id", PreferenceManager.getStudentID(context))
+    val call: Call<ParentAssociationEventResponseModel> = service.postParentAssociationEvents(
+        "Bearer " + PreferenceManager.getAccessToken(context),
+        paramObject
+    )
+    // progressBarDialog.show();
+    call.enqueue(object : Callback<ParentAssociationEventResponseModel?> {
+        override fun onResponse(
+            call: Call<ParentAssociationEventResponseModel?>,
+            response: Response<ParentAssociationEventResponseModel?>
+        ) {
+            //progressBarDialog.hide();
+            if (response.isSuccessful()) {
 //                    Log.e("res", response.toString());
-                    val apiResponse: ParentAssociationEventResponseModel? = response.body()
-                    //                    Log.e("response", String.valueOf(apiResponse));
+                val apiResponse: ParentAssociationEventResponseModel? = response.body()
+                //                    Log.e("response", String.valueOf(apiResponse));
 //                    System.out.println("response" + apiResponse);
-                    val response_code: String =
-                        java.lang.String.valueOf(apiResponse.getResponseCode())
-                    //                    Log.e("errorh", response.body().getResponseCode());
-                    if (response.body() != null) {
-                        if (response.body().getResponseCode().equals("200")) {
-                            val statuscode: String = java.lang.String.valueOf(
-                                response.body().getResponse().getStatusCode()
-                            )
-                            //    Log.e("statuscode", statuscode);
-                            if (statuscode == STATUS_SUCCESS) {
-                                if (apiResponse.getResponse().getEventDataList().size() > 0) {
-                                    for (i in 0 until apiResponse.getResponse().getEventDataList()
-                                        .size()) {
-                                        val item: ParentAssociationEventResponseModel.EventData =
-                                            response.body().getResponse().getEventDataList().get(i)
-                                        //Log.e("item name", item.getEvent());
-                                        val gson = Gson()
-                                        val eventJson = gson.toJson(item)
-                                        //  Log.e("item", eventJson);
-                                        try {
-                                            val jsonObject = JSONObject(eventJson)
-                                            // JSONObject eventJSONdata = dataArray.optJSONObject(i);
-                                            mListViewArray!!.add(
-                                                getParentAssociationEventValues(
-                                                    jsonObject,
-                                                    mParentAssociationEventsModelsArrayList!![i].getPosition()
-                                                )
+                val response_code: String =
+                    java.lang.String.valueOf(apiResponse.getResponseCode())
+                //                    Log.e("errorh", response.body().getResponseCode());
+                if (response.body() != null) {
+                    if (response.body().getResponseCode().equals("200")) {
+                        val statuscode: String = java.lang.String.valueOf(
+                            response.body().getResponse().getStatusCode()
+                        )
+                        //    Log.e("statuscode", statuscode);
+                        if (statuscode == STATUS_SUCCESS) {
+                            if (apiResponse.getResponse().getEventDataList().size() > 0) {
+                                for (i in 0 until apiResponse.getResponse().getEventDataList()
+                                    .size()) {
+                                    val item: ParentAssociationEventResponseModel.EventData =
+                                        response.body().getResponse().getEventDataList().get(i)
+                                    //Log.e("item name", item.getEvent());
+                                    val gson = Gson()
+                                    val eventJson = gson.toJson(item)
+                                    //  Log.e("item", eventJson);
+                                    try {
+                                        val jsonObject = JSONObject(eventJson)
+                                        // JSONObject eventJSONdata = dataArray.optJSONObject(i);
+                                        mListViewArray!!.add(
+                                            getParentAssociationEventValues(
+                                                jsonObject,
+                                                mParentAssociationEventsModelsArrayList!![i].getPosition()
                                             )
-                                        } catch (e: JSONException) {
-                                            e.printStackTrace()
-                                        }
-                                    }
-                                    val mParentsAssociationMainRecyclerviewAdapter =
-                                        ParentsAssociationMainRecyclerviewAdapter(
-                                            context,
-                                            mListViewArray
                                         )
-                                    mRecyclerView!!.adapter =
-                                        mParentsAssociationMainRecyclerviewAdapter
-                                } else {
-                                    //CustomStatusDialog();
-                                    Toast.makeText(context, "Failure", Toast.LENGTH_SHORT).show()
+                                    } catch (e: JSONException) {
+                                        e.printStackTrace()
+                                    }
                                 }
+                                val mParentsAssociationMainRecyclerviewAdapter =
+                                    ParentsAssociationMainRecyclerviewAdapter(
+                                        context,
+                                        mListViewArray
+                                    )
+                                mRecyclerView!!.adapter =
+                                    mParentsAssociationMainRecyclerviewAdapter
                             } else {
-//										CustomStatusDialog(RESPONSE_FAILURE);
+                                //CustomStatusDialog();
                                 Toast.makeText(context, "Failure", Toast.LENGTH_SHORT).show()
                             }
-                        } else if (response.body().getResponseCode()
-                                .equalsIgnoreCase(RESPONSE_ACCESSTOKEN_MISSING) ||
-                            response.body().getResponseCode()
-                                .equalsIgnoreCase(RESPONSE_ACCESSTOKEN_EXPIRED) ||
-                            response.body().getResponseCode()
-                                .equalsIgnoreCase(RESPONSE_INVALID_TOKEN)
-                        ) {
-                            AppUtils.postInitParam(context, object : GetAccessTokenInterface() {
-                                val accessToken: Unit
-                                    get() {}
-                            })
-                            // callParentAssociationEventList();
-                        } else if (response.body().getResponseCode().equals(RESPONSE_ERROR)) {
-//								CustomStatusDialog(RESPONSE_FAILURE);
-                            //Toast.makeText(mContext,"Failure", Toast.LENGTH_SHORT).show();
-                            AppUtils.showDialogAlertDismiss(
-                                context as Activity,
-                                "Alert",
-                                context.getString(R.string.common_error),
-                                R.drawable.exclamationicon,
-                                R.drawable.round
-                            )
                         } else {
-                            AppUtils.showDialogAlertDismiss(
-                                context as Activity,
-                                "Alert",
-                                context.getString(R.string.common_error),
-                                R.drawable.exclamationicon,
-                                R.drawable.round
-                            )
+//										CustomStatusDialog(RESPONSE_FAILURE);
+                            Toast.makeText(context, "Failure", Toast.LENGTH_SHORT).show()
                         }
+                    } else if (response.body().getResponseCode()
+                            .equalsIgnoreCase(RESPONSE_ACCESSTOKEN_MISSING) ||
+                        response.body().getResponseCode()
+                            .equalsIgnoreCase(RESPONSE_ACCESSTOKEN_EXPIRED) ||
+                        response.body().getResponseCode()
+                            .equalsIgnoreCase(RESPONSE_INVALID_TOKEN)
+                    ) {
+                        AppUtils.postInitParam(context, object : GetAccessTokenInterface() {
+                            val accessToken: Unit
+                                get() {}
+                        })
+                        // callParentAssociationEventList();
+                    } else if (response.body().getResponseCode().equals(RESPONSE_ERROR)) {
+//								CustomStatusDialog(RESPONSE_FAILURE);
+                        //Toast.makeText(mContext,"Failure", Toast.LENGTH_SHORT).show();
+                        AppUtils.showDialogAlertDismiss(
+                            context as Activity,
+                            "Alert",
+                            context.getString(R.string.common_error),
+                            R.drawable.exclamationicon,
+                            R.drawable.round
+                        )
                     } else {
                         AppUtils.showDialogAlertDismiss(
                             context as Activity,
@@ -739,20 +742,29 @@ class ParentsAssociationListActivity : AppCompatActivity() {
                             R.drawable.round
                         )
                     }
+                } else {
+                    AppUtils.showDialogAlertDismiss(
+                        context as Activity,
+                        "Alert",
+                        context.getString(R.string.common_error),
+                        R.drawable.exclamationicon,
+                        R.drawable.round
+                    )
                 }
             }
+        }
 
-            override fun onFailure(call: Call<ParentAssociationEventResponseModel?>, t: Throwable) {
-                //  progressBarDialog.hide();
-                AppUtils.showDialogAlertDismiss(
-                    context as Activity,
-                    "Alert",
-                    context.getString(R.string.common_error),
-                    R.drawable.exclamationicon,
-                    R.drawable.round
-                )
-            }
-        })*/
+        override fun onFailure(call: Call<ParentAssociationEventResponseModel?>, t: Throwable) {
+            //  progressBarDialog.hide();
+            AppUtils.showDialogAlertDismiss(
+                context as Activity,
+                "Alert",
+                context.getString(R.string.common_error),
+                R.drawable.exclamationicon,
+                R.drawable.round
+            )
+        }
+    })*/
 
 
 
