@@ -14,7 +14,6 @@ import java.util.Arrays
 
 
 
-/*
 class PTAinfoActivity : AppCompatActivity(){
     private lateinit var mImgCircle: Array<ImageView?>
     private var mLinearLayout: LinearLayout? = null
@@ -45,18 +44,14 @@ class PTAinfoActivity : AppCompatActivity(){
         mContext = this
         val bundle = intent.extras
         if (bundle != null) {
-            dataType = bundle.getInt(TYPE, 0)
+            dataType = bundle.getInt("type", 0)
 
         }
         initialiseViewPagerUI()
     }
 
-    */
-/*******************************************************
-     * Method name : initialiseViewPagerUI Description : initialise View pager
-     * UI elements Parameters : nil Return type : void Date : Jan 13, 2015
-     * Author : Rijo K Jose
-     *//*
+
+
 
     private fun initialiseViewPagerUI() {
         mTutorialViewPager = findViewById<View>(R.id.tutorialViewPager) as ViewPager
@@ -64,7 +59,7 @@ class PTAinfoActivity : AppCompatActivity(){
         imageSkip = findViewById<View>(R.id.imageSkip) as ImageView
 
         mImgCircle = arrayOfNulls(mPhotoList.size)
-        mTutorialViewPagerAdapter = TutorialViewPagerAdapter(mContext, mPhotoList)
+        mTutorialViewPagerAdapter = TutorialViewPagerAdapter(mContext!!, mPhotoList)
         mTutorialViewPager!!.currentItem = 0
         mTutorialViewPager!!.adapter = mTutorialViewPagerAdapter
         addShowCountView(0)
@@ -103,12 +98,7 @@ class PTAinfoActivity : AppCompatActivity(){
         mTutorialViewPager!!.adapter!!.notifyDataSetChanged()
     }
 
-    */
-/*******************************************************
-     * Method name : addShowCountView Description : add show count view at
-     * bottom Parameters : count Return type : void Date : Apr 17, 2015 Author :
-     * Rijo K Jose
-     *//*
+
 
     private fun addShowCountView(count: Int) {
         for (i in mPhotoList.indices) {
@@ -129,4 +119,3 @@ class PTAinfoActivity : AppCompatActivity(){
         }
     }
 }
-*/

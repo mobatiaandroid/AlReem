@@ -156,6 +156,8 @@ class Intentionfragment : Fragment(){
                     intent.putExtra("student", primaryArrayList[position].studentName)
                     intent.putExtra("class", primaryArrayList[position].intensionClass)
                     intent.putExtra("intent_id", primaryArrayList[position].intensionId)
+                    intent.putExtra("title", primaryArrayList.get(position).title)
+                    intent.putExtra("description", primaryArrayList.get(position).description)
                     intent.putParcelableArrayListExtra(
                         "options",
                         primaryArrayList[position].options
@@ -169,6 +171,8 @@ class Intentionfragment : Fragment(){
 
                     intent.putExtra("student", primaryArrayList.get(position).studentName)
                     intent.putExtra("question", primaryArrayList.get(position).question)
+                    intent.putExtra("title", primaryArrayList.get(position).title)
+                    intent.putExtra("description", primaryArrayList.get(position).description)
                     intent.putExtra("classs",intentionstatusArray.get(position).className)
                     intent.putExtra("options",intentionstatusArray.get(position).selected_options)
                     intent.putExtra("selectedchoice", intentionstatusArray[position].selected_option_answer)

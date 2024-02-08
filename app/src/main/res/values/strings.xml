@@ -20,6 +20,7 @@
         <item>Timetable</item>
         <item>Forms</item>
         <item>Enrichment</item>
+        <item>Parent Engagement</item>
         <item>Parent Meetings</item>
         <item>Gallery</item>
         <item>Contact Us</item>
@@ -47,6 +48,7 @@
         <item>@drawable/time_table_side</item>
         <item>@drawable/permission_slip</item>
         <item>@drawable/ccas</item>
+        <item>@drawable/parent_association</item>
         <item>@drawable/parentevening</item>
         <item>@drawable/gallery</item>
         <item>@drawable/contacts</item>

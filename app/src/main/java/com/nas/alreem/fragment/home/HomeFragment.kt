@@ -62,6 +62,7 @@ import com.nas.alreem.fragment.home.re_enrollment.ReEnrollmentStatusResponseMode
 import com.nas.alreem.fragment.home.re_enrollment.StudentEnrollList
 import com.nas.alreem.fragment.intention.Intentionfragment
 import com.nas.alreem.fragment.notifications.NotificationFragment
+import com.nas.alreem.fragment.parent_engagement.ParentAssociationsFragment
 import com.nas.alreem.fragment.parent_meetings.ParentMeetingsFragment
 import com.nas.alreem.fragment.parents_essentials.ParentsEssentialFragment
 import com.nas.alreem.fragment.payments.PaymentFragment
@@ -5426,6 +5427,9 @@ class HomeFragment : Fragment(), View.OnClickListener {
                 textdata.equals(ConstantWords.permission_forms, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_PERMISSION_FORMS
                 }
+                textdata.equals(ConstantWords.parentassociation, ignoreCase = true) -> {
+                    TAB_ID = ConstantWords.TAB_PARENT_ASSOCIATION
+                }
 
                 textdata.equals(ConstantWords.reports, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_REPORTS
@@ -5848,7 +5852,10 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     mFragment = CCAFragment()
                     fragmentIntent(mFragment)
                 }
-
+                ConstantWords.TAB_PARENT_ASSOCIATION -> {
+                    mFragment = ParentAssociationsFragment()
+                    fragmentIntent(mFragment)
+                }
                 ConstantWords.TAB_PARENT_MEETINGS -> {
                     mFragment = ParentMeetingsFragment()
                     fragmentIntent(mFragment)

@@ -74,12 +74,112 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+            <com.nas.alreem.commonviews.CustomTextViewBold
+                android:layout_width="wrap_content"
+                android:id="@+id/title"
+                android:layout_height="wrap_content"
+                android:text="Intention 1"
+                android:layout_marginLeft="20dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/black"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                />
+            <LinearLayout
+                android:id="@+id/namelayout"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@+id/title"
+                android:weightSum="100">
 
+                <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
+                    android:id="@+id/stName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="45"
+                    android:text="Parent Name"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <com.nas.alreem.commonviews.CustomFontSansProTextBlack
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":"
+                    android:textColor="@color/black"
+                    />
+
+                <com.nas.alreem.commonviews.CustomTextViewRegular
+                    android:id="@+id/stnameValue"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="50"
+                    android:text="Gayathri"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/studClassLinear"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@+id/namelayout"
+                android:weightSum="100">
+
+                <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
+                    android:id="@+id/studClassTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="45"
+                    android:text="Email"
+
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <com.nas.alreem.commonviews.CustomFontSansProTextBlack
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":"
+                    android:textColor="@color/black"
+                    />
+
+                <com.nas.alreem.commonviews.CustomTextViewRegular
+                    android:id="@+id/studClassValue"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="50"
+                    android:text="X1"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+            </LinearLayout>
+            <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
+                android:layout_width="match_parent"
+                android:id="@+id/desc"
+                android:layout_height="wrap_content"
+                android:maxLines="3"
+                android:visibility="visible"
+                android:layout_margin="15dp"
+                app:layout_constraintTop_toBottomOf="@+id/studClassLinear"
+                android:text="Question" />
             <RelativeLayout
                 android:id="@+id/relSub"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -133,7 +233,7 @@
                 android:orientation="vertical"
                 android:weightSum="1"
                 android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@+id/relSub">
+                app:layout_constraintTop_toBottomOf="@+id/desc">
 
                 <com.nas.alreem.commonviews.CustomFontSansProTextBlack
                     android:layout_width="match_parent"
@@ -235,15 +335,30 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linear_parentEmail">
-
-                <com.nas.alreem.commonviews.CustomFontSansProTextBlack
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:id="@+id/questionTxt"
-                    android:layout_weight=".2"
-                    android:paddingLeft="8dp"
-                    android:textColor="@color/black"
-                    android:text="Will your child be returning for academic year 2023/24?" />
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <com.nas.alreem.commonviews.CustomTextViewSemiBold
+                        android:id="@+id/relImgOneDot"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center"
+                        android:background="@drawable/shape_circle_black"
+                        android:textColor="@color/white"
+                        android:textSize="8sp"
+                        android:visibility="visible" />
+                    <com.nas.alreem.commonviews.CustomFontSansProTextBlack
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:id="@+id/questionTxt"
+                        android:layout_weight=".2"
+                        android:paddingLeft="8dp"
+                        android:textColor="@color/black"
+                        android:text="Will your child be returning for academic year 2023/24?" />
+                </LinearLayout>
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
@@ -304,14 +419,30 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linear_choose">
-                <com.nas.alreem.commonviews.CustomTextViewRegular
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:id="@+id/questionTxt2"
-                    android:layout_weight=".2"
-                    android:textColor="@color/black"
-                    android:paddingLeft="8dp"
-                    android:text="Will your child be returning for academic year 2023/24?" />
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <com.nas.alreem.commonviews.CustomTextViewSemiBold
+                        android:id="@+id/relImgOneDot2"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center"
+                        android:background="@drawable/shape_circle_black"
+                        android:textColor="@color/white"
+                        android:textSize="8sp"
+                        android:visibility="visible" />
+                    <com.nas.alreem.commonviews.CustomTextViewRegular
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:id="@+id/questionTxt2"
+                        android:layout_weight=".2"
+                        android:textColor="@color/black"
+                        android:paddingLeft="8dp"
+                        android:text="Will your child be returning for academic year 2023/24?" />
+                </LinearLayout>
+
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="40dp"

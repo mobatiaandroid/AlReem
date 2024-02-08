@@ -30,7 +30,7 @@ class ParentAssociationsFragment :  Fragment() {
     lateinit var mTitleTextView: TextView
     var dataArrayStrings: ArrayList<String?> = object : ArrayList<String?>() {
         init {
-            add("Parents' Association")
+            add("Parent Engagement")
             add("Chatter Box Café")
             add("Class Representatives")
             //add("Chatter Box Café");
@@ -85,7 +85,7 @@ class ParentAssociationsFragment :  Fragment() {
         mRecyclerView!!.layoutParams = marginLayoutParams
         mRecyclerView!!.setHasFixedSize(true)
         mTitleTextView = mRootView!!.findViewById<View>(R.id.titleTextView) as TextView
-        mTitleTextView.setText("Parents' Association")
+        mTitleTextView.setText("Parent Engagement")
         relMain = mRootView!!.findViewById<View>(R.id.relMain) as RelativeLayout
         relMain!!.setOnClickListener { }
         val llm = LinearLayoutManager(mContext)
@@ -103,7 +103,7 @@ class ParentAssociationsFragment :  Fragment() {
             RecyclerItemListener(mContext, mRecyclerView,
                 object : RecyclerItemListener.RecyclerTouchListener{
                     override fun onClickItem(v: View?, position: Int) {
-                        if (dataArrayStrings[position] == "Parents' Association") {
+                        if (dataArrayStrings[position] == "Parent Engagement") {
                             val intent = Intent(
                                 mContext,
                                 ParentsAssociationSignUpActivity::class.java

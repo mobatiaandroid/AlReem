@@ -369,7 +369,6 @@ class Addorder_Activity : AppCompatActivity() {
 
                     }
 
-                        Log.e("student_allergy", item_list.get(i).student_allergy.toString())
                         if(item_list.get(i).student_allergy==1)
                         {
                             item_list.get(i).isAllergic=true
@@ -378,7 +377,6 @@ class Addorder_Activity : AppCompatActivity() {
                         }
                         allergycontentlist= ArrayList()
                         allergycontentlist.addAll(item_list.get(i).allergy_contents)
-                        Log.e("allergycontentlist", allergycontentlist.toString())
                 }
                     recyclerview_item.visibility=View.VISIBLE
                     recyclerview_item.layoutManager=LinearLayoutManager(nContext)

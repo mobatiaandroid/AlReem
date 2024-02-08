@@ -67,7 +67,18 @@ class PreorderItemsAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         //onBottomReachedListener.onBottomReached(position)
         //bottomView.visibility=View.GONE
+        if (itemlist[position].student_allergy==1)
+        {
+            holder.addLinear.visibility = View.GONE
+
+        }
+        else
+        {
+            holder.addLinear.visibility = View.VISIBLE
+
+        }
         if (allergycontentlist.size>0){
+
             holder.allergy_info.visibility=View.VISIBLE
             holder.allergy_rec.visibility=View.VISIBLE
             var llm = (LinearLayoutManager(mcontext))
@@ -95,6 +106,7 @@ class PreorderItemsAdapter(
         holder.itemNameTxt.text=itemlist[position].item_name
         holder.itemDescription.text = itemlist[position].description
         holder.amountTxt.text = itemlist[position].price.toString() + " AED"
+
         if (itemlist[position].item_already_ordered==0) {
             holder.confirmedTxt.visibility = View.GONE
         } else {

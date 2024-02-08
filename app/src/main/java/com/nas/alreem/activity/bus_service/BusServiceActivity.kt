@@ -13,6 +13,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
+import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -25,6 +26,7 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.nas.alreem.R
 import com.nas.alreem.activity.absence.model.EarlyPickupListArray
 import com.nas.alreem.activity.absence.model.ListAbsenceApiModel
+import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.activity.payments.adapter.StudentListAdapter
 import com.nas.alreem.activity.payments.model.StudentList
 import com.nas.alreem.activity.payments.model.StudentListModel
@@ -64,6 +66,8 @@ class BusServiceActivity : AppCompatActivity() {
     var studentAbsenceArrayList = ArrayList<BusServiceDetail>()
     lateinit var heading:TextView
     lateinit var titleTextView:TextView
+    lateinit var backRelative: RelativeLayout
+    lateinit var logoClickImgView: ImageView
 
     var select_val:Int=0
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -89,7 +93,7 @@ class BusServiceActivity : AppCompatActivity() {
         studentSpinner =findViewById<LinearLayout>(R.id.studentSpinner)
         studImg = findViewById<ImageView>(R.id.imagicon)
         studentNameTxt = findViewById<TextView>(R.id.studentName)
-        titleTextView = findViewById(R.id.titleTextView)
+        titleTextView = findViewById(R.id.heading)
         titleTextView.text= ConstantWords.bus_service
         newRequestAbsence = findViewById(R.id.newRequestAbsence)
         newRequestPickup =findViewById(R.id.newRequestEarly)
@@ -98,11 +102,21 @@ class BusServiceActivity : AppCompatActivity() {
         pickup_list= ArrayList()
         pickupListSort=ArrayList()
         heading=findViewById(R.id.appregisteredHint)
+        backRelative=findViewById(R.id.backRelative)
+        logoClickImgView=findViewById(R.id.logoClickImgView)
 
         linearLayoutManager = LinearLayoutManager(mContext)
         mAbsenceListView.layoutManager = linearLayoutManager
         mAbsenceListView.itemAnimator = DefaultItemAnimator()
         // absence_btn.setBackgroundResource(R.drawable.event_spinnerfill)
+        backRelative.setOnClickListener(View.OnClickListener {
+            finish()
+        })
+        logoClickImgView.setOnClickListener(View.OnClickListener {
+            val intent = Intent(mContext, HomeActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent)
+        })
         studentSpinner.setOnClickListener(){
             showStudentsList(mContext,studentListArrayList)
 

@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
+import android.text.Html
 import android.util.Log
 import android.view.View
 import android.view.Window
@@ -30,6 +31,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import com.nas.alreem.BuildConfig
 import com.nas.alreem.R
 import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.activity.payments.adapter.StudentListAdapter
@@ -81,7 +83,8 @@ class IntentionRegisterActivity : AppCompatActivity(){
     lateinit var answerTV: TextView
     lateinit var questionTV: TextView
     var reEnrollSaveArray: ArrayList<IntentionSubmitModel>? = null
-
+    var titlle:String=""
+    var descptn:String=""
     lateinit var submitBtn: Button
     lateinit var enterMessage: EditText
     var fromDate: String=""
@@ -102,7 +105,10 @@ class IntentionRegisterActivity : AppCompatActivity(){
     lateinit var optionArray: ArrayList<String>
     lateinit var subQuestion: ArrayList<String>
     var position :Int=0
-
+    lateinit var title : TextView
+    lateinit var parentname : TextView
+    lateinit var email : TextView
+    lateinit var desc : TextView
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -128,7 +134,13 @@ class IntentionRegisterActivity : AppCompatActivity(){
         subQuestionLinearLayout = findViewById(R.id.linear_choose1)
         answerTV = findViewById(R.id.answerTxt2)
         questionTV = findViewById(R.id.questionTxt2)
+        title = findViewById(R.id.title)
+        email = findViewById(R.id.studClassValue)
+        parentname = findViewById(R.id.stnameValue)
+        desc = findViewById(R.id.desc)
         heading.text = "Intention"
+        titlle=intent.getStringExtra("title").toString()
+        descptn=intent.getStringExtra("description").toString()
         question = intent.getStringExtra("question")!!.toString()
         student_name = intent.getStringExtra("student")!!.toString()
         classs = intent.getStringExtra("class")!!.toString()
@@ -215,8 +227,10 @@ class IntentionRegisterActivity : AppCompatActivity(){
 //        }
 
         dropDownList = ArrayList()
-        stud_name.text = student_name
-        stud_class.text = classs
+        parentname.text = student_name
+        email.text = PreferenceManager.getEmailId(mContext)
+        title.text = titlle
+        desc.setText(Html.fromHtml(descptn));
         //  val stud_photo: String = studentEnrollList.get(position).getPhoto()
 
         //  val stud_id: String = studentEnrollList.get(position).getId()
@@ -249,19 +263,7 @@ class IntentionRegisterActivity : AppCompatActivity(){
                         // continus
                     }
                 }
-//                val optionlistSize = finalDropDownList.size - 1
-//                for (i in 1 until optionlistSize) {
-//                    if (selectedItem === finalDropDownList[i].toString()) {
-//                        reEnrollSubmit.status = (finalDropDownList[i].toString())
-//                        reEnrollSubmit.student_id =
-//                            PreferenceManager.getCCAStudentIdPosition(mContext).toString()
-//                        check[0] = 1
-//                    } else if (selectedItem === finalDropDownList[0]) {
-//                        reEnrollSubmit.status = ("")
-//                        check[0] = 0
-//                    }
-//                }
-            }
+        }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
@@ -355,7 +357,13 @@ class IntentionRegisterActivity : AppCompatActivity(){
         primaryArrayList= ArrayList()
         // optionsArray = ArrayList()
        // progress.visibility = View.VISIBLE
-        val body = IntentionApiSubmit(PreferenceManager.getStudentID(mContext)!!,intensionId.toString(),"2","hbhhhj","1.0",selectedItem,answerTV.text.trim().toString())
+        var devicename: String = (Build.MANUFACTURER
+                + " " + Build.MODEL + " " + Build.VERSION.RELEASE
+                + " " + Build.VERSION_CODES::class.java.fields[Build.VERSION.SDK_INT]
+            .name)
+        val version: String = BuildConfig.VERSION_NAME
+
+        val body = IntentionApiSubmit(PreferenceManager.getStudentID(mContext)!!,intensionId.toString(),"2",devicename,version,selectedItem,answerTV.text.trim().toString())
         val token = PreferenceManager.getaccesstoken(mContext)
         val call: Call<StudentInfoModel> = ApiClient.getClient.intensionstatusupdate(body,"Bearer "+token)
         call.enqueue(object : Callback<StudentInfoModel> {

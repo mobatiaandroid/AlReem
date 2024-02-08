@@ -19,7 +19,18 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-
+            <com.nas.alreem.commonviews.CustomTextViewBold
+                android:layout_width="wrap_content"
+                android:id="@+id/title"
+                android:layout_height="wrap_content"
+                android:text="Intention 1"
+                android:layout_marginLeft="18dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/black"
+                />
             <LinearLayout
                 android:id="@+id/namelayout"
                 android:layout_width="match_parent"
@@ -36,7 +47,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="45"
-                    android:text="Name"
+                    android:text="Parent Name"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
 
@@ -73,7 +84,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="45"
-                    android:text="Class"
+                    android:text="Email"
 
                     android:textColor="@color/black"
                     android:textSize="14sp" />
@@ -95,40 +106,57 @@
                     android:textColor="@color/black"
                     android:textSize="14sp" />
             </LinearLayout>
+            <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
+                android:layout_width="match_parent"
+                android:id="@+id/desc"
+                android:layout_height="wrap_content"
+                android:maxLines="3"
+                android:visibility="visible"
+                android:layout_margin="15dp"
+                android:text="Question" />
             <LinearLayout
                 android:id="@+id/linear_parentMail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/linear_parentName"
-                android:layout_margin="8dp"
-                android:orientation="vertical"
+                android:layout_margin="15dp"
+                android:orientation="horizontal"
                 android:weightSum="1">
 
                 <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
+                    android:visibility="gone"
                     android:layout_weight=".2"
                     android:text="Question" />
-
-                <com.nas.alreem.commonviews.CustomFontSansProEditTextNoColor
+                <com.nas.alreem.commonviews.CustomTextViewSemiBold
+                    android:id="@+id/relImgOneDot"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="5dp"
+                    android:gravity="center"
+                    android:background="@drawable/shape_circle_black"
+                    android:textColor="@color/white"
+                    android:textSize="8sp"
+                    android:visibility="visible" />
+                <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
                     android:id="@+id/mailtxt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:background="@drawable/textfield_bg"
                     android:hint="email@gmail.com"
-                    android:padding="8dp"
                     android:text=""
                     android:editable="false"
                     android:textColor="@color/black"
-                    android:textColorHint="@color/dark_grey1" />
+                    />
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/linear_Enrollstatus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/linear_parentMail"
-                android:layout_marginLeft="8dp"
+                android:layout_marginLeft="25dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginBottom="16dp"
@@ -139,14 +167,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
                     android:layout_weight=".2"
+                    android:visibility="gone"
                     android:text="Selected Options" />
 
-                <com.nas.alreem.commonviews.CustomFontSansProEditTextNoColor
+                <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
                     android:id="@+id/statustxt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:background="@drawable/textfield_bg"
                     android:hint="Unsure"
                     android:padding="8dp"
                     android:editable="false"
@@ -161,8 +189,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/linear_parentName"
-                android:layout_margin="8dp"
-                android:orientation="vertical"
+                android:layout_margin="15dp"
+                android:orientation="horizontal"
                 android:visibility="gone"
                 android:weightSum="1">
 
@@ -170,19 +198,29 @@
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
                     android:layout_weight=".2"
+                    android:visibility="gone"
                     android:text="Sub Question" />
+                <com.nas.alreem.commonviews.CustomTextViewSemiBold
+                    android:id="@+id/relImgOneDot2"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="5dp"
+                    android:gravity="center"
+                    android:background="@drawable/shape_circle_black"
+                    android:textColor="@color/white"
+                    android:textSize="8sp"
+                    android:visibility="visible" />
 
-                <com.nas.alreem.commonviews.CustomFontSansProEditTextNoColor
+                <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
                     android:id="@+id/option_question"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:background="@drawable/textfield_bg"
                     android:hint="email@gmail.com"
-                    android:padding="8dp"
                     android:editable="false"
                     android:textColor="@color/black"
-                    android:textColorHint="@color/dark_grey1" />
+                   />
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/linear_answer"
@@ -201,22 +239,38 @@
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
                     android:layout_weight=".2"
+                    android:visibility="gone"
                     android:text="Answer" />
 
-                <com.nas.alreem.commonviews.CustomFontSansProEditTextNoColor
+                <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
                     android:id="@+id/answeroption"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:background="@drawable/textfield_bg"
                     android:hint="Unsure"
                     android:padding="8dp"
+                    android:layout_marginStart="25dp"
                     android:editable="false"
                     android:paddingBottom="4dp"
                     android:textColor="@color/black"
-                    android:textColorHint="@color/dark_grey1" />
+                    />
             </LinearLayout>
-
+            <com.nas.alreem.commonviews.button.CustomFontButtonBoldNoColor
+                android:id="@+id/sub_btn"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:background="@drawable/button_blue"
+                android:gravity="center"
+                android:text="OK"
+                android:layout_gravity="center"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:layout_marginTop="40dp"
+                android:visibility="visible"
+                 />
         </LinearLayout>
 
     </ScrollView>

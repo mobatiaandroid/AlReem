@@ -392,7 +392,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                 {
                     0->
                     {
-                        mFragment = ParentAssociationsFragment()
+                        mFragment = HomeFragment()
                         replaceFragmentsSelected(position)
                     }
                     1->
@@ -667,16 +667,22 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                     18->
                     {
                         //Gallery
-                        mFragment = ParentMeetingsFragment()
+                        mFragment = ParentAssociationsFragment()
                         replaceFragmentsSelected(position)
                     }
                     19->
                     {
                         //Gallery
-                        mFragment = GalleryFragment()
+                        mFragment = ParentMeetingsFragment()
                         replaceFragmentsSelected(position)
                     }
                     20->
+                    {
+                        //Gallery
+                        mFragment = GalleryFragment()
+                        replaceFragmentsSelected(position)
+                    }
+                    21->
                     {
                         //About Us
 
@@ -700,7 +706,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                             replaceFragmentsSelected(position)
                         }
                     }
-                    21->
+                    22->
                     {
                         // Contact Us
                         mFragment = AboutUsFragment()

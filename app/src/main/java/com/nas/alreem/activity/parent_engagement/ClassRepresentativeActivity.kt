@@ -25,6 +25,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.nas.alreem.R
 import com.nas.alreem.activity.home.HomeActivity
+import com.nas.alreem.activity.login.model.SignUpResponseModel
 import com.nas.alreem.activity.parent_engagement.adapter.ClassRepresentativeRecyclerAdapter
 import com.nas.alreem.activity.parent_engagement.model.ClassRepresentativeListResponseModel
 import com.nas.alreem.activity.parent_engagement.model.ParentAssociationResponseModel
@@ -37,6 +38,7 @@ import com.nas.alreem.constants.HeaderManager
 import com.nas.alreem.constants.PDFViewerActivity
 import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.constants.WebLinkActivity
+import com.nas.alreem.fragment.payments.model.SendEmailApiModel
 import com.nas.alreem.recyclermanager.DividerItemDecoration
 import com.nas.alreem.recyclermanager.ItemOffsetDecoration
 import com.nas.alreem.recyclermanager.RecyclerItemListener
@@ -152,21 +154,16 @@ class ClassRepresentativeActivity : AppCompatActivity(){
                                 mContext,
                                 PDFViewerActivity::class.java
                             )
-                            intent.putExtra(
-                                "pdf_url",
-                                mTermsCalendarListArray!![position].getmFileName()
-                            )
+                            intent.putExtra("Url", mTermsCalendarListArray!![position].getmFileName())
+                            intent.putExtra("title", mTermsCalendarListArray!![position].getmTitle())
                             startActivity(intent)
                         } else {
                             val intent = Intent(
                                 mContext,
                                 WebLinkActivity::class.java
                             )
-                            intent.putExtra(
-                                "url",
-                                mTermsCalendarListArray!![position].getmFileName()
-                            )
-                            intent.putExtra("tab_type", tab_type)
+                            intent.putExtra("url", mTermsCalendarListArray!![position].getmFileName())
+                            intent.putExtra("heading", mTermsCalendarListArray!![position].getmTitle())
                             startActivity(intent)
                         }
                     }
@@ -267,6 +264,42 @@ class ClassRepresentativeActivity : AppCompatActivity(){
     }
 
     private fun sendEmailToStaff(dialog: Dialog) {
+        val sendMailBody = SendEmailApiModel(contactEmail!!, text_dialog!!.text.toString(), text_content!!.text.toString())
+        val call: Call<SignUpResponseModel> = ApiClient.getClient.sendEmailStaff(sendMailBody, "Bearer " + PreferenceManager.getaccesstoken(mContext!!))
+        call.enqueue(object : Callback<SignUpResponseModel> {
+            override fun onFailure(call: Call<SignUpResponseModel>, t: Throwable) {
+                //progressDialog.visibility = View.GONE
+            }
+
+            override fun onResponse(call: Call<SignUpResponseModel>, response: Response<SignUpResponseModel>) {
+                val responsedata = response.body()
+                //progressDialog.visibility = View.GONE
+                if (responsedata != null) {
+                    try {
+
+
+                        if (response.body()!!.status==100) {
+                            dialog.dismiss()
+                            showSuccessAlert(
+                                mContext!!,
+                                "Email sent Successfully ",
+                                "Success",
+                                dialog
+                            )
+                        }else {
+                            DialogFunctions.commonErrorAlertDialog(
+                                mContext!!.resources.getString(R.string.alert),
+                                ConstantFunctions.commonErrorString(response.body()!!.status), mContext!!
+                            )
+
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+
+        })
        // ClassRepresentativeActivity.Companion.progressDialog.setVisibility(View.VISIBLE)
       /*  val service: APIInterface = APIClient.getRetrofitInstance().create(APIInterface::class.java)
         val paramObject = JsonObject()
@@ -576,7 +609,26 @@ class ClassRepresentativeActivity : AppCompatActivity(){
                 }
             })*/
 
-
+    fun showSuccessAlert(context: Context, message: String, msgHead: String, mdialog: Dialog) {
+        val dialog = Dialog(context)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.dialog_common_error_alert)
+        var iconImageView = dialog.findViewById(R.id.iconImageView) as ImageView
+        var alertHead = dialog.findViewById(R.id.alertHead) as TextView
+        var text_dialog = dialog.findViewById(R.id.messageTxt) as TextView
+        var btn_Ok = dialog.findViewById(R.id.btn_Ok) as Button
+        text_dialog.text = message
+        alertHead.text = msgHead
+        iconImageView.setImageResource(R.drawable.tick)
+        btn_Ok.setOnClickListener()
+        {
+            dialog.dismiss()
+            mdialog.dismiss()
+        }
+        dialog.show()
+    }
             @Throws(JSONException::class)
     private fun getSearchValues(Object: JSONObject): TermsCalendarModel {
         val mTermsCalendarModel = TermsCalendarModel()

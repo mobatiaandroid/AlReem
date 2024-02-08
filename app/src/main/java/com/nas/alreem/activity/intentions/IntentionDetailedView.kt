@@ -3,8 +3,10 @@ package com.nas.alreem.activity.intentions
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.Html
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
@@ -14,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.nas.alreem.R
 import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.constants.ConstantWords
+import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.fragment.intention.model.IntentionListAPIResponseModel
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -36,9 +39,13 @@ lateinit var answeroption:TextView
     var studcls_pickup:String=""
     var pickby_pickup:String=""
     var reason_pickup:String=""
+    var titlle:String=""
+    var descptn:String=""
 var selectedoptionanswer:String=""
     var receivedOptions: ArrayList<IntentionListAPIResponseModel.Option> = ArrayList()
-
+lateinit var title : TextView
+lateinit var desc: TextView
+lateinit var sub_btn : Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_intention_detail_view)
@@ -54,15 +61,23 @@ var selectedoptionanswer:String=""
         logoClickImgView=findViewById(R.id.logoClickImgView)
       //  timeofPickup=findViewById(R.id.leaveDateToValue)
         option_question=findViewById(R.id.option_question)
+        title = findViewById(R.id.title)
+        desc = findViewById(R.id.desc)
         linear_Option_question=findViewById(R.id.linear_Option_question)
         linear_answer=findViewById(R.id.linear_answer)
         answeroption=findViewById(R.id.answeroption)
+        sub_btn = findViewById(R.id.sub_btn)
         studname_pickup=intent.getStringExtra("student").toString()
+        titlle=intent.getStringExtra("title").toString()
+        descptn=intent.getStringExtra("description").toString()
         studcls_pickup=intent.getStringExtra("classs").toString()
         pickby_pickup=intent.getStringExtra("question").toString()
         reason_pickup=intent.getStringExtra("options").toString()
         selectedoptionanswer=intent.getStringExtra("selectedchoice").toString()
         receivedOptions = intent.getParcelableArrayListExtra("optionsarray")!!
+        sub_btn.setOnClickListener {
+            finish()
+        }
         for (i in receivedOptions.indices){
 
                 if (receivedOptions.get(i).optionQuestion.isNullOrEmpty())
@@ -90,10 +105,10 @@ var selectedoptionanswer:String=""
         stud_name=findViewById(R.id.stnameValue)
         stud_name.text = studname_pickup
         stud_class=findViewById(R.id.studClassValue)
-        stud_class.text = studcls_pickup
+        stud_class.text = PreferenceManager.getEmailId(mContext)
 
-
-
+        title.text = titlle
+        desc.setText(Html.fromHtml(descptn));
         pickup_name=findViewById(R.id.mailtxt)
         pickup_name.text = pickby_pickup
         reasonTxt=findViewById(R.id.statustxt)

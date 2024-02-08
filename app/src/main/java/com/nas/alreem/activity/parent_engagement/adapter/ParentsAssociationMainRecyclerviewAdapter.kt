@@ -85,15 +85,11 @@ lateinit var rec: RecyclerView
 
                        //                                     Log.e("statuscode", statuscode);
 
-                       callListApis(mContext,
-                           mParentAssociationEventsModelArrayList)
-                       /*ParentsAssociationListActivity().callListApis(
+                       /*callListApis(mContext,
+                           mParentAssociationEventsModelArrayList)*/
+                       ParentsAssociationListActivity().callListApis(
                            mContext,
-                           mParentAssociationEventsModelArrayList,
-                           object : ParentsAssociationListActivity.GetPtaItemList {
-                               override val ptaItemData: Unit
-                                   get() {}
-                           })*/
+                           mParentAssociationEventsModelArrayList,rec)
                        showDialogAlertSingleBtn(
                            mContext as Activity,
                            "Alert",
@@ -103,9 +99,9 @@ lateinit var rec: RecyclerView
                        )
                    }
                         else if (response_code ==311) {
-                           callListApis(
+                       ParentsAssociationListActivity().  callListApis(
                                mContext,
-                               mParentAssociationEventsModelArrayList)
+                               mParentAssociationEventsModelArrayList,rec)
                            showDialogAlertSingleBtn(
                                mContext as Activity,
                                "Alert",
@@ -625,6 +621,7 @@ lateinit var rec: RecyclerView
                                 )
                                 rec!!.adapter =
                                     mParentsAssociationMainRecyclerviewAdapter
+                                notifyDataSetChanged()
                             } else {
                                 //CustomStatusDialog();
                                 Toast.makeText(context, "Failure", Toast.LENGTH_SHORT).show()

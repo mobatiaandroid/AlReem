@@ -1,23 +1,17 @@
 package com.nas.alreem.activity.login
 
-import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Dialog
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.Window
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.FirebaseApp
@@ -25,9 +19,7 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.nas.alreem.R
 import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.activity.login.model.LoginResponseModel
-import com.nas.alreem.activity.login.model.SignUpResponseModel
 import com.nas.alreem.constants.*
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -203,6 +195,11 @@ class LoginActivity : AppCompatActivity(),View.OnTouchListener{
                             loginSuccessAlert(
                                 resources.getString(R.string.success), ConstantWords.status_100_login, mContext)
 
+                        } else if (response.body()!!.status==510) {
+                            DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), mContext)
+
+
+//						startCountdown(60000L);
                         }
                         else
                         {

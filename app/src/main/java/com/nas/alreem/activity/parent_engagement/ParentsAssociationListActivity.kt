@@ -71,9 +71,9 @@ class ParentsAssociationListActivity : AppCompatActivity() {
         //        AppUtils.showDialogAlertDismiss((Activity) mContext, "Alert", "Work In Progress", R.drawable.exclamationicon, R.drawable.round);
         if (PreferenceManager.getIsFirstTimeInPE(mContext)) {
             PreferenceManager.setIsFirstTimeInPE(mContext, false)
-           /* val mintent = Intent(mContext, PTAinfoActivity::class.java)
+            val mintent = Intent(mContext, PTAinfoActivity::class.java)
             mintent.putExtra("type", 1)
-            startActivity(mintent)*/
+            startActivity(mintent)
         } else {
 
             if (ConstantFunctions.internetCheck(mContext)) {
@@ -129,21 +129,12 @@ class ParentsAssociationListActivity : AppCompatActivity() {
             startActivity(mintent)
         })
         infoImg.setOnClickListener(View.OnClickListener {
-          /*  val mintent = Intent(mContext, PTAinfoActivity::class.java)
-            startActivity(mintent)*/
+            val mintent = Intent(mContext, PTAinfoActivity::class.java)
+            startActivity(mintent)
         })
 
 
-//        mRecyclerView.addOnItemTouchListener(new RecyclerItemListener(getApplicationContext(), mRecyclerView,
-//                new RecyclerItemListener.RecyclerTouchListener() {
-//                    public void onClickItem(View v, int position) {
-//
-//                    }
-//
-//                    public void onLongClickItem(View v, int position) {
-//                        System.out.println("On Long Click Item interface");
-//                    }
-//                }));
+
     }
 
     private fun callParentAssociationEventList() {
@@ -541,12 +532,13 @@ class ParentsAssociationListActivity : AppCompatActivity() {
 
     fun callListApis(
         context: Context,
-        parentAssociationEventsModelsArrayList: ArrayList<ParentAssociationEventsModel>?
+        parentAssociationEventsModelsArrayList: ArrayList<ParentAssociationEventsModel>?,
+        rec: RecyclerView
     ) {
 
        // mRecyclerView = findViewById<View>(R.id.mRecyclerView) as RecyclerView
-intfn()
-
+        myFormatCalender = "yyyy-MM-dd"
+        sdfcalender = SimpleDateFormat(myFormatCalender)
         mListViewArray = ArrayList<ParentAssociationEventsModel>()
         mParentAssociationEventsModelsArrayList = parentAssociationEventsModelsArrayList
         val paramObject = JsonObject()
@@ -600,9 +592,9 @@ intfn()
                                     }
                                     val mParentsAssociationMainRecyclerviewAdapter = ParentsAssociationMainRecyclerviewAdapter(
                                             context,
-                                            mListViewArray!!,mRecyclerView
+                                            mListViewArray!!,rec
                                         )
-                                    mRecyclerView!!.adapter =
+                                    rec!!.adapter =
                                         mParentsAssociationMainRecyclerviewAdapter
                                 } else {
                                     //CustomStatusDialog();
