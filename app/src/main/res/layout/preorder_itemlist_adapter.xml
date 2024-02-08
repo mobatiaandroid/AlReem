@@ -62,6 +62,7 @@
                         android:text="iten name"
                         android:textColor="@color/black"
                         android:textSize="14sp"
+                        android:layout_marginLeft="5dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/info_allergy"
                         app:layout_constraintStart_toStartOf="parent"

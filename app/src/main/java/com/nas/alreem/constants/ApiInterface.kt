@@ -76,6 +76,7 @@ import com.nas.alreem.activity.settings.model.TermsOfServiceResponseModel
 import com.nas.alreem.activity.shop.model.PaymentGatewayApiModelShop
 import com.nas.alreem.activity.shop_new.model.ShopHistoryItemResponseModel
 import com.nas.alreem.activity.shop_new.model.AddToCartShopApiModel
+import com.nas.alreem.activity.shop_new.model.ItemsListModel_new
 import com.nas.alreem.activity.shop_new.model.ShopCartRemoveApiModel
 import com.nas.alreem.activity.shop_new.model.ShopCartUpdateApiModel
 import com.nas.alreem.activity.shop_new.model.ShopHistoryResponseModel
@@ -808,7 +809,7 @@ interface ApiInterface {
     fun get_shop_items(
         @Body  canteenItems: ShopItemsApiModel,
         @Header("Authorization") token:String
-    ): Call<ItemsListModel>
+    ): Call<ItemsListModel_new>
 
     @POST("add_to_shop_cart")
     @Headers("Content-Type: application/json")

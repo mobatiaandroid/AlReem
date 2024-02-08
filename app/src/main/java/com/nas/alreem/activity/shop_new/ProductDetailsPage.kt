@@ -24,6 +24,7 @@ import com.nas.alreem.activity.lost_card.model.GetShopCartResponseModel
 import com.nas.alreem.activity.lost_card.model.ShopCartResModel
 import com.nas.alreem.activity.shop_new.adapter.PageViewShop
 import com.nas.alreem.activity.shop_new.model.AddToCartShopApiModel
+import com.nas.alreem.activity.shop_new.model.ItemsListModel_new
 import com.nas.alreem.activity.shop_new.model.ShopCartRemoveApiModel
 import com.nas.alreem.activity.shop_new.model.ShopCartUpdateApiModel
 import com.nas.alreem.activity.shop_new.model.ShopItemsApiModel
@@ -437,16 +438,16 @@ class ProductDetailsPage : AppCompatActivity() {
         var canteenItems = ShopItemsApiModel(
             PreferenceManager.getStudentID(mContext)!!, PreferenceManager.getcategoriid(mContext)!!
         )
-        val call: Call<ItemsListModel> =
+        val call: Call<ItemsListModel_new> =
             ApiClient.getClient.get_shop_items(canteenItems, "Bearer " + token)
-        call.enqueue(object : Callback<ItemsListModel> {
-            override fun onFailure(call: Call<ItemsListModel>, t: Throwable) {
+        call.enqueue(object : Callback<ItemsListModel_new> {
+            override fun onFailure(call: Call<ItemsListModel_new>, t: Throwable) {
                 // progressDialogP.hide()
             }
 
             override fun onResponse(
-                call: Call<ItemsListModel>,
-                response: Response<ItemsListModel>
+                call: Call<ItemsListModel_new>,
+                response: Response<ItemsListModel_new>
             ) {
                 val responsedata = response.body()
                 //progressDialogP.hide()

@@ -34,6 +34,7 @@ import com.nas.alreem.activity.payments.model.StudentList
 import com.nas.alreem.activity.payments.model.StudentListModel
 import com.nas.alreem.activity.shop_new.adapter.ItemCategoriesAdapter_new
 import com.nas.alreem.activity.shop_new.adapter.PreorderItemsAdapterShop_new
+import com.nas.alreem.activity.shop_new.model.ItemsListModel_new
 import com.nas.alreem.activity.shop_new.model.ShopItemsApiModel
 import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ConstantFunctions
@@ -353,12 +354,12 @@ class Addorder_Activity_new : AppCompatActivity()  {
         val token = PreferenceManager.getaccesstoken(nContext)
         var canteenItems= ShopItemsApiModel(
             PreferenceManager.getStudentID(nContext)!!,def_cat_id)
-        val call: Call<ItemsListModel> = ApiClient.getClient.get_shop_items(canteenItems,"Bearer "+token)
-        call.enqueue(object : Callback<ItemsListModel> {
-            override fun onFailure(call: Call<ItemsListModel>, t: Throwable) {
+        val call: Call<ItemsListModel_new> = ApiClient.getClient.get_shop_items(canteenItems,"Bearer "+token)
+        call.enqueue(object : Callback<ItemsListModel_new> {
+            override fun onFailure(call: Call<ItemsListModel_new>, t: Throwable) {
                 progressDialogP.hide()
             }
-            override fun onResponse(call: Call<ItemsListModel>, response: Response<ItemsListModel>) {
+            override fun onResponse(call: Call<ItemsListModel_new>, response: Response<ItemsListModel_new>) {
                 val responsedata = response.body()
                 progressDialogP.hide()
                 if (responsedata!!.status==100) {
@@ -432,13 +433,13 @@ class Addorder_Activity_new : AppCompatActivity()  {
         val token = PreferenceManager.getaccesstoken(nContext)
         var canteenItems= ShopItemsApiModel(
             PreferenceManager.getStudentID(nContext).toString(),cat_selected)
-        val call: Call<ItemsListModel> = ApiClient.getClient.get_shop_items(canteenItems,"Bearer "+token)
-        call.enqueue(object : Callback<ItemsListModel> {
-            override fun onFailure(call: Call<ItemsListModel>, t: Throwable) {
+        val call: Call<ItemsListModel_new> = ApiClient.getClient.get_shop_items(canteenItems,"Bearer "+token)
+        call.enqueue(object : Callback<ItemsListModel_new> {
+            override fun onFailure(call: Call<ItemsListModel_new>, t: Throwable) {
                 progressDialogP.hide()
 
             }
-            override fun onResponse(call: Call<ItemsListModel>, response: Response<ItemsListModel>) {
+            override fun onResponse(call: Call<ItemsListModel_new>, response: Response<ItemsListModel_new>) {
                 progressDialogP.hide()
                 cart_empty.visibility= View.GONE
                 recyclerview_item.visibility= View.VISIBLE

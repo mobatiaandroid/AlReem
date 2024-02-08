@@ -19,6 +19,7 @@ import com.nas.alreem.activity.canteen.adapter.DateAdapter
 import com.nas.alreem.activity.canteen.adapter.ItemCategoriesAdapter
 import com.nas.alreem.activity.canteen.adapter.PreorderItemsAdapter
 import com.nas.alreem.activity.canteen.model.AllergyContentModel
+import com.nas.alreem.activity.canteen.model.CatItemsListModel_new
 import com.nas.alreem.activity.canteen.model.DateModel
 import com.nas.alreem.activity.canteen.model.add_orders.*
 import com.nas.alreem.activity.canteen.model.canteen_cart.CanteenCartApiModel
@@ -55,7 +56,7 @@ class Addorder_Activity : AppCompatActivity() {
    // lateinit var progressDialog: ProgressBar
     lateinit var progressDialogP: ProgressBarDialog
     lateinit var category_list: ArrayList<CategoryListModel>
-    lateinit var item_list:ArrayList<CatItemsListModel>
+    lateinit var item_list:ArrayList<CatItemsListModel_new>
     lateinit var allergycontentlist:ArrayList<AllergyContentModel>
 
     lateinit var bottomview: LinearLayout
@@ -368,6 +369,7 @@ class Addorder_Activity : AppCompatActivity() {
 
 
                     }
+                        Log.e("student_allergy", item_list.get(i).student_allergy.toString())
 
                         if(item_list.get(i).student_allergy==1)
                         {
@@ -377,7 +379,9 @@ class Addorder_Activity : AppCompatActivity() {
                         }
                         allergycontentlist= ArrayList()
                         allergycontentlist.addAll(item_list.get(i).allergy_contents)
-                }
+                        Log.e("allergycontentlist", allergycontentlist.toString())
+
+                    }
                     recyclerview_item.visibility=View.VISIBLE
                     recyclerview_item.layoutManager=LinearLayoutManager(nContext)
                     var itemAdapter= PreorderItemsAdapter(item_list,nContext,date_selected,cart_list,cartTotalAmount,
@@ -473,6 +477,8 @@ class Addorder_Activity : AppCompatActivity() {
                         allergycontentlist.addAll(item_list.get(i).allergy_contents)
                         Log.e("allergycontentlist", allergycontentlist.toString())
                     }
+                    Log.e("size", item_list.size.toString())
+
                     recyclerview_item.visibility=View.VISIBLE
                     recyclerview_item.layoutManager=LinearLayoutManager(nContext)
                     var itemAdapter=PreorderItemsAdapter(item_list,nContext,date_selected,cart_list,cartTotalAmount,

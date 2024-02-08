@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +19,7 @@ import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
 import com.nas.alreem.R
 import com.nas.alreem.activity.ProgressBarDialog
 import com.nas.alreem.activity.canteen.model.AllergyContentModel
+import com.nas.alreem.activity.canteen.model.CatItemsListModel_new
 import com.nas.alreem.activity.canteen.model.add_orders.CatItemsListModel
 import com.nas.alreem.activity.canteen.model.add_to_cart.*
 import com.nas.alreem.activity.canteen.model.canteen_cart.CanteenCartApiModel
@@ -36,7 +38,7 @@ import retrofit2.Response
 import java.util.*
 
 class PreorderItemsAdapter(
-    val itemlist: ArrayList<CatItemsListModel>,
+    val itemlist: ArrayList<CatItemsListModel_new>,
     var mcontext: Context,
     var date: String,
     var cart_list: ArrayList<CanteenCartResModel>,
@@ -67,18 +69,11 @@ class PreorderItemsAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         //onBottomReachedListener.onBottomReached(position)
         //bottomView.visibility=View.GONE
-        if (itemlist[position].student_allergy==1)
-        {
-            holder.addLinear.visibility = View.GONE
-
-        }
-        else
-        {
-            holder.addLinear.visibility = View.VISIBLE
-
-        }
+Log.e("studentallergy", itemlist[position].student_allergy.toString())
         if (allergycontentlist.size>0){
 
+            holder.multiLinear.visibility = View.GONE
+            holder.addLinear.visibility = View.GONE
             holder.allergy_info.visibility=View.VISIBLE
             holder.allergy_rec.visibility=View.VISIBLE
             var llm = (LinearLayoutManager(mcontext))
@@ -99,6 +94,8 @@ class PreorderItemsAdapter(
         else{
             holder.allergy_rec.visibility=View.GONE
             holder.allergy_info.visibility=View.GONE
+            holder.multiLinear.visibility = View.VISIBLE
+            holder.addLinear.visibility = View.VISIBLE
         }
         holder.allergy_info.setOnClickListener {
             allergy_contents_popup(mcontext,itemlist[position].item_name)
@@ -121,8 +118,16 @@ class PreorderItemsAdapter(
                 50
             )
         } else {
-            holder.multiLinear.visibility = View.GONE
-            holder.addLinear.visibility = View.VISIBLE
+            if (allergycontentlist.size>0){
+                holder.multiLinear.visibility = View.GONE
+                holder.addLinear.visibility = View.GONE
+            }
+            else
+            {
+                holder.multiLinear.visibility = View.GONE
+                holder.addLinear.visibility = View.VISIBLE
+            }
+
         }
         holder.addLinear.setOnClickListener {
             addToCart(itemlist[position].id,itemlist[position].price,position)
