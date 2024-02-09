@@ -40,10 +40,10 @@ import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.ConstantWords
 import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.PreferenceManager
+import com.nas.alreem.constants.WebLinkActivity
 import com.nas.alreem.constants.WebViewTextActivity
 import com.nas.alreem.fragment.about_us.AboutUsFragment
 import com.nas.alreem.fragment.absence.AbsenceFragment
-import com.nas.alreem.fragment.bus_service.BusServiceFragment
 import com.nas.alreem.fragment.bus_service.BusServiceFragmentNew
 import com.nas.alreem.fragment.calendar.CalendarFragment
 import com.nas.alreem.fragment.canteen.CanteenFragment
@@ -168,12 +168,13 @@ lateinit var surveyArrayList: ArrayList<SurveyDetailDataModel>
 lateinit var surveyQuestionArrayList: ArrayList<SurveyQuestionsModel>
 lateinit var surveyAnswersArrayList: ArrayList<SurveyOfferedAnswersModel>
 lateinit var mAnswerList: ArrayList<SurveySubmitDataModel>
+var noticeTitle = ""
+var noticeLink = ""
 
 class HomeFragment : Fragment(), View.OnClickListener {
     lateinit var studentList: ArrayList<StudentEnrollList>
     lateinit var studentEnrollList: ArrayList<StudentEnrollList>
     lateinit var notice: String
-
 
 
     override fun onCreateView(
@@ -229,13 +230,17 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             } else {
                                 pager.setBackgroundResource(R.drawable.default_banner)
                             }
-                            notice = response.body()!!.responseArray!!.notice
+                            notice = response.body()!!.responseArray!!.notice.image
+                            if (notice.isNotEmpty()) {
+                                noticeLink = response.body()!!.responseArray!!.notice.url
+                                noticeTitle = response.body()!!.responseArray!!.notice.title
+                            }
                             val survey: Int = response.body()!!.responseArray!!.survey
                             val lost_student_card_amount: String =
                                 response.body()!!.responseArray!!.lost_student_card_amount
                             val enrollmentStatus =
                                 response.body()!!.responseArray!!.enrollmentStatus
-                            val bus_note= response.body()!!.responseArray!!.bus_note
+                            val bus_note = response.body()!!.responseArray!!.bus_note
                             PreferenceManager.setBusnotes(mContext, bus_note)
                             PreferenceManager.setLostAmount(mContext, lost_student_card_amount)
                             PreferenceManager.setSurvey(mContext, survey)
@@ -1465,7 +1470,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     //System.out.println("relImgDot 1");
                     //System.out.println("relImgDot 1 badge "+PreferenceManager.getCalendarBadge(mContext));
                     relImgOneDot.visibility = View.VISIBLE
-                    relImgOneDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                    relImgOneDot.text = PreferenceManager.getCalenderhomeBadge(mContext)
                     relImgOneDot.setBackgroundResource(R.drawable.shape_circle_red)
                 } else if (PreferenceManager.getCalenderhomeBadge(mContext)
                         .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(mContext)
@@ -1473,7 +1478,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                 ) {
                     //System.out.println("relImgDot 2");
                     relImgOneDot.visibility = View.VISIBLE
-                    relImgOneDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                    relImgOneDot.text = PreferenceManager.getCalenderEditedhomeBadge(mContext)
                     relImgOneDot.setBackgroundResource(R.drawable.shape_circle_navy)
                 } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
                         .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(mContext)
@@ -1481,7 +1486,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                 ) {
                     //System.out.println("relImgDot 3");
                     relImgOneDot.visibility = View.VISIBLE
-                    relImgOneDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                    relImgOneDot.text = PreferenceManager.getCalenderhomeBadge(mContext)
                     relImgOneDot.setBackgroundResource(R.drawable.shape_circle_red)
                 } else {
 
@@ -1676,7 +1681,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     ).equals("0")
                 ) {
                     relImgTwoDot.visibility = View.VISIBLE
-                    relImgTwoDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                    relImgTwoDot.text = PreferenceManager.getCalenderhomeBadge(mContext)
                     relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
                 } else if (PreferenceManager.getCalenderhomeBadge(mContext)
                         .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
@@ -1684,7 +1689,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     ).equals("0")
                 ) {
                     relImgTwoDot.visibility = View.VISIBLE
-                    relImgTwoDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                    relImgTwoDot.text = PreferenceManager.getCalenderEditedhomeBadge(mContext)
                     relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
                 } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
                         .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
@@ -1692,7 +1697,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     ).equals("0")
                 ) {
                     relImgTwoDot.visibility = View.VISIBLE
-                    relImgTwoDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                    relImgTwoDot.text = PreferenceManager.getCalenderhomeBadge(mContext)
                     relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
                 } else {
                     relImgTwoDot.visibility = View.GONE
@@ -1888,7 +1893,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     ).equals("0")
                 ) {
                     relImgThreeDot.visibility = View.VISIBLE
-                    relImgThreeDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                    relImgThreeDot.text = PreferenceManager.getCalenderhomeBadge(mContext)
                     relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_red)
                 } else if (PreferenceManager.getCalenderhomeBadge(mContext)
                         .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
@@ -1896,7 +1901,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     ).equals("0")
                 ) {
                     relImgThreeDot.visibility = View.VISIBLE
-                    relImgThreeDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                    relImgThreeDot.text = PreferenceManager.getCalenderEditedhomeBadge(mContext)
                     relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_navy)
                 } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
                         .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
@@ -1904,7 +1909,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     ).equals("0")
                 ) {
                     relImgThreeDot.visibility = View.VISIBLE
-                    relImgThreeDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                    relImgThreeDot.text = PreferenceManager.getCalenderhomeBadge(mContext)
                     relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_red)
                 } else {
                     relImgThreeDot.visibility = View.GONE
@@ -2104,7 +2109,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     ).equals("0")
                 ) {
                     relImgFourDot.visibility = View.VISIBLE
-                    relImgFourDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                    relImgFourDot.text = PreferenceManager.getCalenderhomeBadge(mContext)
                     relImgFourDot.setBackgroundResource(R.drawable.shape_circle_red)
                 } else if (PreferenceManager.getCalenderhomeBadge(mContext)
                         .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
@@ -2112,7 +2117,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     ).equals("0")
                 ) {
                     relImgFourDot.visibility = View.VISIBLE
-                    relImgFourDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                    relImgFourDot.text = PreferenceManager.getCalenderEditedhomeBadge(mContext)
                     relImgFourDot.setBackgroundResource(R.drawable.shape_circle_navy)
                 } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
                         .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
@@ -2120,7 +2125,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     ).equals("0")
                 ) {
                     relImgFourDot.visibility = View.VISIBLE
-                    relImgFourDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                    relImgFourDot.text = PreferenceManager.getCalenderhomeBadge(mContext)
                     relImgFourDot.setBackgroundResource(R.drawable.shape_circle_red)
                 } else {
                     relImgFourDot.visibility = View.GONE
@@ -2317,7 +2322,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     ).equals("0")
                 ) {
                     relImgFiveDot.visibility = View.VISIBLE
-                    relImgFiveDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                    relImgFiveDot.text = PreferenceManager.getCalenderhomeBadge(mContext)
                     relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_red)
                 } else if (PreferenceManager.getCalenderhomeBadge(mContext)
                         .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
@@ -2325,7 +2330,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     ).equals("0")
                 ) {
                     relImgFiveDot.visibility = View.VISIBLE
-                    relImgFiveDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                    relImgFiveDot.text = PreferenceManager.getCalenderEditedhomeBadge(mContext)
                     relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_navy)
                 } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
                         .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
@@ -2333,7 +2338,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     ).equals("0")
                 ) {
                     relImgFiveDot.visibility = View.VISIBLE
-                    relImgFiveDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                    relImgFiveDot.text = PreferenceManager.getCalenderhomeBadge(mContext)
                     relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_red)
                 } else {
                     relImgFiveDot.visibility = View.GONE
@@ -2533,7 +2538,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     ).equals("0")
                 ) {
                     relImgSixDot.visibility = View.VISIBLE
-                    relImgSixDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                    relImgSixDot.text = PreferenceManager.getCalenderhomeBadge(mContext)
                     relImgSixDot.setBackgroundResource(R.drawable.shape_circle_red)
                 } else if (PreferenceManager.getCalenderhomeBadge(mContext)
                         .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
@@ -2541,7 +2546,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     ).equals("0")
                 ) {
                     relImgSixDot.visibility = View.VISIBLE
-                    relImgSixDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                    relImgSixDot.text = PreferenceManager.getCalenderEditedhomeBadge(mContext)
                     relImgSixDot.setBackgroundResource(R.drawable.shape_circle_navy)
                 } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
                         .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
@@ -2549,7 +2554,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     ).equals("0")
                 ) {
                     relImgSixDot.visibility = View.VISIBLE
-                    relImgSixDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                    relImgSixDot.text = PreferenceManager.getCalenderhomeBadge(mContext)
                     relImgSixDot.setBackgroundResource(R.drawable.shape_circle_red)
                 } else {
                     relImgSixDot.visibility = View.GONE
@@ -2744,7 +2749,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     ).equals("0")
                 ) {
                     relImgSevenDot.visibility = View.VISIBLE
-                    relImgSevenDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                    relImgSevenDot.text = PreferenceManager.getCalenderhomeBadge(mContext)
                     relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_red)
                 } else if (PreferenceManager.getCalenderhomeBadge(mContext)
                         .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
@@ -2752,7 +2757,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     ).equals("0")
                 ) {
                     relImgSevenDot.visibility = View.VISIBLE
-                    relImgSevenDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                    relImgSevenDot.text = PreferenceManager.getCalenderEditedhomeBadge(mContext)
                     relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_navy)
                 } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
                         .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
@@ -2760,7 +2765,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     ).equals("0")
                 ) {
                     relImgSevenDot.visibility = View.VISIBLE
-                    relImgSevenDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                    relImgSevenDot.text = PreferenceManager.getCalenderhomeBadge(mContext)
                     relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_red)
                 } else {
                     relImgSevenDot.visibility = View.GONE
@@ -2956,7 +2961,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     ).equals("0")
                 ) {
                     relImgEightDot.visibility = View.VISIBLE
-                    relImgEightDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                    relImgEightDot.text = PreferenceManager.getCalenderhomeBadge(mContext)
                     relImgEightDot.setBackgroundResource(R.drawable.shape_circle_red)
                 } else if (PreferenceManager.getCalenderhomeBadge(mContext)
                         .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
@@ -2964,7 +2969,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     ).equals("0")
                 ) {
                     relImgEightDot.visibility = View.VISIBLE
-                    relImgEightDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                    relImgEightDot.text = PreferenceManager.getCalenderEditedhomeBadge(mContext)
                     relImgEightDot.setBackgroundResource(R.drawable.shape_circle_navy)
                 } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
                         .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
@@ -2972,7 +2977,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     ).equals("0")
                 ) {
                     relImgEightDot.visibility = View.VISIBLE
-                    relImgEightDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                    relImgEightDot.text = PreferenceManager.getCalenderhomeBadge(mContext)
                     relImgEightDot.setBackgroundResource(R.drawable.shape_circle_red)
                 } else {
                     relImgEightDot.visibility = View.GONE
@@ -3165,7 +3170,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     ).equals("0")
                 ) {
                     relImgNineDot.visibility = View.VISIBLE
-                    relImgNineDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                    relImgNineDot.text = PreferenceManager.getCalenderhomeBadge(mContext)
                     relImgNineDot.setBackgroundResource(R.drawable.shape_circle_red)
                 } else if (PreferenceManager.getCalenderhomeBadge(mContext)
                         .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
@@ -3173,7 +3178,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     ).equals("0")
                 ) {
                     relImgNineDot.visibility = View.VISIBLE
-                    relImgNineDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                    relImgNineDot.text = PreferenceManager.getCalenderEditedhomeBadge(mContext)
                     relImgNineDot.setBackgroundResource(R.drawable.shape_circle_navy)
                 } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
                         .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
@@ -3181,7 +3186,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     ).equals("0")
                 ) {
                     relImgNineDot.visibility = View.VISIBLE
-                    relImgNineDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                    relImgNineDot.text = PreferenceManager.getCalenderhomeBadge(mContext)
                     relImgNineDot.setBackgroundResource(R.drawable.shape_circle_red)
                 } else {
                     relImgNineDot.visibility = View.GONE
@@ -3446,27 +3451,27 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgOneDot.setVisibility(View.VISIBLE)
-                            relImgOneDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgOneDot.visibility = View.VISIBLE
+                            relImgOneDot.text = PreferenceManager.getCalenderhomeBadge(mContext)
                             relImgOneDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getCalenderhomeBadge(mContext)
                                 .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgOneDot.setVisibility(View.VISIBLE)
-                            relImgOneDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                            relImgOneDot.visibility = View.VISIBLE
+                            relImgOneDot.text = PreferenceManager.getCalenderEditedhomeBadge(mContext)
                             relImgOneDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
                                 .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgOneDot.setVisibility(View.VISIBLE)
-                            relImgOneDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgOneDot.visibility = View.VISIBLE
+                            relImgOneDot.text = PreferenceManager.getCalenderhomeBadge(mContext)
                             relImgOneDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
-                            relImgOneDot.setVisibility(View.GONE)
+                            relImgOneDot.visibility = View.GONE
                         }
                     } else if (PreferenceManager.getbuttononetabid(mContext)
                             .equals(ConstantWords.TAB_NOTIFICATIONS)
@@ -3476,19 +3481,17 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgOneDot.setVisibility(View.VISIBLE)
-                            relImgOneDot.setText(PreferenceManager.getNotificationBadge(mContext))
+                            relImgOneDot.visibility = View.VISIBLE
+                            relImgOneDot.text = PreferenceManager.getNotificationBadge(mContext)
                             relImgOneDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getNotificationBadge(mContext)
                                 .equals("0") && !PreferenceManager.getNotificationEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgOneDot.setVisibility(View.VISIBLE)
-                            relImgOneDot.setText(
-                                PreferenceManager.getNotificationEditedBadge(
-                                    mContext
-                                )
+                            relImgOneDot.visibility = View.VISIBLE
+                            relImgOneDot.text = PreferenceManager.getNotificationEditedBadge(
+                                mContext
                             )
                             relImgOneDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getNotificationBadge(mContext)
@@ -3496,11 +3499,11 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgOneDot.setVisibility(View.VISIBLE)
-                            relImgOneDot.setText(PreferenceManager.getNotificationBadge(mContext))
+                            relImgOneDot.visibility = View.VISIBLE
+                            relImgOneDot.text = PreferenceManager.getNotificationBadge(mContext)
                             relImgOneDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
-                            relImgOneDot.setVisibility(View.GONE)
+                            relImgOneDot.visibility = View.GONE
                         }
                     } else if (PreferenceManager.getbuttononetabid(mContext)
                             .equals(ConstantWords.TAB_PAYMENTS)
@@ -3510,19 +3513,17 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgOneDot.setVisibility(View.VISIBLE)
-                            relImgOneDot.setText(PreferenceManager.getPaymentitem_badge(mContext))
+                            relImgOneDot.visibility = View.VISIBLE
+                            relImgOneDot.text = PreferenceManager.getPaymentitem_badge(mContext)
                             relImgOneDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getPaymentitem_badge(mContext)
                                 .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgOneDot.setVisibility(View.VISIBLE)
-                            relImgOneDot.setText(
-                                PreferenceManager.getPaymentitem_edit_badge(
-                                    mContext
-                                )
+                            relImgOneDot.visibility = View.VISIBLE
+                            relImgOneDot.text = PreferenceManager.getPaymentitem_edit_badge(
+                                mContext
                             )
                             relImgOneDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getPaymentitem_badge(mContext)
@@ -3530,11 +3531,11 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgOneDot.setVisibility(View.VISIBLE)
-                            relImgOneDot.setText(PreferenceManager.getPaymentitem_badge(mContext))
+                            relImgOneDot.visibility = View.VISIBLE
+                            relImgOneDot.text = PreferenceManager.getPaymentitem_badge(mContext)
                             relImgOneDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
-                            relImgOneDot.setVisibility(View.GONE)
+                            relImgOneDot.visibility = View.GONE
                         }
                     } else if (PreferenceManager.getbuttononetabid(mContext)
                             .equals(ConstantWords.TAB_REPORTS)
@@ -3544,27 +3545,27 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgOneDot.setVisibility(View.VISIBLE)
-                            relImgOneDot.setText(PreferenceManager.getReportsBadge(mContext))
+                            relImgOneDot.visibility = View.VISIBLE
+                            relImgOneDot.text = PreferenceManager.getReportsBadge(mContext)
                             relImgOneDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getReportsBadge(mContext)
                                 .equals("0") && !PreferenceManager.getReportsEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgOneDot.setVisibility(View.VISIBLE)
-                            relImgOneDot.setText(PreferenceManager.getReportsEditedBadge(mContext))
+                            relImgOneDot.visibility = View.VISIBLE
+                            relImgOneDot.text = PreferenceManager.getReportsEditedBadge(mContext)
                             relImgOneDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getReportsBadge(mContext)
                                 .equals("0") && PreferenceManager.getReportsEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgOneDot.setVisibility(View.VISIBLE)
-                            relImgOneDot.setText(PreferenceManager.getReportsBadge(mContext))
+                            relImgOneDot.visibility = View.VISIBLE
+                            relImgOneDot.text = PreferenceManager.getReportsBadge(mContext)
                             relImgOneDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
-                            relImgOneDot.setVisibility(View.GONE)
+                            relImgOneDot.visibility = View.GONE
                         }
                     } else if (PreferenceManager.getbuttononetabid(mContext)
                             .equals(ConstantWords.TAB_ENRICHMENT)
@@ -3574,27 +3575,27 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgOneDot.setVisibility(View.VISIBLE)
-                            relImgOneDot.setText(PreferenceManager.getCcaBadge(mContext))
+                            relImgOneDot.visibility = View.VISIBLE
+                            relImgOneDot.text = PreferenceManager.getCcaBadge(mContext)
                             relImgOneDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getCcaBadge(mContext)
                                 .equals("0") && !PreferenceManager.getCcaEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgOneDot.setVisibility(View.VISIBLE)
-                            relImgOneDot.setText(PreferenceManager.getCcaEditedBadge(mContext))
+                            relImgOneDot.visibility = View.VISIBLE
+                            relImgOneDot.text = PreferenceManager.getCcaEditedBadge(mContext)
                             relImgOneDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getCcaBadge(mContext)
                                 .equals("0") && PreferenceManager.getCcaEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgOneDot.setVisibility(View.VISIBLE)
-                            relImgOneDot.setText(PreferenceManager.getCcaBadge(mContext))
+                            relImgOneDot.visibility = View.VISIBLE
+                            relImgOneDot.text = PreferenceManager.getCcaBadge(mContext)
                             relImgOneDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
-                            relImgOneDot.setVisibility(View.GONE)
+                            relImgOneDot.visibility = View.GONE
                         }
                     }   else if (PreferenceManager.getbuttononetabid(mContext)
                             .equals(ConstantWords.TAB_COMMUNICATION)
@@ -3604,30 +3605,30 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgOneDot.setVisibility(View.VISIBLE)
-                            relImgOneDot.setText(PreferenceManager.getNoticeBadge(mContext))
+                            relImgOneDot.visibility = View.VISIBLE
+                            relImgOneDot.text = PreferenceManager.getNoticeBadge(mContext)
                             relImgOneDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getNoticeBadge(mContext)
                                 .equals("0") && !PreferenceManager.getNoticeEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgOneDot.setVisibility(View.VISIBLE)
-                            relImgOneDot.setText(PreferenceManager.getNoticeEditedBadge(mContext))
+                            relImgOneDot.visibility = View.VISIBLE
+                            relImgOneDot.text = PreferenceManager.getNoticeEditedBadge(mContext)
                             relImgOneDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getNoticeBadge(mContext)
                                 .equals("0") && PreferenceManager.getNoticeEditedBadge(
                                 mContext
                             ).equals("0")
                         ) {
-                            relImgOneDot.setVisibility(View.VISIBLE)
-                            relImgOneDot.setText(PreferenceManager.getNoticeBadge(mContext))
+                            relImgOneDot.visibility = View.VISIBLE
+                            relImgOneDot.text = PreferenceManager.getNoticeBadge(mContext)
                             relImgOneDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
-                            relImgOneDot.setVisibility(View.GONE)
+                            relImgOneDot.visibility = View.GONE
                         }
                     } else {
-                        relImgOneDot.setVisibility(View.GONE)
+                        relImgOneDot.visibility = View.GONE
                     }
                 } else if (touchedView == reltwo) {
                     relImgtwo.setImageDrawable(mListImgArrays.getDrawable(sPosition))
@@ -3654,7 +3655,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             ).equals("0")
                         ) {
                             relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgTwoDot.text = PreferenceManager.getCalenderhomeBadge(mContext)
                             relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getCalenderhomeBadge(mContext)
                                 .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
@@ -3662,7 +3663,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             ).equals("0")
                         ) {
                             relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                            relImgTwoDot.text = PreferenceManager.getCalenderEditedhomeBadge(mContext)
                             relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
                                 .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
@@ -3670,7 +3671,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             ).equals("0")
                         ) {
                             relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgTwoDot.text = PreferenceManager.getCalenderhomeBadge(mContext)
                             relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
                             relImgTwoDot.visibility = View.GONE
@@ -3862,7 +3863,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             ).equals("0")
                         ) {
                             relImgThreeDot.visibility = View.VISIBLE
-                            relImgThreeDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgThreeDot.text = PreferenceManager.getCalenderhomeBadge(mContext)
                             relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getCalenderhomeBadge(mContext)
                                 .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
@@ -3870,7 +3871,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             ).equals("0")
                         ) {
                             relImgThreeDot.visibility = View.VISIBLE
-                            relImgThreeDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                            relImgThreeDot.text = PreferenceManager.getCalenderEditedhomeBadge(mContext)
                             relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
                                 .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
@@ -3878,7 +3879,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             ).equals("0")
                         ) {
                             relImgThreeDot.visibility = View.VISIBLE
-                            relImgThreeDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgThreeDot.text = PreferenceManager.getCalenderhomeBadge(mContext)
                             relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
                             relImgThreeDot.visibility = View.GONE
@@ -4069,7 +4070,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             ).equals("0")
                         ) {
                             relImgFourDot.visibility = View.VISIBLE
-                            relImgFourDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgFourDot.text = PreferenceManager.getCalenderhomeBadge(mContext)
                             relImgFourDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getCalenderhomeBadge(mContext)
                                 .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
@@ -4077,7 +4078,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             ).equals("0")
                         ) {
                             relImgFourDot.visibility = View.VISIBLE
-                            relImgFourDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                            relImgFourDot.text = PreferenceManager.getCalenderEditedhomeBadge(mContext)
                             relImgFourDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
                                 .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
@@ -4085,7 +4086,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             ).equals("0")
                         ) {
                             relImgFourDot.visibility = View.VISIBLE
-                            relImgFourDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgFourDot.text = PreferenceManager.getCalenderhomeBadge(mContext)
                             relImgFourDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
                             relImgFourDot.visibility = View.GONE
@@ -4276,7 +4277,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             ).equals("0")
                         ) {
                             relImgFiveDot.visibility = View.VISIBLE
-                            relImgFiveDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgFiveDot.text = PreferenceManager.getCalenderhomeBadge(mContext)
                             relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getCalenderhomeBadge(mContext)
                                 .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
@@ -4284,7 +4285,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             ).equals("0")
                         ) {
                             relImgFiveDot.visibility = View.VISIBLE
-                            relImgFiveDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                            relImgFiveDot.text = PreferenceManager.getCalenderEditedhomeBadge(mContext)
                             relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
                                 .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
@@ -4292,7 +4293,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             ).equals("0")
                         ) {
                             relImgFiveDot.visibility = View.VISIBLE
-                            relImgFiveDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgFiveDot.text = PreferenceManager.getCalenderhomeBadge(mContext)
                             relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
                             relImgFiveDot.visibility = View.GONE
@@ -4483,7 +4484,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             ).equals("0")
                         ) {
                             relImgSixDot.visibility = View.VISIBLE
-                            relImgSixDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgSixDot.text = PreferenceManager.getCalenderhomeBadge(mContext)
                             relImgSixDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getCalenderhomeBadge(mContext)
                                 .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
@@ -4491,7 +4492,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             ).equals("0")
                         ) {
                             relImgSixDot.visibility = View.VISIBLE
-                            relImgSixDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                            relImgSixDot.text = PreferenceManager.getCalenderEditedhomeBadge(mContext)
                             relImgSixDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
                                 .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
@@ -4499,7 +4500,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             ).equals("0")
                         ) {
                             relImgSixDot.visibility = View.VISIBLE
-                            relImgSixDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgSixDot.text = PreferenceManager.getCalenderhomeBadge(mContext)
                             relImgSixDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
                             relImgSixDot.visibility = View.GONE
@@ -4690,7 +4691,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             ).equals("0")
                         ) {
                             relImgSevenDot.visibility = View.VISIBLE
-                            relImgSevenDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgSevenDot.text = PreferenceManager.getCalenderhomeBadge(mContext)
                             relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getCalenderhomeBadge(mContext)
                                 .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
@@ -4698,7 +4699,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             ).equals("0")
                         ) {
                             relImgSevenDot.visibility = View.VISIBLE
-                            relImgSevenDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                            relImgSevenDot.text = PreferenceManager.getCalenderEditedhomeBadge(mContext)
                             relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
                                 .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
@@ -4706,7 +4707,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             ).equals("0")
                         ) {
                             relImgSevenDot.visibility = View.VISIBLE
-                            relImgSevenDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgSevenDot.text = PreferenceManager.getCalenderhomeBadge(mContext)
                             relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
                             relImgSevenDot.visibility = View.GONE
@@ -4897,7 +4898,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             ).equals("0")
                         ) {
                             relImgEightDot.visibility = View.VISIBLE
-                            relImgEightDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgEightDot.text = PreferenceManager.getCalenderhomeBadge(mContext)
                             relImgEightDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getCalenderhomeBadge(mContext)
                                 .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
@@ -4905,7 +4906,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             ).equals("0")
                         ) {
                             relImgEightDot.visibility = View.VISIBLE
-                            relImgEightDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                            relImgEightDot.text = PreferenceManager.getCalenderEditedhomeBadge(mContext)
                             relImgEightDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
                                 .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
@@ -4913,7 +4914,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             ).equals("0")
                         ) {
                             relImgEightDot.visibility = View.VISIBLE
-                            relImgEightDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgEightDot.text = PreferenceManager.getCalenderhomeBadge(mContext)
                             relImgEightDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
                             relImgEightDot.visibility = View.GONE
@@ -5104,7 +5105,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             ).equals("0")
                         ) {
                             relImgNineDot.visibility = View.VISIBLE
-                            relImgNineDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgNineDot.text = PreferenceManager.getCalenderhomeBadge(mContext)
                             relImgNineDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else if (PreferenceManager.getCalenderhomeBadge(mContext)
                                 .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
@@ -5112,7 +5113,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             ).equals("0")
                         ) {
                             relImgNineDot.visibility = View.VISIBLE
-                            relImgNineDot.setText(PreferenceManager.getCalenderEditedhomeBadge(mContext))
+                            relImgNineDot.text = PreferenceManager.getCalenderEditedhomeBadge(mContext)
                             relImgNineDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
                                 .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
@@ -5120,7 +5121,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             ).equals("0")
                         ) {
                             relImgNineDot.visibility = View.VISIBLE
-                            relImgNineDot.setText(PreferenceManager.getCalenderhomeBadge(mContext))
+                            relImgNineDot.text = PreferenceManager.getCalenderhomeBadge(mContext)
                             relImgNineDot.setBackgroundResource(R.drawable.shape_circle_red)
                         } else {
                             relImgNineDot.visibility = View.GONE
@@ -5905,59 +5906,76 @@ class HomeFragment : Fragment(), View.OnClickListener {
         }
     }
 
-
-}
-
-private fun showPopUpImage(notice: String, context: Context) {
-    val dialog = Dialog(context)
-    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-    dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-    dialog.setCancelable(false)
-    dialog.setContentView(R.layout.dialog_notice)
-    var bannerImg = dialog.findViewById(R.id.bannerImg) as ImageView
-    var closeImg = dialog.findViewById(R.id.closeImg) as ImageView
-    Glide.with(context).load(notice).centerCrop().into(bannerImg)
-    closeImg.setOnClickListener {
-
-        if (PreferenceManager.getSurvey(mContext) === 1) {
-            if (PreferenceManager.getIsSurveyHomeVisible(mContext)) {
+    private fun showPopUpImage(notice: String, context: Context) {
+        val dialog = Dialog(context)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.dialog_notice)
+        var bannerImg = dialog.findViewById(R.id.bannerImg) as ImageView
+        var closeImg = dialog.findViewById(R.id.closeImg) as ImageView
+        var linkTitleTV = dialog.findViewById<TextView>(R.id.urlTextView)
+        if (noticeLink.isEmpty()) {
+            linkTitleTV.visibility = View.GONE
+        } else {
+            if (noticeTitle.isEmpty()) {
 
             } else {
-                if (ConstantFunctions.internetCheck(mContext)) {
-                    callSurveyApi()
-                } else {
-                    DialogFunctions.showInternetAlertDialog(mContext)
-                }
+                linkTitleTV.text = noticeTitle.toString()
             }
-        } else {
 
         }
-        dialog.dismiss()
+        linkTitleTV.setOnClickListener {
+            val intent = Intent(mContext, WebLinkActivity::class.java)
+            intent.putExtra("url", noticeLink)
+            intent.putExtra("heading", noticeTitle)
+            startActivity(intent)
+        }
+        Glide.with(context).load(notice).centerCrop().into(bannerImg)
+        closeImg.setOnClickListener {
 
+            if (PreferenceManager.getSurvey(mContext) === 1) {
+                if (PreferenceManager.getIsSurveyHomeVisible(mContext)) {
+
+                } else {
+                    if (ConstantFunctions.internetCheck(mContext)) {
+                        callSurveyApi()
+                    } else {
+                        DialogFunctions.showInternetAlertDialog(mContext)
+                    }
+                }
+            } else {
+
+            }
+            dialog.dismiss()
+
+        }
+
+
+        Handler().postDelayed({
+            if (PreferenceManager.getSurvey(mContext) === 1) {
+                if (PreferenceManager.getIsSurveyHomeVisible(mContext)) {
+
+                } else {
+                    if (ConstantFunctions.internetCheck(mContext)) {
+                        callSurveyApi()
+                    } else {
+                        DialogFunctions.showInternetAlertDialog(mContext)
+                    }
+                }
+            } else {
+
+            }
+            dialog.dismiss()
+
+        }, NOTICE_TIME_OUT)
+
+
+        dialog.show()
     }
 
-
-    Handler().postDelayed({
-        if (PreferenceManager.getSurvey(mContext) === 1) {
-            if (PreferenceManager.getIsSurveyHomeVisible(mContext)) {
-
-            } else {
-                if (ConstantFunctions.internetCheck(mContext)) {
-                    callSurveyApi()
-                } else {
-                    DialogFunctions.showInternetAlertDialog(mContext)
-                }
-            }
-        } else {
-
-        }
-        dialog.dismiss()
-
-    }, NOTICE_TIME_OUT)
-
-
-    dialog.show()
 }
+
 
 fun callSurveyApi() {
     surveyArrayList = ArrayList()
