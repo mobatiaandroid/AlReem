@@ -141,12 +141,12 @@
                                     android:layout_height="40dp"
                                     android:layout_marginTop="3dp"
                                     android:layout_centerHorizontal="true"
-                                    android:src="@drawable/payment_icon"/>
+                                    android:src="@drawable/absence"/>
                                 <com.nas.alreem.commonviews.CustomTextViewRegular
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_below="@+id/external"
-                                    android:text="Payment"
+                                    android:text="Report Absence"
                                     android:textColor="@color/white"
                                     android:layout_centerHorizontal="true"/>
                             </RelativeLayout>

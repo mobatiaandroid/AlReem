@@ -112,15 +112,14 @@ class Intentionfragment : Fragment(){
         super.onViewCreated(view, savedInstanceState)
         mContext=requireContext()
         initializeUI()
-        if (ConstantFunctions.internetCheck(mContext))
-        {
-            callStudentList()
-        }
-        else
-        {
+        var internetCheck = ConstantFunctions.internetCheck(mContext)
+        if (internetCheck) {
+            getIntentionListAPI(stud_id)
+            getIntentionStatusAPI(stud_id)
+
+        } else {
             DialogFunctions.showInternetAlertDialog(mContext)
         }
-
     }
     private fun initializeUI()
     {
@@ -153,8 +152,6 @@ class Intentionfragment : Fragment(){
                     val intent = Intent(mContext, IntentionRegisterActivity::class.java)
 
                     intent.putExtra("question", primaryArrayList[position].question)
-                    intent.putExtra("student", primaryArrayList[position].studentName)
-                    intent.putExtra("class", primaryArrayList[position].intensionClass)
                     intent.putExtra("intent_id", primaryArrayList[position].intensionId)
                     intent.putExtra("title", primaryArrayList.get(position).title)
                     intent.putExtra("description", primaryArrayList.get(position).description)
@@ -588,7 +585,7 @@ class Intentionfragment : Fragment(){
 
         // optionsArray = ArrayList()
         progress.visibility = View.VISIBLE
-        val body = IntentionApiModel(stud_id, "0", "20")
+        val body = IntentionApiModel("0", "20")
         val token = PreferenceManager.getaccesstoken(mContext)
         val call: Call<IntentionListAPIResponseModel> =
             ApiClient.getClient.intension(body, "Bearer " + token)
@@ -646,7 +643,7 @@ class Intentionfragment : Fragment(){
     {
         intentionstatusArray = ArrayList()
         progress.visibility = View.VISIBLE
-        val body = IntentionApiModel(stud_id,"0","20")
+        val body = IntentionApiModel("0","20")
         val token = PreferenceManager.getaccesstoken(mContext)
         val call: Call<IntentionStatusResponseModel> = ApiClient.getClient.intensionstatus(body,"Bearer "+token)
         call.enqueue(object : Callback<IntentionStatusResponseModel> {
@@ -743,14 +740,7 @@ class Intentionfragment : Fragment(){
                             studImg.setImageResource(R.drawable.student)
                         }
                     }
-                    var internetCheck = ConstantFunctions.internetCheck(mContext)
-                    if (internetCheck) {
-                        getIntentionListAPI(stud_id)
-                        getIntentionStatusAPI(stud_id)
 
-                    } else {
-                        DialogFunctions.showInternetAlertDialog(mContext)
-                    }
 
 //
                 }

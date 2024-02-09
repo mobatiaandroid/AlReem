@@ -142,8 +142,6 @@ class IntentionRegisterActivity : AppCompatActivity(){
         titlle=intent.getStringExtra("title").toString()
         descptn=intent.getStringExtra("description").toString()
         question = intent.getStringExtra("question")!!.toString()
-        student_name = intent.getStringExtra("student")!!.toString()
-        classs = intent.getStringExtra("class")!!.toString()
         receivedOptions = intent.getParcelableArrayListExtra("options")!!
         for (i in receivedOptions.indices){
             optionArray.add(receivedOptions[i].option)
@@ -227,7 +225,7 @@ class IntentionRegisterActivity : AppCompatActivity(){
 //        }
 
         dropDownList = ArrayList()
-        parentname.text = student_name
+        parentname.text = "Parent"
         email.text = PreferenceManager.getEmailId(mContext)
         title.text = titlle
         desc.setText(Html.fromHtml(descptn));
