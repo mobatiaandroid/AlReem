@@ -14,17 +14,13 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nas.alreem.R
 import com.nas.alreem.activity.ProgressBarDialog
-import com.nas.alreem.activity.bus_service.BusServiceDetailActivity
-import com.nas.alreem.activity.canteen.adapter.ItemCategoriesAdapter
 import com.nas.alreem.activity.canteen.model.add_orders.CatItemsListModel
 import com.nas.alreem.activity.canteen.model.add_orders.CatListModel
 import com.nas.alreem.activity.canteen.model.add_orders.CategoryListModel
-import com.nas.alreem.activity.canteen.model.add_orders.ItemsListModel
 import com.nas.alreem.activity.canteen.model.canteen_cart.CanteenCartApiModel
 import com.nas.alreem.activity.canteen.model.canteen_cart.CartItemsListModel
 import com.nas.alreem.activity.home.HomeActivity
@@ -42,8 +38,6 @@ import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.OnItemClickListener
 import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.constants.addOnItemClickListener
-import com.nas.alreem.fragment.home.HomeFragment
-import com.nas.alreem.fragment.shop.ShopFragment
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

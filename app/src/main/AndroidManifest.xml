@@ -330,11 +330,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activity.bus_service.RequestBusServiceActivity"
+            android:name=".activity.bus_service.reportabsence.RequestBusServiceActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activity.bus_service.BusServiceDetailActivity"
+            android:name=".activity.bus_service.reportabsence.BusServiceDetailActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -468,7 +468,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activity.bus_service.BusServiceActivity"
+            android:name=".activity.bus_service.reportabsence.BusServiceActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

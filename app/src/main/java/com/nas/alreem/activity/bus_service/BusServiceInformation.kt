@@ -19,6 +19,9 @@ import com.nas.alreem.activity.cca.model.CCAInfoRequestModel
 import com.nas.alreem.activity.cca.model.CCAInfoResponseModel
 import com.nas.alreem.activity.cca.model.CCaInformationList
 import com.nas.alreem.activity.home.HomeActivity
+import com.nas.alreem.activity.payments.adapter.Canteeninfo_adapter
+import com.nas.alreem.activity.payments.model.InfoCanteenModel
+import com.nas.alreem.activity.payments.model.InfoListModel
 import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.DialogFunctions
@@ -33,43 +36,23 @@ import retrofit2.Response
 
 class BusServiceInformation : AppCompatActivity() {
     lateinit var mContext: Context
-    lateinit var titleTextView: TextView
+    private lateinit var logoClickImg: ImageView
+    lateinit var recyclerview: RecyclerView
     lateinit var back: ImageView
+    lateinit var informationlist: ArrayList<InfoListModel>
+    lateinit var heading: TextView
+    lateinit var logoClickImgView: ImageView
     lateinit var backRelative: RelativeLayout
-    lateinit var logoclick: ImageView
-    lateinit var progressBar: ProgressBar
-    var extras: Bundle? = null
-    var tab_type: String? = null
-    var relativeHeader: RelativeLayout? = null
-    //    var mStudentSpinner: LinearLayout? = null
-//    var studImg: ImageView? = null
-//    var studName: TextView? = null
-    var mnewsLetterListView: RecyclerView? = null
-    //    var textViewYear: TextView? = null
-    var stud_id = ""
-    var stud_class = ""
-    var stud_name = ""
-    var stud_img = ""
-    var section = ""
-    private val mListViewArray: ArrayList<CCaInformationList> = ArrayList()
+    lateinit var progressDialogAdd: ProgressBar
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_information_ccaactivity)
-        mContext = this
-        initilaiseUI()
-        logoclick.setOnClickListener {
-            val mIntent = Intent(mContext, HomeActivity::class.java)
-            mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        setContentView(R.layout.canteen_information)
 
-            startActivity(mIntent)
-        }
-        backRelative.setOnClickListener {
-            finish()
-        }
-
+        initfn()
+        progressDialogAdd.visibility=View.VISIBLE
         if (ConstantFunctions.internetCheck(mContext))
         {
-            getList()
+            callPaymentInformation()
         }
         else
         {
@@ -77,112 +60,61 @@ class BusServiceInformation : AppCompatActivity() {
         }
 
     }
-    private fun getList() {
 
-        val body = CCAInfoRequestModel("0","10")
-        val token = PreferenceManager.getaccesstoken(mContext)
-        val call: Call<CCAInfoResponseModel> =
-            ApiClient.getClient.getCCAInfo(body, "Bearer $token")
-        progressBar.visibility = View.VISIBLE
-        call.enqueue(object : Callback<CCAInfoResponseModel> {
-            override fun onResponse(
-                call: Call<CCAInfoResponseModel>,
-                response: Response<CCAInfoResponseModel>
-            ) {
-                progressBar.visibility = View.GONE
+    private fun initfn() {
+        mContext = this
 
-                if (response.isSuccessful) {
-                    if (response.body() != null) {
-                        if (response.body()!!.status.toString() == "100") {
-
-                            if (response.body()!!.data.isNotEmpty()) {
-                                for (i in response.body()!!.data.indices) {
-                                    mListViewArray.add(response.body()!!.data!![i]!!)
-                                }
-                                mnewsLetterListView!!.adapter =
-                                    InformationRecyclerAdapter(mContext, mListViewArray)
-
-                            } else {
-                                ConstantFunctions.showDialogueWithOk(
-                                    mContext,
-                                    "No Data Found!",
-                                    "Alert"
-                                )
-                            }
-                        } else {
-                            ConstantFunctions.showDialogueWithOk(
-                                mContext,
-                                getString(R.string.common_error),
-                                "Alert"
-                            )
-                        }
-                    } else {
-                        ConstantFunctions.showDialogueWithOk(
-                            mContext,
-                            getString(R.string.common_error),
-                            "Alert"
-                        )
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call<CCAInfoResponseModel>, t: Throwable) {
-                progressBar.visibility = View.GONE
-
-                ConstantFunctions.showDialogueWithOk(
-                    mContext,
-                    getString(R.string.common_error),
-                    "Alert"
-                )
-            }
-
-
+        informationlist = ArrayList()
+        recyclerview = findViewById(R.id.canteen_info_list)
+        heading=findViewById(R.id.heading)
+        backRelative=findViewById(R.id.backRelative)
+        logoClickImgView=findViewById(R.id.logoClickImgView)
+        progressDialogAdd=findViewById(R.id.progressDialogAdd)
+        heading.text="Informations"
+        backRelative.setOnClickListener(View.OnClickListener {
+            finish()
         })
+
+        logoClickImgView.setOnClickListener(View.OnClickListener {
+            val intent = Intent(mContext, HomeActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent)
+        })
+
     }
-    private fun initilaiseUI() {
-        extras = intent.extras
-        if (extras != null) {
-            tab_type = extras!!.getString("tab_type")
-        }
-        progressBar = findViewById(R.id.progress)
-        logoclick = findViewById(R.id.logoClickImgView)
-        backRelative = findViewById(R.id.backRelative)
-        relativeHeader = findViewById<View>(R.id.relativeHeader) as RelativeLayout
-//        mStudentSpinner = findViewById<View>(R.id.studentSpinner) as LinearLayout
-//        studImg = findViewById<View>(R.id.imagicon) as ImageView
-//        studName = findViewById<View>(R.id.studentName) as TextView
-//        textViewYear = findViewById<View>(R.id.textViewYear) as TextView
-        mnewsLetterListView = findViewById<View>(R.id.mnewsLetterListView) as RecyclerView
-        mnewsLetterListView!!.setHasFixedSize(true)
-        val divider = DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL)
-        divider.setDrawable(ContextCompat.getDrawable(mContext,R.drawable.list_divider_teal)!!)
-        mnewsLetterListView!!.addItemDecoration(divider)
-//        mnewsLetterListView!!.addItemDecoration(DividerItemDecoration(resources.getDrawable(R.drawable.list_divider_teal)))
-        logoclick.setOnClickListener {
-            val mIntent = Intent(mContext, HomeActivity::class.java)
-            mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+    private fun callPaymentInformation(){
 
-            startActivity(mIntent)
-        }
-        val llm = LinearLayoutManager(this)
-        llm.orientation = LinearLayoutManager.VERTICAL
-        mnewsLetterListView!!.layoutManager = llm
-        mnewsLetterListView!!.addOnItemClickListener(object : OnItemClickListener {
-            override fun onItemClicked(position: Int, view: View) {
-                if (mListViewArray[position].url!!.endsWith(".pdf")) {
-                    val intent = Intent(mContext, PDFViewerActivity::class.java)
-                    intent.putExtra("Url", mListViewArray[position].url)
-                    intent.putExtra("title", mListViewArray[position].title)
-                    startActivity(intent)
-                } else {
-                    val intent = Intent(mContext, WebLinkActivity::class.java)
-                    intent.putExtra("url", mListViewArray[position].url)
-                    intent.putExtra("heading", mListViewArray[position].title)
-                    mContext.startActivity(intent)
+
+        val token = PreferenceManager.getaccesstoken(mContext)
+
+        val call: Call<InfoCanteenModel> = ApiClient.getClient.getBusServiceInfo("Bearer "+token)
+        call.enqueue(object : Callback<InfoCanteenModel> {
+            override fun onFailure(call: Call<InfoCanteenModel>, t: Throwable) {
+                progressDialogAdd.visibility=View.GONE
+            }
+            override fun onResponse(call: Call<InfoCanteenModel>, response: Response<InfoCanteenModel>) {
+                val responsedata = response.body()
+                progressDialogAdd.visibility=View.GONE
+                if (responsedata!!.status==100) {
+
+                    if(response.body()!!.responseArray.information.size>0)
+                    {
+                        recyclerview.layoutManager = LinearLayoutManager(mContext)
+                        recyclerview.adapter = Canteeninfo_adapter(response.body()!!.responseArray.information, mContext)
+
+                    }
+
+
+
+                }
+                else {
+                    DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), mContext)
+
                 }
             }
 
         })
+
 
     }
 }

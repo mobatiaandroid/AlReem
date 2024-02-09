@@ -1,4 +1,4 @@
-package com.nas.alreem.fragment.bus_service
+package com.nas.alreem.activity.bus_service.requestservice
 
 import android.app.Dialog
 import android.content.Context
@@ -7,17 +7,16 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
+import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -29,6 +28,7 @@ import com.nas.alreem.activity.absence.model.EarlyPickupListArray
 import com.nas.alreem.activity.absence.model.ListAbsenceApiModel
 import com.nas.alreem.activity.bus_service.reportabsence.BusServiceDetailActivity
 import com.nas.alreem.activity.bus_service.reportabsence.RequestBusServiceActivity
+import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.activity.payments.adapter.StudentListAdapter
 import com.nas.alreem.activity.payments.model.StudentList
 import com.nas.alreem.activity.payments.model.StudentListModel
@@ -46,7 +46,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class BusServiceFragment : Fragment(){
+class RequestServiceListActivity : AppCompatActivity() {
     lateinit var mContext: Context
     private lateinit var linearLayoutManager: LinearLayoutManager
     lateinit var progressDialogAdd: ProgressBar
@@ -66,25 +66,18 @@ class BusServiceFragment : Fragment(){
     lateinit var pickupListSort:ArrayList<EarlyPickupListArray>
     lateinit var studentAbsenceCopy :ArrayList<BusServiceDetail>
     var studentAbsenceArrayList = ArrayList<BusServiceDetail>()
-
-  //  lateinit var absence_btn:TextView
-   // lateinit var pickup_btn:TextView
-    lateinit var heading:TextView
-    lateinit var titleTextView:TextView
+    lateinit var heading: TextView
+    lateinit var titleTextView: TextView
+    lateinit var backRelative: RelativeLayout
+    lateinit var logoClickImgView: ImageView
 
     var select_val:Int=0
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.bus_service_fragment)
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.bus_service_fragment, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        mContext=requireContext()
-        initializeUI()
+        mContext=this
+        initfn()
         if (ConstantFunctions.internetCheck(mContext))
         {
             callStudentList()
@@ -95,27 +88,37 @@ class BusServiceFragment : Fragment(){
         }
 
     }
-    private fun initializeUI()
-    {
-        progressDialogAdd = requireView().findViewById(R.id.progressDialogAdd)
-        progressDialogAdd.visibility=View.VISIBLE
-        studentSpinner = requireView().findViewById<LinearLayout>(R.id.studentSpinner)
-        studImg = requireView().findViewById<ImageView>(R.id.imagicon)
-        studentNameTxt =requireView().findViewById<TextView>(R.id.studentName)
-        titleTextView=requireView().findViewById(R.id.titleTextView)
+
+    private fun initfn() {
+        progressDialogAdd = findViewById(R.id.progressDialogAdd)
+        progressDialogAdd.visibility= View.VISIBLE
+        studentSpinner =findViewById<LinearLayout>(R.id.studentSpinner)
+        studImg = findViewById<ImageView>(R.id.imagicon)
+        studentNameTxt = findViewById<TextView>(R.id.studentName)
+        titleTextView = findViewById(R.id.heading)
         titleTextView.text= ConstantWords.bus_service
-        newRequestAbsence = requireView().findViewById(R.id.newRequestAbsence)
-        newRequestPickup = requireView().findViewById(R.id.newRequestEarly)
-        mAbsenceListView = requireView().findViewById(R.id.mAbsenceListView) as RecyclerView
-        mPickupListView=requireView().findViewById(R.id.mPickupListView)
+        newRequestAbsence = findViewById(R.id.newRequestAbsence)
+        newRequestPickup =findViewById(R.id.newRequestEarly)
+        mAbsenceListView = findViewById(R.id.mAbsenceListView) as RecyclerView
+        mPickupListView=findViewById(R.id.mPickupListView)
         pickup_list= ArrayList()
         pickupListSort=ArrayList()
-        heading=requireView().findViewById(R.id.appregisteredHint)
+        heading=findViewById(R.id.appregisteredHint)
+        backRelative=findViewById(R.id.backRelative)
+        logoClickImgView=findViewById(R.id.logoClickImgView)
 
         linearLayoutManager = LinearLayoutManager(mContext)
         mAbsenceListView.layoutManager = linearLayoutManager
         mAbsenceListView.itemAnimator = DefaultItemAnimator()
-       // absence_btn.setBackgroundResource(R.drawable.event_spinnerfill)
+        // absence_btn.setBackgroundResource(R.drawable.event_spinnerfill)
+        backRelative.setOnClickListener(View.OnClickListener {
+            finish()
+        })
+        logoClickImgView.setOnClickListener(View.OnClickListener {
+            val intent = Intent(mContext, HomeActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent)
+        })
         studentSpinner.setOnClickListener(){
             showStudentsList(mContext,studentListArrayList)
 
@@ -124,27 +127,25 @@ class BusServiceFragment : Fragment(){
         mAbsenceListView.addOnItemClickListener(object: OnItemClickListener {
             override fun onItemClicked(position: Int, view: View) {
                 // Your logic
-                val intent =Intent(activity, BusServiceDetailActivity::class.java)
-                intent.putExtra("studentName",PreferenceManager.getStudentName(mContext))
-                intent.putExtra("studentClass",PreferenceManager.getStudentClass(mContext))
+                val intent = Intent(mContext, BusServiceDetailActivity::class.java)
+                intent.putExtra("studentName", PreferenceManager.getStudentName(mContext))
+                intent.putExtra("studentClass", PreferenceManager.getStudentClass(mContext))
                 intent.putExtra("date",studentAbsenceCopy.get(position).pickup_date)
                 intent.putExtra("time",studentAbsenceCopy.get(position).requested_time)
                 intent.putExtra("pickupby",studentAbsenceCopy.get(position).requested_on)
                 intent.putExtra("reason",studentAbsenceCopy.get(position).reason)
                 intent.putExtra("status",studentAbsenceCopy.get(position).status)
                 intent.putExtra("reason_for_rejection",studentAbsenceCopy.get(position).reason_for_rejection)
-                activity?.startActivity(intent)
+                startActivity(intent)
             }
         })
+        newRequestAbsence.setText("Request New Service")
         newRequestAbsence.setOnClickListener {
-            val intent = Intent(activity, RequestBusServiceActivity::class.java)
-           // intent.putExtra("studentClass",PreferenceManager.getStudentClass(mContext))
-            activity?.startActivity(intent)
+            val intent = Intent(mContext, RequestBusServiceActivity::class.java)
+            // intent.putExtra("studentClass",PreferenceManager.getStudentClass(mContext))
+            startActivity(intent)
         }
     }
-
-
-
     private fun showStudentsList(mContext: Context, mStudentArray: ArrayList<StudentList>) {
         val dialog = Dialog(mContext)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -182,7 +183,7 @@ class BusServiceFragment : Fragment(){
         studentListRecycler.addOnItemClickListener(object: OnItemClickListener {
             override fun onItemClicked(position: Int, view: View) {
                 // Your logic
-                progressDialogAdd.visibility=View.VISIBLE
+                progressDialogAdd.visibility= View.VISIBLE
 
                 studentName=studentListArrayList.get(position).name
                 studentImg=studentListArrayList.get(position).photo
@@ -222,10 +223,10 @@ class BusServiceFragment : Fragment(){
     {
         studentAbsenceCopy=ArrayList<BusServiceDetail>()
         studentAbsenceArrayList.clear()
-        mAbsenceListView.visibility=View.GONE
-        progressDialogAdd.visibility=View.VISIBLE
-       // val studentInfoAdapter = RequestAbsenceRecyclerAdapter(studentAbsenceArrayList)
-       // mAbsenceListView.adapter = studentInfoAdapter
+        mAbsenceListView.visibility= View.GONE
+        progressDialogAdd.visibility= View.VISIBLE
+        // val studentInfoAdapter = RequestAbsenceRecyclerAdapter(studentAbsenceArrayList)
+        // mAbsenceListView.adapter = studentInfoAdapter
         val token = PreferenceManager.getaccesstoken(mContext)
         val pickupSuccessBody = ListAbsenceApiModel(PreferenceManager.getStudentID(mContext).toString(),0,20)
         val call: Call<BusserviceResponseModel> =
@@ -233,7 +234,7 @@ class BusServiceFragment : Fragment(){
         call.enqueue(object : Callback<BusserviceResponseModel> {
             override fun onFailure(call: Call<BusserviceResponseModel>, t: Throwable) {
 
-                progressDialogAdd.visibility=View.GONE
+                progressDialogAdd.visibility= View.GONE
                 //mProgressRelLayout.visibility=View.INVISIBLE
             }
 
@@ -241,7 +242,7 @@ class BusServiceFragment : Fragment(){
                 val responsedata = response.body()
                 //progressDialog.visibility = View.GONE
 
-                progressDialogAdd.visibility=View.GONE
+                progressDialogAdd.visibility= View.GONE
                 if (responsedata != null) {
                     try {
 
@@ -251,18 +252,18 @@ class BusServiceFragment : Fragment(){
 
                             if (studentAbsenceArrayList.size>0)
                             {
-                                mAbsenceListView.visibility=View.VISIBLE
+                                mAbsenceListView.visibility= View.VISIBLE
                                 val studentInfoAdapter = RequestBusserviceRecyclerAdapter(studentAbsenceArrayList)
                                 mAbsenceListView.adapter = studentInfoAdapter
                             }
                             else{
                                 Toast.makeText(mContext, "No Registered Bus Service Found", Toast.LENGTH_SHORT).show()
-                                mAbsenceListView.visibility=View.GONE
+                                mAbsenceListView.visibility= View.GONE
                             }
 
 
                         }else if(response.body()!!.status==103){
-                           // callStudentLeaveInfo()
+                            // callStudentLeaveInfo()
                         }
                         else
                         {
@@ -278,19 +279,18 @@ class BusServiceFragment : Fragment(){
 
         })
     }
-
     private fun callStudentList()
     {
-        progressDialogAdd.visibility=View.VISIBLE
+        progressDialogAdd.visibility= View.VISIBLE
         studentListArrayList= ArrayList()
-        val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+PreferenceManager.getaccesstoken(mContext))
+        val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+ PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<StudentListModel> {
             override fun onFailure(call: Call<StudentListModel>, t: Throwable) {
-                progressDialogAdd.visibility=View.GONE
+                progressDialogAdd.visibility= View.GONE
             }
             override fun onResponse(call: Call<StudentListModel>, response: Response<StudentListModel>) {
                 val responsedata = response.body()
-                progressDialogAdd.visibility=View.GONE
+                progressDialogAdd.visibility= View.GONE
                 if (responsedata != null) {
                     try {
 
@@ -364,7 +364,6 @@ class BusServiceFragment : Fragment(){
 
         })
     }
-
     override fun onResume() {
         super.onResume()
 
@@ -386,15 +385,15 @@ class BusServiceFragment : Fragment(){
             studImg.setImageResource(R.drawable.student)
         }
 
-            progressDialogAdd.visibility = View.VISIBLE
-            if (ConstantFunctions.internetCheck(mContext))
-            {
-                getBusServiceListAPI()
-            }
-            else
-            {
-                DialogFunctions.showInternetAlertDialog(mContext)
-            }
+        progressDialogAdd.visibility = View.VISIBLE
+        if (ConstantFunctions.internetCheck(mContext))
+        {
+            getBusServiceListAPI()
+        }
+        else
+        {
+            DialogFunctions.showInternetAlertDialog(mContext)
+        }
 
 
 

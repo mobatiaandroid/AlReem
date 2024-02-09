@@ -659,6 +659,13 @@ interface ApiInterface {
         @Header("Authorization") token: String
     )
             : Call<CCAInfoResponseModel>
+  @GET("bus-service-information")
+    @Headers("Content-Type: application/json")
+    fun getBusServiceInfo(
+
+        @Header("Authorization") token: String
+    )
+            : Call<InfoCanteenModel>
 
     /* CCA INFO*/
 

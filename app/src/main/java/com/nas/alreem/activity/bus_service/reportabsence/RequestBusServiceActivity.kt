@@ -1,4 +1,4 @@
-package com.nas.alreem.activity.bus_service
+package com.nas.alreem.activity.bus_service.reportabsence
 
 import android.app.DatePickerDialog
 import android.app.Dialog
@@ -33,7 +33,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.nas.alreem.R
 import com.nas.alreem.activity.absence.model.EarlyPickupModel
-import com.nas.alreem.activity.absence.model.RequestPickupApiModel
 import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.activity.payments.adapter.StudentListAdapter
 import com.nas.alreem.activity.payments.model.StudentList
@@ -132,7 +131,7 @@ class RequestBusServiceActivity : AppCompatActivity() {
                 "" +
                 "Evening")
         dropDownList =ArrayList()
-        dropDownList.add(0, "Pick up At")
+        dropDownList.add(0, "Not Using Bus Service At")
         for (i in 1..optionsArray.size) {
             dropDownList.add(optionsArray.get(i - 1).toString())
         }
