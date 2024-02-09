@@ -5916,7 +5916,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
         var closeImg = dialog.findViewById(R.id.closeImg) as ImageView
         var linkTitleTV = dialog.findViewById<TextView>(R.id.urlTextView)
         if (noticeLink.isEmpty()) {
-            linkTitleTV.visibility = View.GONE
+            linkTitleTV.visibility = View.INVISIBLE
         } else {
             if (noticeTitle.isEmpty()) {
 
