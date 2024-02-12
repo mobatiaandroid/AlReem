@@ -28,6 +28,8 @@ import com.nas.alreem.activity.absence.model.EarlyPickupListArray
 import com.nas.alreem.activity.absence.model.ListAbsenceApiModel
 import com.nas.alreem.activity.bus_service.reportabsence.BusServiceDetailActivity
 import com.nas.alreem.activity.bus_service.reportabsence.RequestBusServiceActivity
+import com.nas.alreem.activity.bus_service.requestservice.model.RequestBusServiceListModel
+import com.nas.alreem.activity.bus_service.requestservice.model.RequestServiceArrayModel
 import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.activity.payments.adapter.StudentListAdapter
 import com.nas.alreem.activity.payments.model.StudentList
@@ -64,17 +66,16 @@ class RequestServiceListActivity : AppCompatActivity() {
     lateinit var mPickupListView: RecyclerView
     lateinit var pickup_list:ArrayList<EarlyPickupListArray>
     lateinit var pickupListSort:ArrayList<EarlyPickupListArray>
-    lateinit var studentAbsenceCopy :ArrayList<BusServiceDetail>
-    var studentAbsenceArrayList = ArrayList<BusServiceDetail>()
+    lateinit var studentAbsenceCopy :ArrayList<RequestServiceArrayModel>
+    var studentAbsenceArrayList = ArrayList<RequestServiceArrayModel>()
     lateinit var heading: TextView
     lateinit var titleTextView: TextView
     lateinit var backRelative: RelativeLayout
     lateinit var logoClickImgView: ImageView
-
     var select_val:Int=0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.bus_service_fragment)
+        setContentView(R.layout.activity_request_bus_service_list)
 
         mContext=this
         initfn()
@@ -127,21 +128,19 @@ class RequestServiceListActivity : AppCompatActivity() {
         mAbsenceListView.addOnItemClickListener(object: OnItemClickListener {
             override fun onItemClicked(position: Int, view: View) {
                 // Your logic
-                val intent = Intent(mContext, BusServiceDetailActivity::class.java)
+                val intent = Intent(mContext, RequestServicetDetailActvity::class.java)
                 intent.putExtra("studentName", PreferenceManager.getStudentName(mContext))
                 intent.putExtra("studentClass", PreferenceManager.getStudentClass(mContext))
-                intent.putExtra("date",studentAbsenceCopy.get(position).pickup_date)
-                intent.putExtra("time",studentAbsenceCopy.get(position).requested_time)
-                intent.putExtra("pickupby",studentAbsenceCopy.get(position).requested_on)
-                intent.putExtra("reason",studentAbsenceCopy.get(position).reason)
+                intent.putExtra("date",studentAbsenceCopy.get(position).requested_date)
+                intent.putExtra("reason",studentAbsenceCopy.get(position).pickup_point)
                 intent.putExtra("status",studentAbsenceCopy.get(position).status)
-                intent.putExtra("reason_for_rejection",studentAbsenceCopy.get(position).reason_for_rejection)
+                intent.putExtra("reason_for_rejection",studentAbsenceCopy.get(position).drop_point)
                 startActivity(intent)
             }
         })
         newRequestAbsence.setText("Request New Service")
         newRequestAbsence.setOnClickListener {
-            val intent = Intent(mContext, RequestBusServiceActivity::class.java)
+            val intent = Intent(mContext, RequestServiceActivity::class.java)
             // intent.putExtra("studentClass",PreferenceManager.getStudentClass(mContext))
             startActivity(intent)
         }
@@ -195,7 +194,7 @@ class RequestServiceListActivity : AppCompatActivity() {
                 PreferenceManager.setStudentClass(mContext,studentClass)
 
                 studentNameTxt.text=studentName
-                studentAbsenceArrayList.clear()
+             //   studentAbsenceArrayList.clear()
                 pickupListSort.clear()
                 if(!studentImg.equals(""))
                 {
@@ -221,24 +220,23 @@ class RequestServiceListActivity : AppCompatActivity() {
     }
     private fun getBusServiceListAPI()
     {
-        studentAbsenceCopy=ArrayList<BusServiceDetail>()
-        studentAbsenceArrayList.clear()
+
         mAbsenceListView.visibility= View.GONE
         progressDialogAdd.visibility= View.VISIBLE
         // val studentInfoAdapter = RequestAbsenceRecyclerAdapter(studentAbsenceArrayList)
         // mAbsenceListView.adapter = studentInfoAdapter
         val token = PreferenceManager.getaccesstoken(mContext)
         val pickupSuccessBody = ListAbsenceApiModel(PreferenceManager.getStudentID(mContext).toString(),0,20)
-        val call: Call<BusserviceResponseModel> =
-            ApiClient.getClient.listbusservice(pickupSuccessBody, "Bearer " + token)
-        call.enqueue(object : Callback<BusserviceResponseModel> {
-            override fun onFailure(call: Call<BusserviceResponseModel>, t: Throwable) {
+        val call: Call<RequestBusServiceListModel> =
+            ApiClient.getClient.requestBusServiceList(pickupSuccessBody, "Bearer " + token)
+        call.enqueue(object : Callback<RequestBusServiceListModel> {
+            override fun onFailure(call: Call<RequestBusServiceListModel>, t: Throwable) {
 
                 progressDialogAdd.visibility= View.GONE
                 //mProgressRelLayout.visibility=View.INVISIBLE
             }
 
-            override fun onResponse(call: Call<BusserviceResponseModel>, response: Response<BusserviceResponseModel>) {
+            override fun onResponse(call: Call<RequestBusServiceListModel>, response: Response<RequestBusServiceListModel>) {
                 val responsedata = response.body()
                 //progressDialog.visibility = View.GONE
 
@@ -247,13 +245,15 @@ class RequestServiceListActivity : AppCompatActivity() {
                     try {
 
                         if (response.body()!!.status==100) {
-                            studentAbsenceCopy.addAll(response.body()!!.bus_services)
+                            studentAbsenceCopy=ArrayList<RequestServiceArrayModel>()
+                            studentAbsenceArrayList=ArrayList<RequestServiceArrayModel>()
+                            studentAbsenceCopy.addAll(response.body()!!.responseArray.bus_service_request)
                             studentAbsenceArrayList=studentAbsenceCopy
 
                             if (studentAbsenceArrayList.size>0)
                             {
                                 mAbsenceListView.visibility= View.VISIBLE
-                                val studentInfoAdapter = RequestBusserviceRecyclerAdapter(studentAbsenceArrayList)
+                                val studentInfoAdapter = RequestServiceListAdapter(studentAbsenceArrayList)
                                 mAbsenceListView.adapter = studentInfoAdapter
                             }
                             else{
@@ -367,35 +367,44 @@ class RequestServiceListActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        mPickupListView.visibility = View.GONE
-        mAbsenceListView.visibility = View.GONE
-        studentNameTxt.text = PreferenceManager.getStudentName(mContext)
-        studentId = PreferenceManager.getStudentID(mContext).toString()
-        studentImg = PreferenceManager.getStudentPhoto(mContext)!!
-        if (!studentImg.equals("")) {
-            Glide.with(mContext) //1
-                .load(studentImg)
-                .placeholder(R.drawable.student)
-                .error(R.drawable.student)
-                .skipMemoryCache(true) //2
-                .diskCacheStrategy(DiskCacheStrategy.NONE) //3
-                .transform(CircleCrop()) //4
-                .into(studImg)
-        } else {
-            studImg.setImageResource(R.drawable.student)
-        }
+//        mPickupListView.visibility = View.GONE
+//        mAbsenceListView.visibility = View.GONE
+//        studentNameTxt.text = PreferenceManager.getStudentName(mContext)
+//        studentId = PreferenceManager.getStudentID(mContext).toString()
+//        studentImg = PreferenceManager.getStudentPhoto(mContext)!!
+//        if (!studentImg.equals("")) {
+//            Glide.with(mContext) //1
+//                .load(studentImg)
+//                .placeholder(R.drawable.student)
+//                .error(R.drawable.student)
+//                .skipMemoryCache(true) //2
+//                .diskCacheStrategy(DiskCacheStrategy.NONE) //3
+//                .transform(CircleCrop()) //4
+//                .into(studImg)
+//        } else {
+//            studImg.setImageResource(R.drawable.student)
+//        }
+//
+//        progressDialogAdd.visibility = View.VISIBLE
+//        if (ConstantFunctions.internetCheck(mContext))
+//        {
+//            studentAbsenceCopy=ArrayList<RequestServiceArrayModel>()
+//            studentAbsenceArrayList=ArrayList<RequestServiceArrayModel>()
+//            getBusServiceListAPI()
+//        }
+//        else
+//        {
+//            DialogFunctions.showInternetAlertDialog(mContext)
+//        }
+//
 
-        progressDialogAdd.visibility = View.VISIBLE
         if (ConstantFunctions.internetCheck(mContext))
         {
-            getBusServiceListAPI()
+            callStudentList()
         }
         else
         {
             DialogFunctions.showInternetAlertDialog(mContext)
         }
-
-
-
     }
 }

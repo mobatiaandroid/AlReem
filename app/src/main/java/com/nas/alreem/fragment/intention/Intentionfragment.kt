@@ -55,6 +55,7 @@ import com.nas.alreem.fragment.intention.model.IntentionApiModel
 import com.nas.alreem.fragment.intention.model.IntentionApiSubmit
 import com.nas.alreem.fragment.intention.model.IntentionInfoResponseArray
 import com.nas.alreem.fragment.intention.model.IntentionListAPIResponseModel
+import com.nas.alreem.fragment.intention.model.IntentionStatusApiModel
 import com.nas.alreem.fragment.intention.model.IntentionStatusResponseModel
 import com.nas.alreem.fragment.intention.model.IntentionSubmitModel
 import com.nas.alreem.fragment.intention.model.IntentionstatusResponseArray
@@ -76,6 +77,7 @@ class Intentionfragment : Fragment(){
     lateinit var backRelative: RelativeLayout
     lateinit var logoclick: ImageView
     lateinit var progress: ProgressBar
+    lateinit var parentName:String
     var studentListArrayList = ArrayList<StudentList>()
 
     lateinit var studentName: TextView
@@ -115,7 +117,7 @@ class Intentionfragment : Fragment(){
         var internetCheck = ConstantFunctions.internetCheck(mContext)
         if (internetCheck) {
             getIntentionListAPI(stud_id)
-            getIntentionStatusAPI(stud_id)
+
 
         } else {
             DialogFunctions.showInternetAlertDialog(mContext)
@@ -155,6 +157,7 @@ class Intentionfragment : Fragment(){
                     intent.putExtra("intent_id", primaryArrayList[position].intensionId)
                     intent.putExtra("title", primaryArrayList.get(position).title)
                     intent.putExtra("description", primaryArrayList.get(position).description)
+                    intent.putExtra("parent_name", parentName)
                     intent.putParcelableArrayListExtra(
                         "options",
                         primaryArrayList[position].options
@@ -164,25 +167,13 @@ class Intentionfragment : Fragment(){
                     startActivity(intent)
                 }
                 else{
-                    val intent = Intent(mContext, IntentionDetailedView::class.java)
 
-                    intent.putExtra("student", primaryArrayList.get(position).studentName)
-                    intent.putExtra("question", primaryArrayList.get(position).question)
-                    intent.putExtra("title", primaryArrayList.get(position).title)
-                    intent.putExtra("description", primaryArrayList.get(position).description)
-                    intent.putExtra("classs",intentionstatusArray.get(position).className)
-                    intent.putExtra("options",intentionstatusArray.get(position).selected_options)
-                    intent.putExtra("selectedchoice", intentionstatusArray[position].selected_option_answer)
-                    intent.putExtra("position",position)
-                    intent.putParcelableArrayListExtra(
-                        "optionsarray",
-                        primaryArrayList[position].options
-                    )
-                    startActivity(intent)
+                    getIntentionStatusAPI(primaryArrayList[position].intensionId)
+
                    /* val dialog = Dialog(mContext)
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
                     dialog.setContentView(R.layout.alert_intention_view)
-                    dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                    dialog.window!!.setBackgroundDrawable(ColorDrawable(Col or.TRANSPARENT))
                     val name = dialog.findViewById<TextView>(R.id.nametxt)
                     val studName = dialog.findViewById<TextView>(R.id.stud_name)
                     val department = dialog.findViewById<TextView>(R.id.mailtxt)
@@ -502,7 +493,7 @@ class Intentionfragment : Fragment(){
             dialog.dismiss()
             dialog1.dismiss()
             getIntentionListAPI(stud_id)
-            getIntentionStatusAPI(stud_id)
+         //   getIntentionStatusAPI(stud_id)
 
         }
         d.show()
@@ -569,7 +560,7 @@ class Intentionfragment : Fragment(){
                 var internetCheck = ConstantFunctions.internetCheck(mContext)
                 if (internetCheck) {
                     getIntentionListAPI(stud_id)
-                    getIntentionStatusAPI(stud_id)
+
 
                 } else {
                     DialogFunctions.showInternetAlertDialog(mContext)
@@ -585,7 +576,7 @@ class Intentionfragment : Fragment(){
 
         // optionsArray = ArrayList()
         progress.visibility = View.VISIBLE
-        val body = IntentionApiModel("0", "20")
+        val body = IntentionApiModel("0", "100")
         val token = PreferenceManager.getaccesstoken(mContext)
         val call: Call<IntentionListAPIResponseModel> =
             ApiClient.getClient.intension(body, "Bearer " + token)
@@ -606,6 +597,7 @@ class Intentionfragment : Fragment(){
 
                         if (response.body()!!.status == 100) {
                             primaryArrayList = response.body()!!.responseArray.intensions
+                            parentName=response.body()!!.responseArray.parent_name
                             Log.e("primaryArrayList", primaryArrayList.toString())
                             if (primaryArrayList.size>0)
                             {
@@ -624,6 +616,12 @@ class Intentionfragment : Fragment(){
                         }
                         else
                         {
+                            if (response.body()!!.status==132)
+                            {
+                                DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), "No Intension Available.", mContext)
+
+                            }
+
                             var primaryAdapter= IntentionAdapter(primaryArrayList,mContext)
                             recycler_review.adapter=primaryAdapter
                             //Toast.makeText(mContext, "No Registered Early Pickup Found", Toast.LENGTH_SHORT).show()
@@ -639,11 +637,11 @@ class Intentionfragment : Fragment(){
 
         })
     }
-    private fun getIntentionStatusAPI(stud_id: String)
+    private fun getIntentionStatusAPI(intensionId: Int)
     {
         intentionstatusArray = ArrayList()
         progress.visibility = View.VISIBLE
-        val body = IntentionApiModel("0","20")
+        val body = IntentionStatusApiModel(intensionId,"0","150")
         val token = PreferenceManager.getaccesstoken(mContext)
         val call: Call<IntentionStatusResponseModel> = ApiClient.getClient.intensionstatus(body,"Bearer "+token)
         call.enqueue(object : Callback<IntentionStatusResponseModel> {
@@ -657,6 +655,22 @@ class Intentionfragment : Fragment(){
                 if (response.body()!!.status==100)
                 {
                     intentionstatusArray.addAll(response.body()!!.responseArray.response!!)
+                                        val intent = Intent(mContext, IntentionDetailedView::class.java)
+
+                    intent.putExtra("student", primaryArrayList.get(0).studentName)
+                    intent.putExtra("question", primaryArrayList.get(0).question)
+                    intent.putExtra("title", primaryArrayList.get(0).title)
+                    intent.putExtra("description", primaryArrayList.get(0).description)
+                    intent.putExtra("classs",intentionstatusArray.get(0).className)
+                    intent.putExtra("options",intentionstatusArray.get(0).selected_options)
+                    intent.putExtra("selectedchoice", intentionstatusArray[0].selected_option_answer)
+                    intent.putExtra("parent_name", parentName)
+                    intent.putExtra("position",0)
+                    intent.putParcelableArrayListExtra(
+                        "optionsarray",
+                        primaryArrayList[0].options
+                    )
+                    startActivity(intent)
 //
                 }
 
@@ -756,27 +770,10 @@ class Intentionfragment : Fragment(){
 
         recycler_review.visibility = View.GONE
 
-        studentName.text = PreferenceManager.getStudentName(mContext)
-        stud_id = PreferenceManager.getStudentID(mContext).toString()
-        stud_img = PreferenceManager.getStudentPhoto(mContext)!!
-        if (!stud_img.equals("")) {
-            Glide.with(mContext) //1
-                .load(stud_img)
-                .placeholder(R.drawable.student)
-                .error(R.drawable.student)
-                .skipMemoryCache(true) //2
-                .diskCacheStrategy(DiskCacheStrategy.NONE) //3
-                .transform(CircleCrop()) //4
-                .into(studImg)
-        } else {
-            studImg.setImageResource(R.drawable.student)
-        }
-
-        progress.visibility = View.VISIBLE
         if (ConstantFunctions.internetCheck(mContext))
         {
             getIntentionListAPI(stud_id)
-            getIntentionStatusAPI(stud_id)
+
         }
         else
         {

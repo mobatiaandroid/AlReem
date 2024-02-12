@@ -9,6 +9,8 @@ import com.nas.alreem.activity.absence.model.PickupListModel
 import com.nas.alreem.activity.absence.model.RequestLeaveApiModel
 import com.nas.alreem.activity.absence.model.RequestLeaveModel
 import com.nas.alreem.activity.absence.model.RequestPickupApiModel
+import com.nas.alreem.activity.bus_service.requestservice.model.RequestBusServiceListModel
+import com.nas.alreem.activity.bus_service.requestservice.model.RequestServiceApiModel
 import com.nas.alreem.activity.canteen.model.TimeExceedModel
 import com.nas.alreem.activity.canteen.model.add_orders.CanteenItemsApiModel
 import com.nas.alreem.activity.canteen.model.add_orders.CatListModel
@@ -87,6 +89,7 @@ import com.nas.alreem.activity.staff_directory.model.ListStaffDetailModel
 import com.nas.alreem.activity.staff_directory.model.StaffCatListResponseModel
 import com.nas.alreem.activity.survey.model.*
 import com.nas.alreem.fragment.about_us.model.AboutUsResponseModel
+import com.nas.alreem.fragment.bus_service.model.BannerModel
 import com.nas.alreem.fragment.bus_service.model.BusserviceResponseModel
 import com.nas.alreem.fragment.bus_service.model.RequestBusServiceModelSubmit
 import com.nas.alreem.fragment.calendar.model.CalendarResponseModel
@@ -107,6 +110,7 @@ import com.nas.alreem.fragment.home.re_enrollment.ReEnrollmentStatusResponseMode
 import com.nas.alreem.fragment.intention.model.IntentionApiModel
 import com.nas.alreem.fragment.intention.model.IntentionApiSubmit
 import com.nas.alreem.fragment.intention.model.IntentionListAPIResponseModel
+import com.nas.alreem.fragment.intention.model.IntentionStatusApiModel
 import com.nas.alreem.fragment.intention.model.IntentionStatusResponseModel
 import com.nas.alreem.fragment.notifications.model.NotificationApiModel
 import com.nas.alreem.fragment.notifications.model.NotificationResponseModel
@@ -651,6 +655,12 @@ interface ApiInterface {
         @Header("Authorization") token: String
     ): Call<BannerResponseModelCCa>
 
+    @POST("bus_service_info_banner_images")
+    @Headers("Content-Type: application/json")
+    fun getBusServiceBanner(
+        @Header("Authorization") token: String
+    ): Call<BannerModel>
+
     /* CCA INFO*/
     @POST("cca-informations")
     @Headers("Content-Type: application/json")
@@ -759,7 +769,7 @@ interface ApiInterface {
     @Headers("Content-Type: application/json")
     fun intensionstatus
     (
-        @Body  intentionbody: IntentionApiModel,
+        @Body  intentionbody: IntentionStatusApiModel,
         @Header("Authorization") token:String
     ): Call<IntentionStatusResponseModel>
 
@@ -779,10 +789,25 @@ interface ApiInterface {
         @Header("Authorization") token:String
     ): Call<BusserviceResponseModel>
 
+    @POST("list-bus-service-request")
+    @Headers("Content-Type: application/json")
+    fun requestBusServiceList
+                (
+        @Body absenceApiModel: ListAbsenceApiModel,
+        @Header("Authorization") token:String
+    ): Call<RequestBusServiceListModel>
+
     @POST("request-bus-service")
     @Headers("Content-Type: application/json")
     fun requestbusservice(
         @Body requestBusservicemodelsubmit: RequestBusServiceModelSubmit,
+        @Header("Authorization") token:String
+    ): Call<EarlyPickupModel>
+
+    @POST("bus-service-request")
+    @Headers("Content-Type: application/json")
+    fun requestService(
+        @Body requestBusservicemodelsubmit: RequestServiceApiModel,
         @Header("Authorization") token:String
     ): Call<EarlyPickupModel>
     @POST("get_lost_card_instruction")

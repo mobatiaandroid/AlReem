@@ -41,6 +41,7 @@ lateinit var answeroption:TextView
     var reason_pickup:String=""
     var titlle:String=""
     var descptn:String=""
+    var parent_name:String=""
 var selectedoptionanswer:String=""
     var receivedOptions: ArrayList<IntentionListAPIResponseModel.Option> = ArrayList()
 lateinit var title : TextView
@@ -73,6 +74,7 @@ lateinit var sub_btn : Button
         studcls_pickup=intent.getStringExtra("classs").toString()
         pickby_pickup=intent.getStringExtra("question").toString()
         reason_pickup=intent.getStringExtra("options").toString()
+        parent_name=intent.getStringExtra("parent_name").toString()
         selectedoptionanswer=intent.getStringExtra("selectedchoice").toString()
         receivedOptions = intent.getParcelableArrayListExtra("optionsarray")!!
         sub_btn.setOnClickListener {
@@ -103,7 +105,7 @@ lateinit var sub_btn : Button
 
         }
         stud_name=findViewById(R.id.stnameValue)
-        stud_name.text = studname_pickup
+        stud_name.text = parent_name
         stud_class=findViewById(R.id.studClassValue)
         stud_class.text = PreferenceManager.getEmailId(mContext)
 

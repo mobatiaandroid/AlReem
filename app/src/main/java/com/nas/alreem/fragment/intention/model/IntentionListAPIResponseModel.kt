@@ -8,10 +8,13 @@ import com.google.gson.annotations.SerializedName
 data class IntentionListAPIResponseModel(
     @SerializedName("status")
     val status: Int,
+
     @SerializedName("responseArray")
     val responseArray: ResponseArray
 ) {
     data class ResponseArray(
+        @SerializedName("parent_name")
+        val parent_name: String,
         @SerializedName("intension")
         val intensions: ArrayList<Intention>
     )

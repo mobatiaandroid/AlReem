@@ -26,6 +26,7 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.nas.alreem.R
 import com.nas.alreem.activity.absence.model.EarlyPickupListArray
 import com.nas.alreem.activity.absence.model.ListAbsenceApiModel
+import com.nas.alreem.activity.bus_service.requestservice.model.RequestServiceArrayModel
 import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.activity.payments.adapter.StudentListAdapter
 import com.nas.alreem.activity.payments.model.StudentList
@@ -244,6 +245,8 @@ class BusServiceActivity : AppCompatActivity() {
                     try {
 
                         if (response.body()!!.status==100) {
+                            studentAbsenceCopy=ArrayList<BusServiceDetail>()
+                            studentAbsenceArrayList=ArrayList<BusServiceDetail>()
                             studentAbsenceCopy.addAll(response.body()!!.bus_services)
                             studentAbsenceArrayList=studentAbsenceCopy
 

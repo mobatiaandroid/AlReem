@@ -23,12 +23,14 @@ import com.bumptech.glide.Glide
 import com.nas.alreem.R
 import com.nas.alreem.activity.bus_service.reportabsence.BusServiceActivity
 import com.nas.alreem.activity.bus_service.BusServiceInformation
+import com.nas.alreem.activity.bus_service.requestservice.RequestServiceListActivity
 import com.nas.alreem.activity.cca.ExternalProviderActivity
 import com.nas.alreem.activity.login.model.SignUpResponseModel
 import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.PreferenceManager
+import com.nas.alreem.fragment.bus_service.model.BannerModel
 import com.nas.alreem.fragment.cca.model.BannerResponseModelCCa
 import com.nas.alreem.fragment.payments.model.SendEmailApiModel
 import retrofit2.Call
@@ -96,9 +98,9 @@ class BusServiceFragmentNew : Fragment() {
             DialogFunctions.showInternetAlertDialog(mContext!!)
         }
 
-        externalCCA!!.setOnClickListener {
-            val intent = Intent(mContext, ExternalProviderActivity::class.java)
-            intent.putExtra("tab_type", "External Providers")
+        ccaOption!!.setOnClickListener {
+            val intent = Intent(mContext, RequestServiceListActivity::class.java)
+            intent.putExtra("tab_type", "Bus Service")
             startActivity(intent)
         }
         informationCCA!!.setOnClickListener {
@@ -106,7 +108,7 @@ class BusServiceFragmentNew : Fragment() {
             intent.putExtra("tab_type", "Information")
             startActivity(intent)
         }
-        ccaOption!!.setOnClickListener {
+        externalCCA!!.setOnClickListener {
 
                 PreferenceManager.setStudIdForCCA(mContext!!, "")
                 // PreferenceManager.setStudentID(mContext!!, "")
@@ -265,56 +267,23 @@ class BusServiceFragmentNew : Fragment() {
     private fun getList() {
         progress.visibility = View.VISIBLE
         val token = PreferenceManager.getaccesstoken(mContext!!)
-        val call: Call<BannerResponseModelCCa> =
-            ApiClient.getClient.getBanner( "Bearer $token")
-        call.enqueue(object : Callback<BannerResponseModelCCa> {
+        val call: Call<BannerModel> =
+            ApiClient.getClient.getBusServiceBanner( "Bearer $token")
+        call.enqueue(object : Callback<BannerModel> {
             override fun onResponse(
-                call: Call<BannerResponseModelCCa>,
-                response: Response<BannerResponseModelCCa>
+                call: Call<BannerModel>,
+                response: Response<BannerModel>
             ) {
                 progress.visibility = View.GONE
 
                 if (response.isSuccessful){
                     if (response.body() != null){
                         if (response.body()!!.status.toString() == "100"){
-                            val bannerImage: String = response.body()!!.data!!.banner_image!!
-                            description = response.body()!!.data!!.description!!
-                            contactEmail = response.body()!!.data!!.contact_email!!
+                            val bannerImage: String = response.body()!!.responseArray!!.banner_image
+                            description = response.body()!!.responseArray!!.description!!
+                            contactEmail = response.body()!!.responseArray!!.contact_email!!
 //
-                            PreferenceManager.setCcaOptionCCABadge(
-                                mContext!!,
-                                response.body()!!.data!!.cca_badge
-                            )
-                            PreferenceManager.setCcaOptionEditedCCaBadge(
-                                mContext!!,
-                                response.body()!!.data!!.cca_edited_badge
-                            )
-                            if (PreferenceManager.getCcaoptionCCaBadge(mContext!!)!!.equals(0) &&
-                                PreferenceManager.getCcaoptionEditedCCaBadge(mContext!!)!!.equals(0)
-                            ) {
-                                ccaDot!!.setVisibility(View.GONE)
-                            } else if (PreferenceManager.getCcaoptionCCaBadge(mContext!!)!!.equals(0) &&
-                                !PreferenceManager.getCcaoptionEditedCCaBadge(mContext!!)!!.equals(0)
-                            ) {
-                                ccaDot!!.setVisibility(View.VISIBLE)
-                                ccaDot!!.setText(response.body()!!.data!!.cca_edited_badge)
-                                ccaDot!!.setBackgroundResource(R.drawable.shape_circle_navy)
-                            } else if (!PreferenceManager.getCcaoptionCCaBadge(mContext!!)!!.equals(0)
-                                && PreferenceManager.getCcaoptionEditedCCaBadge(
-                                    mContext!!)!!.equals(0)
-                            ) {
-                                ccaDot!!.setVisibility(View.VISIBLE)
-                                ccaDot!!.setText(response.body()!!.data!!.cca_badge.toString())
-                                ccaDot!!.setBackgroundResource(R.drawable.shape_circle_red)
-                            } else if (!PreferenceManager.getCcaoptionCCaBadge(mContext!!)!!.equals(0)
-                                && !PreferenceManager.getCcaoptionEditedCCaBadge(mContext!!)!!.equals(0)
-                            ) {
-                                ccaDot!!.setVisibility(View.VISIBLE)
-                                ccaDot!!.setText(response.body()!!.data!!.cca_badge)
-                                ccaDot!!.setBackgroundResource(
-                                    R.drawable.shape_circle_red
-                                )
-                            }
+
                             if (!bannerImage.equals("", ignoreCase = true)) {
                                 Glide.with(mContext!!).load(ConstantFunctions.replace(bannerImage)).fitCenter()
 
@@ -332,9 +301,11 @@ class BusServiceFragmentNew : Fragment() {
                                     "",
                                     ignoreCase = true
                                 )
-                            ) {
+                            )
+                            {
                                 mtitleRel!!.visibility = View.GONE
-                            } else {
+                            }
+                            else {
                                 mtitleRel!!.visibility = View.VISIBLE
                             }
                             if (description.equals("", ignoreCase = true)) {
@@ -368,7 +339,7 @@ class BusServiceFragmentNew : Fragment() {
                 }
             }
 
-            override fun onFailure(call: Call<BannerResponseModelCCa>, t: Throwable) {
+            override fun onFailure(call: Call<BannerModel>, t: Throwable) {
                 progress.visibility = View.GONE
 
                 ConstantFunctions.showDialogueWithOk(mContext!!,getString(R.string.common_error),"Alert")

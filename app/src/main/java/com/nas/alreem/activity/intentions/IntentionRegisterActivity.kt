@@ -72,6 +72,7 @@ class IntentionRegisterActivity : AppCompatActivity(){
     lateinit var studentId: String
     lateinit var studentImg: String
     lateinit var studentClass: String
+    lateinit var parent_name: String
     lateinit var studentNameTxt: TextView
     lateinit var enterStratDate: TextView
     lateinit var enterTime: TextView
@@ -142,6 +143,7 @@ class IntentionRegisterActivity : AppCompatActivity(){
         titlle=intent.getStringExtra("title").toString()
         descptn=intent.getStringExtra("description").toString()
         question = intent.getStringExtra("question")!!.toString()
+        parent_name = intent.getStringExtra("parent_name")!!.toString()
         receivedOptions = intent.getParcelableArrayListExtra("options")!!
         for (i in receivedOptions.indices){
             optionArray.add(receivedOptions[i].option)
@@ -225,7 +227,7 @@ class IntentionRegisterActivity : AppCompatActivity(){
 //        }
 
         dropDownList = ArrayList()
-        parentname.text = "Parent"
+        parentname.text = parent_name
         email.text = PreferenceManager.getEmailId(mContext)
         title.text = titlle
         desc.setText(Html.fromHtml(descptn));
@@ -380,7 +382,7 @@ class IntentionRegisterActivity : AppCompatActivity(){
                         if (response.body()!!.status==100)
                         {
                             showSuccessReEnrollAlert(
-                                mContext, " Thank you\n" + "\n" + "Successfully submitted", "Success", dialog1)
+                                mContext, " Thank you\n" , "Success", dialog1)
                         }
                         else
                         {

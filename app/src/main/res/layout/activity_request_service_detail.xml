@@ -112,7 +112,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="45"
-                    android:text="Day of Pickup"
+                    android:text="Date"
 
                     android:textColor="@color/black"
                     android:textSize="14sp" />
@@ -181,6 +181,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="5dp"
                 android:gravity="center"
+                android:visibility="gone"
                 android:orientation="horizontal"
                 android:weightSum="100">
 
@@ -265,7 +266,7 @@
                     android:layout_gravity="top"
                     android:singleLine="true"
                     android:layout_marginLeft="7dp"
-                    android:text="Reason for not using the bus"
+                    android:text="Pick Up Pont"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
 
@@ -279,6 +280,7 @@
 
             </LinearLayout>
             <ScrollView
+                android:id="@+id/reasonScroll"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:layout_marginTop="10dp"
@@ -320,7 +322,7 @@
                     android:layout_weight="45"
                     android:layout_gravity="top"
                     android:layout_marginLeft="7dp"
-                    android:text="Reason for Rejection"
+                    android:text="Drop In Point"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
 

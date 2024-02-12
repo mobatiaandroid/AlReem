@@ -1,4 +1,4 @@
-package com.nas.alreem.activity.bus_service.reportabsence
+package com.nas.alreem.activity.bus_service.requestservice
 
 import android.app.DatePickerDialog
 import android.app.Dialog
@@ -33,6 +33,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.nas.alreem.R
 import com.nas.alreem.activity.absence.model.EarlyPickupModel
+import com.nas.alreem.activity.bus_service.requestservice.model.RequestServiceApiModel
 import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.activity.payments.adapter.StudentListAdapter
 import com.nas.alreem.activity.payments.model.StudentList
@@ -53,13 +54,12 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 
-class RequestBusServiceActivity : AppCompatActivity() {
+class RequestServiceActivity : AppCompatActivity() {
     lateinit var mContext: Context
     var hour:Int=0
     var min:String=""
     var hour_new:String=""
     var new_time:String=""
-    lateinit var optionsArray : ArrayList<String>
     lateinit var backRelative: RelativeLayout
     lateinit var heading: TextView
     lateinit var logoClickImgView: ImageView
@@ -73,13 +73,12 @@ class RequestBusServiceActivity : AppCompatActivity() {
     lateinit var studentClass: String
     lateinit var studentNameTxt: TextView
     lateinit var enterStratDate: TextView
-    lateinit var enterTime: TextView
-    lateinit var pickupName: TextView
+    lateinit var pickUpPoint: EditText
     lateinit var submitBtn: Button
-    lateinit var enterMessage: EditText
+    lateinit var dropPoint: EditText
     var fromDate: String=""
     var toDate: String =""
-    var totime: String =""
+
     lateinit var submitLayout: LinearLayout
     lateinit var myCalendar : Calendar
     lateinit var currentDate: Date
@@ -91,7 +90,7 @@ class RequestBusServiceActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_request_bus_service)
+        setContentView(R.layout.activity_request_service)
 
         mContext=this
         initfn()
@@ -117,53 +116,12 @@ class RequestBusServiceActivity : AppCompatActivity() {
         currentDate= Calendar.getInstance().time
         studentNameTxt = findViewById<TextView>(R.id.studentName)
         enterStratDate = findViewById<TextView>(R.id.enterStratDate)
-        enterTime = findViewById<TextView>(R.id.enterEndDate)
-        pickupName=findViewById(R.id.enterPickupname)
+
+        pickUpPoint=findViewById(R.id.pickUpPoint)
         studImg = findViewById<ImageView>(R.id.studImg)
-        enterMessage = findViewById<EditText>(R.id.enterMessage)
+        dropPoint = findViewById<EditText>(R.id.dropPoint)
         submitLayout = findViewById<LinearLayout>(R.id.submitLayout)
         submitBtn = findViewById<Button>(R.id.submitBtn)
-        val spinnerList =findViewById<Spinner>(R.id.spinnerlist)
-        var dropDownList: java.util.ArrayList<String> = ArrayList<String>()
-        optionsArray=ArrayList()
-        optionsArray.add(0,"Morning")
-        optionsArray.add(1,"" +
-                "" +
-                "Evening")
-        dropDownList =ArrayList()
-        dropDownList.add(0, "Not Using Bus Service At")
-        for (i in 1..optionsArray.size) {
-            dropDownList.add(optionsArray.get(i - 1).toString())
-        }
-        val sp_adapter: ArrayAdapter<*> =
-            ArrayAdapter<Any?>(mContext, R.layout.spinner_textview, dropDownList as List<Any?>)
-        spinnerList.adapter = sp_adapter
-        spinnerList.setSelection(0)
-        val finalDropDownList: java.util.ArrayList<*> = dropDownList
-        spinnerList.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View,
-                position: Int,
-                id: Long
-            ) {
-                selectedItem = parent.getItemAtPosition(position).toString()
-                val optionlistSize = finalDropDownList.size - 1
-                for (i in 1 until optionlistSize) {
-                    if (selectedItem === finalDropDownList[i].toString()) {
-                      //  reEnrollSubmit.status=(finalDropDownList[i].toString())
-                    //    reEnrollSubmit.student_id=
-                         //   PreferenceManager.getCCAStudentIdPosition(mContext).toString()
-                      //  check[0] = 1
-                    } else if (selectedItem === finalDropDownList[0]) {
-                      //  reEnrollSubmit.status=("")
-                      //  check[0] = 0
-                    }
-                }
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-        }
         studentSpinner.setOnClickListener(){
             showStudentList(mContext,studentListArrayList)
         }
@@ -185,41 +143,16 @@ class RequestBusServiceActivity : AppCompatActivity() {
                     DialogFunctions.commonErrorAlertDialog("Alert","Please select Date of Early Pickup",mContext)
                 }
                 else{
-                    if (!enterTime.text.equals("")){
+                    if (dropPoint.text.toString().equals("") && pickUpPoint.text.toString().equals(""))
+                    {
+                        DialogFunctions.commonErrorAlertDialog("Alert","Please enter the pickup point or drop point.",mContext)
 
-                        DialogFunctions.commonErrorAlertDialog("Alert","Please select your Pickup Time",mContext)
-                    }else{
-                        Log.e("selectedItem",selectedItem)
-                        if (selectedItem.equals("") || selectedItem.equals("Pick up At")
-                        ) {
-
-                            DialogFunctions.commonErrorAlertDialog("Alert","You didn't enter any data of your child. Please Enter data and Submit",mContext)
-
-                        }
-                        else{
-
-
-                            if (enterMessage.text.isEmpty()){
-                                DialogFunctions.commonErrorAlertDialog("Alert","Please enter reason for early pickup",mContext)
-
-                            } else{
-                                var date_entered=enterStratDate.text
-                                var date=toDate
-                                var time_entered=enterTime.text
-                                var time=totime
-                                var pickupname_entered=pickupName.text
-                                var reason_entered=enterMessage.text
-
-                                /*callPickupSubmitApi(date,time.toString(),pickupname_entered.toString(),
-                                    reason_entered.toString()
-                                )*/
-                                callPickupSubmitApi(date,new_time,selectedItem,
-                                    reason_entered.toString()
-                                )
-                            }
-                        }
                     }
-
+                    else{
+                        var date=toDate
+                        callPickupSubmitApi(date,dropPoint.text.toString(),
+                            pickUpPoint.text.toString())
+                    }
 
                 }
 
@@ -229,66 +162,7 @@ class RequestBusServiceActivity : AppCompatActivity() {
         enterStratDate.setOnClickListener{
             cal()
         }
-        enterTime.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View?) {
-                if (enterStratDate.text.equals("")){
-                    DialogFunctions.commonErrorAlertDialog("Alert","Please select Date of Early Pickup",mContext)
 
-                }
-                else{
-                    val mTimePicker: TimePickerDialog
-                    val mcurrentTime = Calendar.getInstance()
-                    val hours = mcurrentTime.get(Calendar.HOUR_OF_DAY)
-                    val minute = mcurrentTime.get(Calendar.MINUTE)
-                    //var am_pm = mcurrentTime.get(Calendar.AM_PM)
-                    var am_pm:String=""
-
-                    mTimePicker = TimePickerDialog(mContext, object : TimePickerDialog.OnTimeSetListener {
-                        override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
-                            var AM_PM: String
-                            hour=hourOfDay
-                            min=minute.toString()
-                            var hour_n=hour.toString()
-
-                            if (minute<10){
-                                min="0"+min
-                            }
-                            if (hourOfDay<10){
-                                hour_n="0"+hour.toString()
-
-                            }
-
-                            new_time=hour_n + ":" + min + ":" + "00"
-
-                            if(hour ==0) {
-
-                                hour = 12
-                                AM_PM="AM"
-                            } else if(hour<12){
-                                hour = hourOfDay
-                                AM_PM = "AM"
-                            }
-                            else if (hour >12) {
-                                hour -= 12
-                                AM_PM = "PM"
-                            } else if (hour == 12) {
-
-                                hour = 12
-                                AM_PM = "PM"
-                            } else
-                                AM_PM = "AM"
-                            enterTime.text = hour.toString() + ":" + min + ":" + "00"+ AM_PM
-                            totime=hour.toString() + ":" + min + ":" + "00"
-                        }
-                    }, hour, minute,false)
-
-                    enterTime.setOnClickListener({ v ->
-                        mTimePicker.show()
-                    })
-
-                }
-            }
-        })
     }
     @RequiresApi(Build.VERSION_CODES.N)
     private fun cal() {
@@ -331,7 +205,7 @@ class RequestBusServiceActivity : AppCompatActivity() {
         dpd1.show()
 //}
     }
-    fun callPickupSubmitApi(date:String,time:String,pickupby:String,reason:String) {
+    fun callPickupSubmitApi(date:String,dropPoint:String,pickupby:String) {
         progressDialogAdd.visibility= View.VISIBLE
 
         var devicename:String= (Build.MANUFACTURER
@@ -345,11 +219,11 @@ class RequestBusServiceActivity : AppCompatActivity() {
         val date: Date = inputFormat.parse(inputDateStr)
         new_date = outputFormat.format(date)
         val token = PreferenceManager.getaccesstoken(mContext)
-        val pickupSuccessBody = RequestBusServiceModelSubmit(
+        val pickupSuccessBody = RequestServiceApiModel(
             PreferenceManager.getStudentID(mContext).toString(),new_date,
-            "00:00:00",reason,pickupby,2,devicename,"1.0")
+           dropPoint,pickupby)
         val call: Call<EarlyPickupModel> =
-            ApiClient.getClient.requestbusservice(pickupSuccessBody, "Bearer " + token)
+            ApiClient.getClient.requestService(pickupSuccessBody, "Bearer " + token)
         call.enqueue(object : Callback<EarlyPickupModel> {
             override fun onFailure(call: Call<EarlyPickupModel>, t: Throwable) {
 
