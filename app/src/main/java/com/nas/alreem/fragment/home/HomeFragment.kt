@@ -231,7 +231,8 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 pager.setBackgroundResource(R.drawable.default_banner)
                             }
                             notice = response.body()!!.responseArray!!.notice.image
-                            if (notice.isNotEmpty()) {
+                            if (notice.isNotEmpty())
+                            {
                                 noticeLink = response.body()!!.responseArray!!.notice.url
                                 noticeTitle = response.body()!!.responseArray!!.notice.title
                             }

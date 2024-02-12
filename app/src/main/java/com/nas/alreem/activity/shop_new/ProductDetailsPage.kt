@@ -64,6 +64,7 @@ class ProductDetailsPage : AppCompatActivity() {
     lateinit var addLinear_cart: LinearLayout
     lateinit var backRelative: ImageView
     lateinit var heading: TextView
+    lateinit var outOfStockTxt: TextView
     lateinit var logoClickImgView: ImageView
     var image_array = ArrayList<String>()
     lateinit var itemCount: ElegantNumberButton
@@ -104,6 +105,7 @@ class ProductDetailsPage : AppCompatActivity() {
         itemCount = findViewById(R.id.itemCount)
         backRelative = findViewById(R.id.logoclick)
         logoClickImgView = findViewById(R.id.relative_logo_header)
+        outOfStockTxt = findViewById(R.id.outOfStockTxt)
         basket = findViewById(R.id.basket)
         pager = findViewById<ViewPager>(R.id.bannerImagePager)
         productNameTxt = findViewById(R.id.productNameTxt)
@@ -468,10 +470,12 @@ class ProductDetailsPage : AppCompatActivity() {
                         if (available_quantity == 0) {
                             addLinear_cart.visibility = View.GONE
                             addLinear.visibility = View.GONE
+                            outOfStockTxt.visibility = View.VISIBLE
 
                         } else {
                             addLinear.visibility = View.VISIBLE
                             addLinear_cart.visibility = View.GONE
+                            outOfStockTxt.visibility = View.GONE
                             itemCount.setNumber(quantityCart.toString())
                             itemCount.setRange(
                                 0,
@@ -485,11 +489,13 @@ class ProductDetailsPage : AppCompatActivity() {
                         if (available_quantity == 0) {
                             addLinear_cart.visibility = View.GONE
                             addLinear.visibility = View.GONE
+                            outOfStockTxt.visibility = View.VISIBLE
 
                         } else {
                             addLinear_cart.visibility = View.VISIBLE
                             itemCount.setNumber("1")
                             addLinear.visibility = View.GONE
+                            outOfStockTxt.visibility = View.GONE
                         }
 
                     }

@@ -25,6 +25,7 @@
                 android:id="@+id/relSub"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/statusImg"
                 android:paddingBottom="10dp">
 
                 <com.nas.alreem.commonviews.CustomTextViewRegular

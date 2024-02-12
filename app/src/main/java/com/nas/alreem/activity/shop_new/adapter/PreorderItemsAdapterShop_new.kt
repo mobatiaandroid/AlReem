@@ -76,7 +76,8 @@ class PreorderItemsAdapterShop_new(
         holder.price.text=itemlist[position].price + " AED"
         var url:String?=""
         url=itemlist[position].item_image.get(0)
-        if (url.equals("")) {
+        if (url.equals(""))
+        {
             holder.itemImg.setBackgroundResource(R.drawable.default_banner)
 
         }
@@ -93,10 +94,13 @@ class PreorderItemsAdapterShop_new(
         {
             holder.multiLinear.visibility = View.GONE
             holder.addLinear.visibility = View.GONE
+            holder.outOfStockLinear.visibility = View.VISIBLE
            holder. gradeoutrelative.alpha=0.5f
 
         }
-        else {
+        else
+        {
+            holder.outOfStockLinear.visibility = View.GONE
             /*if (itemlist[position].item_already_ordered == 0) {
             holder.confirmedTxt.visibility = View.GONE
         } else {
@@ -187,6 +191,7 @@ class PreorderItemsAdapterShop_new(
        // lateinit var soldout: LinearLayout
         lateinit var addLinear: LinearLayout
         lateinit var multiLinear: LinearLayout
+        lateinit var outOfStockLinear: LinearLayout
         lateinit var itemCount: ElegantNumberButton
         var gradeoutrelative : RelativeLayout
        // lateinit var bannerImagePager: ViewPager
@@ -201,6 +206,7 @@ class PreorderItemsAdapterShop_new(
             addLinear = itemView.findViewById(R.id.addLinear) as LinearLayout
            // soldout = itemView.findViewById(R.id.soldout) as LinearLayout
             multiLinear = itemView.findViewById(R.id.multiLinear) as LinearLayout
+            outOfStockLinear = itemView.findViewById(R.id.outOfStockLinear) as LinearLayout
             itemCount = itemView.findViewById(R.id.itemCount)
             gradeoutrelative = itemView.findViewById(R.id.gradeoutrelative)
          //   itemDescription = itemView.findViewById(R.id.itemDescription)
@@ -371,7 +377,8 @@ class PreorderItemsAdapterShop_new(
                 progressDialogP.hide()
 
                 //progressDialogP.hide()
-                if (responsedata!!.status==100) {
+                if (responsedata!!.status==100)
+                {
 
                     itemlist[position].isItemCart=false
                     itemlist[position].quantityCart=0

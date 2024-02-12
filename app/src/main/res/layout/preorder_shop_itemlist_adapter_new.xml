@@ -137,6 +137,30 @@
             app:textColor="@color/black"
             app:textSize="6sp" />
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/outOfStockLinear"
+        android:layout_width="0dp"
+        android:layout_height="35dp"
+        android:layout_margin="8dp"
+        android:layout_weight="25"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone">
+        <com.nas.alreem.commonviews.CustomEditTextViewRegular
+            android:id="@+id/outOfStockTxt"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="2dp"
+            android:text="Out Of Stock"
+            android:textColor="@color/red"
+            android:layout_marginBottom="5dp"
+            android:gravity="center"
+            />
+    </LinearLayout>
+
 </LinearLayout>
 
         </RelativeLayout>
