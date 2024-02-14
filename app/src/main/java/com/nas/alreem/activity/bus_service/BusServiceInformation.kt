@@ -103,6 +103,11 @@ class BusServiceInformation : AppCompatActivity() {
                         recyclerview.adapter = Canteeninfo_adapter(response.body()!!.responseArray.information, mContext)
 
                     }
+                    else
+                    {
+                        DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), "No Data Found.", mContext)
+
+                    }
 
 
 

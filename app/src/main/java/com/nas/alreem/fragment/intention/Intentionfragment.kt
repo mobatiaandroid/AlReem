@@ -52,14 +52,12 @@ import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.constants.addOnItemClickListener
 import com.nas.alreem.fragment.intention.adapter.IntentionAdapter
 import com.nas.alreem.fragment.intention.model.IntentionApiModel
-import com.nas.alreem.fragment.intention.model.IntentionApiSubmit
 import com.nas.alreem.fragment.intention.model.IntentionInfoResponseArray
 import com.nas.alreem.fragment.intention.model.IntentionListAPIResponseModel
 import com.nas.alreem.fragment.intention.model.IntentionStatusApiModel
 import com.nas.alreem.fragment.intention.model.IntentionStatusResponseModel
 import com.nas.alreem.fragment.intention.model.IntentionSubmitModel
 import com.nas.alreem.fragment.intention.model.IntentionstatusResponseArray
-import com.nas.alreem.fragment.student_information.model.StudentInfoModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -167,8 +165,8 @@ class Intentionfragment : Fragment(){
                     startActivity(intent)
                 }
                 else{
-
-                    getIntentionStatusAPI(primaryArrayList[position].intensionId)
+Log.e("position", position.toString())
+                    getIntentionStatusAPI(primaryArrayList[position].intensionId,position)
 
                    /* val dialog = Dialog(mContext)
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -637,8 +635,12 @@ class Intentionfragment : Fragment(){
 
         })
     }
-    private fun getIntentionStatusAPI(intensionId: Int)
+    private fun getIntentionStatusAPI(
+        intensionId: Int,
+        position: Int
+    )
     {
+        Log.e("Position1", position.toString())
         intentionstatusArray = ArrayList()
         progress.visibility = View.VISIBLE
         val body = IntentionStatusApiModel(intensionId,"0","150")
@@ -657,18 +659,18 @@ class Intentionfragment : Fragment(){
                     intentionstatusArray.addAll(response.body()!!.responseArray.response!!)
                                         val intent = Intent(mContext, IntentionDetailedView::class.java)
 
-                    intent.putExtra("student", primaryArrayList.get(0).studentName)
-                    intent.putExtra("question", primaryArrayList.get(0).question)
-                    intent.putExtra("title", primaryArrayList.get(0).title)
-                    intent.putExtra("description", primaryArrayList.get(0).description)
-                    intent.putExtra("classs",intentionstatusArray.get(0).className)
+                    intent.putExtra("student", primaryArrayList.get(position).studentName)
+                    intent.putExtra("question", primaryArrayList.get(position).question)
+                    intent.putExtra("title", primaryArrayList.get(position).title)
+                    intent.putExtra("description", primaryArrayList.get(position).description)
+                    //intent.putExtra("classs",intentionstatusArray.get(position).className)
                     intent.putExtra("options",intentionstatusArray.get(0).selected_options)
                     intent.putExtra("selectedchoice", intentionstatusArray[0].selected_option_answer)
                     intent.putExtra("parent_name", parentName)
                     intent.putExtra("position",0)
                     intent.putParcelableArrayListExtra(
                         "optionsarray",
-                        primaryArrayList[0].options
+                        primaryArrayList[position].options
                     )
                     startActivity(intent)
 //

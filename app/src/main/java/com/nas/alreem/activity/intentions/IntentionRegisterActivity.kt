@@ -164,7 +164,7 @@ class IntentionRegisterActivity : AppCompatActivity(){
 //       optionArray= PreferenceManager.getoptions(mContext)!!
         position = intent.getIntExtra("position", 0)
         val check = intArrayOf(0)
-        Log.e("option", receivedOptions[0].option + " " + receivedOptions[0].optionQuestion)
+       // Log.e("option", receivedOptions[0].option + " " + receivedOptions[0].optionQuestion)
         backRelative = findViewById(R.id.backRelative)
         logoClickImgView = findViewById(R.id.logoClickImgView)
 
@@ -189,7 +189,7 @@ class IntentionRegisterActivity : AppCompatActivity(){
 //        val parent_email = dialog.findViewById<EditText>(R.id.textField_parentEmail)
         val spinnerList = findViewById<Spinner>(R.id.spinnerlist)
         val option_txt = findViewById<TextView>(R.id.option_txt)
-        val dropdown_btn = findViewById<ImageView>(R.id.dropdown_btn)
+       // val dropdown_btn = findViewById<ImageView>(R.id.dropdown_btn)
         val radioButton = findViewById<RadioButton>(R.id.check_btn)
         val scrollView = findViewById<ScrollView>(R.id.scroll)
         val terms_and_condtns = findViewById<Button>(R.id.terms_conditions)
@@ -254,12 +254,13 @@ class IntentionRegisterActivity : AppCompatActivity(){
             ) {
                 selectedItem = parent.getItemAtPosition(position).toString()
                 for (i in subQuestion.indices){
-                    if (subQuestion[position].isNotEmpty()){
+                    if (subQuestion[position].equals("")){
                         // show sub question
+                        subQuestionLinearLayout.visibility = View.GONE
+                    }else{
                         subQuestionLinearLayout.visibility = View.VISIBLE
                         questionTV.text = subQuestion[position]
-                    }else{
-                        subQuestionLinearLayout.visibility = View.GONE
+
                         // continus
                     }
                 }
@@ -267,7 +268,7 @@ class IntentionRegisterActivity : AppCompatActivity(){
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
-        dropdown_btn.setOnClickListener { dropdown_btn.visibility = View.GONE }
+       // dropdown_btn.setOnClickListener { dropdown_btn.visibility = View.GONE }
         option_txt.setOnClickListener {
             option_txt.visibility = View.GONE
             spinnerList.visibility = View.VISIBLE

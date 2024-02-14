@@ -266,7 +266,7 @@
                     android:layout_gravity="top"
                     android:singleLine="true"
                     android:layout_marginLeft="7dp"
-                    android:text="Pick Up Pont"
+                    android:text="Pick Up Point"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
 
