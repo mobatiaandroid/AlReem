@@ -11,6 +11,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -42,6 +45,7 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 public class VideosPlayerViewActivity extends Activity {
     Bundle extras;
     String url;
+    String video_type;
     Context mContext;
     GiraffePlayer player;
     //String headName;
@@ -77,12 +81,31 @@ public class VideosPlayerViewActivity extends Activity {
         extras = getIntent().getExtras();
         if (extras != null) {
             url = extras.getString("video_url");
+            video_type = extras.getString("video_type");
         }
 
         fileName="NAS_VIDEO_" + System.currentTimeMillis() + ".mp4";
         downloadimageView = (ImageView) findViewById(R.id.download);
         share = (ImageView) findViewById(R.id.share);
-        player = new GiraffePlayer(this);
+        if (video_type.equals("Youtube"))
+        {
+            share.setVisibility(View.GONE);
+            downloadimageView.setVisibility(View.GONE);
+        }
+        else
+        {
+            share.setVisibility(View.VISIBLE);
+            downloadimageView.setVisibility(View.VISIBLE);
+        }
+        WebView webView = findViewById(R.id.webView);
+        WebSettings webSettings = webView.getSettings();
+        webSettings.setJavaScriptEnabled(true); // Enable JavaScript if necessary
+
+        webView.setWebViewClient(new WebViewClient());
+
+        String videoUrl = url;
+        webView.loadUrl(videoUrl);
+        /*player = new GiraffePlayer(this);
         player.play(url.replaceAll(" ","%20"));
         player.onComplete(new Runnable() {
             @Override
@@ -116,7 +139,7 @@ public class VideosPlayerViewActivity extends Activity {
 //UtilityMethods.showAlertFinish(activity,"Can't play this video","","OK",false);
                 Toast.makeText(getApplicationContext(), "Can't play this video", Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
         downloadimageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -181,7 +204,7 @@ public class VideosPlayerViewActivity extends Activity {
             //ADDED NEWLY NTN
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.setDataAndType(FileProvider.getUriForFile(mContext, mContext.getApplicationContext().getPackageName() + ".provider", mFile), "video/*");
-            PendingIntent pIntent = PendingIntent.getActivity(activity, 0, intent, 0);
+            PendingIntent pIntent = PendingIntent.getActivity(activity, 0, intent, PendingIntent.FLAG_IMMUTABLE);
             mBuilder.setContentTitle(fileName)
                     .setContentText("Download completed")
                     .setSmallIcon(R.drawable.notify_small)
