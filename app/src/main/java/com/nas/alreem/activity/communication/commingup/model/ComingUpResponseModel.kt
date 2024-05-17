@@ -26,7 +26,9 @@ data class ComingUpResponseModel(
         @SerializedName("image")
         val image: String,
         @SerializedName("status")
-        var status: String
+        var status: String,
+        @SerializedName("read_unread_status")
+    var read_unread_status: String
     )
 }
 

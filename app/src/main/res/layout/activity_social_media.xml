@@ -48,53 +48,55 @@
                     android:layout_gravity="center_horizontal"
                     android:background="@drawable/instagram"/>
 
-
-                <RelativeLayout
-                    android:id="@+id/twitterButton"
+                <ImageView
+                    android:id="@+id/facebookButton"
                     android:layout_width="0dp"
-                    android:layout_height="100dp"
-                    android:layout_marginLeft="5dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="50"
-                    android:background="@color/Grey_600" >
+                    android:layout_marginLeft="5dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/facebook"/>
 
-                    <ImageView
-                        android:id="@+id/badge"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginRight="5dp"
-                        android:scaleType="fitCenter"
-                        android:layout_marginTop="20dp"
-                        android:src="@drawable/x"
-                        android:textColor="@color/white"
-                        android:visibility="visible"
-                        app:siBorderColor="@color/white"
-                        app:siBorderWidth="10dp" />
-                    <TextView
-                        android:id="@+id/twittertext"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:layout_marginRight="5dp"
-                        android:scaleType="fitCenter"
-                        android:text="X"
-                        android:textSize="16dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_below="@+id/badge"
-                        android:src="@drawable/x"
-                        android:textColor="@color/white"
-                        android:visibility="visible"
-                        app:siBorderColor="@color/white"
-                        app:siBorderWidth="10dp" />
-                </RelativeLayout>
             </LinearLayout>
-            <ImageView
-                android:id="@+id/facebookButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+
+            <RelativeLayout
+                android:id="@+id/twitterButton"
+                android:layout_width="200dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
                 android:layout_marginTop="5dp"
-                android:layout_gravity="center_horizontal"
-                android:background="@drawable/facebook"/>
+                android:background="@color/Grey_600" >
+
+                <ImageView
+                    android:id="@+id/badge"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginRight="5dp"
+                    android:scaleType="fitCenter"
+                    android:layout_marginTop="20dp"
+                    android:src="@drawable/x"
+                    android:textColor="@color/white"
+                    android:visibility="visible"
+                    app:siBorderColor="@color/white"
+                    app:siBorderWidth="10dp" />
+                <TextView
+                    android:id="@+id/twittertext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginRight="5dp"
+                    android:scaleType="fitCenter"
+                    android:text="X"
+                    android:textSize="16dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_below="@+id/badge"
+                    android:src="@drawable/x"
+                    android:textColor="@color/white"
+                    android:visibility="visible"
+                    app:siBorderColor="@color/white"
+                    app:siBorderWidth="10dp" />
+            </RelativeLayout>
 
         </LinearLayout>
     </LinearLayout>

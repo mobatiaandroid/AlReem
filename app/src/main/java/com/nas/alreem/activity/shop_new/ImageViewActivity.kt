@@ -27,6 +27,7 @@ class ImageViewActivity : AppCompatActivity() {
     private lateinit var scaleGestureDetector: ScaleGestureDetector
     private var scaleFactor = 1.0f
     private lateinit var imageView: ImageView
+    lateinit var back:ImageView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.shop_item_view_image)
@@ -37,6 +38,10 @@ class ImageViewActivity : AppCompatActivity() {
     private fun initfn() {
         image_url = intent.getStringExtra("currentImg").toString()
         image = findViewById(R.id.imageView)
+        back = findViewById(R.id.back)
+        back.setOnClickListener {
+            finish()
+        }
         mContext.let {
             Glide.with(it)
                 .load(image_url)

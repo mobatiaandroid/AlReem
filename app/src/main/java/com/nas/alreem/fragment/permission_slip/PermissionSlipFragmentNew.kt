@@ -257,12 +257,14 @@ class PermissionSlipFragmentNew :Fragment(){
         val call: Call<PermissionSlipModel> = ApiClient.getClient.permissnslipList(list_permissionSlip,"Bearer "+token)
         call.enqueue(object : Callback<PermissionSlipModel> {
             override fun onFailure(call: Call<PermissionSlipModel>, t: Throwable) {
+                Log.e("FAiled","Failed")
                 progressDialog.visibility = View.GONE
             }
             override fun onResponse(call: Call<PermissionSlipModel>, response: Response<PermissionSlipModel>) {
                 progressDialog.visibility = View.GONE
                 if (response.body()!!.status==100)
                 {
+                    Log.e("Success","Success")
                     general_rec.visibility= View.GONE
                     forms_recycler.visibility= View.VISIBLE
                     formslist=ArrayList()

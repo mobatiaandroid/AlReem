@@ -99,7 +99,7 @@ class ProductDetailsPage : AppCompatActivity() {
 
         Log.e("size_chart", size_chart)
         id = intent.getStringExtra("id").toString()
-        Log.e("id", id)
+
         heading = findViewById(R.id.textViewtitle)
         heading.text = "Product Details"
         itemCount = findViewById(R.id.itemCount)
@@ -120,7 +120,11 @@ class ProductDetailsPage : AppCompatActivity() {
         productNameTxt.setText(item_name)
         price_text.setText(price + " AED")
         product_desc.setText(item_desc)
-
+if (size_chart.equals(""))
+{
+    sacleImg.visibility=View.GONE
+    scaletextt.visibility=View.GONE
+}
         basket.setOnClickListener {
             val intent = Intent(mContext, Myorderbasket_Activity_new::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)

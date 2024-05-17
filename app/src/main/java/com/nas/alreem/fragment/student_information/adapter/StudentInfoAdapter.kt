@@ -38,15 +38,22 @@ internal class StudentInfoAdapter(
         {
             holder.nameTxt.visibility=View.GONE
             holder.valueTxt.visibility=View.GONE
-            email_icon.visibility=View.GONE
+
         }
         else{
             holder.nameTxt.visibility=View.VISIBLE
             holder.valueTxt.visibility=View.VISIBLE
-            email_icon.visibility=View.VISIBLE
+
             if (movie.value.contains(".com"))
             {
+                Log.e("value",movie.value)
                 PreferenceManager.setEmail(mContext,movie.value)
+                email_icon.visibility=View.VISIBLE
+
+            }
+            else
+            {
+                email_icon.visibility=View.GONE
             }
         }
 

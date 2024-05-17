@@ -268,7 +268,7 @@ class InvoiceListingActivity : AppCompatActivity() {
     private fun getPaymentHistory(studentIdStr: String?) {
         progressDialogAdd.visibility=View.VISIBLE
 
-        val studentbody= ShopHistoryModel(studentIdStr!!,"0","20")
+        val studentbody= ShopHistoryModel(studentIdStr!!,"0","25")
 
         val call: Call<ShopHistoryResponseModel> = ApiClient.getClient.get_shop_orders_history(studentbody,"Bearer "+ PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<ShopHistoryResponseModel> {

@@ -15,6 +15,13 @@
         <item name="android:divider">@color/white</item>
         <item name="android:dividerHeight">1dp</item>
     </style>
+
+    <style name="textstyleblackNopaddingSmall" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+    </style>
     <style name="textstyletimetablesingle" parent="@android:style/Widget.TextView">
         <item name="android:textColor">@color/logout_user</item>
         <item name="android:gravity">center_vertical</item>

@@ -275,7 +275,9 @@
                 android:layout_marginTop="40dp"
                 android:visibility="gone"
                  />
+
         </LinearLayout>
 
     </ScrollView>
+
 </LinearLayout>

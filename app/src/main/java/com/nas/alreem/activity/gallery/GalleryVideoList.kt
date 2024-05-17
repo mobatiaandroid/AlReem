@@ -77,6 +77,7 @@ class GalleryVideoList : AppCompatActivity(){
             {
                 val intent = Intent(mContext, VideosPlayerViewActivity::class.java)
                 intent.putExtra("video_url",imageArrayList.get(position).url.toString())
+                intent.putExtra("video_type",imageArrayList.get(position).video_type.toString())
                 startActivity(intent)
 
             }

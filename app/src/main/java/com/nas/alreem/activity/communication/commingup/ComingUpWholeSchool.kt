@@ -74,14 +74,14 @@ class ComingUpWholeSchool : AppCompatActivity() {
             @SuppressLint("SimpleDateFormat", "SetTextI18n")
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onItemClicked(position: Int, view: View) {
-                if (comingUpArrayList.get(position).status
-                        .equals("0") || comingUpArrayList.get(position).status
+                if (comingUpArrayList.get(position).read_unread_status
+                        .equals("0") || comingUpArrayList.get(position).read_unread_status
                         .equals("2")
                 ) {
                     callStatusChangeApi(
                         comingUpArrayList.get(position).id.toString(),
                         position,
-                        comingUpArrayList.get(position).status
+                        comingUpArrayList.get(position).read_unread_status
                     )
                 }
                 else
@@ -147,7 +147,7 @@ class ComingUpWholeSchool : AppCompatActivity() {
                 comingUpArrayList.addAll(response.body()!!.responseArray.data)
                 if (response.body()!!.status == 100) {
                     if (comingUpArrayList.size > 0) {
-                        var adapterComing = ComingUpAdapter(comingUpArrayList, mContext)
+                         adapterComing = ComingUpAdapter(comingUpArrayList, mContext)
                         mListView.adapter = adapterComing
                     } else {
                         DialogFunctions.commonErrorAlertDialog(
@@ -183,7 +183,7 @@ class ComingUpWholeSchool : AppCompatActivity() {
         var model= NotificationApiModel(0,500)
         val paramObject = JsonObject()
         paramObject.addProperty("id", ccaDaysId)
-        paramObject.addProperty("type", "communications")
+        paramObject.addProperty("type", "whole_school_coming_ups")
         val call: Call<StudentShopCardResponseModel> = ApiClient.getClient.status_changeAPI(token,paramObject)
         call.enqueue(object : Callback<StudentShopCardResponseModel> {
             override fun onFailure(call: Call<StudentShopCardResponseModel>, t: Throwable) {
@@ -201,7 +201,7 @@ class ComingUpWholeSchool : AppCompatActivity() {
                                 ignoreCase = true
                             )
                         ) {
-                            comingUpArrayList.get(event_position).status="1"
+                            comingUpArrayList.get(event_position).read_unread_status="1"
                             adapterComing.notifyDataSetChanged()
                         }
 

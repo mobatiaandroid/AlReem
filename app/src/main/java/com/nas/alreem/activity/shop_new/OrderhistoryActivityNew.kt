@@ -115,7 +115,7 @@ class OrderhistoryActivityNew  : AppCompatActivity(){
                                 recyclerview.adapter = OrderHistoryPreorderDetailsAdapter_new( order_summery,nContext)
                             } else {
 
-
+                                DialogFunctions.commonErrorAlertDialog(nContext.resources.getString(R.string.alert),"No Data Found", nContext)
 
                             }
 

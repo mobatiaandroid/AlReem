@@ -131,6 +131,7 @@ import com.nas.alreem.fragment.student_information.model.StudentInfoApiModel
 import com.nas.alreem.fragment.student_information.model.StudentInfoModel
 import com.nas.alreem.fragment.time_table.model.apimodel.TimeTableApiDataModel
 import com.nas.alreem.fragment.time_table.model.apimodel.TimeTableApiModel
+import com.nas.alreem.fragment.time_table_new.model.TimeTableApiDataModelNew
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -339,6 +340,12 @@ interface ApiInterface {
         @Body  calendarBody: TimeTableApiModel,
         @Header("Authorization") token:String,
         ): Call<TimeTableApiDataModel>
+    @POST("timetable-isams")
+    @Headers("Content-Type: application/json")
+    fun timetable_isams(
+        @Body  calendarBody: TimeTableApiModel,
+        @Header("Authorization") token:String,
+    ): Call<TimeTableApiDataModelNew>
 
     /*************SEND_EMAIL_TO_STAFF****************/
     @POST("send_email_to_staff ")

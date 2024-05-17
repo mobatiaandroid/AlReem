@@ -175,7 +175,7 @@ class FormDetailActivity: AppCompatActivity()  {
     }
 
     private fun  callpermissionresponseApi() {
-        progressDialog.visibility = View.VISIBLE
+       /* progressDialog.visibility = View.VISIBLE
         var devicename: String = (Build.MANUFACTURER
                 + " " + Build.MODEL + " " + Build.VERSION.RELEASE
                 + " " + Build.VERSION_CODES::class.java.fields[Build.VERSION.SDK_INT]
@@ -231,7 +231,7 @@ class FormDetailActivity: AppCompatActivity()  {
                 }
             }
 
-        })
+        })*/
     }
 
     private fun showSuccessAlert(context: Context,message : String,msgHead : String)

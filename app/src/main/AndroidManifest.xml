@@ -273,7 +273,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activity.permission_slips.FormDetailActivity"
+            android:name=".activity.permission_slips.FormDetailActivityNew"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

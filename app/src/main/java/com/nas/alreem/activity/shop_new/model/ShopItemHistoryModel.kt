@@ -9,5 +9,7 @@ class ShopItemHistoryModel (
     @SerializedName("item_name") var item_name:String,
     @SerializedName("description") var description:String,
     @SerializedName("order_date") var order_date:String,
+    @SerializedName("pickup_location") var pickup_location:String,
+    @SerializedName("status") var status:String,
     @SerializedName("item_image") val item_image: ArrayList<String>
 )

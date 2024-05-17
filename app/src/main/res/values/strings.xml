@@ -13,14 +13,13 @@
         <item>Shop</item>
         <item>Parent Essentials</item>
         <item>Absence &amp; Early Pickup</item>
+        <item>Early Years</item>
+        <item>Primary</item>
+        <item>Secondary</item>
         <item>Performing Arts</item>
-        <item>Bus Service</item>
-        <item>Intentions</item>
         <item>Reports</item>
-        <item>Timetable</item>
         <item>Forms</item>
         <item>Enrichment</item>
-        <item>Parent Engagement</item>
         <item>Parent Meetings</item>
         <item>Gallery</item>
         <item>Contact Us</item>
@@ -41,14 +40,13 @@
         <item>@drawable/store64</item>
         <item>@drawable/parent</item>
         <item>@drawable/absence</item>
+        <item>@drawable/earlyyears</item>
+        <item>@drawable/primary</item>
+        <item>@drawable/secondary</item>
         <item>@drawable/arts</item>
-        <item>@drawable/busstop64</item>
-        <item>@drawable/yesorno32</item>
         <item>@drawable/report_side</item>
-        <item>@drawable/time_table_side</item>
         <item>@drawable/permission_slip</item>
         <item>@drawable/ccas</item>
-        <item>@drawable/parent_association</item>
         <item>@drawable/parentevening</item>
         <item>@drawable/gallery</item>
         <item>@drawable/contacts</item>

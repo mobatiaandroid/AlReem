@@ -265,7 +265,7 @@
                     android:layout_gravity="top"
                     android:singleLine="true"
                     android:layout_marginLeft="7dp"
-                    android:text="Reason for not using the bus"
+                    android:text="Reason for Early Pickup"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
 
