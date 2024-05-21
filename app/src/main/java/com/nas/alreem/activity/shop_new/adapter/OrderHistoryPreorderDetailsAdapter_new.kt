@@ -61,6 +61,14 @@ class OrderHistoryPreorderDetailsAdapter_new ( val preorderhis_list: ArrayList<S
                     .into(viewHolder.itemImg)
             }
         }
+        if (preorderhis_list.get(position).pickup_location.equals("")){
+            viewHolder.location.visibility=View.GONE
+        }
+        else
+        {
+            viewHolder.location.visibility=View.VISIBLE
+        }
+
         viewHolder.location.setOnClickListener {
             if (preorderhis_list.get(position).status.equals("1"))
             {
