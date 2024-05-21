@@ -8,11 +8,11 @@
         <item>Calendar</item>
         <item>Communications</item>
         <item>Payments</item>
-        <item>Re-Enrolment</item>
+        <item>Absence &amp; Early Pickup</item>
         <item>Lunch Box</item>
         <item>Shop</item>
         <item>Parent Essentials</item>
-        <item>Absence &amp; Early Pickup</item>
+        <item>Re-Enrolment</item>
         <item>Early Years</item>
         <item>Primary</item>
         <item>Secondary</item>
@@ -35,11 +35,11 @@
         <item>@drawable/calendar</item>
         <item>@drawable/communication</item>
         <item>@drawable/payment</item>
-        <item>@drawable/re_enrollment</item>
+        <item>@drawable/absence</item>
         <item>@drawable/lunchbox_icon</item>
         <item>@drawable/store64</item>
         <item>@drawable/parent</item>
-        <item>@drawable/absence</item>
+        <item>@drawable/re_enrollment</item>
         <item>@drawable/earlyyears</item>
         <item>@drawable/primary</item>
         <item>@drawable/secondary</item>

@@ -20,7 +20,20 @@ import android.util.Log
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
-import android.widget.*
+import android.widget.AbsListView
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.ListView
+import android.widget.RadioButton
+import android.widget.RelativeLayout
+import android.widget.ScrollView
+import android.widget.Spinner
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -44,8 +57,6 @@ import com.google.gson.JsonObject
 import com.nas.alreem.R
 import com.nas.alreem.activity.home.adapter.HomeListAdapter
 import com.nas.alreem.activity.home.model.ReEnrollSubmitAPIModel
-import com.nas.alreem.activity.shop_new.Addorder_Activity_new
-import com.nas.alreem.activity.shop_new.PreOrderActivity_new
 import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ApiInterface
 import com.nas.alreem.constants.ConstantFunctions
@@ -55,8 +66,6 @@ import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.constants.WebViewTextActivity
 import com.nas.alreem.fragment.about_us.AboutUsFragment
 import com.nas.alreem.fragment.absence.AbsenceFragment
-import com.nas.alreem.fragment.bus_service.BusServiceFragment
-import com.nas.alreem.fragment.bus_service.BusServiceFragmentNew
 import com.nas.alreem.fragment.calendar.CalendarFragment
 import com.nas.alreem.fragment.canteen.CanteenFragment
 import com.nas.alreem.fragment.cca.CCAFragment
@@ -74,14 +83,11 @@ import com.nas.alreem.fragment.home.re_enrollment.ReEnrollmentFormResponseModel
 import com.nas.alreem.fragment.home.re_enrollment.ReEnrollmentFormStudentModel
 import com.nas.alreem.fragment.home.re_enrollment.ReEnrollmentStatusResponseModel
 import com.nas.alreem.fragment.home.re_enrollment.StudentEnrollList
-import com.nas.alreem.fragment.intention.Intentionfragment
 import com.nas.alreem.fragment.notifications.NotificationFragment
-import com.nas.alreem.fragment.parent_engagement.ParentAssociationsFragment
 import com.nas.alreem.fragment.parent_meetings.ParentMeetingsFragment
 import com.nas.alreem.fragment.parents_essentials.ParentsEssentialFragment
 import com.nas.alreem.fragment.payments.PaymentFragment
 import com.nas.alreem.fragment.performing_arts.PerformingArtsFragment
-import com.nas.alreem.fragment.permission_slip.PermissionSlipFragment
 import com.nas.alreem.fragment.permission_slip.PermissionSlipFragmentNew
 import com.nas.alreem.fragment.primary.PrimaryFragment
 import com.nas.alreem.fragment.reports.ReportsFragment
@@ -89,8 +95,6 @@ import com.nas.alreem.fragment.secondary.SecondaryFragment
 import com.nas.alreem.fragment.settings.SettingsFragment
 import com.nas.alreem.fragment.shop.ShopFragment
 import com.nas.alreem.fragment.student_information.StudentInformationFragment
-import com.nas.alreem.fragment.time_table.TimeTableFragment
-import com.nas.alreem.fragment.time_table_new.TimeTableFragmentNew
 import com.nas.alreem.recyclermanager.RecyclerItemListener
 import org.json.JSONException
 import org.json.JSONObject
@@ -577,8 +581,9 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                     {
 
                         // about us
-                        reEnroll(mContext)
-                        drawer_layout.closeDrawer(linear_layout)
+                        PreferenceManager.setStudentID(mContext, "")
+                        mFragment = AbsenceFragment()
+                        replaceFragmentsSelected(position)
 //                        DialogFunctions.commonErrorAlertDialog("Coming Soon!","This Feature will be available shortly",
 //                            mContext
 //                        )
@@ -609,9 +614,9 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                     10->
                     {
                         //Secondary
-                        PreferenceManager.setStudentID(mContext,"")
-                        mFragment = AbsenceFragment()
-                        replaceFragmentsSelected(position)
+                        reEnroll(mContext)
+                        drawer_layout.closeDrawer(linear_layout)
+
                     }
 
                     11->

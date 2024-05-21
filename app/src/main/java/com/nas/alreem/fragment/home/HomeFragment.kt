@@ -116,15 +116,15 @@ lateinit var relImgeight: ImageView
 lateinit var relImgnine: ImageView
 
 
- lateinit var relImgOneDot: TextView
- lateinit var relImgTwoDot: TextView
- lateinit var relImgThreeDot: TextView
- lateinit var relImgFourDot: TextView
- lateinit var relImgFiveDot: TextView
- lateinit var relImgSixDot: TextView
- lateinit var relImgSevenDot: TextView
- lateinit var relImgEightDot: TextView
- lateinit var relImgNineDot: TextView
+lateinit var relImgOneDot: TextView
+lateinit var relImgTwoDot: TextView
+lateinit var relImgThreeDot: TextView
+lateinit var relImgFourDot: TextView
+lateinit var relImgFiveDot: TextView
+lateinit var relImgSixDot: TextView
+lateinit var relImgSevenDot: TextView
+lateinit var relImgEightDot: TextView
+lateinit var relImgNineDot: TextView
 var versionfromapi: String = ""
 var currentversion: String = ""
 
@@ -175,6 +175,7 @@ lateinit var surveyAnswersArrayList: ArrayList<SurveyOfferedAnswersModel>
 lateinit var mAnswerList: ArrayList<SurveySubmitDataModel>
 var noticeTitle = ""
 var noticeLink = ""
+var key = "0"
 
 class HomeFragment : Fragment(), View.OnClickListener {
     lateinit var studentList: ArrayList<StudentEnrollList>
@@ -236,8 +237,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                                 pager.setBackgroundResource(R.drawable.default_banner)
                             }
                             notice = response.body()!!.responseArray!!.notice.image
-                            if (notice.isNotEmpty())
-                            {
+                            if (notice.isNotEmpty()) {
                                 noticeLink = response.body()!!.responseArray!!.notice.url
                                 noticeTitle = response.body()!!.responseArray!!.notice.title
                             }
@@ -297,89 +297,92 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
         })
     }
-   fun getBadge()
-   {
-       val token = PreferenceManager.getaccesstoken(mContext)
-       val call: Call<BadgeResponseModel> = ApiClient.getClient.badge_counts("Bearer "+token)
-       call.enqueue(object : Callback<BadgeResponseModel> {
-           override fun onFailure(call: Call<BadgeResponseModel>, t: Throwable) {
-           }
 
-           override fun onResponse(
-               call: Call<BadgeResponseModel>, response: Response<BadgeResponseModel>
-           ) {
-               val responsedata = response.body()
-               if (responsedata != null) {
-                   try {
+    fun getBadge() {
+        val token = PreferenceManager.getaccesstoken(mContext)
+        val call: Call<BadgeResponseModel> = ApiClient.getClient.badge_counts("Bearer " + token)
+        call.enqueue(object : Callback<BadgeResponseModel> {
+            override fun onFailure(call: Call<BadgeResponseModel>, t: Throwable) {
+            }
 
-                       if (response.body()!!.status == 100) {
+            override fun onResponse(
+                call: Call<BadgeResponseModel>, response: Response<BadgeResponseModel>
+            ) {
+                val responsedata = response.body()
+                if (responsedata != null) {
+                    try {
 
-                           val calendar_badge: String =
-                               responsedata.responseArray.badgeCounts.calendarBadge
-                           PreferenceManager.setCalendarHomeBadge(mContext, calendar_badge)
-                           val notification_badge: String =
-                               responsedata.responseArray.badgeCounts.notificationBadge
-                           PreferenceManager.setNotificationBadge(mContext, notification_badge)
-                           val whole_school_coming_up_badge: String =
-                               responsedata.responseArray.badgeCounts.wholeSchoolComingUpsBadge
-                           PreferenceManager.setNoticeBadge(mContext, whole_school_coming_up_badge)
+                        if (response.body()!!.status == 100) {
 
-                           val reports_badge: String =responsedata.responseArray.badgeCounts.reportsBadge
-                           PreferenceManager.setReportsBadge(mContext, reports_badge)
-                           val cca_badge: String = responsedata.responseArray.badgeCounts.ccaBadge
-                           PreferenceManager.setCcaBadge(mContext, cca_badge)
-                           val paymentitem_badge: String =
-                               responsedata.responseArray.badgeCounts.paymentItemBadge
-                           PreferenceManager.setPaymentitem_badge(mContext, paymentitem_badge)
-                           val calendar_edited_badge: String =
-                               responsedata.responseArray.badgeCounts.calendarEditedBadge
-                           PreferenceManager.setCalendarEditedhomeBadge(mContext, calendar_edited_badge)
-                           val notification_edited_badge: String =
-                               responsedata.responseArray.badgeCounts.notificationEditedBadge
-                           PreferenceManager.setNotificationEditedBadge(
-                               mContext,
-                               notification_edited_badge
-                           )
-                           val whole_school_coming_up_edited_badge: String =
-                               responsedata.responseArray.badgeCounts.wholeSchoolComingUpsEditedBadge
-                           PreferenceManager.setNoticeEditedBadge(
-                               mContext,
-                               whole_school_coming_up_edited_badge
-                           )
-                           val report_edited_badge: String =
-                               responsedata.responseArray.badgeCounts.reportsEditedBadge
-                           PreferenceManager.setReportsEditedBadge(mContext, report_edited_badge)
-                           val cca_edited_badge: String =
-                               responsedata.responseArray.badgeCounts.ccaEditedBadge
-                           PreferenceManager.setCcaEditedBadge(mContext, cca_edited_badge)
+                            val calendar_badge: String =
+                                responsedata.responseArray.badgeCounts.calendarBadge
+                            PreferenceManager.setCalendarHomeBadge(mContext, calendar_badge)
+                            val notification_badge: String =
+                                responsedata.responseArray.badgeCounts.notificationBadge
+                            PreferenceManager.setNotificationBadge(mContext, notification_badge)
+                            val whole_school_coming_up_badge: String =
+                                responsedata.responseArray.badgeCounts.wholeSchoolComingUpsBadge
+                            PreferenceManager.setNoticeBadge(mContext, whole_school_coming_up_badge)
 
-                           val paymentitem_edit_badge: String =
-                               responsedata.responseArray.badgeCounts.paymentItemEditBadge
-                           PreferenceManager.setPaymentitem_edit_badge(
-                               mContext,
-                               paymentitem_edit_badge
-                           )
+                            val reports_badge: String =
+                                responsedata.responseArray.badgeCounts.reportsBadge
+                            PreferenceManager.setReportsBadge(mContext, reports_badge)
+                            val cca_badge: String = responsedata.responseArray.badgeCounts.ccaBadge
+                            PreferenceManager.setCcaBadge(mContext, cca_badge)
+                            val paymentitem_badge: String =
+                                responsedata.responseArray.badgeCounts.paymentItemBadge
+                            PreferenceManager.setPaymentitem_badge(mContext, paymentitem_badge)
+                            val calendar_edited_badge: String =
+                                responsedata.responseArray.badgeCounts.calendarEditedBadge
+                            PreferenceManager.setCalendarEditedhomeBadge(
+                                mContext,
+                                calendar_edited_badge
+                            )
+                            val notification_edited_badge: String =
+                                responsedata.responseArray.badgeCounts.notificationEditedBadge
+                            PreferenceManager.setNotificationEditedBadge(
+                                mContext,
+                                notification_edited_badge
+                            )
+                            val whole_school_coming_up_edited_badge: String =
+                                responsedata.responseArray.badgeCounts.wholeSchoolComingUpsEditedBadge
+                            PreferenceManager.setNoticeEditedBadge(
+                                mContext,
+                                whole_school_coming_up_edited_badge
+                            )
+                            val report_edited_badge: String =
+                                responsedata.responseArray.badgeCounts.reportsEditedBadge
+                            PreferenceManager.setReportsEditedBadge(mContext, report_edited_badge)
+                            val cca_edited_badge: String =
+                                responsedata.responseArray.badgeCounts.ccaEditedBadge
+                            PreferenceManager.setCcaEditedBadge(mContext, cca_edited_badge)
 
-
-
-                       } else {
-
-                           DialogFunctions.commonErrorAlertDialog(
-                               mContext.resources.getString(R.string.alert),
-                               ConstantFunctions.commonErrorString(response.body()!!.status),
-                               mContext
-                           )
-                       }
+                            val paymentitem_edit_badge: String =
+                                responsedata.responseArray.badgeCounts.paymentItemEditBadge
+                            PreferenceManager.setPaymentitem_edit_badge(
+                                mContext,
+                                paymentitem_edit_badge
+                            )
 
 
-                   } catch (e: Exception) {
-                       e.printStackTrace()
-                   }
-               }
-           }
+                        } else {
 
-       })
-   }
+                            DialogFunctions.commonErrorAlertDialog(
+                                mContext.resources.getString(R.string.alert),
+                                ConstantFunctions.commonErrorString(response.body()!!.status),
+                                mContext
+                            )
+                        }
+
+
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+
+        })
+    }
 
     private fun getReEnrollmentStatus() {
         val call: Call<ReEnrollmentStatusResponseModel> = ApiClient.getClient.getenrollstatus(
@@ -623,7 +626,8 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             } else {
                                 if (ConstantFunctions.internetCheck(mContext)) {
                                     // TODO ReEnrollment Help
-                                    sendEmailEnroll(textDialog.text.toString().trim { it <= ' ' },
+                                    sendEmailEnroll(
+                                        textDialog.text.toString().trim { it <= ' ' },
                                         textContent.text.toString().trim { it <= ' ' }, dialog
                                     )
                                 } else {
@@ -1588,7 +1592,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                 } else {
                     relImgOneDot.visibility = View.GONE
                 }
-            }   else if (PreferenceManager.getbuttononetabid(mContext)
+            } else if (PreferenceManager.getbuttononetabid(mContext)
                     .equals(ConstantWords.TAB_COMMUNICATION)
             ) {
                 if (!PreferenceManager.getNoticeBadge(mContext)
@@ -1836,7 +1840,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                 } else {
                     relImgTwoDot.visibility = View.GONE
                 }
-            }   else if (PreferenceManager.getbuttontwotabid(mContext)
+            } else if (PreferenceManager.getbuttontwotabid(mContext)
                     .equals(ConstantWords.TAB_COMMUNICATION)
             ) {
                 if (!PreferenceManager.getNoticeBadge(mContext)
@@ -1869,7 +1873,6 @@ class HomeFragment : Fragment(), View.OnClickListener {
             } else {
                 relImgTwoDot.visibility = View.GONE
             }
-
 
 
         }
@@ -2048,7 +2051,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                 } else {
                     relImgThreeDot.visibility = View.GONE
                 }
-            }   else if (PreferenceManager.getbuttonthreetabid(mContext)
+            } else if (PreferenceManager.getbuttonthreetabid(mContext)
                     .equals(ConstantWords.TAB_COMMUNICATION)
             ) {
                 if (!PreferenceManager.getNoticeBadge(mContext)
@@ -2081,7 +2084,6 @@ class HomeFragment : Fragment(), View.OnClickListener {
             } else {
                 relImgThreeDot.visibility = View.GONE
             }
-
 
 
         }
@@ -2264,7 +2266,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                 } else {
                     relImgFourDot.visibility = View.GONE
                 }
-            }   else if (PreferenceManager.getbuttonfourtabid(mContext)
+            } else if (PreferenceManager.getbuttonfourtabid(mContext)
                     .equals(ConstantWords.TAB_COMMUNICATION)
             ) {
                 if (!PreferenceManager.getNoticeBadge(mContext)
@@ -2477,7 +2479,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                 } else {
                     relImgFiveDot.visibility = View.GONE
                 }
-            }   else if (PreferenceManager.getbuttonfivetabid(mContext)
+            } else if (PreferenceManager.getbuttonfivetabid(mContext)
                     .equals(ConstantWords.TAB_COMMUNICATION)
             ) {
                 if (!PreferenceManager.getNoticeBadge(mContext)
@@ -2510,10 +2512,6 @@ class HomeFragment : Fragment(), View.OnClickListener {
             } else {
                 relImgFiveDot.visibility = View.GONE
             }
-
-
-
-
 
 
         }
@@ -2693,7 +2691,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                 } else {
                     relImgSixDot.visibility = View.GONE
                 }
-            }   else if (PreferenceManager.getbuttonsixtabid(mContext)
+            } else if (PreferenceManager.getbuttonsixtabid(mContext)
                     .equals(ConstantWords.TAB_COMMUNICATION)
             ) {
                 if (!PreferenceManager.getNoticeBadge(mContext)
@@ -2904,7 +2902,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                 } else {
                     relImgSevenDot.visibility = View.GONE
                 }
-            }   else if (PreferenceManager.getbuttonseventabid(mContext)
+            } else if (PreferenceManager.getbuttonseventabid(mContext)
                     .equals(ConstantWords.TAB_COMMUNICATION)
             ) {
                 if (!PreferenceManager.getNoticeBadge(mContext)
@@ -3116,7 +3114,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                 } else {
                     relImgEightDot.visibility = View.GONE
                 }
-            }   else if (PreferenceManager.getbuttoneighttabid(mContext)
+            } else if (PreferenceManager.getbuttoneighttabid(mContext)
                     .equals(ConstantWords.TAB_COMMUNICATION)
             ) {
                 if (!PreferenceManager.getNoticeBadge(mContext)
@@ -3325,7 +3323,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                 } else {
                     relImgNineDot.visibility = View.GONE
                 }
-            }   else if (PreferenceManager.getbuttonninetabid(mContext)
+            } else if (PreferenceManager.getbuttonninetabid(mContext)
                     .equals(ConstantWords.TAB_COMMUNICATION)
             ) {
                 if (!PreferenceManager.getNoticeBadge(mContext)
@@ -3403,10 +3401,16 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     for (i in mSectionText.indices) {
                         isDraggable = true
                         if (mSectionText[i].equals(
-                                listitems[homeActivity.sPosition], ignoreCase = true
+                                listitems[homeActivity.sPosition],
+                                ignoreCase = true
                             )
                         ) {
                             isDraggable = false
+                            key = "0"
+                            break
+                        } else if (listitems[homeActivity.sPosition].equals("Re-Enrolment")) {
+                            isDraggable = false
+                            key = "1"
                             break
                         }
                     }
@@ -3415,8 +3419,18 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
                     } else {
 
-                        Toast.makeText(mContext, "Item Already Exists !!!", Toast.LENGTH_SHORT)
-                            .show()
+                        if (key.equals("1")) {
+                            Toast.makeText(
+                                mContext,
+                                "This Feature cannot be added to the Home Screen !!!",
+                                Toast.LENGTH_SHORT
+                            )
+                                .show()
+                        } else {
+                            Toast.makeText(mContext, "Item Already Exists !!!", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+
                     }
 
                 }
@@ -3450,7 +3464,8 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     setBackgroundColorForView(listitems[sPosition], relone)
                     PreferenceManager.setbuttononetextimage(mContext, sPosition.toString())
 
-                    if (PreferenceManager.getbuttononetabid(mContext).equals(ConstantWords.TAB_CALENDAR)
+                    if (PreferenceManager.getbuttononetabid(mContext)
+                            .equals(ConstantWords.TAB_CALENDAR)
                     ) {
                         if (!PreferenceManager.getCalenderhomeBadge(mContext)
                                 .equals("0") && !PreferenceManager.getCalenderEditedhomeBadge(
@@ -3466,7 +3481,8 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             ).equals("0")
                         ) {
                             relImgOneDot.visibility = View.VISIBLE
-                            relImgOneDot.text = PreferenceManager.getCalenderEditedhomeBadge(mContext)
+                            relImgOneDot.text =
+                                PreferenceManager.getCalenderEditedhomeBadge(mContext)
                             relImgOneDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
                                 .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
@@ -3603,7 +3619,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                         } else {
                             relImgOneDot.visibility = View.GONE
                         }
-                    }   else if (PreferenceManager.getbuttononetabid(mContext)
+                    } else if (PreferenceManager.getbuttononetabid(mContext)
                             .equals(ConstantWords.TAB_COMMUNICATION)
                     ) {
                         if (!PreferenceManager.getNoticeBadge(mContext)
@@ -3669,7 +3685,8 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             ).equals("0")
                         ) {
                             relImgTwoDot.visibility = View.VISIBLE
-                            relImgTwoDot.text = PreferenceManager.getCalenderEditedhomeBadge(mContext)
+                            relImgTwoDot.text =
+                                PreferenceManager.getCalenderEditedhomeBadge(mContext)
                             relImgTwoDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
                                 .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
@@ -3810,7 +3827,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                         } else {
                             relImgTwoDot.visibility = View.GONE
                         }
-                    }   else if (PreferenceManager.getbuttontwotabid(mContext)
+                    } else if (PreferenceManager.getbuttontwotabid(mContext)
                             .equals(ConstantWords.TAB_COMMUNICATION)
                     ) {
                         if (!PreferenceManager.getNoticeBadge(mContext)
@@ -3877,7 +3894,8 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             ).equals("0")
                         ) {
                             relImgThreeDot.visibility = View.VISIBLE
-                            relImgThreeDot.text = PreferenceManager.getCalenderEditedhomeBadge(mContext)
+                            relImgThreeDot.text =
+                                PreferenceManager.getCalenderEditedhomeBadge(mContext)
                             relImgThreeDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
                                 .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
@@ -4018,7 +4036,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                         } else {
                             relImgThreeDot.visibility = View.GONE
                         }
-                    }   else if (PreferenceManager.getbuttonthreetabid(mContext)
+                    } else if (PreferenceManager.getbuttonthreetabid(mContext)
                             .equals(ConstantWords.TAB_COMMUNICATION)
                     ) {
                         if (!PreferenceManager.getNoticeBadge(mContext)
@@ -4084,7 +4102,8 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             ).equals("0")
                         ) {
                             relImgFourDot.visibility = View.VISIBLE
-                            relImgFourDot.text = PreferenceManager.getCalenderEditedhomeBadge(mContext)
+                            relImgFourDot.text =
+                                PreferenceManager.getCalenderEditedhomeBadge(mContext)
                             relImgFourDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
                                 .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
@@ -4225,7 +4244,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                         } else {
                             relImgFourDot.visibility = View.GONE
                         }
-                    }   else if (PreferenceManager.getbuttonfourtabid(mContext)
+                    } else if (PreferenceManager.getbuttonfourtabid(mContext)
                             .equals(ConstantWords.TAB_COMMUNICATION)
                     ) {
                         if (!PreferenceManager.getNoticeBadge(mContext)
@@ -4291,7 +4310,8 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             ).equals("0")
                         ) {
                             relImgFiveDot.visibility = View.VISIBLE
-                            relImgFiveDot.text = PreferenceManager.getCalenderEditedhomeBadge(mContext)
+                            relImgFiveDot.text =
+                                PreferenceManager.getCalenderEditedhomeBadge(mContext)
                             relImgFiveDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
                                 .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
@@ -4432,7 +4452,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                         } else {
                             relImgFiveDot.visibility = View.GONE
                         }
-                    }   else if (PreferenceManager.getbuttonfivetabid(mContext)
+                    } else if (PreferenceManager.getbuttonfivetabid(mContext)
                             .equals(ConstantWords.TAB_COMMUNICATION)
                     ) {
                         if (!PreferenceManager.getNoticeBadge(mContext)
@@ -4498,7 +4518,8 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             ).equals("0")
                         ) {
                             relImgSixDot.visibility = View.VISIBLE
-                            relImgSixDot.text = PreferenceManager.getCalenderEditedhomeBadge(mContext)
+                            relImgSixDot.text =
+                                PreferenceManager.getCalenderEditedhomeBadge(mContext)
                             relImgSixDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
                                 .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
@@ -4639,7 +4660,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                         } else {
                             relImgSixDot.visibility = View.GONE
                         }
-                    }   else if (PreferenceManager.getbuttonsixtabid(mContext)
+                    } else if (PreferenceManager.getbuttonsixtabid(mContext)
                             .equals(ConstantWords.TAB_COMMUNICATION)
                     ) {
                         if (!PreferenceManager.getNoticeBadge(mContext)
@@ -4705,7 +4726,8 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             ).equals("0")
                         ) {
                             relImgSevenDot.visibility = View.VISIBLE
-                            relImgSevenDot.text = PreferenceManager.getCalenderEditedhomeBadge(mContext)
+                            relImgSevenDot.text =
+                                PreferenceManager.getCalenderEditedhomeBadge(mContext)
                             relImgSevenDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
                                 .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
@@ -4846,7 +4868,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                         } else {
                             relImgSevenDot.visibility = View.GONE
                         }
-                    }   else if (PreferenceManager.getbuttonseventabid(mContext)
+                    } else if (PreferenceManager.getbuttonseventabid(mContext)
                             .equals(ConstantWords.TAB_COMMUNICATION)
                     ) {
                         if (!PreferenceManager.getNoticeBadge(mContext)
@@ -4912,7 +4934,8 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             ).equals("0")
                         ) {
                             relImgEightDot.visibility = View.VISIBLE
-                            relImgEightDot.text = PreferenceManager.getCalenderEditedhomeBadge(mContext)
+                            relImgEightDot.text =
+                                PreferenceManager.getCalenderEditedhomeBadge(mContext)
                             relImgEightDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
                                 .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
@@ -5053,7 +5076,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                         } else {
                             relImgEightDot.visibility = View.GONE
                         }
-                    }   else if (PreferenceManager.getbuttoneighttabid(mContext)
+                    } else if (PreferenceManager.getbuttoneighttabid(mContext)
                             .equals(ConstantWords.TAB_COMMUNICATION)
                     ) {
                         if (!PreferenceManager.getNoticeBadge(mContext)
@@ -5119,7 +5142,8 @@ class HomeFragment : Fragment(), View.OnClickListener {
                             ).equals("0")
                         ) {
                             relImgNineDot.visibility = View.VISIBLE
-                            relImgNineDot.text = PreferenceManager.getCalenderEditedhomeBadge(mContext)
+                            relImgNineDot.text =
+                                PreferenceManager.getCalenderEditedhomeBadge(mContext)
                             relImgNineDot.setBackgroundResource(R.drawable.shape_circle_navy)
                         } else if (!PreferenceManager.getCalenderhomeBadge(mContext)
                                 .equals("0") && PreferenceManager.getCalenderEditedhomeBadge(
@@ -5260,7 +5284,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                         } else {
                             relImgNineDot.visibility = View.GONE
                         }
-                    }   else if (PreferenceManager.getbuttonninetabid(mContext)
+                    } else if (PreferenceManager.getbuttonninetabid(mContext)
                             .equals(ConstantWords.TAB_COMMUNICATION)
                     ) {
                         if (!PreferenceManager.getNoticeBadge(mContext)
@@ -5377,13 +5401,13 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     TAB_ID = ConstantWords.TAB_PAYMENTS
                 }
 
-               /* textdata.equals(ConstantWords.busservice, ignoreCase = true) -> {
-                    TAB_ID = ConstantWords.TAB_BUS_SERVICE
-                }*/
+                /* textdata.equals(ConstantWords.busservice, ignoreCase = true) -> {
+                     TAB_ID = ConstantWords.TAB_BUS_SERVICE
+                 }*/
 
-               /* textdata.equals(ConstantWords.intention, ignoreCase = true) -> {
-                    TAB_ID = ConstantWords.TAB_INTENTIONS
-                }*/
+                /* textdata.equals(ConstantWords.intention, ignoreCase = true) -> {
+                     TAB_ID = ConstantWords.TAB_INTENTIONS
+                 }*/
 
                 textdata.equals(ConstantWords.studentinformation, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_STUDENT_INFORMATION
@@ -5434,22 +5458,26 @@ class HomeFragment : Fragment(), View.OnClickListener {
                 textdata.equals(ConstantWords.permission_forms, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_PERMISSION_FORMS
                 }
-               /* textdata.equals(ConstantWords.parentassociation, ignoreCase = true) -> {
-                    TAB_ID = ConstantWords.TAB_PARENT_ASSOCIATION
-                }*/
+                /* textdata.equals(ConstantWords.parentassociation, ignoreCase = true) -> {
+                     TAB_ID = ConstantWords.TAB_PARENT_ASSOCIATION
+                 }*/
 
                 textdata.equals(ConstantWords.reports, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_REPORTS
                 }
+
                 textdata.equals(ConstantWords.reenrollment, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_REENROLMENT
                 }
+
                 textdata.equals(ConstantWords.early_years, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_EARLY_YEARS
                 }
+
                 textdata.equals(ConstantWords.primary, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_PRIMARY
                 }
+
                 textdata.equals(ConstantWords.secondary, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_SECONDARY
                 }
@@ -5806,29 +5834,29 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     mFragment = CommunicationFragment()
                     fragmentIntent(mFragment)
                 }
-               /* ConstantWords.TAB_BUS_SERVICE -> {
-                    mFragment = BusServiceFragmentNew()
-                    fragmentIntent(mFragment)
-                }*/
+                /* ConstantWords.TAB_BUS_SERVICE -> {
+                     mFragment = BusServiceFragmentNew()
+                     fragmentIntent(mFragment)
+                 }*/
 
                 ConstantWords.TAB_REENROLMENT -> {
                     getReEnrollmentStatus()
                 }
 
-               /* ConstantWords.TAB_INTENTIONS -> {
-                    mFragment = Intentionfragment()
-                    fragmentIntent(mFragment)
-                }*/
+                /* ConstantWords.TAB_INTENTIONS -> {
+                     mFragment = Intentionfragment()
+                     fragmentIntent(mFragment)
+                 }*/
 
                 ConstantWords.TAB_STUDENT_INFORMATION -> {
                     mFragment = StudentInformationFragment()
                     fragmentIntent(mFragment)
                 }
 
-              /*  ConstantWords.TAB_TIMETABLE -> {
-                    mFragment = TimeTableFragmentNew()
-                    fragmentIntent(mFragment)
-                }*/
+                /*  ConstantWords.TAB_TIMETABLE -> {
+                      mFragment = TimeTableFragmentNew()
+                      fragmentIntent(mFragment)
+                  }*/
 
                 ConstantWords.TAB_SHOP -> {
                     mFragment = ShopFragment()
@@ -5863,29 +5891,33 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     mFragment = AbsenceFragment()
                     fragmentIntent(mFragment)
                 }
+
                 ConstantWords.TAB_EARLY_YEARS -> {
                     PreferenceManager.setStudentID(mContext, "")
                     mFragment = EarlyYearsFragment()
                     fragmentIntent(mFragment)
                 }
+
                 ConstantWords.TAB_PRIMARY -> {
                     PreferenceManager.setStudentID(mContext, "")
                     mFragment = PrimaryFragment()
                     fragmentIntent(mFragment)
                 }
+
                 ConstantWords.TAB_SECONDARY -> {
                     PreferenceManager.setStudentID(mContext, "")
                     mFragment = SecondaryFragment()
                     fragmentIntent(mFragment)
                 }
+
                 ConstantWords.TAB_ENRICHMENT -> {
                     mFragment = CCAFragment()
                     fragmentIntent(mFragment)
                 }
-               /* ConstantWords.TAB_PARENT_ASSOCIATION -> {
-                    mFragment = ParentAssociationsFragment()
-                    fragmentIntent(mFragment)
-                }*/
+                /* ConstantWords.TAB_PARENT_ASSOCIATION -> {
+                     mFragment = ParentAssociationsFragment()
+                     fragmentIntent(mFragment)
+                 }*/
                 ConstantWords.TAB_PARENT_MEETINGS -> {
                     mFragment = ParentMeetingsFragment()
                     fragmentIntent(mFragment)
