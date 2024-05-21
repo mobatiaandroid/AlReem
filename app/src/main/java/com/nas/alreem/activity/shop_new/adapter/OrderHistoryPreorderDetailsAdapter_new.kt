@@ -76,16 +76,14 @@ class OrderHistoryPreorderDetailsAdapter_new ( val preorderhis_list: ArrayList<S
                 );
             }
         }
-        viewHolder.amountTxt.text=preorderhis_list.get(position).price+"AED"
-        if (preorderhis_list.get(position).quantity==1)
-        {
-            viewHolder.itemsCount.text=preorderhis_list.get(position).quantity.toString()+" item"
+        viewHolder.amountTxt.text = preorderhis_list.get(position).price + "AED"
+        if (preorderhis_list.get(position).quantity == 1) {
+            viewHolder.itemsCount.text =
+                preorderhis_list.get(position).quantity.toString() + " item"
+        } else {
+            viewHolder.itemsCount.text =
+                preorderhis_list.get(position).quantity.toString() + " items"
         }
-        else
-        {
-            viewHolder.itemsCount.text=preorderhis_list.get(position).quantity.toString()+" items"
-        }
-
 
 
     }
@@ -103,22 +101,24 @@ class OrderHistoryPreorderDetailsAdapter_new ( val preorderhis_list: ArrayList<S
         var itemsCount: TextView
         var status: TextView
         var orderbadge: TextView
-        var itemImg : ImageView
-        var date_item : TextView
-        var location : TextView
+        var itemImg: ImageView
+        var date_item: TextView
+        var location: TextView
+
         init {
             itemNameTxt = itemView.findViewById(R.id.itemNameTxt)
             itemDescription = itemView.findViewById(R.id.itemDescription)
             amountTxt = itemView.findViewById(R.id.amountTxt)
             itemsCount = itemView.findViewById(R.id.itemsCount)
             status = itemView.findViewById(R.id.status)
-            orderbadge=itemView.findViewById(R.id.orderbadge)
+            orderbadge = itemView.findViewById(R.id.orderbadge)
             itemImg = itemView.findViewById(R.id.itemImg)
             date_item = itemView.findViewById(R.id.date)
             location = itemView.findViewById(R.id.orderbadge)
 
         }
     }
+
     fun showSuccessAlertnew(context: Context, pickupLocation: String, message: String) {
         val dialog = Dialog(context)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -129,7 +129,7 @@ class OrderHistoryPreorderDetailsAdapter_new ( val preorderhis_list: ArrayList<S
         // var alertHead = dialog.findViewById(R.id.alertHead) as TextView
         var text_dialog = dialog.findViewById(R.id.text_dialog) as TextView
         var btn_Ok = dialog.findViewById(R.id.btn_Ok) as Button
-        text_dialog.text = message+" "+pickupLocation
+        text_dialog.text = message + " " + pickupLocation
         //   alertHead.text = msgHead
         //   iconImageView.setImageResource(R.drawable.exclamationicon)
         btn_Ok.setOnClickListener()

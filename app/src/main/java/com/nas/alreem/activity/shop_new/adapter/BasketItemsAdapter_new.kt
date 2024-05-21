@@ -11,6 +11,7 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -78,6 +79,9 @@ class BasketItemsAdapter_new (
                     .into(holder.itemImg)
             }
         }
+//        if (items_list[position].quantity.equals(0)) {
+//            holder.itemView.visibility = View.GONE
+//        }
 
         holder.amountTxt.text = items_list[position].price.toString() + "AED"
         holder.notAvailableTxt.visibility = View.GONE
@@ -251,6 +255,8 @@ class BasketItemsAdapter_new (
                     itemLinear.visibility= View.VISIBLE
                     cart_list=response!!.body()!!.responseArray.data
 
+                    items_list=cart_list
+
 
                         cartTotalAmount=cartTotalAmount + responsedata.responseArray.total_amount
 
@@ -333,8 +339,9 @@ class BasketItemsAdapter_new (
                     if(responsedata!!.status==300)
                     {
 
-                        multiLinear.visibility=View.GONE
-                        basketrelative.alpha=0.5f
+//                        multiLinear.visibility=View.GONE
+//                        basketrelative.alpha=0.5f
+                        Toast.makeText(mcontext, "Item maximum limit reached!", Toast.LENGTH_SHORT).show()
 
                     }
 
