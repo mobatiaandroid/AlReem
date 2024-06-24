@@ -328,6 +328,7 @@ class ParentMeetingsFragment:Fragment() {
                 staffImg = mStaffList.get(position).staff_photo
                 staffId = mStaffList.get(position).id.toString()
                // staffEmail = mStaffList.get(position).email
+
                 staffNameTV.text = staffName
                 nxtbtn.visibility = View.VISIBLE
                 if (!staffImg.equals("")) {
