@@ -23,7 +23,6 @@ import com.nas.alreem.activity.parent_meetings.adapter.ParentsEveningRoomListAda
 import com.nas.alreem.activity.parent_meetings.adapter.TimeslotAdapter
 import com.nas.alreem.activity.parent_meetings.model.*
 import com.nas.alreem.constants.*
-import kotlinx.android.synthetic.main.activity_parent_meeting_detail.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -318,9 +317,9 @@ class ParentMeetingDetailActivity:AppCompatActivity() {
                             }
                             if (confirmedslotBookedByUser) {
                                 if (confirmed_link.equals("")) {
-                                    vpmlBtn.visibility=View.GONE
+                                    vpml_btn.visibility=View.GONE
                                 } else {
-                                    vpmlBtn.visibility=View.VISIBLE
+                                    vpml_btn.visibility=View.VISIBLE
                                 }
                                 cancel.visibility = View.INVISIBLE
                                 confirm.visibility = View.INVISIBLE

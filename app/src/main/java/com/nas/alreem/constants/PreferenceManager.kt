@@ -455,7 +455,7 @@ class PreferenceManager {
                 PREFSNAME,
                 Context.MODE_PRIVATE
             )
-            return prefs.getString("button_ninetabid", "9")
+            return prefs.getString("button_ninetabid", "10")
         }
 
 
@@ -649,7 +649,7 @@ class PreferenceManager {
                 PREFSNAME,
                 Context.MODE_PRIVATE
             )
-            return prefs.getString("button_ninetextimage", "9")
+            return prefs.getString("button_ninetextimage", "10")
         }
 
         fun setButtonOneGuestBg(context: Context, color: Int) {

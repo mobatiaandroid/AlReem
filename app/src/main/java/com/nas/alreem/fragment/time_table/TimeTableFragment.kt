@@ -61,7 +61,6 @@ import com.nas.alreem.fragment.time_table.model.usagemodel.PeriodModel
 import com.nas.alreem.fragment.time_table.model.usagemodel.RangeModel
 import com.nas.alreem.fragment.time_table.model.usagemodel.WeekModel
 import com.ryanharter.android.tooltips.ToolTipLayout
-import kotlinx.android.synthetic.main.fragment_timetablenew.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

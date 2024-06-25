@@ -1,15 +1,18 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
+
+//apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.gms.google-services'
 
 android {
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.nas.alreem"
-        minSdk 19
-        minSdkVersion 19
+        //namespace "com.nas.alreem"
+        minSdk 27
+        minSdkVersion 27
         targetSdkVersion 33
         versionCode 25
         versionName "3.4"
@@ -23,13 +26,13 @@ android {
         cleanedAnnotations
         implementation.exclude group: 'org.jetbrains' , module:'annotations'
     }
-    lintOptions {
+  /*  lintOptions {
         checkReleaseBuilds false
     }
     // This is handled for you by the 2.0+ Gradle Plugin
     aaptOptions {
         additionalParameters "--no-version-vectors"
-    }
+    }*/
     dexOptions {
         javaMaxHeapSize "4g" //specify the heap size for the dex process
     }
@@ -41,13 +44,22 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
+  //  namespace 'com.nas.alreem'
 
     packagingOptions {
-        exclude 'project.properties'
-        exclude 'META-INF/INDEX.LIST'
+        resources {
+            excludes += ['project.properties', 'META-INF/INDEX.LIST']
+        }
+    }
+    namespace 'com.nas.alreem'
+    androidResources {
+        additionalParameters '--no-version-vectors'
+    }
+    lint {
+        checkReleaseBuilds false
     }
 
     dataBinding {
@@ -95,10 +107,10 @@ dependencies {
     implementation 'com.ryanharter.android.tooltips:library:0.0.3'
 
 // For card payment
-    implementation 'com.github.network-international.payment-sdk-android:payment-sdk:3.0.1'
+    implementation 'com.github.network-international.payment-sdk-android:payment-sdk:3.1.7'
 
 //For samsung payment
-    implementation 'com.github.network-international.payment-sdk-android:payment-sdk-samsungpay:3.0.1'
+    implementation 'com.github.network-international.payment-sdk-android:payment-sdk-samsungpay:3.1.7'
 
 
 

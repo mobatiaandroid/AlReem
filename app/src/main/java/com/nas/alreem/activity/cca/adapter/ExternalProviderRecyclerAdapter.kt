@@ -10,10 +10,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.nas.alreem.R
 import com.nas.alreem.activity.cca.model.ExternalProvidersResponseModel
-import kotlinx.android.synthetic.main.custom_pdf_adapter_row_new.view.*
+import com.nas.alreem.activity.shop_new.adapter.BasketItemsAdapter_new
 
 
-class ExternalProviderRecyclerAdapter(mContext: Context, mListViewArray: ArrayList<ExternalProvidersResponseModel.Data.Lists>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ExternalProviderRecyclerAdapter(mContext: Context
+                                      , mListViewArray: ArrayList<ExternalProvidersResponseModel.Data.Lists>)
+    : RecyclerView.Adapter<ExternalProviderRecyclerAdapter.MyViewHolder>() {
     private val mContext: Context? = mContext
     private val mnNewsLetterModelArrayList: ArrayList<ExternalProvidersResponseModel.Data.Lists> = mListViewArray
     var dept: String? = null
@@ -28,25 +30,25 @@ class ExternalProviderRecyclerAdapter(mContext: Context, mListViewArray: ArrayLi
 
         init {
             imageIcon = view.findViewById<View>(R.id.imageIcon) as ImageView
-            pdfTitle = view.findViewById<View>(R.id.pdfTitle) as TextView
+           // pdfTitle = view.findViewById<View>(R.id.pdfTitle) as TextView
+            pdfTitle = view.findViewById<TextView>(R.id.pdfTitle)
+
 //            status = view.findViewById<View>(R.id.status) as TextView
 //            statusLayout = view.findViewById<View>(R.id.statusLayout) as RelativeLayout
         }
     }
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val itemView: View = LayoutInflater.from(parent.context)
-            .inflate(R.layout.custom_pdf_adapter_row_new, parent, false)
-
-        return MyViewHolder(
-            itemView
-        )
+    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): MyViewHolder {
+        val view: View = LayoutInflater.from(viewGroup.context)
+            .inflate(R.layout.custom_pdf_adapter_row_new, viewGroup, false)
+        return MyViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
 //        holder.submenu.setText(mnNewsLetterModelArrayList.get(position).getSubmenu());
-        holder.itemView.pdfTitle.text = mnNewsLetterModelArrayList[position].title
-        holder.itemView.imageIcon.visibility = View.GONE
+        holder.pdfTitle.text = mnNewsLetterModelArrayList[position].title
+        holder.imageIcon.visibility = View.GONE
 /*
         if (mnNewsLetterModelArrayList.get(position).getmFile().endsWith(".pdf")) {
             holder.imageIcon.setBackgroundResource(R.drawable.pdfdownloadbutton);

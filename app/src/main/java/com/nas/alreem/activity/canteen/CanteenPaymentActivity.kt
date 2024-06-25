@@ -513,6 +513,7 @@ mProgressRelLayout.visibility=View.VISIBLE
         super.onActivityResult(requestCode, resultCode, data)
         Log.d("request_code", requestCode.toString())
         Log.d("resultt_code", resultCode.toString())
+        Log.d("data", data.toString())
         if (data == null) {
             mProgressRelLayout.visibility=View.GONE
             Toast.makeText(nContext, "transaction cancelled", Toast.LENGTH_SHORT).show()
