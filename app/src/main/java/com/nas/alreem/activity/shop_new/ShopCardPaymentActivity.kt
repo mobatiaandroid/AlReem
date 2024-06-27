@@ -238,8 +238,52 @@ class ShopCardPaymentActivity :AppCompatActivity(){
 
         })
     }
+    override fun onActivityResult(
+        requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 101) {
+            when (resultCode) {
+                Activity.RESULT_OK -> onCardPaymentResponse(
+                    CardPaymentData.getFromIntent(data!!)
+                )
+                Activity.RESULT_CANCELED ->{
+                    Toast.makeText(mContext, "Transaction Failed", Toast.LENGTH_SHORT).show();
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+                }
+            }
+        }
+    }
+    fun onCardPaymentResponse(data: CardPaymentData) {
+        when (data.code) {
+            CardPaymentData.STATUS_PAYMENT_AUTHORIZED,
+            CardPaymentData.STATUS_PAYMENT_CAPTURED -> {
+                if (ConstantFunctions.internetCheck(mContext))
+                {
+                    val JSONData =
+                        "{\"details\":[{" + "\"student_id\":\"" + PreferenceManager.getStudentID(
+                            mContext
+                        ) + "\"," +
+                                "\"amount\":\"" + payAmount + "\"," +
+                                "\"keycode\":\"" + merchantOrderReference + "\"" + "}]}"
+                    println("JSON DATA URL$JSONData")
+                    CallWalletSubmission(JSONData)
+                }
+                else
+                {
+                    DialogFunctions.showInternetAlertDialog(mContext)
+                }
+            }
+            CardPaymentData.STATUS_PAYMENT_FAILED -> {
+                Toast.makeText(mContext, "Transaction Failed", Toast.LENGTH_SHORT).show();
+            }
+            CardPaymentData.STATUS_GENERIC_ERROR -> {
+                Toast.makeText(mContext, data.reason, Toast.LENGTH_SHORT).show();
+            }
+            else -> IllegalArgumentException(
+                "Unknown payment response (${data.reason})")
+        }
+    }
+    /*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         Log.d("request_code", requestCode.toString())
         Log.d("resultt_code", resultCode.toString())
@@ -266,7 +310,7 @@ class ShopCardPaymentActivity :AppCompatActivity(){
                 }
             }
         }
-    }
+    }*/
 
 
 

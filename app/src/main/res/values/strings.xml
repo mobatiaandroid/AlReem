@@ -15,7 +15,9 @@
         <item>Early Years</item>
         <item>Primary</item>
         <item>Secondary</item>
+<!--
         <item>Performing Arts</item>
+-->
         <item>Reports</item>
         <item>Forms</item>
         <item>Enrichment</item>
@@ -41,7 +43,9 @@
         <item>@drawable/earlyyears</item>
         <item>@drawable/primary</item>
         <item>@drawable/secondary</item>
+<!--
         <item>@drawable/arts</item>
+-->
         <item>@drawable/report_side</item>
         <item>@drawable/permission_slip</item>
         <item>@drawable/ccas</item>

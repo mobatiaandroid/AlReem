@@ -12,10 +12,8 @@ import android.os.Handler
 import android.print.PrintAttributes
 import android.print.PrintJob
 import android.print.PrintManager
-import android.util.Log
 import android.view.View
 import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import android.view.animation.RotateAnimation
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -41,7 +39,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.BufferedReader
-
 import java.io.File
 import java.io.InputStreamReader
 import java.text.DateFormat
@@ -342,7 +339,45 @@ class PaymentDetailActivity : AppCompatActivity() {
 
         })
     }
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(
+        requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 101) {
+            when (resultCode) {
+                Activity.RESULT_OK -> onCardPaymentResponse(
+                    CardPaymentData.getFromIntent(data!!)
+                )
+                Activity.RESULT_CANCELED ->{
+                    Toast.makeText(context, "Transaction Failed", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        }
+    }
+    fun onCardPaymentResponse(data: CardPaymentData) {
+        when (data.code) {
+            CardPaymentData.STATUS_PAYMENT_AUTHORIZED,
+            CardPaymentData.STATUS_PAYMENT_CAPTURED -> {
+                if (ConstantFunctions.internetCheck(context))
+                {
+                    paySuccessApi()
+                }
+                else
+                {
+                    DialogFunctions.showInternetAlertDialog(context)
+                }
+            }
+            CardPaymentData.STATUS_PAYMENT_FAILED -> {
+                Toast.makeText(context, "Transaction Failed", Toast.LENGTH_SHORT).show();
+            }
+            CardPaymentData.STATUS_GENERIC_ERROR -> {
+                Toast.makeText(context, data.reason, Toast.LENGTH_SHORT).show();
+            }
+            else -> IllegalArgumentException(
+                "Unknown payment response (${data.reason})")
+        }
+    }
+    /*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         Log.d("request_code", requestCode.toString())
         Log.d("resultt_code", resultCode.toString())
@@ -372,7 +407,7 @@ class PaymentDetailActivity : AppCompatActivity() {
                 }
             }
         }
-    }
+    }*/
     private fun paySuccessApi(){
         mProgressRelLayout.visibility= View.VISIBLE
         val token =PreferenceManager.getaccesstoken(context)

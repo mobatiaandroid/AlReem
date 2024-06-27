@@ -27,6 +27,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="false"
+        android:enableOnBackInvokedCallback="true"
         tools:replace="android:icon,android:allowBackup">
         <activity
             android:name=".constants.WebViewTextActivity"

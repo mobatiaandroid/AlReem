@@ -14,8 +14,8 @@ android {
         minSdk 27
         minSdkVersion 27
         targetSdkVersion 33
-        versionCode 25
-        versionName "3.4"
+        versionCode 26
+        versionName "3.5"
         multiDexEnabled true
         generatedDensities = []
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -100,13 +100,15 @@ dependencies {
     implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
     implementation 'com.mindorks.android:prdownloader:0.6.0'
     implementation 'me.leolin:ShortcutBadger:1.1.21@aar'
-    implementation 'com.github.network-international.payment-sdk-android:payment-sdk-core:3.0.1'
     implementation 'com.cepheuen.elegant-number-button:lib:1.0.2'
     implementation 'com.github.siyamed:android-shape-imageview:0.9.+@aar'
     implementation 'com.scottyab:rootbeer-lib:0.1.0'
     implementation 'com.ryanharter.android.tooltips:library:0.0.3'
 
 // For card payment
+
+    implementation 'com.github.network-international.payment-sdk-android:payment-sdk-core:3.1.7'
+
     implementation 'com.github.network-international.payment-sdk-android:payment-sdk:3.1.7'
 
 //For samsung payment

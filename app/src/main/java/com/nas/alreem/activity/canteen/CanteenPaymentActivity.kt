@@ -509,7 +509,45 @@ mProgressRelLayout.visibility=View.VISIBLE
 
         })
     }
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(
+        requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 101) {
+            when (resultCode) {
+                Activity.RESULT_OK -> onCardPaymentResponse(
+                    CardPaymentData.getFromIntent(data!!)
+                )
+                Activity.RESULT_CANCELED ->{
+                    Toast.makeText(nContext, "Transaction Failed", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        }
+    }
+    fun onCardPaymentResponse(data: CardPaymentData) {
+        when (data.code) {
+            CardPaymentData.STATUS_PAYMENT_AUTHORIZED,
+            CardPaymentData.STATUS_PAYMENT_CAPTURED -> {
+                if (ConstantFunctions.internetCheck(nContext))
+                {
+                    paySuccessApi()
+                }
+                else
+                {
+                    DialogFunctions.showInternetAlertDialog(nContext)
+                }
+            }
+            CardPaymentData.STATUS_PAYMENT_FAILED -> {
+                Toast.makeText(nContext, "Transaction Failed", Toast.LENGTH_SHORT).show();
+            }
+            CardPaymentData.STATUS_GENERIC_ERROR -> {
+                Toast.makeText(nContext, data.reason, Toast.LENGTH_SHORT).show();
+            }
+            else -> IllegalArgumentException(
+                "Unknown payment response (${data.reason})")
+        }
+    }
+    /*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         Log.d("request_code", requestCode.toString())
         Log.d("resultt_code", resultCode.toString())
@@ -528,7 +566,7 @@ mProgressRelLayout.visibility=View.VISIBLE
                 Log.d("PAYMM", cardPaymentData.reason.toString())
                 if (cardPaymentData.code == 2) {
 
-                    /* val tripDetailsAPI = """
+                    *//* val tripDetailsAPI = """
                          {
                          "details":[
                          {
@@ -542,14 +580,14 @@ mProgressRelLayout.visibility=View.VISIBLE
                          }
                          ]
                          }
-                         """.trimIndent()*/
+                         """.trimIndent()*//*
 
-                 /*   payment_type_print = "Online"
+                 *//*   payment_type_print = "Online"
                     payTotalButton.visibility = View.GONE
                     totalLinear.visibility = View.VISIBLE
                     paidImg.visibility = View.VISIBLE
                     mainLinear.visibility = View.VISIBLE
-                    printLinear.visibility = View.VISIBLE*/
+                    printLinear.visibility = View.VISIBLE*//*
 
                     if (ConstantFunctions.internetCheck(nContext)) {
 //            progressDialog.visibility= View.VISIBLE
@@ -564,9 +602,9 @@ mProgressRelLayout.visibility=View.VISIBLE
                 }
             }
         }
-    }
+    }*/
     private fun paySuccessApi(){
-       // mProgressRelLayout.visibility=View.VISIBLE
+        mProgressRelLayout.visibility=View.VISIBLE
         var devicename:String= (Build.MANUFACTURER
                 + " " + Build.MODEL + " " + Build.VERSION.RELEASE
                 + " " + Build.VERSION_CODES::class.java.fields[Build.VERSION.SDK_INT]
