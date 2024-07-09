@@ -95,7 +95,7 @@ class NotificationFragment : Fragment() {
                 }
                 else if (notificationList.get(position).alert_type.equals("Video"))
                 {
-                    val intent = Intent(activity, VideoMessageActivity::class.java)
+                    val intent = Intent(activity, ImageMessageActivity::class.java)
                     intent.putExtra("id",notificationList.get(position).id)
                     intent.putExtra("title",notificationList.get(position).title)
                     activity?.startActivity(intent)
