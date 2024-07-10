@@ -19,6 +19,7 @@ import com.nas.alreem.activity.notifications.AudioPlayerDetailNew
 import com.nas.alreem.activity.notifications.ImageMessageActivity
 import com.nas.alreem.activity.notifications.TextMessageActivity
 import com.nas.alreem.activity.notifications.VideoMessageActivity
+import com.nas.alreem.activity.notifications.VideoMessageActivityNew
 import com.nas.alreem.activity.shop_new.model.StudentShopCardResponseModel
 import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ConstantFunctions
@@ -95,7 +96,7 @@ class NotificationFragment : Fragment() {
                 }
                 else if (notificationList.get(position).alert_type.equals("Video"))
                 {
-                    val intent = Intent(activity, VideoMessageActivity::class.java)
+                    val intent = Intent(activity, VideoMessageActivityNew::class.java)
                     intent.putExtra("id",notificationList.get(position).id)
                     intent.putExtra("title",notificationList.get(position).title)
                     activity?.startActivity(intent)
