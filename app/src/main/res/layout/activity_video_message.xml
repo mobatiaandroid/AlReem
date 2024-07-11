@@ -16,7 +16,7 @@
         android:layout_below="@+id/includeRel">
 
         <WebView
-            android:id="@+id/webView"
+            android:id="@+id/txtContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp" />
@@ -41,7 +41,7 @@
         android:padding="10dp">
 
         <WebView
-            android:id="@+id/txtContent"
+            android:id="@+id/webView"
             android:layout_below="@+id/relativeHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
