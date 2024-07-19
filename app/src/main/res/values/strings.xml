@@ -333,4 +333,36 @@
     <string name="terms_conditions">Please click and sign here to let us know you have understood the
          NAE Terms and Conditions.</string>
 
+
+    <string name="mothers_name">Mother\'s Name<font fgcolor="red">*</font></string>
+    <string name="fathers_name">Father\'s Name<font fgcolor="red">*</font></string>
+    <string name="mobile_no">Mobile No<font fgcolor="red">*</font></string>
+    <string name="email_bus">E-mail<font fgcolor="red">*</font></string>
+    <string name="address">Residentials Address</string>
+    <string name="ackwolegemnt">Acknowlegment</string>
+
+    <string name="parents_details">Parents Details</string>
+
+    <string name="door_no">Door No / Villa No<font fgcolor="red">*</font></string>
+    <string name="street">Street<font fgcolor="red">*</font></string>
+    <string name="building_name">Building Name<font fgcolor="red">*</font></string>
+    <string name="Area">Area<font fgcolor="red">*</font></string>
+    <string name="city">City<font fgcolor="red">*</font></string>
+    <string name="Gpslocation">GPS Location<font fgcolor="red">*</font></string>
+    <string name="other_Approved">Other Approved/Naany/Driver/Guardian<font fgcolor="red">*</font></string>
+    <string name="contact1">Contact #1<font fgcolor="red">*</font></string>
+    <string name="contact2">Contact #2<font fgcolor="red">*</font></string>
+    <string name="contact3">Contact #3<font fgcolor="red">*</font></string>
+    <string name="land_mark">Land Mark</string>
+    <string name="enter_land_mark">enter land mark<font fgcolor="red">*</font></string>
+    <string name="note">NOTE:<font fgcolor="black">In case of change of home, a request form must be submitted one week prior to changing of home.
+If you wish to register your child for the EAP Bus Service a 50AED/ trip is charged separately.</font></string>
+
+
+    <string name="acknowledgement">I hereby acknowledge that I have read, understand and accept the rules for my child travelling by the school bus and certify
+that I will abide by them.</string>
+    <string name="sign">Signature of Parent/Guardian</string>
+    <string name="pick_up">Pick Up Point</string>
+    <string name="drop">Drop Point</string>
+
 </resources>

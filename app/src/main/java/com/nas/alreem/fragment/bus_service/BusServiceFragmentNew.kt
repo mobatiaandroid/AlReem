@@ -21,8 +21,10 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.nas.alreem.R
+import com.nas.alreem.activity.bus_service.BusServiceEapRegister
 import com.nas.alreem.activity.bus_service.reportabsence.BusServiceActivity
 import com.nas.alreem.activity.bus_service.BusServiceInformation
+import com.nas.alreem.activity.bus_service.BusServiceRegisterNew
 import com.nas.alreem.activity.bus_service.requestservice.RequestServiceListActivity
 import com.nas.alreem.activity.cca.ExternalProviderActivity
 import com.nas.alreem.activity.login.model.SignUpResponseModel
@@ -113,7 +115,7 @@ class BusServiceFragmentNew : Fragment() {
                 PreferenceManager.setStudIdForCCA(mContext!!, "")
                 // PreferenceManager.setStudentID(mContext!!, "")
 
-                val intent = Intent(mContext, BusServiceActivity::class.java)
+                val intent = Intent(mContext, BusServiceRegisterNew::class.java)
                 intent.putExtra("tab_type", "ECA Options")
                 startActivity(intent)
 
