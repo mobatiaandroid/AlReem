@@ -127,7 +127,6 @@ class AudioPlayerDetail : AppCompatActivity() {
         call.enqueue(object : Callback<MessageDetailModel> {
             override fun onFailure(call: Call<MessageDetailModel>, t: Throwable) {
               //  progressDialog.visibility = View.GONE
-                Log.e("Error", t.localizedMessage)
                 progressDialog.visibility = View.GONE
             }
             override fun onResponse(call: Call<MessageDetailModel>, response: Response<MessageDetailModel>) {

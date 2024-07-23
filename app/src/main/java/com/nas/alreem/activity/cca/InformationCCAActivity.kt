@@ -92,7 +92,6 @@ class InformationCCAActivity : AppCompatActivity() {
 
                             if (response.body()!!.data.isNotEmpty()) {
                                 for (i in response.body()!!.data.indices) {
-                                    Log.e("respoje", response.body()!!.data[i]!!.url.toString())
                                     mListViewArray.add(response.body()!!.data!![i]!!)
                                 }
                                 mnewsLetterListView!!.adapter =

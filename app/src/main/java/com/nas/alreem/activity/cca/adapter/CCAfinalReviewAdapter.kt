@@ -148,7 +148,6 @@ class CCAfinalReviewAdapter(
             holder.textViewCCAChoice1.text = "Choice 1 : Nil"
         } else {
             holder.linearChoice1.visibility = View.VISIBLE
-            Log.e("date", mCCADetailModelArrayList[position].cca_item_start_timechoice1.toString())
             holder.textViewCCAChoice1.text =
                 "Choice  : " + mCCADetailModelArrayList[position].choice1
             if (mCCADetailModelArrayList[position].cca_item_start_timechoice1 != null && mCCADetailModelArrayList[position].cca_item_end_timechoice1 != null) {
@@ -203,7 +202,6 @@ class CCAfinalReviewAdapter(
     }
 
     override fun getItemCount(): Int {
-        Log.e("size", mCCADetailModelArrayList.size.toString())
         return mCCADetailModelArrayList.size
     }
 

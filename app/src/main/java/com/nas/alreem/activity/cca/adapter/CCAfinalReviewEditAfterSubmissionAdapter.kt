@@ -100,7 +100,6 @@ class CCAfinalReviewEditAfterSubmissionAdapter(
         } else {
             holder.linearChoice1.visibility = View.VISIBLE
             holder.textViewCCAChoice1.setText(mCCADetailModelArrayList[position].choice1)
-            Log.e("LOCATION EDIT", mCCADetailModelArrayList[position].venue!!)
             if (mCCADetailModelArrayList[position].venue
                     .equals("0") || mCCADetailModelArrayList[position].venue
                     .equals("")
@@ -145,7 +144,6 @@ class CCAfinalReviewEditAfterSubmissionAdapter(
             }
         }
         holder.readMore.setOnClickListener {
-            Log.e("des",mCCADetailModelArrayList[position].cca_item_description_2!!)
             if (mCCADetailModelArrayList[position].cca_item_description_2 != null) {
                 ConstantFunctions.showDialogueWithOk(
                     mContext,
@@ -165,7 +163,6 @@ class CCAfinalReviewEditAfterSubmissionAdapter(
             )
         }
         holder.readMore1.setOnClickListener {
-            Log.e("des1",mCCADetailModelArrayList[position].cca_item_description!!)
             ConstantFunctions.showDialogueWithOk(
                 mContext,
                 mCCADetailModelArrayList[position].cca_item_description!!,

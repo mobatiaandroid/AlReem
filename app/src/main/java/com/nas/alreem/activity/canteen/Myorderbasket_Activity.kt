@@ -163,7 +163,6 @@ class Myorderbasket_Activity : AppCompatActivity() {
                             val JSON =
                                 "{\"student_id\":\"" + PreferenceManager.getStudentID(nContext) + "\"," +
                                         "\"orders\":" + Data + "}"
-                            Log.e("JSON:", JSON)
                             //get pre order
                         progressDialogAdd.visibility=View.VISIBLE
 
@@ -194,11 +193,11 @@ class Myorderbasket_Activity : AppCompatActivity() {
         val call: Call<WalletBalanceModel> = ApiClient.getClient.get_wallet_balance(canteenCart,"Bearer "+token)
         call.enqueue(object : Callback<WalletBalanceModel> {
             override fun onFailure(call: Call<WalletBalanceModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
+
             }
             override fun onResponse(call: Call<WalletBalanceModel>, response: Response<WalletBalanceModel>) {
                 val responsedata = response.body()
-                Log.e("Response", responsedata.toString())
+
                 if (responsedata!!.status==100) {
                     WalletAmount=response!!.body()!!.responseArray.wallet_balance
 
@@ -221,13 +220,13 @@ class Myorderbasket_Activity : AppCompatActivity() {
         val call: Call<CanteenCartModel> = ApiClient.getClient.get_canteen_cart(canteenCart,"Bearer "+token)
         call.enqueue(object : Callback<CanteenCartModel> {
             override fun onFailure(call: Call<CanteenCartModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
+
                 progressDialogAdd.visibility=View.GONE
             }
             override fun onResponse(call: Call<CanteenCartModel>, response: Response<CanteenCartModel>) {
                 val responsedata = response.body()
                 progressDialogAdd.visibility=View.GONE
-                Log.e("Response", responsedata.toString())
+
                 if (responsedata!!.status==100) {
                     progress.visibility = View.GONE
                     cart_list=response!!.body()!!.responseArray.data
@@ -288,11 +287,9 @@ class Myorderbasket_Activity : AppCompatActivity() {
         val token = PreferenceManager.getaccesstoken(nContext)
         progressDialogAdd.visibility=View.VISIBLE
         var canteenCart= CanteenPreorderApiModel(PreferenceManager.getStudentID(nContext).toString(),itemArray)
-        Log.e("cc",canteenCart.toString())
         val call: Call<CanteenPreorderModel> = ApiClient.getClient.canteen_preorder(canteenCart,"Bearer "+token)
         call.enqueue(object : Callback<CanteenPreorderModel> {
             override fun onFailure(call: Call<CanteenPreorderModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
                 progressDialogAdd.visibility=View.GONE
             }
             override fun onResponse(call: Call<CanteenPreorderModel>, response: Response<CanteenPreorderModel>) {

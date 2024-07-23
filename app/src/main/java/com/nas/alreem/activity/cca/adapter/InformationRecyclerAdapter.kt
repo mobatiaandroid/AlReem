@@ -1,6 +1,7 @@
 package com.nas.alreem.activity.cca.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,84 +10,62 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.nas.alreem.R
-import com.nas.alreem.activity.cca.model.CCAInfoResponseModel
 import com.nas.alreem.activity.cca.model.CCaInformationList
+import com.nas.alreem.activity.payment_history.PaymentWalletHistoryModel
+import com.nas.alreem.constants.ConstantFunctions
 
-import kotlinx.android.synthetic.main.custom_pdf_adapter_row_new.view.*
 
-class InformationRecyclerAdapter(mContext: Context, mListViewArray: ArrayList<CCaInformationList>)
-    : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class InformationRecyclerAdapter(
+    mContext: Context, mListViewArray: ArrayList<CCaInformationList>
+) :
+    RecyclerView.Adapter<InformationRecyclerAdapter.MyViewHolder>() {
     private val mContext: Context? = mContext
     private val mnNewsLetterModelArrayList:ArrayList<CCaInformationList> = mListViewArray
     var dept: String? = null
     private val statusLayout: RelativeLayout? = null
     private val status: TextView? = null
 
-    class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        //  ImageView imageIcon;
         var imageIcon: ImageView
         var pdfTitle: TextView
 //        private val statusLayout: RelativeLayout
 //        private val status: TextView
 
         init {
+
             imageIcon = view.findViewById<View>(R.id.imageIcon) as ImageView
             pdfTitle = view.findViewById<View>(R.id.pdfTitle) as TextView
-//            status = view.findViewById<View>(R.id.status) as TextView
-//            statusLayout = view.findViewById<View>(R.id.statusLayout) as RelativeLayout
+
         }
     }
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+
+
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView: View = LayoutInflater.from(parent.context)
             .inflate(R.layout.custom_pdf_adapter_row_new, parent, false)
-
-        return MyViewHolder(
-            itemView
-        )
+        return MyViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        holder.pdfTitle.text = mnNewsLetterModelArrayList[position].title
+        holder.imageIcon.visibility = View.GONE
+    }
 
-//        holder.submenu.setText(mnNewsLetterModelArrayList.get(position).getSubmenu());
-        holder.itemView.pdfTitle.text = mnNewsLetterModelArrayList[position].title
-        holder.itemView.imageIcon.visibility = View.GONE
-/*
-        if (mnNewsLetterModelArrayList.get(position).getmFile().endsWith(".pdf")) {
-            holder.imageIcon.setBackgroundResource(R.drawable.pdfdownloadbutton);
-        }
-        else
-        {
-            holder.imageIcon.setBackgroundResource(R.drawable.webcontentviewbutton);
-
-        }*/
-        /*
-        if (mnNewsLetterModelArrayList.get(position).getmFile().endsWith(".pdf")) {
-            holder.imageIcon.setBackgroundResource(R.drawable.pdfdownloadbutton);
-        }
-        else
-        {
-            holder.imageIcon.setBackgroundResource(R.drawable.webcontentviewbutton);
-
-        }*/
-//        if (mnNewsLetterModelArrayList[position].getStatus().equalsIgnoreCase("0")) {
-//            holder.itemView.statusLayout.setVisibility(View.VISIBLE)
-//            holder.itemView.status.setBackgroundResource(R.drawable.rectangle_red)
-//            holder.itemView.status.setText("New")
-//        } else if (mnNewsLetterModelArrayList[position].getStatus()
-//                .equalsIgnoreCase("1") || mnNewsLetterModelArrayList[position].getStatus()
-//                .equalsIgnoreCase("")
-//        ) {
-//            holder.itemView.status.setVisibility(View.INVISIBLE)
-//        } else if (mnNewsLetterModelArrayList[position].getStatus().equalsIgnoreCase("2")) {
-//            holder.itemView.statusLayout.setVisibility(View.VISIBLE)
-//            holder.itemView.status.setBackgroundResource(R.drawable.rectangle_orange)
-//            holder.itemView.status.setText("Updated")
-//        } else {
-//            holder.itemView.status.setVisibility(View.GONE)
-//        }
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
     }
 
     override fun getItemCount(): Int {
+        Log.e("lostcardsize", mnNewsLetterModelArrayList.size.toString())
         return mnNewsLetterModelArrayList.size
     }
 
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
 }
+
+
+

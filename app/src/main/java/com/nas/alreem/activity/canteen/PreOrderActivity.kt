@@ -222,7 +222,6 @@ class PreOrderActivity : AppCompatActivity(){
         val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+token)
         call.enqueue(object : Callback<StudentListModel> {
             override fun onFailure(call: Call<StudentListModel>, t: Throwable) {
-                Log.e("Error", t.localizedMessage)
                 progressDialog.visibility = View.GONE
             }
             override fun onResponse(call: Call<StudentListModel>, response: Response<StudentListModel>) {
@@ -415,10 +414,7 @@ class PreOrderActivity : AppCompatActivity(){
                     }
                 }
                 if (isFound) {
-                    Log.e(
-                        "timexeed",
-                        "Sorry pre-ordering for the day closes at 7.30am .Please remove todays date"
-                    )
+
 
                 } else {
                     dialog.dismiss()
@@ -447,7 +443,7 @@ class PreOrderActivity : AppCompatActivity(){
         val call: Call<TimeExceedModel> = ApiClient.getClient.time_exceed_status("Bearer "+token)
         call.enqueue(object : Callback<TimeExceedModel> {
             override fun onFailure(call: Call<TimeExceedModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
+
                 progressDialogAdd.visibility=View.GONE
             }
             override fun onResponse(call: Call<TimeExceedModel>, response: Response<TimeExceedModel>) {

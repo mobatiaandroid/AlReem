@@ -130,7 +130,6 @@ class AudioPlayerDetailNew:AppCompatActivity() {
         call.enqueue(object : Callback<MessageDetailModel> {
             override fun onFailure(call: Call<MessageDetailModel>, t: Throwable) {
                 //  progressDialog.visibility = View.GONE
-                Log.e("Error", t.localizedMessage)
               //  progressDialog.visibility = View.GONE
             }
             override fun onResponse(call: Call<MessageDetailModel>, response: Response<MessageDetailModel>) {
@@ -150,7 +149,6 @@ class AudioPlayerDetailNew:AppCompatActivity() {
                         mediaplayer!!.pause()
                         playbutton_audio.setImageResource(R.drawable.ic_baseline_play_circle_outline_24)
                     } else {
-                        Log.e("suess","success")
                         mediaplayer!!.start()
                         playbutton_audio.setImageResource(R.drawable.ic_baseline_pause_circle_outline_24)
                         try {
@@ -205,7 +203,6 @@ class AudioPlayerDetailNew:AppCompatActivity() {
             val currentduration: Long = mediaplayer!!.getCurrentPosition().toLong()
             textcurrent_time.text=(milliseconds(currentduration).toString())
             currenrdr=(milliseconds(currentduration).toString())
-            Log.e("testcurrentTime",(milliseconds(currentduration).toString()))
         }catch (e:Exception)
         {
 
@@ -214,13 +211,11 @@ class AudioPlayerDetailNew:AppCompatActivity() {
 
     }
     fun updateseekbar() {
-        Log.e("success","success")
 
-        Log.e("dfgdh","success")
         try {
             seebbar!!.setProgress((mediaplayer!!.getCurrentPosition().toFloat() / mediaplayer!!.getDuration() * 100).toInt())
            // Log.e("")
-            System.out.print("seekbar"+seebbar)
+
             handler2.postDelayed(updater, 1000)
         }catch (e:InterruptedException)
         {

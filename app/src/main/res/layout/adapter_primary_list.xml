@@ -13,11 +13,19 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="7dp"
             android:background="@color/list_bg">
-
+            <ImageView
+                android:id="@+id/statusImg"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:visibility="gone"
+                android:layout_centerVertical="true" />
             <RelativeLayout
                 android:id="@+id/relSub"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/statusImg"
                 android:paddingBottom="10dp">
 
                 <com.nas.alreem.commonviews.CustomTextViewRegular

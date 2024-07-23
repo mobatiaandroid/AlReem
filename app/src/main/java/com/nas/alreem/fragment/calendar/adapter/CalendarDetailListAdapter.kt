@@ -36,7 +36,6 @@ class CalendarDetailListAdapter(
         return MyViewHolder(itemView)
     }
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        Log.e("ADAPTAR", "DETAIL")
         holder.eventName.text = calendarModels.get(position).title
         //Log.e("isalladay", calendarModels.get(position).isAllday)
         if (calendarModels.get(position).isAllday.equals("1")) {
@@ -46,7 +45,6 @@ class CalendarDetailListAdapter(
           //  Log.e("endtime",calendarModels.get(position).endtime)
             if (!calendarModels.get(position).starttime.equals("") && !(calendarModels.get(position).endtime).equals("")
             ) {
-                Log.e("minus","minus")
                 holder.eventTime.text =
                     calendarModels.get(position).starttime + " - " + calendarModels.get(
                         position
@@ -103,7 +101,6 @@ class CalendarDetailListAdapter(
 
     }
     override fun getItemCount(): Int {
-        Log.e("SIZE ADA", calendarModels.size.toString())
         return calendarModels.size
 
     }

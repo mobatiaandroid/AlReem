@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:focusable="false"
         android:layout_below="@+id/includeRel"
-        android:focusableInTouchMode="false"
+        android:focusableInTouchMode="true"
         android:overScrollMode="never"
         android:scrollbars="none" />
 

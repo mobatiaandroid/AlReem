@@ -12,6 +12,7 @@ import androidx.annotation.NonNull
 import androidx.recyclerview.widget.RecyclerView
 import com.nas.alreem.R
 import com.nas.alreem.activity.permission_slips.FormDetailActivity
+import com.nas.alreem.activity.permission_slips.FormDetailActivityNew
 import com.nas.alreem.fragment.permission_slip.model.PermissionSlipListModel
 
 internal class FormslistAdapter (private var mContext: Context, var formslist:ArrayList<PermissionSlipListModel> ) :
@@ -33,17 +34,20 @@ internal class FormslistAdapter (private var mContext: Context, var formslist:Ar
         holder.linear.setOnClickListener {
             if (formslist[position].status==null){
                 sts="0"
-                Log.e("null","true")
             }
             else{
                 sts=formslist[position].status
-                Log.e("null",formslist[position].status)
             }
-            val intent = Intent(mContext, FormDetailActivity::class.java)
+            val intent = Intent(mContext, FormDetailActivityNew::class.java)
             intent.putExtra("title",formslist[position].title)
             intent.putExtra("description",formslist[position].consent)
             intent.putExtra("status",sts)
+            intent.putExtra("selectedoption",formslist[position].selected_options)
             intent.putExtra("slip_id",formslist[position].id)
+            intent.putStringArrayListExtra(
+                "options",
+                formslist[position].options
+            )
             mContext.startActivity(intent)
         }
 

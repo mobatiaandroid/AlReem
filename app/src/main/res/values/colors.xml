@@ -18,6 +18,12 @@
     <color name="rel_seven">#ffc20a</color>
     <color name="rel_eight">#8f8c85</color>
     <color name="rel_nine">#ee2953</color>
+    <color name="present">#4BB5C4</color>
+    <color name="logout_user"> #808080</color>
+    <color name="btnBackground">#e7e7e7</color>
+    <color name="timetableblue">#7AE2ED</color>
+    <color name="ttpop">#043255</color>
+    <color name="trip_green">#009740</color>
 
     <color name="parents_slot_color">#15395A</color>
     <color name="parents_association_titleclr">#ee2953</color>

@@ -9,8 +9,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.Window
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,6 +18,8 @@ import com.nas.alreem.activity.ProgressBarDialog
 import com.nas.alreem.activity.canteen.adapter.DateAdapter
 import com.nas.alreem.activity.canteen.adapter.ItemCategoriesAdapter
 import com.nas.alreem.activity.canteen.adapter.PreorderItemsAdapter
+import com.nas.alreem.activity.canteen.model.AllergyContentModel
+import com.nas.alreem.activity.canteen.model.CatItemsListModel_new
 import com.nas.alreem.activity.canteen.model.DateModel
 import com.nas.alreem.activity.canteen.model.add_orders.*
 import com.nas.alreem.activity.canteen.model.canteen_cart.CanteenCartApiModel
@@ -56,7 +56,9 @@ class Addorder_Activity : AppCompatActivity() {
    // lateinit var progressDialog: ProgressBar
     lateinit var progressDialogP: ProgressBarDialog
     lateinit var category_list: ArrayList<CategoryListModel>
-    lateinit var item_list:ArrayList<CatItemsListModel>
+    lateinit var item_list:ArrayList<CatItemsListModel_new>
+    lateinit var allergycontentlist:ArrayList<AllergyContentModel>
+
     lateinit var bottomview: LinearLayout
     lateinit var basketbtn: LinearLayout
 
@@ -224,7 +226,6 @@ class Addorder_Activity : AppCompatActivity() {
         val call: Call<CatListModel> = ApiClient.getClient.get_canteen_categories("Bearer "+token)
         call.enqueue(object : Callback<CatListModel> {
             override fun onFailure(call: Call<CatListModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
             }
             override fun onResponse(call: Call<CatListModel>, response: Response<CatListModel>) {
                 val responsedata = response.body()
@@ -308,14 +309,12 @@ class Addorder_Activity : AppCompatActivity() {
         item_list= ArrayList()
         progressDialogP.show()
 
-        Log.e("dsel",date_selected)
         val token = PreferenceManager.getaccesstoken(nContext)
         var canteenItems= CanteenItemsApiModel(PreferenceManager.getStudentID(nContext).toString(),def_cat_id,
             date_selected,"0","50")
         val call: Call<ItemsListModel> = ApiClient.getClient.get_canteen_items(canteenItems,"Bearer "+token)
         call.enqueue(object : Callback<ItemsListModel> {
             override fun onFailure(call: Call<ItemsListModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
                 progressDialogP.hide()
             }
             override fun onResponse(call: Call<ItemsListModel>, response: Response<ItemsListModel>) {
@@ -370,11 +369,23 @@ class Addorder_Activity : AppCompatActivity() {
 
 
                     }
-                }
+                        Log.e("student_allergy", item_list.get(i).student_allergy.toString())
+
+                        if(item_list.get(i).student_allergy==1)
+                        {
+                            item_list.get(i).isAllergic=true
+                        } else {
+                            item_list.get(i).isAllergic=false
+                        }
+                        allergycontentlist= ArrayList()
+                        allergycontentlist.addAll(item_list.get(i).allergy_contents)
+                        Log.e("allergycontentlist", allergycontentlist.toString())
+
+                    }
                     recyclerview_item.visibility=View.VISIBLE
                     recyclerview_item.layoutManager=LinearLayoutManager(nContext)
                     var itemAdapter= PreorderItemsAdapter(item_list,nContext,date_selected,cart_list,cartTotalAmount,
-                        total_items,total_price,bottomview,cart_empty,progressDialogP)
+                        total_items,total_price,bottomview,cart_empty,progressDialogP,allergycontentlist)
                     recyclerview_item.adapter=itemAdapter
                 }
                 else if (response.body()!!.status==132)
@@ -403,7 +414,6 @@ class Addorder_Activity : AppCompatActivity() {
             override fun onFailure(call: Call<ItemsListModel>, t: Throwable) {
                 progressDialogP.hide()
 
-                Log.e("Failed", t.localizedMessage)
             }
             override fun onResponse(call: Call<ItemsListModel>, response: Response<ItemsListModel>) {
                 progressDialogP.hide()
@@ -455,11 +465,24 @@ class Addorder_Activity : AppCompatActivity() {
 
 
                         }
+
+                        Log.e("student_allergy", item_list.get(i).student_allergy.toString())
+                        if(item_list.get(i).student_allergy==1)
+                        {
+                            item_list.get(i).isAllergic=true
+                        } else {
+                            item_list.get(i).isAllergic=false
+                        }
+                        allergycontentlist= ArrayList()
+                        allergycontentlist.addAll(item_list.get(i).allergy_contents)
+                        Log.e("allergycontentlist", allergycontentlist.toString())
                     }
+                    Log.e("size", item_list.size.toString())
+
                     recyclerview_item.visibility=View.VISIBLE
                     recyclerview_item.layoutManager=LinearLayoutManager(nContext)
                     var itemAdapter=PreorderItemsAdapter(item_list,nContext,date_selected,cart_list,cartTotalAmount,
-                        total_items,total_price,bottomview,cart_empty,progressDialogP)
+                        total_items,total_price,bottomview,cart_empty,progressDialogP,allergycontentlist)
                     recyclerview_item.adapter=itemAdapter
 
 
@@ -489,7 +512,6 @@ class Addorder_Activity : AppCompatActivity() {
         call.enqueue(object : Callback<CanteenCartModel> {
             override fun onFailure(call: Call<CanteenCartModel>, t: Throwable) {
                 progressDialogP.hide()
-                Log.e("Failed", t.localizedMessage)
             }
             override fun onResponse(call: Call<CanteenCartModel>, response: Response<CanteenCartModel>) {
                 val responsedata = response.body()

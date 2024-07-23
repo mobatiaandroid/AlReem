@@ -52,49 +52,56 @@
             android:id="@+id/description"
             android:layout_margin="10dp"
             android:textColor="@color/black"/>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/lihead"
+    android:layout_marginLeft="10dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginRight="10dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/description_canteen"
+    android:orientation="horizontal">
+    <LinearLayout
+        android:id="@+id/preOrderLinear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="2dp"
+        android:background="@drawable/sportsbtnorange"
+        android:gravity="center"
+        android:orientation="vertical">
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/lunchbox_icon" />
+
+        <com.nas.alreem.commonviews.CustomTextViewRegular
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pre-Order"
+            android:textColor="@color/white" />
+    </LinearLayout>
+</LinearLayout>
         <LinearLayout
             android:id="@+id/staffLinear"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
             android:layout_weight="60"
             android:orientation="horizontal"
-            android:weightSum="3"
+            android:weightSum="2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/description_canteen">
-
-            <LinearLayout
-                android:id="@+id/preOrderLinear"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="2dp"
-                android:layout_weight="1"
-                android:background="@drawable/sportsbtnorange"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/lunchbox_icon" />
-
-                <com.nas.alreem.commonviews.CustomTextViewRegular
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Pre-Order"
-                    android:textColor="@color/white" />
-            </LinearLayout>
+            app:layout_constraintTop_toBottomOf="@+id/lihead">
 
             <LinearLayout
                 android:id="@+id/informationLinear"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginRight="2dp"
                 android:layout_weight="1"
@@ -137,6 +144,30 @@
                     android:text="Payment"
                     android:textColor="@color/white" />
             </LinearLayout>
+
+            <!--<LinearLayout
+                android:id="@+id/lostcardLinear"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="2dp"
+                android:layout_weight="1"
+                android:background="@drawable/sportsbtnred"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/lostcard" />
+
+                <com.nas.alreem.commonviews.CustomTextViewRegular
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Lost ID Card"
+                    android:textColor="@color/white" />
+            </LinearLayout>-->
         </LinearLayout>
     </LinearLayout>
     <ProgressBar

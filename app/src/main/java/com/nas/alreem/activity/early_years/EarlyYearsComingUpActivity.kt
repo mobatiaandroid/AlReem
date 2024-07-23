@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
@@ -17,8 +16,8 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nas.alreem.R
+import com.nas.alreem.activity.early_years.adapter.ComingUpAdapterCommon
 import com.nas.alreem.activity.home.HomeActivity
-import com.nas.alreem.activity.primary.PrimaryActivity
 import com.nas.alreem.activity.primary.adapter.ComingUpAdapter
 import com.nas.alreem.activity.primary.model.ComingUpDataModell
 import com.nas.alreem.activity.primary.model.ComingUpResponseModel
@@ -34,7 +33,7 @@ class EarlyYearsComingUpActivity : AppCompatActivity(){
     lateinit var heading: TextView
     lateinit var logoClickImgView: ImageView
     lateinit var progressDialogAdd: ProgressBar
-    lateinit var comingUpArrayList:ArrayList<ComingUpDataModell>
+    lateinit var comingUpArrayList: ArrayList<ComingUpDataModell>
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
@@ -118,7 +117,6 @@ class EarlyYearsComingUpActivity : AppCompatActivity(){
         val call: Call<ComingUpResponseModel> = ApiClient.getClient.earlyComingUp()
         call.enqueue(object : Callback<ComingUpResponseModel> {
             override fun onFailure(call: Call<ComingUpResponseModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
                 progressDialogAdd.visibility=View.GONE
             }
             override fun onResponse(call: Call<ComingUpResponseModel>, response: Response<ComingUpResponseModel>) {
@@ -132,7 +130,7 @@ class EarlyYearsComingUpActivity : AppCompatActivity(){
                             comingUpArrayList=response.body()!!.responseArray!!.data!!
                             if (comingUpArrayList.size>0)
                             {
-                                var adapterComing= ComingUpAdapter(comingUpArrayList,mContext)
+                                var adapterComing= ComingUpAdapterCommon(comingUpArrayList,mContext)
                                 mListView.adapter=adapterComing
                             }
                             else

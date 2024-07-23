@@ -118,7 +118,6 @@ class MyorderActivity:AppCompatActivity() {
         val call: Call<PreOrdersModel> = ApiClient.getClient.canteen_myorder_history(model,"Bearer "+token)
         call.enqueue(object : Callback<PreOrdersModel> {
             override fun onFailure(call: Call<PreOrdersModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
                 progressDialogAdd.visibility=View.GONE
              //   progressDialogAdd.hide()
             }
@@ -126,7 +125,6 @@ class MyorderActivity:AppCompatActivity() {
                 val responsedata = response.body()
                 progressDialogAdd.visibility=View.GONE
              //   progressDialogAdd.hide()
-                Log.e("Response", responsedata.toString())
                 if (responsedata!!.status==100) {
                     dateRecyclerView.visibility=View.VISIBLE
                     noItemTxt.visibility=View.GONE

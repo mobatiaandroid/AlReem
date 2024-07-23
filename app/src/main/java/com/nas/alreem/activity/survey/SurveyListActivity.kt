@@ -57,7 +57,9 @@ class SurveyListActivity: AppCompatActivity(){
     var currentPageSurvey=0
     var survey_satisfation_status = 0
     private var surveySize = 1
-
+    private val EMAIL_PATTERN =
+        "^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$"
+    private val pattern = "^([a-zA-Z ]*)$"
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
@@ -124,7 +126,6 @@ class SurveyListActivity: AppCompatActivity(){
         val call: Call<SurveyListResponseModel> = ApiClient.getClient.surveyList("Bearer "+ PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<SurveyListResponseModel> {
             override fun onFailure(call: Call<SurveyListResponseModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
                 progressDialogAdd.visibility= View.GONE
             }
             override fun onResponse(call: Call<SurveyListResponseModel>, response: Response<SurveyListResponseModel>) {
@@ -170,7 +171,6 @@ class SurveyListActivity: AppCompatActivity(){
         val call: Call<SurveyDetailResponseModel> = ApiClient.getClient.surveyDetail(model,"Bearer "+ PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<SurveyDetailResponseModel> {
             override fun onFailure(call: Call<SurveyDetailResponseModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
                 progressDialogAdd.visibility= View.GONE
             }
             override fun onResponse(call: Call<SurveyDetailResponseModel>, response: Response<SurveyDetailResponseModel>) {
@@ -188,7 +188,6 @@ class SurveyListActivity: AppCompatActivity(){
                             survey_description=response.body()!!.responseArray!!.data!!.description
                             survey_contact_email=response.body()!!.responseArray!!.data!!.contact_email
                           //  surveyDetailQuestionsArrayList= response.body()!!.responseArray!!.data!!.questions!!
-                            Log.e("surveyDetailQuestions",surveyDetailQuestionsArrayList.size.toString())
                             if (response.body()!!.responseArray!!.data!!.questions!!.size > 0) {
 
                                 for ( j in  response.body()!!.responseArray!!.data!!.questions!!.indices)
@@ -201,22 +200,16 @@ class SurveyListActivity: AppCompatActivity(){
                                     surveyAnswersArrayList = ArrayList()
                                     if(response.body()!!.responseArray!!.data!!.questions!!.get(j).offered_answers!!.size>0)
                                     {
-                                        Log.e("insideif","insideif")
                                         for (k in response.body()!!.responseArray!!.data!!.questions!!.get(j).offered_answers!!.indices)
                                         {
-                                            Log.e("insidefor","insidefor")
                                             val nModel = SurveyOfferedAnswersModel()
                                             nModel.id=(response.body()!!.responseArray!!.data!!.questions!!.get(j).offered_answers!!.get(k).id)
                                             nModel.answer=(response.body()!!.responseArray!!.data!!.questions!!.get(j).offered_answers!!.get(k).answer)
                                             nModel.label=(response.body()!!.responseArray!!.data!!.questions!!.get(j).offered_answers!!.get(k).label)
-                                            Log.e("answer",response.body()!!.responseArray!!.data!!.questions!!.get(j).answer)
-                                            Log.e("id",
-                                                response.body()!!.responseArray!!.data!!.questions!!.get(j).offered_answers!!.get(k).id.toString()
-                                            )
+
                                             if (response.body()!!.responseArray!!.data!!.questions!!.get(j).answer.equals(
                                                     response.body()!!.responseArray!!.data!!.questions!!.get(j).offered_answers!!.get(k).id.toString())
                                             ) {
-                                                Log.e("insideifanswer","insideifanswer")
                                                 nModel.is_clicked=(true)
                                             } else {
                                                 nModel.is_clicked=(false)
@@ -225,7 +218,6 @@ class SurveyListActivity: AppCompatActivity(){
                                             surveyAnswersArrayList.add(nModel)
                                         }
                                         if (surveyAnswersArrayList.size > 0) {
-                                            Log.e("insideifanswersurvey","insideifanswersurvey")
                                             var isPositionClicked = false
                                             var position = -1
                                             for (m in surveyAnswersArrayList.indices) {
@@ -235,7 +227,7 @@ class SurveyListActivity: AppCompatActivity(){
                                                 }
                                             }
                                             if (isPositionClicked) {
-                                                Log.e("insideifanswersurveypos","insideifanswersurveypos")
+
                                                 if (position == 0) {
                                                     surveyAnswersArrayList[0].is_clicked0=(true)
                                                 } else if (position == 1) {
@@ -312,17 +304,13 @@ class SurveyListActivity: AppCompatActivity(){
 
         }
 
-        Log.e("paramobject", paramObject.toString())
+
         var model=SurveySubmitApiModel(survey_ID.toString(), status.toString(),mAnswerList)
-        Log.e("model", model.toString())
-        Log.e("model", model.id .toString())
-        Log.e("model", model.survey_satisfaction_status.toString())
-        Log.e("model", model.questions.toString())
+
 
          val call: Call<SurveySubmitResponseModel> = ApiClient.getClient.surveysubmit(model,"Bearer "+ PreferenceManager.getaccesstoken(mContext))
          call.enqueue(object : Callback<SurveySubmitResponseModel> {
              override fun onFailure(call: Call<SurveySubmitResponseModel>, t: Throwable) {
-                 Log.e("Failed", t.localizedMessage)
                  progressDialogAdd.visibility= View.GONE
              }
              override fun onResponse(call: Call<SurveySubmitResponseModel>, response: Response<SurveySubmitResponseModel>) {
@@ -681,7 +669,6 @@ class SurveyListActivity: AppCompatActivity(){
                     PassportArray.add(i, json)
                 }
                 val JSON_STRING = "" + PassportArray + ""
-                Log.e("JSON", JSON_STRING)
                 if (emptyvalue == surveyDetailQuestionsArrayList.size) {
                     val isEmpty = true
                     showSurveyContinueDialog(
@@ -730,7 +717,6 @@ class SurveyListActivity: AppCompatActivity(){
                         model.question_id=(surveyDetailQuestionsArrayList.get(k).id.toString())
                         model.answer_id=(surveyDetailQuestionsArrayList.get(k).answer)
                         mAnswerList.add(model)
-                        Log.e("Array", mAnswerList.toString())
                     }
                     val gson = Gson()
                     val PassportArray = java.util.ArrayList<String>()
@@ -742,7 +728,6 @@ class SurveyListActivity: AppCompatActivity(){
                         PassportArray.add(i, json)
                     }
                     val JSON_STRING = "" + PassportArray + ""
-                    Log.e("JSON", JSON_STRING)
                     dialog.dismiss()
                     callSurveySubmitApi(
                         survey_ID,
@@ -770,7 +755,6 @@ class SurveyListActivity: AppCompatActivity(){
                         PassportArray.add(i, json)
                     }
                     val JSON_STRING = "" + PassportArray + ""
-                    Log.e("JSON", JSON_STRING)
                     dialog.dismiss()
                     callSurveySubmitApi(
                         survey_ID,
@@ -783,7 +767,6 @@ class SurveyListActivity: AppCompatActivity(){
                     )
                 }
             }
-            Log.e("POS", pos.toString())
         }
         dialog.show()
     }
@@ -807,20 +790,64 @@ class SurveyListActivity: AppCompatActivity(){
         })
 
         btn_submit.setOnClickListener {
+
             if (text_dialog.text.toString().trim().equals("")) {
-                DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), resources.getString(R.string.enter_subject), mContext)
+                DialogFunctions.commonErrorAlertDialog(
+                    mContext.resources.getString(R.string.alert), resources.getString(R.string.enter_subject),
+                    mContext
+                )
 
 
             } else {
                 if (text_content.text.toString().trim().equals("")) {
-                    DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), resources.getString(R.string.enter_content), mContext)
+                    DialogFunctions.commonErrorAlertDialog(
+                        mContext.resources.getString(R.string.alert), resources.getString(R.string.enter_content),
+                        mContext
+                    )
 
+                } else if (survey_contact_email.matches(EMAIL_PATTERN.toRegex())) {
+                    if (text_dialog.text.toString().trim ().matches(pattern.toRegex())) {
+                        if (text_content.text.toString().trim ()
+                                .matches(pattern.toRegex())) {
+
+                            if (ConstantFunctions.internetCheck(mContext))
+                            {
+                                sendEmail(text_dialog.text.toString().trim(), text_content.text.toString().trim(), survey_contact_email, dialog)
+
+                            }
+                            else
+                            {
+                                DialogFunctions.showInternetAlertDialog(mContext)
+                            }
+
+                        } else {
+                            val toast: Toast = Toast.makeText(mContext, mContext.getResources().getString(R.string.enter_valid_contents), Toast.LENGTH_SHORT)
+                            toast.show()
+                        }
+                    } else {
+                        val toast: Toast = Toast.makeText(
+                            mContext,
+                            mContext.getResources()
+                                .getString(
+                                    R.string.enter_valid_subjects
+                                ),
+                            Toast.LENGTH_SHORT
+                        )
+                        toast.show()
+                    }
                 } else {
-                    // progressDialog.visibility = View.VISIBLE
-
-                    sendEmail(text_dialog.text.toString().trim(), text_content.text.toString().trim(), survey_contact_email, dialog)
+                    val toast: Toast = Toast.makeText(
+                        mContext,
+                        mContext.getResources()
+                            .getString(
+                                R.string.enter_valid_email
+                            ),
+                        Toast.LENGTH_SHORT
+                    )
+                    toast.show()
                 }
             }
+
         }
         dialog.show()
     }
@@ -834,14 +861,12 @@ class SurveyListActivity: AppCompatActivity(){
         val call: Call<SignUpResponseModel> = ApiClient.getClient.sendEmailStaff(sendMailBody, "Bearer " + PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<SignUpResponseModel> {
             override fun onFailure(call: Call<SignUpResponseModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
                 progressDialogAdd.visibility = View.GONE
             }
 
             override fun onResponse(call: Call<SignUpResponseModel>, response: Response<SignUpResponseModel>) {
                 val responsedata = response.body()
                 progressDialogAdd.visibility = View.GONE
-                Log.e("Response Signup", responsedata.toString())
                 if (responsedata != null) {
                     try {
 
@@ -932,10 +957,8 @@ class SurveyListActivity: AppCompatActivity(){
         submit.setOnClickListener {
             if (!isEmpty) {
                 nDialog.dismiss()
-                Log.e("SURVEY SIZE", surveySize.toString())
                 surveySize = surveySize - 1
                 if (surveySize <= 0) {
-                    Log.e("SURVEY SIZE ", surveySize.toString())
                     callSurveySubmitApi(
                         surveyID,
                         JSON_STRING!!,
@@ -963,7 +986,6 @@ class SurveyListActivity: AppCompatActivity(){
             currentPageSurvey = pos + 1
             progressBar.progress = currentPageSurvey
             surveyPager.currentItem = currentPageSurvey - 1
-            Log.e("WORKING", "SURVEY COUNT$currentPageSurvey")
             if (surveyQuestionArrayList.size > 1) {
                 if (currentPageSurvey != surveyQuestionArrayList.size) {
                     if (currentPageSurvey == 1) {

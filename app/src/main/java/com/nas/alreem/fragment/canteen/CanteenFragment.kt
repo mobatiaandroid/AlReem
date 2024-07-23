@@ -19,6 +19,9 @@ import com.nas.alreem.activity.canteen.CanteenPaymentActivity
 import com.nas.alreem.activity.canteen.InformationActivity
 import com.nas.alreem.activity.canteen.PreOrderActivity
 import com.nas.alreem.activity.login.model.SignUpResponseModel
+import com.nas.alreem.activity.lost_card.LostCardMainActivity
+import com.nas.alreem.activity.shop_new.Addorder_Activity_new
+import com.nas.alreem.activity.shop_new.PreOrderActivity_new
 import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.DialogFunctions
@@ -37,12 +40,15 @@ class CanteenFragment  : Fragment() {
     lateinit var information_image: LinearLayout
     lateinit var payment_image: LinearLayout
     lateinit var staffLinear: LinearLayout
+    //lateinit var lostcardLinear: LinearLayout
     lateinit var bannerImg:ImageView
     lateinit var title: TextView
     lateinit var description: TextView
     lateinit var contactEmail:String
     lateinit var progress: ProgressBar
-
+    private val EMAIL_PATTERN =
+        "^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$"
+    private val pattern = "^([a-zA-Z ]*)$"
      var walletTopUpLimit:Int=0
      var walletTopUpLimit_str:String=""
     override fun onCreateView(
@@ -75,7 +81,7 @@ class CanteenFragment  : Fragment() {
     //    progress.visibility=View.GONE
         email_icon = view?.findViewById(R.id.email_icon)!!
         progress = view?.findViewById(R.id.progress)!!
-
+       // lostcardLinear = view?.findViewById(R.id.lostcardLinear)!!
         preorder_image = view?.findViewById(R.id.preOrderLinear)!!
         information_image = view?.findViewById(R.id.informationLinear)!!
         payment_image = view?.findViewById(R.id.paymentLinear)!!
@@ -86,6 +92,13 @@ class CanteenFragment  : Fragment() {
 
     }
     private fun onClick() {
+
+       /* lostcardLinear.setOnClickListener {
+            val i = Intent(mContext, LostCardMainActivity::class.java)
+            PreferenceManager.setStudentID(mContext,"")
+
+            mContext.startActivity(i)
+        }*/
         email_icon.setOnClickListener {
             showSendEmailDialog()
         }
@@ -122,12 +135,10 @@ class CanteenFragment  : Fragment() {
             override fun onFailure(call: Call<CanteenBannerResponseModel>, t: Throwable) {
                 progress.visibility = View.GONE
 
-                Log.e("Failed", t.localizedMessage)
 
             }
             override fun onResponse(call: Call<CanteenBannerResponseModel>, response: Response<CanteenBannerResponseModel>) {
                 val responsedata = response.body()
-                Log.e("Response", responsedata.toString())
                 progress.visibility = View.GONE
 
                 if (responsedata!!.status==100) {
@@ -193,26 +204,63 @@ class CanteenFragment  : Fragment() {
 
         btn_submit.setOnClickListener {
             if (text_dialog.text.toString().trim().equals("")) {
-                DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), resources.getString(R.string.enter_subject), mContext)
+                DialogFunctions.commonErrorAlertDialog(
+                    mContext.resources.getString(R.string.alert), resources.getString(R.string.enter_subject),
+                    mContext
+                )
 
 
             } else {
                 if (text_content.text.toString().trim().equals("")) {
-                    DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), resources.getString(R.string.enter_content), mContext)
+                    DialogFunctions.commonErrorAlertDialog(
+                        mContext.resources.getString(R.string.alert), resources.getString(R.string.enter_content),
+                        mContext
+                    )
 
+                } else if (contactEmail.matches(EMAIL_PATTERN.toRegex())) {
+                    if (text_dialog.text.toString().trim ().matches(pattern.toRegex())) {
+                        if (text_content.text.toString().trim ()
+                                .matches(pattern.toRegex())) {
+
+                            if (ConstantFunctions.internetCheck(mContext))
+                            {
+                                sendEmail(text_dialog.text.toString().trim(), text_content.text.toString().trim(), contactEmail, dialog)
+
+                            }
+                            else
+                            {
+                                DialogFunctions.showInternetAlertDialog(mContext)
+                            }
+
+                        } else {
+                            val toast: Toast = Toast.makeText(mContext, mContext.getResources().getString(R.string.enter_valid_contents), Toast.LENGTH_SHORT)
+                            toast.show()
+                        }
+                    } else {
+                        val toast: Toast = Toast.makeText(
+                            mContext,
+                            mContext.getResources()
+                                .getString(
+                                    R.string.enter_valid_subjects
+                                ),
+                            Toast.LENGTH_SHORT
+                        )
+                        toast.show()
+                    }
                 } else {
-                    // progressDialog.visibility = View.VISIBLE
-                    if (ConstantFunctions.internetCheck(mContext))
-                    {
-                        sendEmail(text_dialog.text.toString().trim(), text_content.text.toString().trim(), contactEmail, dialog)
-                    }
-                    else
-                    {
-                        DialogFunctions.showInternetAlertDialog(mContext)
-                    }
-
+                    val toast: Toast = Toast.makeText(
+                        mContext,
+                        mContext.getResources()
+                            .getString(
+                                R.string.enter_valid_email
+                            ),
+                        Toast.LENGTH_SHORT
+                    )
+                    toast.show()
                 }
             }
+
+
         }
         dialog.show()
     }
@@ -225,14 +273,12 @@ class CanteenFragment  : Fragment() {
         val call: Call<SignUpResponseModel> = ApiClient.getClient.sendEmailStaff(sendMailBody, "Bearer " + PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<SignUpResponseModel> {
             override fun onFailure(call: Call<SignUpResponseModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
                 //progressDialog.visibility = View.GONE
             }
 
             override fun onResponse(call: Call<SignUpResponseModel>, response: Response<SignUpResponseModel>) {
                 val responsedata = response.body()
                 //progressDialog.visibility = View.GONE
-                Log.e("Response Signup", responsedata.toString())
                 if (responsedata != null) {
                     try {
 

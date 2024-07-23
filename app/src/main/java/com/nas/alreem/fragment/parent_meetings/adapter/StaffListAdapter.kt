@@ -1,6 +1,7 @@
 package com.nas.alreem.fragment.parent_meetings.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,11 +31,14 @@ internal class StaffListAdapter (private var studentList: List<StaffInfoDetail>,
     }
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val movie = studentList[position]
+        holder.setIsRecyclable(false)
         holder.listTxtTitle.text = movie.name
         //holder.jobTxtTitle.visibility=View.GONE
         //holder.jobTxtTitle.text = movie.role
+        holder.imagicon.setImageResource(R.drawable.staff)
         if(!movie.staff_photo.equals(""))
         {
+Log.e("staffimage",movie.staff_photo)
 
             Glide.with(mContext) //1
                 .load(movie.staff_photo)
@@ -46,6 +50,8 @@ internal class StaffListAdapter (private var studentList: List<StaffInfoDetail>,
                 .into(holder.imagicon)
         }
         else{
+            Log.e("staffimage",movie.staff_photo)
+
             holder.imagicon.setImageResource(R.drawable.staff)
         }
     }

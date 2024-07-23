@@ -3,17 +3,23 @@
 
     <string-array name="navigation_item_names">
         <item>Home</item>
+        <item>Student Information</item>
         <item>Notifications</item>
         <item>Calendar</item>
         <item>Payments</item>
-        <item>Lunch Box</item>
-        <item>Parent Essentials</item>
         <item>Absence &amp; Early Pickup</item>
+        <item>Lunch Box</item>
+        <item>Shop</item>
+        <item>Parent Essentials</item>
+        <item>Re-Enrolment</item>
         <item>Early Years</item>
         <item>Primary</item>
         <item>Secondary</item>
+        <!--
+        <item>Performing Arts</item>
+-->
         <item>Reports</item>
-        <item>Permission Forms</item>
+        <item>Forms</item>
         <item>Enrichment</item>
         <item>Parent Meetings</item>
         <item>Gallery</item>
@@ -21,21 +27,25 @@
         <item>About Us</item>
 
 
-
-
     </string-array>
     <string name="loading">Loading&#8230;</string>
     <string-array name="navigation_item_icons">
         <item>@drawable/home</item>
+        <item>@drawable/sidebar_student_information</item>
         <item>@drawable/notif</item>
         <item>@drawable/calendar</item>
         <item>@drawable/payment</item>
-        <item>@drawable/lunchbox_icon</item>
-        <item>@drawable/parent</item>
         <item>@drawable/absence</item>
+        <item>@drawable/lunchbox_icon</item>
+        <item>@drawable/store64</item>
+        <item>@drawable/parent</item>
+        <item>@drawable/re_enrollment</item>
         <item>@drawable/earlyyears</item>
         <item>@drawable/primary</item>
         <item>@drawable/secondary</item>
+        <!--
+        <item>@drawable/arts</item>
+-->
         <item>@drawable/report_side</item>
         <item>@drawable/permission_slip</item>
         <item>@drawable/ccas</item>
@@ -43,8 +53,6 @@
         <item>@drawable/gallery</item>
         <item>@drawable/contacts</item>
         <item>@drawable/aboutus</item>
-
-
 
 
     </string-array>
@@ -87,7 +95,8 @@
     <string name="confirm_password">Kindly confirm your new password</string>
     <string name="enter_subject">Please enter your subject</string>
     <string name="enter_content">Please enter your content</string>
-
+    <string name="enter_valid_contents"> Please enter your valid content</string>
+    <string name="enter_valid_subjects"> Please enter your valid subject</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="add_cal_success">Event added to device calendar</string>
     <string name="del_cal_success">Event removed from device calendar</string>
@@ -309,9 +318,19 @@
     <string name="force_update">There is a newer version available for download! Please update the app by visiting the Google Play Store</string>
     <string name="appregisteredHint">App Registered Absences</string>
     <string name="regNewAbsence">Register New Absence</string>
+    <string name="regNewbusservice">Report Absence</string>
     <string name="regEarlypickup">Register Early Pickup</string>
+    <string name="requestHintbus">If you need to cancel a registered Bus service pickup please contact reception (phone or email).</string>
+
     <string name="requestHint">If you need to cancel a registered absence/early pickup please contact reception (phone or email).</string>
+    <string name="new_card">Request for New ID Card</string>
 
-
+    <string name="personal_info">Please check to confirm you have read and acknowledged the Nord Anglia
+        Education Personal Information Collection Statement</string>
+    <string name="agree">I have agreed to the terms and conditions.</string>
+    <string name="agree_info">I confirm I have read and acknowledged the Nord Anglia Education Personal
+        Information Collection Statement as outlined in the above link.</string>
+    <string name="terms_conditions">Please click and sign here to let us know you have understood the
+         NAE Terms and Conditions.</string>
 
 </resources>

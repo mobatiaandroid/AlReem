@@ -13,7 +13,7 @@
         android:textSize="20sp"
         android:textColor="@color/black"
         android:layout_toLeftOf="@+id/imgClose"
-        android:visibility="visible"/>
+        android:visibility="gone"/>
     <ImageView
         android:id="@+id/imgClose"
         android:layout_width="wrap_content"

@@ -95,7 +95,6 @@ class PaymentCategoryActivity : AppCompatActivity() {
         val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<StudentListModel> {
             override fun onFailure(call: Call<StudentListModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
                 progressDialogAdd.visibility=View.GONE
             }
             override fun onResponse(call: Call<StudentListModel>, response: Response<StudentListModel>) {
@@ -110,7 +109,6 @@ class PaymentCategoryActivity : AppCompatActivity() {
                             studentListArrayList.addAll(response.body()!!.responseArray.studentList)
                             if (PreferenceManager.getStudentID(mContext).equals(""))
                             {
-                                Log.e("Empty Img","Empty")
                                 studentName=studentListArrayList.get(0).name
                                 studentImg=studentListArrayList.get(0).photo
                                 studentId=studentListArrayList.get(0).id
@@ -120,7 +118,6 @@ class PaymentCategoryActivity : AppCompatActivity() {
                                 PreferenceManager.setStudentPhoto(mContext,studentImg)
                                 PreferenceManager.setStudentClass(mContext,studentClass)
                                 studentNameTxt.text=studentName
-                                Log.e("studid(0)", PreferenceManager.getStudentID(mContext).toString())
                                 if(!studentImg.equals(""))
                                 {
                                     Glide.with(mContext) //1
@@ -236,7 +233,6 @@ class PaymentCategoryActivity : AppCompatActivity() {
                 PreferenceManager.setStudentName(mContext,studentName)
                 PreferenceManager.setStudentPhoto(mContext,studentImg)
                 PreferenceManager.setStudentClass(mContext,studentClass)
-                Log.e("studidclick",PreferenceManager.getStudentID(mContext).toString())
                 studentNameTxt.text=studentName
                 if(!studentImg.equals(""))
                 {
@@ -278,7 +274,6 @@ class PaymentCategoryActivity : AppCompatActivity() {
                 PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<PayCategoryModel> {
             override fun onFailure(call: Call<PayCategoryModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
                 progressDialogAdd.visibility = View.GONE
             }
 
@@ -287,7 +282,6 @@ class PaymentCategoryActivity : AppCompatActivity() {
 
                 catListRec.visibility=View.VISIBLE
 
-                Log.e("Response Signup", responsedata.toString())
                 if (responsedata != null) {
                     try {
 
@@ -328,7 +322,6 @@ class PaymentCategoryActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         catListRec.visibility=View.GONE
-        Log.e("resume","resume")
         if(PreferenceManager.getStudentID(mContext).equals("")){
 
         }else {

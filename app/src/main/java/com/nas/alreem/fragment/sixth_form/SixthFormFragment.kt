@@ -99,7 +99,6 @@ class SixthFormFragment : Fragment() {
         val call: Call<PrimaryResponseModel> = ApiClient.getClient.earlyYearsList()
         call.enqueue(object : Callback<PrimaryResponseModel> {
             override fun onFailure(call: Call<PrimaryResponseModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
                 progressDialogAdd.visibility= View.GONE
             }
             override fun onResponse(call: Call<PrimaryResponseModel>, response: Response<PrimaryResponseModel>) {

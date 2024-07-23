@@ -10,11 +10,17 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.Window
 import android.view.inputmethod.EditorInfo
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.ProgressBar
+import android.widget.TextView
+import android.widget.Toast
 import com.nas.alreem.R
 import com.nas.alreem.activity.login.LoginActivity
 import com.nas.alreem.activity.login.model.ForgetPasswordResponseModel
 import com.nas.alreem.activity.login.model.SignUpResponseModel
+import com.nas.alreem.fragment.settings.SettingsFragment
 import com.nas.alreem.fragment.settings.model.ChangePasswordApiModel
 import retrofit2.Call
 import retrofit2.Callback
@@ -242,7 +248,6 @@ class DialogFunctions {
             val call: Call<SignUpResponseModel> = ApiClient.getClient.signup(email)
             call.enqueue(object : Callback<SignUpResponseModel> {
                 override fun onFailure(call: Call<SignUpResponseModel>, t: Throwable) {
-                    Log.e("Failed", t.localizedMessage)
                     progressDialogAdd.visibility=View.GONE
                 }
                 override fun onResponse(call: Call<SignUpResponseModel>, response: Response<SignUpResponseModel>) {
@@ -278,7 +283,6 @@ class DialogFunctions {
             val call: Call<ForgetPasswordResponseModel> = ApiClient.getClient.forgetPassword(email)
             call.enqueue(object : Callback<ForgetPasswordResponseModel> {
                 override fun onFailure(call: Call<ForgetPasswordResponseModel>, t: Throwable) {
-                    Log.e("Failed", t.localizedMessage)
                     progressDialogAdd.visibility=View.GONE
                 }
                 override fun onResponse(call: Call<ForgetPasswordResponseModel>, response: Response<ForgetPasswordResponseModel>) {
@@ -346,6 +350,16 @@ class DialogFunctions {
             var text_currentnewpassword = dialog.findViewById(R.id.text_currentnewpassword) as EditText
             var text_confirmpassword = dialog.findViewById(R.id.text_confirmpassword) as EditText
             var progressDialogAdd = dialog.findViewById(R.id.progressDialogAdd) as ProgressBar
+            val PASSWORD_PATTERN = "^" +
+                    "(?=.*[@#$%^&+=])" +  // at least 1 special character
+                    "(?=\\S+$)" +  // no white spaces
+                    ".{8,}" +  // at least 8 characters
+                    "$"
+            var PASSWORD_PATTERN3="^" +
+                    ".{8,}"+
+                    "(?=.*[@#$%^&+=])"+  // at least 1 special character
+                    "(?=\\S+$)"
+            var  PASSWORD_PATTERN4 = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#\$%^&+=])(?=\\\\S+\$).{8,}\$"
             text_currentpassword.setOnTouchListener(object : View.OnTouchListener {
                 override fun onTouch(v: View, m: MotionEvent): Boolean {
                     // Perform tasks here
@@ -393,9 +407,18 @@ class DialogFunctions {
                        }
                        else
                        {
-                           if (text_currentnewpassword.text.toString().trim().equals(text_confirmpassword.text.toString().trim()))
+
+                           /*if (text_currentnewpassword.getText().toString().trim { it <= ' ' }
+                                   .matches(PASSWORD_PATTERN.toRegex()) && text_confirmpassword.getText()
+                                   .toString().trim { it <= ' ' }
+                                   .matches(PASSWORD_PATTERN.toRegex()))*/
+                           if (text_currentnewpassword.getText().toString().trim { it <= ' ' }
+                                   .matches(PASSWORD_PATTERN4.toRegex()) && text_confirmpassword.getText()
+                                   .toString().trim { it <= ' ' }
+                                   .matches(PASSWORD_PATTERN4.toRegex())
+                           )
                            {
-                               // callChangePasswordApi()
+                               Log.e("SUCCESS","SUCCESS")
                                if (ConstantFunctions.internetCheck(context))
                                {
                                    progressDialogAdd.visibility= View.VISIBLE
@@ -406,13 +429,69 @@ class DialogFunctions {
                                {
                                    showInternetAlertDialog(context)
                                }
+
+                           } else {
+                               Log.e("Failed","Failed")
+                               if (!text_currentnewpassword.getText().toString().onlyLetters()&&
+                                   !text_confirmpassword.getText()
+                                       .toString().onlyLetters())
+                               {
+
+                                   if (!text_currentnewpassword.text.toString()
+                                           .contains(" ") &&
+                                       !text_confirmpassword.getText()
+                                           .toString()
+                                           .contains(" "))
+                                   {
+
+                                       if (text_currentnewpassword.text.toString().trim()
+                                               .matches(PASSWORD_PATTERN3.toRegex()) &&
+                                           text_confirmpassword.getText()
+                                               .toString().trim { it <= ' ' }
+                                               .matches(PASSWORD_PATTERN3.toRegex())){
+
+                                       }else{
+                                           Toast.makeText(context, "Password must contain atleast 8 characters", Toast.LENGTH_SHORT).show()
+
+                                       }
+
+                                   }else{
+                                       Toast.makeText(context, "Password must not contain white spaces", Toast.LENGTH_SHORT).show()
+
+                                   }
+
+                               }else{
+                                   Toast.makeText(context, "Password must contain atleast 1 special character", Toast.LENGTH_SHORT).show()
+
+                               }
+                           }
+                          /* if (text_currentnewpassword.text.toString().trim().equals(text_confirmpassword.text.toString().trim()))
+                           {
+                               // callChangePasswordApi()
+                               if (text_currentnewpassword.getText().toString().trim ()
+                                       .matches(PASSWORD_PATTERN.toRegex()) && text_confirmpassword.getText()
+                                       .toString().trim { it <= ' ' }
+                                       .matches(PASSWORD_PATTERN.toRegex())
+                               ) {
+                                   if (ConstantFunctions.internetCheck(context))
+                                   {
+                                       progressDialogAdd.visibility= View.VISIBLE
+                                       changePassword(text_currentpassword.text.toString().trim(),text_currentnewpassword.text.toString().trim(),text_confirmpassword.text.toString().trim(),progressDialogAdd,context,dialog)
+
+                                   }
+                                   else
+                                   {
+                                       showInternetAlertDialog(context)
+                                   }
+                               }
+
                            }
                            else
                            {
                                // New Password and Confirm Password Doesn't match
                                commonErrorAlertDialog(context.resources.getString(R.string.alert),context.resources.getString(R.string.password_not_match),context)
 
-                           }
+                           }*/
                        }
                    }
                }
@@ -425,6 +504,7 @@ class DialogFunctions {
             }
             dialog.show()
         }
+        fun String.onlyLetters() = all { it.isLetter() }
 
         fun deleteAccountDialog(context: Context)
         {
@@ -465,7 +545,6 @@ class DialogFunctions {
             val call: Call<ForgetPasswordResponseModel> = ApiClient.getClient.changePassword(model,"Bearer "+PreferenceManager.getaccesstoken(context))
             call.enqueue(object : Callback<ForgetPasswordResponseModel> {
                 override fun onFailure(call: Call<ForgetPasswordResponseModel>, t: Throwable) {
-                    Log.e("Failed", t.localizedMessage)
                     progressDialogAdd.visibility=View.GONE
                 }
                 override fun onResponse(call: Call<ForgetPasswordResponseModel>, response: Response<ForgetPasswordResponseModel>) {
@@ -503,7 +582,6 @@ class DialogFunctions {
             val call: Call<ForgetPasswordResponseModel> = ApiClient.getClient.deleteAccount("Bearer "+PreferenceManager.getaccesstoken(context))
             call.enqueue(object : Callback<ForgetPasswordResponseModel> {
                 override fun onFailure(call: Call<ForgetPasswordResponseModel>, t: Throwable) {
-                    Log.e("Failed", t.localizedMessage)
                     progressDialogAdd.visibility=View.GONE
                 }
                 override fun onResponse(call: Call<ForgetPasswordResponseModel>, response: Response<ForgetPasswordResponseModel>) {

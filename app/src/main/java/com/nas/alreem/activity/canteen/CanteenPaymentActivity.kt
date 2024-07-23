@@ -225,7 +225,6 @@ class CanteenPaymentActivity:AppCompatActivity() {
         val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+token)
         call.enqueue(object : Callback<StudentListModel> {
             override fun onFailure(call: Call<StudentListModel>, t: Throwable) {
-                Log.e("Error", t.localizedMessage)
                 //progressDialog.visibility = View.GONE
             }
             override fun onResponse(call: Call<StudentListModel>, response: Response<StudentListModel>) {
@@ -236,7 +235,6 @@ class CanteenPaymentActivity:AppCompatActivity() {
                     studentListArrayList.addAll(response.body()!!.responseArray.studentList)
                     if (PreferenceManager.getStudentID(nContext).equals(""))
                     {
-                        Log.e("Empty Img","Empty")
                         studentName=studentListArrayList.get(0).name
                         studentImg=studentListArrayList.get(0).photo
                         studentId=studentListArrayList.get(0).id
@@ -391,11 +389,9 @@ mProgressRelLayout.visibility=View.VISIBLE
         call.enqueue(object : Callback<WalletBalanceModel> {
             override fun onFailure(call: Call<WalletBalanceModel>, t: Throwable) {
                 mProgressRelLayout.visibility=View.GONE
-                Log.e("Failed", t.localizedMessage)
             }
             override fun onResponse(call: Call<WalletBalanceModel>, response: Response<WalletBalanceModel>) {
                 val responsedata = response.body()
-                Log.e("Response", responsedata.toString())
                 if (responsedata!!.status==100) {
                     mProgressRelLayout.visibility=View.GONE
                     WalletAmount=response!!.body()!!.responseArray.wallet_balance
@@ -418,14 +414,12 @@ mProgressRelLayout.visibility=View.VISIBLE
             ApiClient.getClient.payment_token(paymentTokenBody, "Bearer " + token)
         call.enqueue(object : Callback<PaymentTokenModel> {
             override fun onFailure(call: Call<PaymentTokenModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
                 mProgressRelLayout.visibility = View.GONE
             }
 
             override fun onResponse(call: Call<PaymentTokenModel>, response: Response<PaymentTokenModel>) {
                 val responsedata = response.body()
                 mProgressRelLayout.visibility = View.GONE
-                Log.e("Response Signup", responsedata.toString())
                 if (responsedata != null) {
                     try {
 
@@ -435,12 +429,10 @@ mProgressRelLayout.visibility=View.VISIBLE
                             val ts = tsLong.toString()
                             invoice_ref="NASCANAND"
                             var mechantorderRef=invoice_ref+"-"+ts
-                            Log.e("m",mechantorderRef)
-                            Log.e("w",WalletAmount.toString())
+
                             val amountDouble: Double = WalletAmount.toDouble() * 100
                             val amuntInt = amountDouble.toInt()
                             val strDoubleAmount = amuntInt.toString()
-                            Log.e("amount",strDoubleAmount)
                             //order_id= "BISAD" + id + "S" + studentId
                             var amt:Int=payAmount.toInt() * 100
                             mProgressRelLayout.visibility=View.VISIBLE
@@ -468,7 +460,6 @@ mProgressRelLayout.visibility=View.VISIBLE
         })
     }
     private fun callForPayment(payment_token:String,amount:String){
-        Log.e("paymentcall","true")
         mProgressRelLayout.visibility=View.VISIBLE
         val tsLong = System.currentTimeMillis() / 1000
         val ts = tsLong.toString()
@@ -481,14 +472,12 @@ mProgressRelLayout.visibility=View.VISIBLE
             ApiClient.getClient.payment_gateway(paymentGatewayBody, "Bearer " + token)
         call.enqueue(object : Callback<PaymentGatewayModel> {
             override fun onFailure(call: Call<PaymentGatewayModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
                 mProgressRelLayout.visibility = View.GONE
             }
 
             override fun onResponse(call: Call<PaymentGatewayModel>, response: Response<PaymentGatewayModel>) {
                 val responsedata = response.body()
                 mProgressRelLayout.visibility = View.GONE
-                Log.e("Response gateway", response.body()!!.status.toString())
                 if (responsedata != null) {
                     try {
 
@@ -498,8 +487,7 @@ mProgressRelLayout.visibility=View.VISIBLE
                             var orderPageUrl=responsedata.responseArray.order_paypage_url
                             var auth=responsedata.responseArray.authorization
                             val Code: String = orderPageUrl.split("=").toTypedArray().get(1)
-                            Log.e("code",Code)
-                            Log.e("auth",auth)
+
                             mProgressRelLayout.visibility = View.GONE
                             val request: CardPaymentRequest = CardPaymentRequest.Builder().gatewayUrl(auth).code(Code).build()
 
@@ -521,10 +509,49 @@ mProgressRelLayout.visibility=View.VISIBLE
 
         })
     }
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(
+        requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 101) {
+            when (resultCode) {
+                Activity.RESULT_OK -> onCardPaymentResponse(
+                    CardPaymentData.getFromIntent(data!!)
+                )
+                Activity.RESULT_CANCELED ->{
+                    Toast.makeText(nContext, "Transaction Failed", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        }
+    }
+    fun onCardPaymentResponse(data: CardPaymentData) {
+        when (data.code) {
+            CardPaymentData.STATUS_PAYMENT_AUTHORIZED,
+            CardPaymentData.STATUS_PAYMENT_CAPTURED -> {
+                if (ConstantFunctions.internetCheck(nContext))
+                {
+                    paySuccessApi()
+                }
+                else
+                {
+                    DialogFunctions.showInternetAlertDialog(nContext)
+                }
+            }
+            CardPaymentData.STATUS_PAYMENT_FAILED -> {
+                Toast.makeText(nContext, "Transaction Failed", Toast.LENGTH_SHORT).show();
+            }
+            CardPaymentData.STATUS_GENERIC_ERROR -> {
+                Toast.makeText(nContext, data.reason, Toast.LENGTH_SHORT).show();
+            }
+            else -> IllegalArgumentException(
+                "Unknown payment response (${data.reason})")
+        }
+    }
+    /*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         Log.d("request_code", requestCode.toString())
         Log.d("resultt_code", resultCode.toString())
+        Log.d("data", data.toString())
         if (data == null) {
             mProgressRelLayout.visibility=View.GONE
             Toast.makeText(nContext, "transaction cancelled", Toast.LENGTH_SHORT).show()
@@ -539,7 +566,7 @@ mProgressRelLayout.visibility=View.VISIBLE
                 Log.d("PAYMM", cardPaymentData.reason.toString())
                 if (cardPaymentData.code == 2) {
 
-                    /* val tripDetailsAPI = """
+                    *//* val tripDetailsAPI = """
                          {
                          "details":[
                          {
@@ -553,14 +580,14 @@ mProgressRelLayout.visibility=View.VISIBLE
                          }
                          ]
                          }
-                         """.trimIndent()*/
+                         """.trimIndent()*//*
 
-                 /*   payment_type_print = "Online"
+                 *//*   payment_type_print = "Online"
                     payTotalButton.visibility = View.GONE
                     totalLinear.visibility = View.VISIBLE
                     paidImg.visibility = View.VISIBLE
                     mainLinear.visibility = View.VISIBLE
-                    printLinear.visibility = View.VISIBLE*/
+                    printLinear.visibility = View.VISIBLE*//*
 
                     if (ConstantFunctions.internetCheck(nContext)) {
 //            progressDialog.visibility= View.VISIBLE
@@ -575,9 +602,9 @@ mProgressRelLayout.visibility=View.VISIBLE
                 }
             }
         }
-    }
+    }*/
     private fun paySuccessApi(){
-       // mProgressRelLayout.visibility=View.VISIBLE
+        mProgressRelLayout.visibility=View.VISIBLE
         var devicename:String= (Build.MANUFACTURER
                 + " " + Build.MODEL + " " + Build.VERSION.RELEASE
                 + " " + Build.VERSION_CODES::class.java.fields[Build.VERSION.SDK_INT]
@@ -589,14 +616,13 @@ mProgressRelLayout.visibility=View.VISIBLE
             ApiClient.getClient.wallet_topup(paymentSuccessBody, "Bearer " + token)
         call.enqueue(object : Callback<WalletAmountModel> {
             override fun onFailure(call: Call<WalletAmountModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
+
                 mProgressRelLayout.visibility=View.INVISIBLE
             }
 
             override fun onResponse(call: Call<WalletAmountModel>, response: Response<WalletAmountModel>) {
                 val responsedata = response.body()
                 //progressDialog.visibility = View.GONE
-                Log.e("Response Signup", responsedata.toString())
                 if (responsedata != null) {
                     try {
 

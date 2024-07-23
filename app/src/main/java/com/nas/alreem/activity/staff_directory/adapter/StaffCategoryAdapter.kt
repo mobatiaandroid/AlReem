@@ -30,7 +30,6 @@ internal class StaffCategoryAdapter (var context: Context, var staff_cat_list: A
         return MyViewHolder(itemView)
     }
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        Log.e("ad",staff_cat_list.size.toString())
 
        holder.department.text=staff_cat_list[position].department_name
 

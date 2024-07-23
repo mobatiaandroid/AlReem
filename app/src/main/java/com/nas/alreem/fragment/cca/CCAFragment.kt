@@ -46,6 +46,9 @@ import retrofit2.Response
     var mailImageView: ImageView? = null
     var ccaOption: RelativeLayout? = null
     var contactEmail = ""
+      private val EMAIL_PATTERN =
+          "^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$"
+      private val pattern = "^([a-zA-Z ]*)$"
     private var description = ""
     var text_content: TextView? = null
     var text_dialog: TextView? = null
@@ -139,6 +142,7 @@ import retrofit2.Response
         })
 
         btn_submit.setOnClickListener {
+
             if (text_dialog.text.toString().trim().equals("")) {
                 DialogFunctions.commonErrorAlertDialog(
                     mContext.resources.getString(R.string.alert), resources.getString(R.string.enter_subject),
@@ -153,20 +157,51 @@ import retrofit2.Response
                         mContext
                     )
 
+                } else if (contactEmail.matches(EMAIL_PATTERN.toRegex())) {
+                    if (text_dialog.text.toString().trim ().matches(pattern.toRegex())) {
+                        if (text_content.text.toString().trim ()
+                                .matches(pattern.toRegex())) {
+
+                            if (ConstantFunctions.internetCheck(mContext))
+                            {
+                                callSendEmailToStaffApi(text_dialog.text.toString().trim(), text_content.text.toString().trim(), contactEmail, dialog)
+
+                            }
+                            else
+                            {
+                                DialogFunctions.showInternetAlertDialog(mContext)
+                            }
+
+                        } else {
+                            val toast: Toast = Toast.makeText(mContext, mContext.getResources().getString(R.string.enter_valid_contents), Toast.LENGTH_SHORT)
+                            toast.show()
+                        }
+                    } else {
+                        val toast: Toast = Toast.makeText(
+                            mContext,
+                            mContext.getResources()
+                                .getString(
+                                    R.string.enter_valid_subjects
+                                ),
+                            Toast.LENGTH_SHORT
+                        )
+                        toast.show()
+                    }
                 } else {
-                    // progressDialog.visibility = View.VISIBLE
-                    if (ConstantFunctions.internetCheck(mContext))
-                    {
-                        callSendEmailToStaffApi(text_dialog.text.toString().trim(), text_content.text.toString().trim(), contactEmail, dialog)
-                    }
-                    else
-                    {
-                        DialogFunctions.showInternetAlertDialog(mContext)
-                    }
-
-
+                    val toast: Toast = Toast.makeText(
+                        mContext,
+                        mContext.getResources()
+                            .getString(
+                                R.string.enter_valid_email
+                            ),
+                        Toast.LENGTH_SHORT
+                    )
+                    toast.show()
                 }
             }
+
+
+
         }
         dialog.show()
     }
@@ -177,14 +212,12 @@ import retrofit2.Response
         val call: Call<SignUpResponseModel> = ApiClient.getClient.sendEmailStaff(sendMailBody, "Bearer " + PreferenceManager.getaccesstoken(mContext!!))
         call.enqueue(object : Callback<SignUpResponseModel> {
             override fun onFailure(call: Call<SignUpResponseModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
                 //progressDialog.visibility = View.GONE
             }
 
             override fun onResponse(call: Call<SignUpResponseModel>, response: Response<SignUpResponseModel>) {
                 val responsedata = response.body()
                 //progressDialog.visibility = View.GONE
-                Log.e("Response Signup", responsedata.toString())
                 if (responsedata != null) {
                     try {
 
@@ -232,33 +265,33 @@ import retrofit2.Response
                             description = response.body()!!.data!!.description!!
                             contactEmail = response.body()!!.data!!.contact_email!!
 //
-                            PreferenceManager.setCcaOptionBadge(
+                            PreferenceManager.setCcaOptionCCABadge(
                                 mContext!!,
                                 response.body()!!.data!!.cca_badge
                             )
-                            PreferenceManager.setCcaOptionEditedBadge(
+                            PreferenceManager.setCcaOptionEditedCCaBadge(
                                 mContext!!,
                                 response.body()!!.data!!.cca_edited_badge
                             )
-                            if (PreferenceManager.getCcaOptionBadge(mContext!!)!!.equals(0) &&
-                                PreferenceManager.getCcaOptionEditedBadge(mContext!!)!!.equals(0)
+                            if (PreferenceManager.getCcaoptionCCaBadge(mContext!!)!!.equals(0) &&
+                                PreferenceManager.getCcaoptionEditedCCaBadge(mContext!!)!!.equals(0)
                             ) {
                                 ccaDot!!.setVisibility(View.GONE)
-                            } else if (PreferenceManager.getCcaOptionBadge(mContext!!)!!.equals(0) &&
-                                !PreferenceManager.getCcaOptionEditedBadge(mContext!!)!!.equals(0)
+                            } else if (PreferenceManager.getCcaoptionCCaBadge(mContext!!)!!.equals(0) &&
+                                !PreferenceManager.getCcaoptionEditedCCaBadge(mContext!!)!!.equals(0)
                             ) {
                                 ccaDot!!.setVisibility(View.VISIBLE)
                                ccaDot!!.setText(response.body()!!.data!!.cca_edited_badge)
                                ccaDot!!.setBackgroundResource(R.drawable.shape_circle_navy)
-                            } else if (!PreferenceManager.getCcaOptionBadge(mContext!!)!!.equals(0)
-                                && PreferenceManager.getCcaOptionEditedBadge(
-                                    mContext!!).equals(0)
+                            } else if (!PreferenceManager.getCcaoptionCCaBadge(mContext!!)!!.equals(0)
+                                && PreferenceManager.getCcaoptionEditedCCaBadge(
+                                    mContext!!)!!.equals(0)
                             ) {
                                 ccaDot!!.setVisibility(View.VISIBLE)
                                ccaDot!!.setText(response.body()!!.data!!.cca_badge.toString())
                                 ccaDot!!.setBackgroundResource(R.drawable.shape_circle_red)
-                            } else if (!PreferenceManager.getCcaOptionBadge(mContext!!).equals(0)
-                                && !PreferenceManager.getCcaOptionEditedBadge(mContext!!)!!.equals(0)
+                            } else if (!PreferenceManager.getCcaoptionCCaBadge(mContext!!)!!.equals(0)
+                                && !PreferenceManager.getCcaoptionEditedCCaBadge(mContext!!)!!.equals(0)
                             ) {
                                ccaDot!!.setVisibility(View.VISIBLE)
                                 ccaDot!!.setText(response.body()!!.data!!.cca_badge)
@@ -350,7 +383,6 @@ import retrofit2.Response
 
       override fun onResume() {
           super.onResume()
-          Log.e("TEST","call 1")
           if (ConstantFunctions.internetCheck(mContext!!))
           {
               getList()

@@ -55,7 +55,6 @@ class PDFViewerActivity : AppCompatActivity() {
         btn_left = findViewById(R.id.btn_left)
         urltoshow = intent.getStringExtra("Url").toString()
         title = intent.getStringExtra("title").toString()
-        Log.e("url",urltoshow)
         progressBar.visibility = View.VISIBLE
         heading.text=title
         btn_left.setOnClickListener {

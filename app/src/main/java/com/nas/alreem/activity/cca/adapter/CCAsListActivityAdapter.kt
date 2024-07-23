@@ -54,7 +54,6 @@ class CCAsListActivityAdapter(var mContext: Context, mCCAmodelArrayList: ArrayLi
         ) + " to " + dateParsingTodd_MMM_yyyy(
             mCCAmodelArrayList[position].to_date
         )
-        Log.e("isAttentii", mCCAmodelArrayList[position].isAttendee!!)
 
         if (mCCAmodelArrayList[position].isAttendee.equals("0")) {
             if (mCCAmodelArrayList[position].isSubmissionDateOver.equals("1")) {
@@ -86,7 +85,6 @@ class CCAsListActivityAdapter(var mContext: Context, mCCAmodelArrayList: ArrayLi
     }
 
     override fun getItemCount(): Int {
-        Log.e("size", mCCAmodelArrayList.size.toString())
         return mCCAmodelArrayList.size
     }
 

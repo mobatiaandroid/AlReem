@@ -141,26 +141,22 @@ class RequestabsenceActivity: AppCompatActivity() {
                     if (enterMessage.text.toString().trim().equals("")){
                         DialogFunctions.commonErrorAlertDialog("Alert","Please enter reason for your absence",mContext)
 
-
                     }
                     else{
 
                         reasonAPI=enterMessage.text.toString().trim()
-                        Log.e("Pass Value",fromDate+"  "+toDate+"   "+reasonAPI)
 
                             val inputFormat2: DateFormat = SimpleDateFormat("d-m-yyyy")
                             val outputFormat2: DateFormat = SimpleDateFormat("d-m-yyyy")
                             val inputDateStr2 = fromDate
                             val date2: Date = inputFormat2.parse(inputDateStr2)
                             val f_date: String = outputFormat2.format(date2)
-                            Log.e("fd",f_date)
 
                             val inputFormat3: DateFormat = SimpleDateFormat("d-m-yyyy")
                             val outputFormat3: DateFormat = SimpleDateFormat("d-m-yyyy")
                             val inputDateStr3 = toDate
                             val date3: Date = inputFormat3.parse(inputDateStr3)
                             val t_date: String = outputFormat3.format(date3)
-                            Log.e("fd",t_date)
 
                             callAbsenceSubmitApi(f_date,t_date,reasonAPI)
 
@@ -205,14 +201,12 @@ class RequestabsenceActivity: AppCompatActivity() {
             ApiClient.getClient.leaveRequest(absenceSuccessBody, "Bearer " + token)
         call.enqueue(object : Callback<RequestLeaveModel> {
             override fun onFailure(call: Call<RequestLeaveModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
                 //mProgressRelLayout.visibility=View.INVISIBLE
             }
 
             override fun onResponse(call: Call<RequestLeaveModel>, response: Response<RequestLeaveModel>) {
                 val responsedata = response.body()
                 //progressDialog.visibility = View.GONE
-                Log.e("Response Signup", responsedata.toString())
                 if (responsedata != null) {
                     try {
 
@@ -261,7 +255,6 @@ class RequestabsenceActivity: AppCompatActivity() {
                     val inputDateStr = date_temp
                     val date: Date = inputFormat.parse(inputDateStr)
                     val outputDateStr: String = outputFormat.format(date)
-                    Log.e("dt", outputDateStr)
                     fromDate=date_sel.toString()
                     enterStratDate.text = outputDateStr
 
@@ -294,7 +287,6 @@ class RequestabsenceActivity: AppCompatActivity() {
                 val inputDateStr = date_temp
                 val date: Date = inputFormat.parse(inputDateStr)
                 val outputDateStr: String = outputFormat.format(date)
-                Log.e("dt", outputDateStr)
                 toDate=date_sel.toString()
                 enterEndDate.text = outputDateStr
 
@@ -312,7 +304,6 @@ class RequestabsenceActivity: AppCompatActivity() {
         val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+ PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<StudentListModel> {
             override fun onFailure(call: Call<StudentListModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
                 progressDialogAdd.visibility=View.GONE
             }
             override fun onResponse(call: Call<StudentListModel>, response: Response<StudentListModel>) {
@@ -327,7 +318,6 @@ class RequestabsenceActivity: AppCompatActivity() {
                             studentListArrayList.addAll(response.body()!!.responseArray.studentList)
                             if (PreferenceManager.getStudentID(mContext).equals(""))
                             {
-                                Log.e("Empty Img","Empty")
                                 studentName=studentListArrayList.get(0).name
                                 studentImg=studentListArrayList.get(0).photo
                                 studentId=studentListArrayList.get(0).id
@@ -337,7 +327,6 @@ class RequestabsenceActivity: AppCompatActivity() {
                                 PreferenceManager.setStudentPhoto(mContext,studentImg)
                                 PreferenceManager.setStudentClass(mContext,studentClass)
                                 studentNameTxt.text=studentName
-                                Log.e("studid(0)", PreferenceManager.getStudentID(mContext).toString())
                                 if(!studentImg.equals(""))
                                 {
                                     Glide.with(mContext) //1
@@ -440,7 +429,6 @@ class RequestabsenceActivity: AppCompatActivity() {
                 PreferenceManager.setStudentName(mContext,studentName)
                 PreferenceManager.setStudentPhoto(mContext,studentImg)
                 PreferenceManager.setStudentClass(mContext,studentClass)
-                Log.e("studidclick", PreferenceManager.getStudentID(mContext).toString())
                 studentNameTxt.text=studentName
                 if(!studentImg.equals(""))
                 {

@@ -28,7 +28,6 @@ public class PayCanteenRecActivity extends Activity {
         try {
             sb = new StringBuffer();
             eachLine = br.readLine();
-            Log.e("appcontline",eachLine);
             while (eachLine != null) {
                 sb.append(eachLine);
                 sb.append("\n");

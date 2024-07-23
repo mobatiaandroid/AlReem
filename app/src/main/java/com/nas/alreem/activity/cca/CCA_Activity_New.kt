@@ -275,7 +275,6 @@ class CCA_Activity_New:AppCompatActivity() {
                         if (response.body()!!.data!!.isNotEmpty()) {
                             for (i in response.body()!!.data!!.indices) {
                                 enterTextView!!.visibility = View.VISIBLE
-                                Log.e("isattentii", response.body()!!.data!![i].isAttendee.toString())
                                 mCCAmodelArrayList!!.add(addCCAlist(response.body()!!.data!![i]))
                             }
                             //  Log.e("arraty", mCCAmodelArrayList!!.get(0).isAttendee.toString())
@@ -398,10 +397,7 @@ class CCA_Activity_New:AppCompatActivity() {
                                 mCCADetailModel.choice1 = objectCCAchoice.cca_item_name
                                 mCCADetailModel.choice1Id = objectCCAchoice.cca_details_id.toString()
                                 mCCADetailModel.choiceitem1Id = objectCCAchoice.cca_item_id.toString()
-                                Log.e("choice1Id",objectCCAchoice.cca_details_id.toString())
-                                Log.e("choice1Id2", mCCADetailModel.choice1Id!!)
-                                Log.e("choiceitem1Id",objectCCAchoice.cca_item_id.toString())
-                                Log.e("choiceitem1Id2", mCCADetailModel.choiceitem1Id!!)
+
 
 
                             } else {

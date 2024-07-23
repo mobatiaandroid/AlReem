@@ -16,12 +16,30 @@
         android:layout_below="@+id/includeRel"
         android:orientation="vertical"
         android:weightSum="100">
+
         <ImageView
             android:id="@+id/bannerImagePager"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="30"
-            android:background="@drawable/default_banner"/>
+            android:background="@drawable/default_banner" />
+
+        <com.nas.alreem.commonviews.CustomTextViewRegular
+            android:id="@+id/description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            tools:text="Description content" />
+
+        <ImageView
+            android:id="@+id/email_icon"
+            android:layout_width="30dp"
+            android:layout_height="20dp"
+            android:layout_gravity="end"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/mailiconpe" />
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/mEarlyYearsRecycler"

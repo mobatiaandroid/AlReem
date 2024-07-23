@@ -217,7 +217,7 @@ class BasketItemsAdapter (
         val call: Call<CanteenCartModel> = ApiClient.getClient.get_canteen_cart(canteenCart,"Bearer "+token)
         call.enqueue(object : Callback<CanteenCartModel> {
             override fun onFailure(call: Call<CanteenCartModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
+
                 progress.visibility=View.GONE
                // progress.hide()
             }
@@ -230,7 +230,7 @@ class BasketItemsAdapter (
                     itemLinear.visibility=View.VISIBLE
                     cart_list=response!!.body()!!.responseArray.data
                     for (i in cart_list.indices){
-                        Log.e("ta",cart_list[i].total_amount.toString())
+
                         cartTotalAmount=cartTotalAmount + cart_list[i].total_amount
                     }
                     if (cartTotalAmount==0){
@@ -243,8 +243,7 @@ class BasketItemsAdapter (
                                 cartTotalItems=cartTotalItems + cart_list[i].items[j].quantity
                             }
                         }
-                        Log.e("items",cartTotalItems.toString())
-                        Log.e("price",cartTotalAmount.toString())
+
                         itemtxt.setText(cartTotalItems.toString() + "Items")
                         amnttxt.setText(cartTotalAmount.toString() + "AED")
                     }
@@ -281,7 +280,7 @@ class BasketItemsAdapter (
         val call: Call<CanteenCartUpdateModel> = ApiClient.getClient.update_canteen_cart(canteenadd,"Bearer "+token)
         call.enqueue(object : Callback<CanteenCartUpdateModel> {
             override fun onFailure(call: Call<CanteenCartUpdateModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
+
                 progress.visibility=View.GONE
               //  progress.hide()
             }
@@ -320,7 +319,7 @@ class BasketItemsAdapter (
         val call: Call<CanteenCartRemoveModel> = ApiClient.getClient.remove_canteen_cart(canteenadd,"Bearer "+token)
         call.enqueue(object : Callback<CanteenCartRemoveModel> {
             override fun onFailure(call: Call<CanteenCartRemoveModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
+
                 progress.visibility=View.GONE
               //  progress.hide()
             }

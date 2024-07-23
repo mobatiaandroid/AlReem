@@ -77,6 +77,7 @@ class GalleryVideoList : AppCompatActivity(){
             {
                 val intent = Intent(mContext, VideosPlayerViewActivity::class.java)
                 intent.putExtra("video_url",imageArrayList.get(position).url.toString())
+                intent.putExtra("video_type",imageArrayList.get(position).video_type.toString())
                 startActivity(intent)
 
             }
@@ -93,7 +94,6 @@ class GalleryVideoList : AppCompatActivity(){
         call.enqueue(object : Callback<VideoResponseModel> {
             override fun onFailure(call: Call<VideoResponseModel>, t: Throwable) {
                 progress.visibility = View.GONE
-                Log.e("Failed", t.localizedMessage)
 
             }
             override fun onResponse(call: Call<VideoResponseModel>, response: Response<VideoResponseModel>) {

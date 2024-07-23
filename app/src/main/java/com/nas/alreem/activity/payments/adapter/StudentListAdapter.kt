@@ -30,6 +30,8 @@ internal class StudentListAdapter (private var context:Context,private var stude
     }
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val movie = studentList[position]
+        holder.setIsRecyclable(false)
+
         holder.listTxtTitle.text = movie.name
         holder.listTxtClass.text = movie.section
         if(!movie.photo.equals(""))

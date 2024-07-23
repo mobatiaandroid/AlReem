@@ -82,13 +82,11 @@ class PaymentInformationActivity : AppCompatActivity() {
         val call: Call<InfoCanteenModel> = ApiClient.getClient.getPaymentInformation("Bearer "+token)
         call.enqueue(object : Callback<InfoCanteenModel> {
             override fun onFailure(call: Call<InfoCanteenModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
                 progressDialogAdd.visibility=View.GONE
             }
             override fun onResponse(call: Call<InfoCanteenModel>, response: Response<InfoCanteenModel>) {
                 val responsedata = response.body()
                 progressDialogAdd.visibility=View.GONE
-                Log.e("Response", responsedata.toString())
                 if (responsedata!!.status==100) {
 
                     if(response.body()!!.responseArray.information.size>0)

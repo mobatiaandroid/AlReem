@@ -212,7 +212,6 @@ class PaymentHistory_Activity : AppCompatActivity() {
         val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+token)
         call.enqueue(object : Callback<StudentListModel> {
             override fun onFailure(call: Call<StudentListModel>, t: Throwable) {
-                Log.e("Error", t.localizedMessage)
                 progress.visibility = View.GONE
             }
             override fun onResponse(call: Call<StudentListModel>, response: Response<StudentListModel>) {
@@ -223,7 +222,6 @@ class PaymentHistory_Activity : AppCompatActivity() {
                     studentListArrayList.addAll(response.body()!!.responseArray.studentList)
                     if (PreferenceManager.getStudentID(nContext).equals(""))
                     {
-                        Log.e("Empty Img","Empty")
                         studentName=studentListArrayList.get(0).name
                         studentImg=studentListArrayList.get(0).photo
                         studentId=studentListArrayList.get(0).id
@@ -295,14 +293,12 @@ class PaymentHistory_Activity : AppCompatActivity() {
             ApiClient.getClient.get_wallet_history(paymentSuccessBody, "Bearer " + token)
         call.enqueue(object : Callback<WalletHistoryModel> {
             override fun onFailure(call: Call<WalletHistoryModel>, t: Throwable) {
-                Log.e("Failed", t.localizedMessage)
                 progress.visibility=View.GONE
             }
 
             override fun onResponse(call: Call<WalletHistoryModel>, response: Response<WalletHistoryModel>) {
                 val responsedata = response.body()
                 progress.visibility = View.GONE
-                Log.e("Response Signup", responsedata.toString())
                 if (responsedata != null) {
                     try {
 

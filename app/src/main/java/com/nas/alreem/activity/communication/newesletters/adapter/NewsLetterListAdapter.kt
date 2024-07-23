@@ -9,8 +9,9 @@ import androidx.annotation.NonNull
 import androidx.recyclerview.widget.RecyclerView
 import com.nas.alreem.R
 import com.nas.alreem.fragment.communication.adapter.CommunicationAdapter
+import com.nas.alreem.fragment.communication.model.CommunicationDataModel
 
-class NewsLetterListAdapter (private var communicationList: ArrayList<String>, var context: Context) :
+class NewsLetterListAdapter (private var communicationList: ArrayList<CommunicationDataModel>, var context: Context) :
     RecyclerView.Adapter<NewsLetterListAdapter.MyViewHolder>() {
     inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var listTxtTitle: TextView = view.findViewById(R.id.listTxtTitle)
@@ -23,7 +24,7 @@ class NewsLetterListAdapter (private var communicationList: ArrayList<String>, v
     }
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
-        holder.listTxtTitle.text = communicationList[position].toString()
+        holder.listTxtTitle.text = communicationList[position].submenu
 
     }
     override fun getItemCount(): Int {

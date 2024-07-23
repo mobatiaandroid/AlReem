@@ -278,7 +278,6 @@ class CCA_Activity : AppCompatActivity() {
                             if (response.body()!!.data!!.isNotEmpty()) {
                                 for (i in response.body()!!.data!!.indices) {
                                     enterTextView!!.visibility = View.VISIBLE
-                                    Log.e("isattentii", response.body()!!.data!![i].isAttendee.toString())
                                     mCCAmodelArrayList!!.add(addCCAlist(response.body()!!.data!![i]))
                                 }
                               //  Log.e("arraty", mCCAmodelArrayList!!.get(0).isAttendee.toString())

@@ -1,15 +1,10 @@
 package com.nas.alreem.activity.notifications
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebSettings.PluginState
@@ -28,13 +23,12 @@ import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.PreferenceManager
-
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
 
 private lateinit var relativeHeader: RelativeLayout
 private lateinit var backRelative: RelativeLayout
@@ -44,37 +38,35 @@ private lateinit var heading: TextView
 private lateinit var textcontent: WebView
 private lateinit var webView: WebView
 private lateinit var proWebView: ProgressBar
-class VideoMessageActivity : AppCompatActivity(){
-    lateinit var mContext: Context
-    var id:String=""
-    var title:String=""
-    var idApi:String=""
-    var titleApi:String=""
-    var message:String=""
-    var url:String=""
-    var date:String=""
 
-    override fun onCreate(savedInstanceState: Bundle?)
-    {
+class VideoMessageActivity : AppCompatActivity() {
+    lateinit var mContext: Context
+    var id: String = ""
+    var title: String = ""
+    var idApi: String = ""
+    var titleApi: String = ""
+    var message: String = ""
+    var url: String = ""
+    var date: String = ""
+
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video_message)
-        mContext=this
+        mContext = this
 
-        id=intent.getStringExtra("id").toString()
-        title=intent.getStringExtra("title").toString()
+        id = intent.getStringExtra("id").toString()
+        title = intent.getStringExtra("title").toString()
         initUI()
-        if (ConstantFunctions.internetCheck(mContext))
-        {
+        if (ConstantFunctions.internetCheck(mContext)) {
             callMessageDetailAPI()
-        }
-        else
-        {
+        } else {
             DialogFunctions.showInternetAlertDialog(mContext)
         }
 
-      //  getSettings()
+        //  getSettings()
 
     }
+
     fun initUI() {
         relativeHeader = findViewById(R.id.relativeHeader)
         heading = findViewById(R.id.heading)
@@ -84,7 +76,7 @@ class VideoMessageActivity : AppCompatActivity(){
         webView = findViewById(R.id.webView)
         proWebView = findViewById(R.id.progressDialog)
         backRelative = findViewById(R.id.backRelative)
-        textcontent.visibility=View.INVISIBLE
+        textcontent.visibility = View.VISIBLE
         heading.text = "Notification"
         btn_left.setOnClickListener(View.OnClickListener {
             finish()
@@ -101,25 +93,29 @@ class VideoMessageActivity : AppCompatActivity(){
 //            AnimationUtils.loadAnimation(mContext, R.anim.linear_interpolator)
 //        progressDialog.startAnimation(aniRotate)
     }
-    fun callMessageDetailAPI()
-    {
+
+    fun callMessageDetailAPI() {
         val token = PreferenceManager.getaccesstoken(mContext)
-        val studentbody= MessageDetailApiModel(id)
-        val call: Call<MessageDetailModel> = ApiClient.getClient.notifictaionDetail(studentbody,"Bearer "+token)
+        val studentbody = MessageDetailApiModel(id)
+        val call: Call<MessageDetailModel> =
+            ApiClient.getClient.notifictaionDetail(studentbody, "Bearer " + token)
         call.enqueue(object : Callback<MessageDetailModel> {
             override fun onFailure(call: Call<MessageDetailModel>, t: Throwable) {
 //                progressDialog.visibility = View.GONE
-                Log.e("Error", t.localizedMessage)
+
             }
-            override fun onResponse(call: Call<MessageDetailModel>, response: Response<MessageDetailModel>) {
+
+            override fun onResponse(
+                call: Call<MessageDetailModel>,
+                response: Response<MessageDetailModel>
+            ) {
 //                progressDialog.visibility = View.GONE
-                if (response.body()!!.status==100)
-                {
-                    idApi=id
-                    titleApi=title
-                    message=response.body()!!.responseArray.notificationArray.message
-                    url=response.body()!!.responseArray.notificationArray.url
-                    date=response.body()!!.responseArray.notificationArray.created_at
+                if (response.body()!!.status == 100) {
+                    idApi = id
+                    titleApi = title
+                    message = response.body()!!.responseArray.notificationArray.message
+                    url = response.body()!!.responseArray.notificationArray.url
+                    date = response.body()!!.responseArray.notificationArray.created_at
                     val inputFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
                     val outputFormat: DateFormat = SimpleDateFormat("hh:mm a")
                     val outputFormatdate: DateFormat = SimpleDateFormat("dd-MMM-yyyy")
@@ -127,17 +123,17 @@ class VideoMessageActivity : AppCompatActivity(){
                     val date: Date = inputFormat.parse(inputDateStr)
                     val outputDateStr: String = outputFormat.format(date)
                     val outputDateStr1: String = outputFormatdate.format(date)
-                    var pushNotificationDetail="<!DOCTYPE html>\n"+
+                    var pushNotificationDetail = "<!DOCTYPE html>\n" +
                             "<html>\n" +
                             "<head>\n" +
                             "<style>\n" +
                             "\n" +
                             "@font-face {\n" +
                             "font-family: SourceSansPro-Semibold;" +
-                            "src: url(SourceSansPro-Semibold.ttf);" +
+                            "src: url(SourceSansPro-Semibold.otf);" +
 
                             "font-family: SourceSansPro-Regular;" +
-                            "src: url(SourceSansPro-Regular.ttf);" +
+                            "src: url(SourceSansPro-Regular.otf);" +
                             "}" +
                             ".title {" +
                             "font-family: SourceSansPro-Regular;" +
@@ -155,20 +151,21 @@ class VideoMessageActivity : AppCompatActivity(){
                             "}" +
                             "</style>\n" + "</head>" +
                             "<body>" +
-                            "<p class='title'>"+title
+                            "<p class='title'>" + message
 
-                    pushNotificationDetail=pushNotificationDetail+ "<p class='description'>" +outputDateStr1 +" "+outputDateStr+  "</p>"
-                    if (!url.equals(""))
-                    {
-                        pushNotificationDetail=pushNotificationDetail+"<center><img src='" + url + "'width='100%', height='auto'>"
-                    }
-                    pushNotificationDetail=pushNotificationDetail+"</body>\n</html>"
+                    pushNotificationDetail =
+                        pushNotificationDetail + "<p class='description'>" + outputDateStr1 + " " + outputDateStr + "</p>"
+//                    if (!url.equals("")) {
+//                        pushNotificationDetail =
+//                            pushNotificationDetail + "<center><img src='" + url + "'width='100%', height='auto'>"
+//                    }
+                    pushNotificationDetail = pushNotificationDetail + "</body>\n</html>"
                     //webView.webViewClient = HelloWebViewClient()
                     webView.settings.javaScriptEnabled = true
                     webView.settings.pluginState = PluginState.ON
                     webView.settings.builtInZoomControls = false
                     webView.settings.displayZoomControls = true
-                   // webView.webViewClient = HelloWebViewClient()
+                    // webView.webViewClient = HelloWebViewClient()
                     textcontent.settings.javaScriptEnabled = true
                     textcontent.settings.pluginState = PluginState.ON
                     textcontent.settings.builtInZoomControls = false
@@ -178,8 +175,7 @@ class VideoMessageActivity : AppCompatActivity(){
                         override fun onProgressChanged(view: WebView, newProgress: Int) {
                             proWebView.visibility = View.VISIBLE
                             println("testing2")
-                            if (newProgress == 100)
-                            {
+                            if (newProgress == 100) {
                                 println("testing1")
                                 proWebView.visibility = View.GONE
 
@@ -191,28 +187,30 @@ class VideoMessageActivity : AppCompatActivity(){
                         "text/html; charset=utf-8",
                         "utf-8"
                     )
-                    var frameVideo= "<html>" + "<br><iframe width=\"320\" height=\"250\" src=\""
-                    var url_Video= frameVideo+url+"\" frameborder=\"0\" allowfullscreen></iframe></body></html>"
-                    var urlYoutube=url_Video.replace("watch?v=", "embed/")
+                    var frameVideo = "<html>" + "<br><iframe width=\"320\" height=\"250\" src=\""
+                    var url_Video =
+                        frameVideo + url + "\" frameborder=\"0\" allowfullscreen></iframe></body></html>"
+                    var urlYoutube = url_Video.replace("watch?v=", "embed/")
                     webView.loadData(urlYoutube, "text/html", "utf-8")
                     proWebView.visibility = View.VISIBLE
 
-                }
-                else
-                {
+                } else {
 
-                    DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), mContext)
+                    DialogFunctions.commonErrorAlertDialog(
+                        mContext.resources.getString(R.string.alert),
+                        ConstantFunctions.commonErrorString(response.body()!!.status),
+                        mContext
+                    )
                 }
             }
 
         })
     }
 
-    fun getSettings()
-    {
+    fun getSettings() {
         webView.settings.javaScriptEnabled = true
         webView.settings.setSupportZoom(false)
-        webView.settings.cacheMode=WebSettings.LOAD_NO_CACHE
+        webView.settings.cacheMode = WebSettings.LOAD_NO_CACHE
         webView.settings.javaScriptCanOpenWindowsAutomatically = true
         webView.settings.domStorageEnabled = true
         webView.settings.databaseEnabled = true
@@ -228,8 +226,7 @@ class VideoMessageActivity : AppCompatActivity(){
             override fun onProgressChanged(view: WebView, newProgress: Int) {
                 proWebView.visibility = View.VISIBLE
                 println("testing2")
-                if (newProgress == 100)
-                {
+                if (newProgress == 100) {
                     println("testing1")
                     proWebView.visibility = View.GONE
 

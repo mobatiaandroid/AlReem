@@ -10,8 +10,8 @@ import java.util.concurrent.TimeUnit
 
 object ApiClient {
 
-    var BASE_URL = "http://gama.mobatia.in:8080/nas-abudhabiv2/public/api/v1/"
-//    var BASE_URL = "https://cms.nasabudhabi.ae/api/v1/"
+var BASE_URL = "http://gama.mobatia.in:8080/nas-abudhabiv2/public/api/v1/"
+//   var BASE_URL = "https://cms.nasabudhabi.ae/api/v1/"
 
     val getClient: ApiInterface
         get() {
@@ -28,5 +28,6 @@ object ApiClient {
             return retrofit.create(ApiInterface::class.java)
 
         }
+
 
 }

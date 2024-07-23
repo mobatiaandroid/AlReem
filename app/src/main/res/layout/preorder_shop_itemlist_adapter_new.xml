@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_height="130dp"
+    android:layout_width="wrap_content"
+    android:layout_margin="10dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/tools">
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        card_view:cardBackgroundColor="@android:color/white"
+        app:cardElevation="2dp"
+        app:cardCornerRadius="10dp"
+        app:cardUseCompatPadding="true"
+        card_view:cardUseCompatPadding="true"
+        android:background="@color/canteen_item_bg">
+        <RelativeLayout
+            android:id="@+id/gradeoutrelative"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/itemImg"
+        android:layout_width="100dp"
+        android:layout_height="130dp"
+        android:scaleType="centerInside"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/default_banner"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_toRightOf="@+id/itemImg"
+                android:layout_marginTop="10dp"
+                android:id="@+id/item_linear"
+                android:orientation="vertical">
+
+                <com.nas.alreem.commonviews.CustomTextViewBold
+                    android:id="@+id/slugNameTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:gravity="center"
+                    android:text="slug"
+                    android:textColor="@color/black"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <com.nas.alreem.commonviews.CustomTextViewRegular
+                    android:id="@+id/itemNameTxt"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_below="@+id/slugNameTxt"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginBottom="5dp"
+                    android:maxLines="2"
+                    android:text="Desc"
+                    android:textSize="12sp" />
+
+
+            </LinearLayout>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentRight="true"
+    android:layout_toRightOf="@+id/itemImg"
+    android:layout_below="@id/item_linear"
+    android:weightSum="30">
+    <com.nas.alreem.commonviews.CustomTextViewBold
+        android:id="@+id/price"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_below="@+id/slugNameTxt"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="5dp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:maxLines="2"
+        android:layout_weight="5"
+        android:text="price"
+        android:textSize="14sp" />
+
+    <LinearLayout
+        android:id="@+id/addLinear"
+        android:layout_width="0dp"
+        android:layout_height="35dp"
+        android:layout_marginBottom="5dp"
+        android:layout_weight="25"
+        android:layout_margin="8dp"
+        android:background="@drawable/cart_add_bg"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <com.nas.alreem.commonviews.CustomTextViewRegular
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="Add"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <com.nas.alreem.commonviews.CustomTextViewRegular
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="  +"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/multiLinear"
+        android:layout_width="0dp"
+        android:layout_height="35dp"
+        android:layout_margin="8dp"
+        android:layout_weight="25"
+        android:background="@drawable/cart_add_bg"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="visible">
+        <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
+            android:id="@+id/itemCount"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="2dp"
+            android:layout_marginBottom="5dp"
+            android:gravity="center"
+            app:backGroundColor="@color/white"
+            app:backgroundDrawable="@drawable/curvedsavebutton"
+            app:textColor="@color/black"
+            app:textSize="6sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/outOfStockLinear"
+        android:layout_width="0dp"
+        android:layout_height="35dp"
+        android:layout_margin="8dp"
+        android:layout_weight="25"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone">
+        <com.nas.alreem.commonviews.CustomEditTextViewRegular
+            android:id="@+id/outOfStockTxt"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="2dp"
+            android:text="Out Of Stock"
+            android:textColor="@color/red"
+            android:layout_marginBottom="5dp"
+            android:gravity="center"
+            />
+    </LinearLayout>
+
+</LinearLayout>
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+</RelativeLayout>

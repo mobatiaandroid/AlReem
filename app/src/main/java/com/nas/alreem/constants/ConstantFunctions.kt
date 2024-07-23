@@ -1,25 +1,25 @@
 package com.nas.alreem.constants
 
+import android.app.Activity
 import android.app.Dialog
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
-import android.util.Log
 import android.view.View
 import android.view.Window
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import com.nas.alreem.R
+import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 class ConstantFunctions {
     companion object{
@@ -92,6 +92,10 @@ class ConstantFunctions {
             {
                 msg=ConstantWords.status_113
             }
+            else if (status==141)
+            {
+                msg=ConstantWords.status_141
+            }
             else if (status==114)
             {
                 msg=ConstantWords.status_114
@@ -109,6 +113,10 @@ class ConstantFunctions {
              else if (status==125)
             {
                 msg=ConstantWords.status_125
+            }
+            else if (status==118)
+            {
+                msg=ConstantWords.status_118
             }
              else if (status==130)
             {
@@ -134,7 +142,10 @@ class ConstantFunctions {
             {
                 msg=ConstantWords.status_121
             }
-
+            else if(status==510)
+            {
+                msg=ConstantWords.status_510
+            }
             return msg
         }
 
@@ -177,7 +188,6 @@ class ConstantFunctions {
             }
             format = SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH)
             strCurrentDate = format.format(newDate)
-            Log.e("Date converted",strCurrentDate)
             return strCurrentDate
         }
         fun replace(str: String): String? {
@@ -185,5 +195,106 @@ class ConstantFunctions {
         }
     }
 
+    fun replaceamdot(str: String): String? {
+        return str.replace("a.m.".toRegex(), " ")
+    }
+    fun replacepmdot(str: String): String? {
+        return str.replace("p.m.".toRegex(), " ")
+    }
+    fun dateConversionYY(inputDate: String?): String? {
+        var mDate = ""
+        try {
+            val date: Date
+            val formatter: DateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
+            date = formatter.parse(inputDate)
+            //Subtracting 6 hours from selected time
+            val time = date.time
 
+            //SimpleDateFormat formatterFullDate = new SimpleDateFormat("dd MMMM yyyy");
+            val formatterFullDate = SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH)
+            mDate = formatterFullDate.format(time)
+        } catch (e: Exception) {
+//			Log.d("Exception", "" + e);
+        }
+        return mDate
+    }
+    fun dateConversionYYY(inputDate: String?): String? {
+        var mDate = ""
+        try {
+            val date: Date
+            val formatter: DateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+            date = formatter.parse(inputDate)
+            //Subtracting 6 hours from selected time
+            val time = date.time
+
+            //SimpleDateFormat formatterFullDate = new SimpleDateFormat("dd MMMM yyyy");
+            val formatterFullDate = SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH)
+            mDate = formatterFullDate.format(time)
+        } catch (e: Exception) {
+//			Log.d("Exception", "" + e);
+        }
+        return mDate
+    }
+    fun dateParsingTodd_MMM_yyyy(date: String?): String? {
+        var strCurrentDate = ""
+        var format = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+        var newDate: Date? = null
+        try {
+            newDate = format.parse(date)
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }
+        format = SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH)
+        strCurrentDate = format.format(newDate)
+        return strCurrentDate
+    }
+    fun dateConversionddmmyyyy(inputDate: String?): String {
+        var mDate = ""
+        try {
+            val date: Date
+            val formatter: DateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+            date = formatter.parse(inputDate)
+            //Subtracting 6 hours from selected time
+            val time = date.time
+
+            //SimpleDateFormat formatterFullDate = new SimpleDateFormat("dd MMMM yyyy");
+            val formatterFullDate = SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH)
+            mDate = formatterFullDate.format(time)
+        } catch (e: Exception) {
+//			Log.d("Exception", "" + e);
+        }
+        return mDate
+    }
+
+    fun showDialogAlertDismiss(
+        activity: Activity?,
+        msgHead: String?,
+        msg: String?,
+        ico: Int,
+        bgIcon: Int
+    ) {
+        val dialog = Dialog(activity!!)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.dialog_common_error_alert)
+        val icon = dialog.findViewById<View>(R.id.iconImageView) as ImageView
+        icon.setBackgroundResource(bgIcon)
+        icon.setImageResource(ico)
+        val text = dialog.findViewById<View>(R.id.messageTxt) as TextView
+        val textHead = dialog.findViewById<View>(R.id.alertHead) as TextView
+        text.text = msg
+        textHead.text = msgHead
+        val dialogButton = dialog.findViewById<View>(R.id.btn_Ok) as Button
+        dialogButton.setOnClickListener { dialog.dismiss() }
+        //		Button dialogButtonCancel = (Button) dialog.findViewById(R.id.btn_Cancel);
+//		dialogButtonCancel.setVisibility(View.GONE);
+//		dialogButtonCancel.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				dialog.dismiss();
+//			}
+//		});
+        dialog.show()
+    }
 }

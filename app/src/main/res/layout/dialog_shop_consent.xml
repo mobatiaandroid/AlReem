@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="320dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/curved_rectangle_white"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/relativeHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="16sp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/customFontSansProTextBlack4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/closeButton"
+        app:layout_constraintStart_toStartOf="parent">
+
+
+        <com.nas.alreem.commonviews.CustomFontDJ5TextWhite
+            android:id="@+id/titleTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:gravity="center"
+            android:text="Consent Form"
+
+            android:background="@color/split_bg"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <com.nas.alreem.commonviews.CustomFontSansProTextBlack
+        android:id="@+id/customFontSansProTextBlack4"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:justificationMode="inter_word"
+        android:text="It is a requirement to provide your daughter/son with an instrument for
+personal practise between lessons."
+        app:layout_constraintBottom_toTopOf="@+id/agreeButton1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relativeHeader" />
+
+    <com.nas.alreem.commonviews.button.CustomButtonFontSansButtonBold
+        android:id="@+id/agreeButton1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:backgroundTint="@color/list_bg"
+        android:text="I/We already have an instrument in good condition"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/agreeButton2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/customFontSansProTextBlack4">
+
+    </com.nas.alreem.commonviews.button.CustomButtonFontSansButtonBold>
+
+
+    <com.nas.alreem.commonviews.button.CustomButtonFontSansButtonBold
+
+        android:id="@+id/agreeButton2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="@color/list_bg"
+        android:text="I/We will hire or purchase an instrument"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/agreeButton1">
+
+    </com.nas.alreem.commonviews.button.CustomButtonFontSansButtonBold>
+
+    <ImageView
+        android:id="@+id/closeButton"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_margin="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/closed_rounded" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

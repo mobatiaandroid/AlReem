@@ -51,7 +51,6 @@ class PaymentItemListAdapter (var mcontext: Context, val catItemList: ArrayList<
         }*/
         holder.listTitle.setText(catItemList[position].invoice_description)
         if (catItemList[position].due_date.isNotEmpty()){
-            Log.e("date",catItemList[position].due_date.toString())
 
             /* val parser = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
              val formatter = SimpleDateFormat("dd.MM.yyyy HH:mm")
@@ -62,7 +61,6 @@ class PaymentItemListAdapter (var mcontext: Context, val catItemList: ArrayList<
             val inputDateStr = catItemList[position].due_date
             val date: Date = inputFormat.parse(inputDateStr)
             dueDate = outputFormat.format(date)
-            Log.e("date",dueDate.toString())
             holder.listDate.setText("Due Date: " + dueDate)
         }else{
             holder.listDate.setText("")

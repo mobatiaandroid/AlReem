@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.nas.alreem">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -12,251 +11,489 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
-    <uses-permission android:name="com.google.android.gms.permission.AD_ID" tools:node="remove"/>
+    <uses-permission
+        android:name="com.google.android.gms.permission.AD_ID"
+        tools:node="remove" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:allowBackup="false"
+        android:enableOnBackInvokedCallback="true"
         android:hardwareAccelerated="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
+
         android:networkSecurityConfig="@xml/network_security_config"
         android:requestLegacyExternalStorage="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true"
+        android:usesCleartextTraffic="false"
         tools:replace="android:icon,android:allowBackup">
-
+        <activity
+            android:name=".activity.notifications.VideoMessageActivityNew"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".constants.WebViewTextActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.splash.SplashActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
-        <activity android:name=".activity.home.HomeActivity"
+        <activity
+            android:name=".activity.home.HomeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.login.LoginActivity"
             android:screenOrientation="portrait"
-          />
-        <activity android:name=".activity.login.LoginActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.primary.PrimaryActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.primary.PrimaryComingUpActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.early_years.EarlyYearsComingUpActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.secondary.SecondaryComingUpActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.settings.TermsOfServiceActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".constants.WebLinkActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.payments.PaymentCategoryActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.payments.PaymentDetailActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.settings.TutorialActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.early_years.ComingUpDetailActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.primary.PrimaryActivity"
+        <activity
+            android:name=".activity.notifications.ImageMessageActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.primary.PrimaryComingUpActivity"
+        <activity
+            android:name=".activity.notifications.VideoMessageActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.early_years.EarlyYearsComingUpActivity"
+        <activity
+            android:name=".activity.notifications.AudioPlayerDetail"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.secondary.SecondaryComingUpActivity"
+        <activity
+            android:name=".activity.notifications.AudioPlayerDetailNew"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.settings.TermsOfServiceActivity"
+        <activity
+            android:name=".activity.notifications.TextMessageActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".constants.WebLinkActivity"
+        <activity
+            android:name=".constants.PDFViewerActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.payments.PaymentCategoryActivity"
+        <activity
+            android:name=".activity.calendar.TermCalendarActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.payments.PaymentDetailActivity"
+        <activity
+            android:name=".activity.calendar.CalendarTutorialActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.settings.TutorialActivity"
+        <activity
+            android:name=".activity.payments.PaymentReceiptActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.early_years.ComingUpDetailActivity"
+        <activity
+            android:name=".activity.payments.PaymentInformationActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.notifications.ImageMessageActivity"
+        <activity
+            android:name=".activity.gallery.GalleryImageListActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.notifications.VideoMessageActivity"
+        <activity
+            android:name=".activity.gallery.GalleryImageViewActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity android:name=".activity.notifications.AudioPlayerDetail"
+        <activity
+            android:name=".activity.gallery.GalleryVideoList"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity android:name=".activity.notifications.AudioPlayerDetailNew"
+        <activity
+            android:name=".activity.gallery.GalleryImageDetailActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.notifications.TextMessageActivity"
+        <activity
+            android:name=".activity.gallery.VideosPlayerViewActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".constants.PDFViewerActivity"
+        <activity
+            android:name=".activity.canteen.Addorder_Activity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity android:name=".activity.calendar.TermCalendarActivity"
+        <activity
+            android:name=".activity.canteen.CanteenActviity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.calendar.CalendarTutorialActivity"
+        <activity
+            android:name=".activity.canteen.CanteenPaymentActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.payments.PaymentReceiptActivity"
+        <activity
+            android:name=".activity.canteen.InformationActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.payments.PaymentInformationActivity"
+        <activity
+            android:name=".activity.canteen.MyorderActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.gallery.GalleryImageListActivity"
+        <activity
+            android:name=".activity.canteen.Myorderbasket_Activity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.gallery.GalleryImageViewActivity"
+        <activity
+            android:name=".activity.canteen.OrderhistoryActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.gallery.GalleryVideoList"
+        <activity
+            android:name=".activity.canteen.PayCanteenRecActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.gallery.GalleryImageDetailActivity"
+        <activity
+            android:name=".activity.canteen.PaymentActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.gallery.VideosPlayerViewActivity"
+        <activity
+            android:name=".activity.canteen.PaymentHistory_Activity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.canteen.Addorder_Activity"
+        <activity
+            android:name=".activity.canteen.PaymentprintActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.canteen.CanteenActviity"
+        <activity
+            android:name=".activity.canteen.PreOrderActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.canteen.CanteenPaymentActivity"
+        <activity
+            android:name=".activity.gallery.PhotosViewPagerActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.canteen.InformationActivity"
+        <activity
+            android:name=".activity.communication.socialmedia.SocialMediaActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.canteen.MyorderActivity"
+        <activity
+            android:name=".activity.communication.information.CommunicationInformationActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.canteen.Myorderbasket_Activity"
+        <activity
+            android:name=".activity.communication.commingup.ComingUpWholeSchool"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.canteen.OrderhistoryActivity"
+        <activity
+            android:name=".activity.communication.newesletters.NewsLetterActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.canteen.PayCanteenRecActivity"
+        <activity
+            android:name=".activity.communication.newesletters.NewsLetterListActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.canteen.PaymentActivity"
+        <activity
+            android:name=".activity.communication.newesletters.NewsLetterDetailActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.canteen.PaymentHistory_Activity"
+        <activity
+            android:name=".activity.sixth_form.SixthFormComingUpActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.canteen.PaymentprintActivity"
+        <activity
+            android:name=".activity.sixth_form.SixthFormActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.canteen.PreOrderActivity"
+        <activity
+            android:name=".activity.survey.SurveyListActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.gallery.PhotosViewPagerActivity"
+        <activity
+            android:name=".activity.parentsessential.ParentsEssentialDetail"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.communication.socialmedia.SocialMediaActivity"
+        <activity
+            android:name=".activity.cca.InformationCCAActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.communication.information.CommunicationInformationActivity"
+        <activity
+            android:name=".activity.cca.CCA_Activity_New"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.communication.commingup.ComingUpWholeSchool"
+        <activity
+            android:name=".activity.cca.CCAsReviewAfterSubmissionActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.communication.newesletters.NewsLetterActivity"
+        <activity
+            android:name=".activity.cca.CCAsReviewEditAfterSubmissionActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.communication.newesletters.NewsLetterListActivity"
+        <activity
+            android:name=".activity.cca.CCASelectionActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.communication.newesletters.NewsLetterDetailActivity"
+        <activity
+            android:name=".activity.cca.CCAsReviewActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.sixth_form.SixthFormComingUpActivity"
+        <activity
+            android:name=".activity.cca.ExternalProviderActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.sixth_form.SixthFormActivity"
+        <activity
+            android:name=".activity.permission_slips.FormDetailActivityNew"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.survey.SurveyListActivity"
+        <activity
+            android:name=".activity.parent_meetings.ParentsEveningCalendarActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.parentsessential.ParentsEssentialDetail"
+        <activity
+            android:name=".activity.parent_meetings.ParentsEveninginfoActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.cca.InformationCCAActivity"
+        <activity
+            android:name=".activity.parent_meetings.ReviewAppointmentsRecyclerViewActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity android:name=".activity.cca.CCA_Activity_New"
+        <activity
+            android:name=".activity.parent_meetings.ParentMeetingDetailActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.cca.CCAsReviewAfterSubmissionActivity"
+        <activity
+            android:name=".activity.absence.AbsenceDetailActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.cca.CCAsReviewEditAfterSubmissionActivity"
+        <activity
+            android:name=".activity.absence.EarlyPickupDetailActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.cca.CCASelectionActivity"
+        <activity
+            android:name=".activity.absence.RequestabsenceActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.cca.CCAsReviewActivity"
+        <activity
+            android:name=".activity.absence.RequestearlypickupActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity android:name=".activity.cca.ExternalProviderActivity"
+        <activity
+            android:name=".activity.staff_directory.StaffDirectoryActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity android:name=".activity.permission_slips.FormDetailActivity"
+        <activity
+            android:name=".activity.staff_directory.StaffDetailActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.parent_meetings.ParentsEveningCalendarActivity"
+        <activity
+            android:name=".activity.cca.CCAsReviewAfterSubmissionNoDeleteActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.parent_meetings.ParentsEveninginfoActivity"
+        <activity
+            android:name=".activity.about_us.FacilityActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.parent_meetings.ReviewAppointmentsRecyclerViewActivity"
+        <activity
+            android:name=".activity.about_us.AccreditationsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.parent_meetings.ParentMeetingDetailActivity"
+        <activity
+            android:name=".activity.bus_service.reportabsence.RequestBusServiceActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.absence.AbsenceDetailActivity"
+        <activity
+            android:name=".activity.bus_service.requestservice.RequestServiceListActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.absence.EarlyPickupDetailActivity"
+        <activity
+            android:name=".activity.bus_service.requestservice.RequestServiceActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.bus_service.reportabsence.BusServiceDetailActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.lost_card.LostCardMainActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".activity.bus_service.requestservice.RequestServicetDetailActvity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".activity.lost_card.LostCardPaymentActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".activity.lost_card.LostCardPaymentHistory"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:hardwareAccelerated="true"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".activity.lost_card.LostCardPrintPaymentActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:hardwareAccelerated="true"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".activity.shop_new.PreOrderActivity_new"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:hardwareAccelerated="true"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".activity.shop_new.Myorderbasket_Activity_new"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:hardwareAccelerated="true"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".activity.shop_new.ShopCardPaymentActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:hardwareAccelerated="true"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".activity.intentions.IntentionRegisterActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:hardwareAccelerated="true"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".activity.intentions.IntentionDetailedView"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:hardwareAccelerated="true"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".activity.shop_new.InvoiceListingActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:hardwareAccelerated="true"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".activity.shop_new.MusicInvoicePrintNew"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:hardwareAccelerated="true"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".activity.shop_new.OrderhistoryActivityNew"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:hardwareAccelerated="true"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".activity.shop_new.ProductDetailsPage"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:hardwareAccelerated="true"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".activity.shop_new.ImageViewActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:hardwareAccelerated="true"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".activity.shop_new.Addorder_Activity_new"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.absence.RequestabsenceActivity"
+        <activity
+            android:name=".activity.parent_engagement.ChatterBoxActivityNew"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.absence.RequestearlypickupActivity"
+        <activity
+            android:name=".activity.parent_engagement.ParentsAssociationSignUpActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.staff_directory.StaffDirectoryActivity"
+        <activity
+            android:name=".activity.parent_engagement.ClassRepresentativeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.staff_directory.StaffDetailActivity"
+        <activity
+            android:name=".activity.parent_engagement.ParentsAssociationListActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.cca.CCAsReviewAfterSubmissionNoDeleteActivity"
+        <activity
+            android:name=".activity.bus_service.reportabsence.BusServiceActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.about_us.FacilityActivity"
+        <activity
+            android:name=".activity.bus_service.BusServiceInformation"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.about_us.AccreditationsActivity"
+        <activity
+            android:name=".activity.parent_engagement.PTAinfoActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
@@ -289,12 +526,14 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".constants.MyFirebaseInstanceIDService"
+        <service
+            android:name=".constants.MyFirebaseInstanceIDService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -304,7 +543,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
-
     </application>
 
 </manifest>

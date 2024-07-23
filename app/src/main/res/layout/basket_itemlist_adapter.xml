@@ -16,13 +16,26 @@
         app:cardUseCompatPadding="true"
         card_view:cardUseCompatPadding="true"
         android:background="@color/canteen_item_bg">
+        <RelativeLayout
+            android:id="@+id/basketRelative"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/itemImg"
+            android:layout_width="100dp"
+            android:layout_height="130dp"
+            android:scaleType="centerInside"
+            android:layout_alignParentLeft="true"
+            android:src="@drawable/default_banner"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:weightSum="100"
             android:id="@+id/linearlayout"
-            android:background="@color/canteen_item_bg">
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/itemImg"
+            android:background="@color/white">
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -106,8 +119,7 @@
                         android:layout_weight="20"
                         android:textColor="@color/black"
                         android:gravity="center_vertical"
-                        android:textSize="14sp"
-                        android:text="AED 45.00" />
+                        android:textSize="14sp" />
                     <TextView
                         android:id="@+id/removeTxt"
                         android:layout_width="0dp"
@@ -117,6 +129,30 @@
                         android:gravity="center"
                         android:textColor="@color/red"
                         android:visibility="gone"/>
+                    <LinearLayout
+                        android:id="@+id/soldout"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_weight="10"
+                        android:background="@drawable/add_item_bg_sold_out"
+                        android:gravity="center"
+
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <com.nas.alreem.commonviews.button.CustomFontButtonRegularNoColor
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="Item Out Of Stock"
+                            android:padding="5dp"
+                            android:textColor="@color/white"
+                            android:textSize="13sp" />
+
+
+
+                    </LinearLayout>
                     <LinearLayout
                         android:id="@+id/multiLinear"
                         android:layout_width="0dp"
@@ -207,7 +243,7 @@
             </RelativeLayout>
 
         </LinearLayout>
-
+        </RelativeLayout>
 
     </androidx.cardview.widget.CardView>
 </RelativeLayout>
