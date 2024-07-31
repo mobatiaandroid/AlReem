@@ -2,7 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
     <include
         android:id="@+id/includeRel"
         layout="@layout/layout_activity_header"
@@ -256,16 +257,43 @@
                 app:layout_constraintTop_toBottomOf="@id/select_days">
 
             </androidx.recyclerview.widget.RecyclerView>
-
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                android:background="@color/list_bg"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                app:layout_constraintTop_toBottomOf="@id/daysrec"
+                android:id="@+id/parentlinear">
+                <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
+                    android:id="@+id/parentinfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_margin="10dp"
+                    android:text="@string/parents_details"
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
+                <ImageView
+                    android:id="@+id/downarrowImage"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/downarrow"
+                    />
+            </RelativeLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/parentsdetailslinear"
                 android:orientation="vertical"
                 android:layout_marginTop="10dp"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/daysrec">
+                app:layout_constraintTop_toBottomOf="@id/parentlinear">
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
@@ -313,6 +341,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/parentsdetailslinear"
@@ -334,6 +363,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/parentsdetailslinear1"
                 android:orientation="vertical"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/checkPassportLinear">
@@ -380,38 +410,78 @@
                     android:layout_marginRight="10dp"
                     android:background="@drawable/rect_background_grey"/>
             </LinearLayout>
-            <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
-                android:id="@+id/address_info"
-                android:layout_width="0dp"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="45"
-                android:layout_marginTop="10dp"
-                android:text="@string/address"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/parentsdetailslinear1"
-                android:textColor="@color/black"
-                android:textSize="20sp" />
-            <ImageView
-                android:id="@+id/gpslocation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/locationnew"
-                android:text="@string/address"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="15dp"
+                android:background="@color/list_bg"
                 app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
                 app:layout_constraintTop_toBottomOf="@id/parentsdetailslinear1"
-                android:textColor="@color/black"
-                android:textSize="20sp" />
+                android:id="@+id/addresslinear">
+
+                <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
+                    android:id="@+id/address_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/address"
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/downarrowAddress"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/downarrow"
+                    />
+            </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/addressinfo_linear"
                 android:orientation="vertical"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/address_info">
+                app:layout_constraintTop_toBottomOf="@id/addresslinear">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:hint="@string/Gpslocation"
+                        android:padding="5dp"
+                        android:textSize="16sp"
+                        android:inputType="text"
+                        android:imeOptions="actionDone"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="10dp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp" />
+                    <ImageView
+                        android:id="@+id/gpslocation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/locationnew"
+                        android:text="@string/address"
+                        android:layout_marginRight="20dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginTop="10dp"
+                        android:textColor="@color/black"
+                        android:textSize="20sp" />
+                </RelativeLayout>
+
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
@@ -569,55 +639,82 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:background="@drawable/rect_background_grey"/>
+            </LinearLayout>
+            <RelativeLayout
+                android:id="@+id/acknowledgementt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="10dp"
+                app:layout_constraintTop_toBottomOf="@+id/addressinfo_linear"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:layout_editor_absoluteY="560dp">
                 <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
                     android:id="@+id/note"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
                     android:layout_marginLeft="5dp"
-                    android:textStyle="bold"
+                    android:layout_marginTop="10dp"
                     android:text="@string/note"
-                    android:textSize="13sp" />
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
 
                 <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
                     android:id="@+id/acknowledgement"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_below="@+id/note"
                     android:layout_marginLeft="5dp"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
+                    android:layout_marginTop="10dp"
                     android:text="@string/acknowledgement"
-                    android:textSize="13sp" />
+                    android:textColor="@color/black"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
                 <com.nas.alreem.commonviews.CustomTextViewBold
                     android:id="@+id/signature"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_below="@+id/acknowledgement"
                     android:layout_marginLeft="5dp"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
+                    android:layout_marginTop="10dp"
                     android:text="@string/sign"
-                    android:textSize="13sp" />
+                    android:textColor="@color/black"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
                 <LinearLayout
                     android:id="@+id/linearLayout5"
-                    android:layout_width="300dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
+                    android:layout_below="@+id/signature"
+                    android:layout_margin="20dp"
                     android:background="@drawable/digitalsig_bg"
                     android:orientation="horizontal">
 
                     <com.github.gcacace.signaturepad.views.SignaturePad
                         android:id="@+id/signature_pad"
-                        android:layout_width="300dp"
+                        android:layout_width="match_parent"
                         android:layout_height="100dp"
                         android:layout_margin="8dp"
                         android:visibility="visible" />
 
                 </LinearLayout>
-
-
-            </LinearLayout>
+            </RelativeLayout>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:textColor="@color/white"
+                android:background="@color/split_bg"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/acknowledgementt"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:text="Pay"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 

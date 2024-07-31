@@ -8,8 +8,10 @@ import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -47,6 +49,16 @@ class BusServiceEapRegister : AppCompatActivity() {
     lateinit var area : EditText
     lateinit var city : EditText
 
+    lateinit var parentsdetailslinear : LinearLayout
+    lateinit var parentsdetailslinear1 : LinearLayout
+    lateinit var checkPassportLinear : LinearLayout
+    lateinit var addresslinear : RelativeLayout
+    lateinit var parentlinear : RelativeLayout
+    lateinit var addressinfo_linear : LinearLayout
+    lateinit var downarrowImage : ImageView
+    lateinit var downarrowAddress : ImageView
+    var flag:Boolean = true
+
     var latitude: Double = 0.0
     var longitude: Double = 0.0
 
@@ -73,6 +85,56 @@ class BusServiceEapRegister : AppCompatActivity() {
         street = findViewById(R.id.street)
         area = findViewById(R.id.area)
         city = findViewById(R.id.city)
+        heading=findViewById(R.id.heading)
+        heading.text= "EAP Registration Form"
+        parentsdetailslinear=findViewById(R.id.parentsdetailslinear)
+        parentsdetailslinear1=findViewById(R.id.parentsdetailslinear1)
+        checkPassportLinear=findViewById(R.id.checkPassportLinear)
+        addresslinear=findViewById(R.id.addresslinear)
+        addressinfo_linear=findViewById(R.id.addressinfo_linear)
+        parentlinear = findViewById(R.id.parentlinear)
+        downarrowImage = findViewById(R.id.downarrowImage)
+        downarrowAddress = findViewById(R.id.downarrowAddress)
+        parentlinear.setOnClickListener {
+
+            if(flag)
+            {
+                parentsdetailslinear.visibility= View.VISIBLE
+                parentsdetailslinear1.visibility= View.VISIBLE
+                checkPassportLinear.visibility= View.VISIBLE
+                downarrowImage.rotation= 180F
+                //  parentsdetailslinear1.visibility=View.VISIBLE
+
+
+            }
+            else
+            {
+                parentsdetailslinear.visibility= View.GONE
+                parentsdetailslinear1.visibility= View.GONE
+                checkPassportLinear.visibility= View.GONE
+                downarrowImage.rotation= 0F
+
+            }
+            flag = !flag
+        }
+        addresslinear.setOnClickListener {
+            if(flag)
+            {
+                addressinfo_linear.visibility= View.VISIBLE
+                downarrowAddress.rotation=180f
+
+
+            }
+            else
+            {
+                addressinfo_linear.visibility= View.GONE
+                downarrowAddress.rotation=0f
+
+            }
+            flag = !flag
+        }
+
+
         var linearLayoutManager = GridLayoutManager(mContext,2)
         recyclerview.layoutManager = linearLayoutManager
         eapdaysarray.add("All")

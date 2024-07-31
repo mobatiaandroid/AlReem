@@ -25,6 +25,7 @@ import com.nas.alreem.activity.bus_service.BusServiceEapRegister
 import com.nas.alreem.activity.bus_service.reportabsence.BusServiceActivity
 import com.nas.alreem.activity.bus_service.BusServiceInformation
 import com.nas.alreem.activity.bus_service.BusServiceRegisterNew
+import com.nas.alreem.activity.bus_service.BusServiceRegisterupdate
 import com.nas.alreem.activity.bus_service.requestservice.RequestServiceListActivity
 import com.nas.alreem.activity.cca.ExternalProviderActivity
 import com.nas.alreem.activity.login.model.SignUpResponseModel
@@ -101,7 +102,7 @@ class BusServiceFragmentNew : Fragment() {
         }
 
         ccaOption!!.setOnClickListener {
-            val intent = Intent(mContext, RequestServiceListActivity::class.java)
+            val intent = Intent(mContext, BusServiceRegisterupdate::class.java)
             intent.putExtra("tab_type", "Bus Service")
             startActivity(intent)
         }
@@ -115,7 +116,7 @@ class BusServiceFragmentNew : Fragment() {
                 PreferenceManager.setStudIdForCCA(mContext!!, "")
                 // PreferenceManager.setStudentID(mContext!!, "")
 
-                val intent = Intent(mContext, BusServiceRegisterNew::class.java)
+                val intent = Intent(mContext, BusServiceActivity::class.java)
                 intent.putExtra("tab_type", "ECA Options")
                 startActivity(intent)
 

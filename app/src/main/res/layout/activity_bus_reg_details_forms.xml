@@ -285,6 +285,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/drop"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/radioGroup"
@@ -302,6 +303,7 @@
         android:textColor="@color/black"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
+        android:visibility="gone"
         android:layout_marginTop="10dp"
         android:background="@drawable/rect_background_grey"
         app:layout_constraintBottom_toTopOf="@+id/parentlinear"
@@ -501,24 +503,41 @@
         android:layout_height="wrap_content"
         android:id="@+id/addressinfo_linear"
         android:orientation="vertical"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/addresslinear">
-        <TextView
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:hint="@string/Gpslocation"
-            android:padding="5dp"
-            android:textSize="16sp"
-            android:inputType="text"
-            android:imeOptions="actionDone"
-            android:gravity="center_vertical"
-            android:layout_marginTop="10dp"
-            android:textColor="@color/black"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/rect_background_grey"/>
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:hint="@string/Gpslocation"
+                android:padding="5dp"
+                android:textSize="16sp"
+                android:inputType="text"
+                android:imeOptions="actionDone"
+                android:gravity="center_vertical"
+                android:layout_marginTop="10dp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
+            <ImageView
+                android:id="@+id/gpslocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/locationnew"
+                android:text="@string/address"
+                android:layout_marginRight="20dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+        </RelativeLayout>
+
         <EditText
             android:layout_width="match_parent"
             android:layout_height="40dp"
@@ -538,6 +557,8 @@
             android:layout_height="40dp"
             android:hint="@string/street"
             android:padding="5dp"
+            android:id="@+id/street"
+
             android:textSize="16sp"
             android:layout_marginTop="10dp"
             android:inputType="text"
@@ -571,6 +592,7 @@
             android:imeOptions="actionDone"
             android:gravity="center_vertical"
             android:layout_marginTop="10dp"
+            android:id="@+id/area"
             android:textColor="@color/black"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
@@ -582,6 +604,7 @@
             android:padding="5dp"
             android:textSize="16sp"
             android:inputType="text"
+            android:id="@+id/city"
             android:imeOptions="actionDone"
             android:gravity="center_vertical"
             android:layout_marginTop="10dp"
@@ -671,37 +694,12 @@ app:layout_constraintTop_toBottomOf="@+id/addressinfo_linear"
         app:layout_constraintStart_toStartOf="parent"
         tools:layout_editor_absoluteY="560dp">
 
-        <RelativeLayout
-            android:id="@+id/acknowlegment_rel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/list_bg">
 
-            <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
-                android:id="@+id/achnowledgment_Info"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="10dp"
-                android:text="@string/ackwolegemnt"
-                android:textColor="@color/white"
-                android:textSize="20sp" />
-
-            <ImageView
-                android:id="@+id/downarrowAcknowledegement"
-                android:layout_width="30dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:src="@drawable/downarrow" />
-        </RelativeLayout>
 
         <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
             android:id="@+id/note"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/acknowlegment_rel"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="10dp"
             android:text="@string/note"
