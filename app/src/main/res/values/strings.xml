@@ -342,6 +342,8 @@
     <string name="ackwolegemnt">Acknowlegment</string>
 
     <string name="parents_details">Parents Details</string>
+    <string name="selecting_term">Selecting Terms</string>
+
 
     <string name="door_no">Door No / Villa No<font fgcolor="red">*</font></string>
     <string name="street">Street<font fgcolor="red">*</font></string>
@@ -355,6 +357,8 @@
     <string name="contact3">Contact #3<font fgcolor="red">*</font></string>
     <string name="land_mark">Land Mark</string>
     <string name="enter_land_mark">enter land mark<font fgcolor="red">*</font></string>
+    <string name="enter_signature_prompt">Please provide your signature!</string>
+
     <string name="note">NOTE:<font fgcolor="black">In case of change of home, a request form must be submitted one week prior to changing of home.
 If you wish to register your child for the EAP Bus Service a 50AED/ trip is charged separately.</font></string>
 

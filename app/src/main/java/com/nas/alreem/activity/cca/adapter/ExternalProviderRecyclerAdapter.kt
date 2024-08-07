@@ -11,9 +11,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.nas.alreem.R
 import com.nas.alreem.activity.cca.model.ExternalProvidersResponseModel
 import com.nas.alreem.activity.shop_new.adapter.BasketItemsAdapter_new
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody
 
 
-class ExternalProviderRecyclerAdapter(mContext: Context
+class ExternalProviderRecyclerAdapter(mContext: Context        val term = RequestBody.create("text/plain".toMediaTypeOrNull(), documentType)
+
                                       , mListViewArray: ArrayList<ExternalProvidersResponseModel.Data.Lists>)
     : RecyclerView.Adapter<ExternalProviderRecyclerAdapter.MyViewHolder>() {
     private val mContext: Context? = mContext

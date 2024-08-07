@@ -153,17 +153,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.55" />
-    <ProgressBar
-        android:id="@+id/progressDialog"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_centerInParent="true"
-        android:indeterminateDrawable="@anim/customspinner"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline7"
-        />
+
     <RelativeLayout
         android:id="@+id/addOrderRelative"
         android:layout_width="match_parent"

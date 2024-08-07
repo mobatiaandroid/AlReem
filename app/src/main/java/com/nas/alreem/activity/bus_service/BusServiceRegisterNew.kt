@@ -3,12 +3,15 @@ package com.nas.alreem.activity.bus_service
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
-import android.text.InputType
 import android.util.Log
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -16,18 +19,34 @@ import android.widget.ProgressBar
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.RelativeLayout
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.github.gcacace.signaturepad.views.SignaturePad
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.nas.alreem.R
+import com.nas.alreem.activity.bus_service.model.DetailsResponseModel
+import com.nas.alreem.activity.bus_service.model.RegularBusSubmitModel
+import com.nas.alreem.activity.bus_service.model.StudentDetailsModel
 import com.nas.alreem.activity.payments.model.InfoListModel
+import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ConstantFunctions
-import com.nas.alreem.constants.DialogFunctions
+import com.nas.alreem.constants.PreferenceManager
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.ResponseBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import java.util.Locale
 
 class BusServiceRegisterNew : AppCompatActivity() {
@@ -54,10 +73,33 @@ class BusServiceRegisterNew : AppCompatActivity() {
     lateinit var street : EditText
     lateinit var area : EditText
     lateinit var city : EditText
+    lateinit var student_name_text : TextView
+    lateinit var student_year_text : TextView
+    lateinit var student_section_text : TextView
+    lateinit var student_date_text : TextView
+    lateinit var student_esis_text : TextView
+    lateinit var parenr1name : EditText
+    lateinit var parent1mobNo : EditText
+    lateinit var parent1email : EditText
+    lateinit var parent2name : EditText
+    lateinit var parent2email : EditText
+    lateinit var parent2mobno : EditText
     var latitude: Double = 0.0
     var longitude: Double = 0.0
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val LOCATION_PERMISSION_REQUEST_CODE = 1
+    lateinit var spinnerList : Spinner
+    lateinit var dropDownList : ArrayList<String>
+    lateinit var optionsArray : ArrayList<String>
+    lateinit var optionArray: ArrayList<String>
+    lateinit var submit : Button
+
+    var selectedItem = ""
+    lateinit var signature_pad : SignaturePad
+    lateinit var signatureBitmap : Bitmap
+    lateinit var signatureFile : File
+
+
 
 
 
@@ -71,16 +113,94 @@ class BusServiceRegisterNew : AppCompatActivity() {
 
         checkLocationPermission()
         initfn()
-
         if (ConstantFunctions.internetCheck(mContext)) {
-
+            callStudentDetails()
         } else {
 
         }
 
+
+
+    }
+
+    private fun callStudentDetails() {
+        optionArray = ArrayList()
+
+        var studentdetailsmodel = StudentDetailsModel(PreferenceManager.getStudentID(mContext)!!)
+        val call: Call<DetailsResponseModel> = ApiClient.getClient.student_details("Bearer " + PreferenceManager.getaccesstoken(mContext),
+            studentdetailsmodel)
+        call.enqueue(object : Callback<DetailsResponseModel> {
+            override fun onFailure(call: Call<DetailsResponseModel>, t: Throwable) {
+            }
+            override fun onResponse(call: Call<DetailsResponseModel>, response: Response<DetailsResponseModel>) {
+                val responsedata = response.body()
+                if (response.isSuccessful()) {
+//
+                    val apiResponse: DetailsResponseModel? = response.body()
+                    student_name_text.setText( responsedata!!.responseArray.student_detail.name)
+                    student_year_text.setText(responsedata!!.responseArray.student_detail.section)
+                    student_section_text.setText(responsedata!!.responseArray.student_detail.classs)
+                    student_date_text.setText(responsedata!!.responseArray.student_detail.enrolmentDate)
+                    student_esis_text.setText(responsedata!!.responseArray.student_detail.esis_number)
+                    parenr1name.setText(responsedata!!.responseArray.parent1_name)
+                    parent1mobNo.setText(responsedata!!.responseArray.parent1_mobile)
+                    parent1email.setText(responsedata!!.responseArray.parent1_email)
+                    parent2name.setText(responsedata!!.responseArray.parent2_name)
+                    parent2mobno.setText(responsedata!!.responseArray.parent2_mobile)
+                    parent2email.setText(responsedata!!.responseArray.parent2_email)
+
+                    Log.e("response", apiResponse.toString())
+                    Log.e("response", responsedata!!.responseArray.terms.size.toString())
+                    for (i in responsedata!!.responseArray.terms.indices){
+                        optionArray.add(responsedata.responseArray.terms[i].name)
+                    }
+                    Log.e("response", optionArray.size.toString())
+                    optionsArray = ArrayList()
+                    optionsArray.addAll(optionArray)
+                    Log.e("arraysizeoption", optionsArray.size.toString())
+
+                    dropDownList = ArrayList()
+
+                    dropDownList.add(0, "Please Select")
+                    for (i in 1..optionsArray.size) {
+//        for (i in optionsArray.indices) {
+                        dropDownList.add(optionsArray.get(i-1).toString())
+                    }
+                    val sp_adapter: ArrayAdapter<*> =
+                        ArrayAdapter<Any?>(mContext, R.layout.spinner_textview, dropDownList as List<Any?>)
+                    spinnerList.adapter = sp_adapter
+
+                    spinnerList.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                        override fun onItemSelected(
+                            parent: AdapterView<*>,
+                            view: View,
+                            position: Int,
+                            id: Long
+                        ) {
+                            selectedItem = parent.getItemAtPosition(position).toString()
+                            /* for (i in subQuestion.indices){
+                                 if (subQuestion[position].equals("")){
+
+                                 }else{
+
+                                 }
+                             }*/
+                        }
+
+                        override fun onNothingSelected(parent: AdapterView<*>?) {}
+                    }
+
+
+
+                }
+
+            }
+
+        })
     }
 
     private fun initfn() {
+
         heading=findViewById(R.id.heading)
         heading.text= "Regular Bus Service Registration Form"
         parentsdetailslinear=findViewById(R.id.parentsdetailslinear)
@@ -94,9 +214,25 @@ class BusServiceRegisterNew : AppCompatActivity() {
         droppoint = findViewById(R.id.drop)
         pickuppoint = findViewById(R.id.pickup)
         gpslocation = findViewById(R.id.gpslocation)
+        parenr1name = findViewById(R.id.fathersname)
+        parent1mobNo = findViewById(R.id.fathersno)
+        parent1email = findViewById(R.id.fathersmail)
+        parent2name = findViewById(R.id.mothersname)
+        parent2mobno = findViewById(R.id.mothersno)
+        parent2email = findViewById(R.id.mothersemail)
+        submit = findViewById(R.id.submit)
+
+        student_name_text = findViewById(R.id.student_name_text)
+        student_year_text = findViewById(R.id.student_year_text)
+        student_section_text = findViewById(R.id.student_section_text)
+        student_date_text = findViewById(R.id.student_date_text)
+        student_esis_text = findViewById(R.id.student_esis_text)
         street = findViewById(R.id.street)
         area = findViewById(R.id.area)
         city = findViewById(R.id.city)
+         spinnerList = findViewById<Spinner>(R.id.spinnerlist)
+
+
 
         val yesNoRadioGroup = findViewById<RadioGroup>(R.id.radioGroup)
         val yesButton = findViewById<RadioButton>(R.id.radioYes)
@@ -159,11 +295,92 @@ class BusServiceRegisterNew : AppCompatActivity() {
             flag = !flag
         }
 
+         signature_pad = findViewById(R.id.signature_pad)
+
+
+        submit.setOnClickListener {
+            if (signature_pad.isEmpty()) {
+                // Prompt the user to enter a signature
+                Toast.makeText(mContext, getString(R.string.enter_signature_prompt), Toast.LENGTH_SHORT).show()
+            }
+            else{
+                signatureBitmap = signature_pad.getSignatureBitmap()
+                signatureFile = bitmapToFile(signatureBitmap)
+                submitApi(signatureFile)
+
+            }
+
+        }
 
 
 
+    }
+    private fun bitmapToFile(bitmap: Bitmap): File {
+        val signatureFile = File(mContext.externalCacheDir, "signature.png")
+        try {
+            // Write the bitmap to the file
+            val fos = FileOutputStream(signatureFile)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
+            fos.flush()
+            fos.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        return signatureFile
+    }
+    private fun submitApi(signatureFile: File)
+    {
+
+        var attachment1: MultipartBody.Part? = null
+       /* val pickuptext = RequestBody.create("text/plain".toMediaTypeOrNull(), documentType)
+        val droptext = RequestBody.create("text/plain".toMediaTypeOrNull(), documentType)
+        val unigueid = RequestBody.create("text/plain".toMediaTypeOrNull(), documentType)
+        val classname = RequestBody.create("text/plain".toMediaTypeOrNull(), documentType)
+        val parent1name  = RequestBody.create("text/plain".toMediaTypeOrNull(), documentType)
+        val parent1relationship = RequestBody.create("text/plain".toMediaTypeOrNull(), documentType)
+        val parentmobile = RequestBody.create("text/plain".toMediaTypeOrNull(), documentType)
+        val parent1additionaltele = RequestBody.create("text/plain".toMediaTypeOrNull(), documentType)
+        val parent1country = RequestBody.create("text/plain".toMediaTypeOrNull(), documentType)
+        val parentaddress = RequestBody.create("text/plain".toMediaTypeOrNull(), documentType)
+        val term = RequestBody.create("text/plain".toMediaTypeOrNull(), documentType)
+        val tyeppp = RequestBody.create("text/plain".toMediaTypeOrNull(), documentType)
+        val term = RequestBody.create("text/plain".toMediaTypeOrNull(), documentType)
+        val term = RequestBody.create("text/plain".toMediaTypeOrNull(), documentType)*/
+
+        val student_id = RequestBody.create(
+            "text/plain".toMediaTypeOrNull(),
+            PreferenceManager.getStudentID(mContext).toString()
+        )
+        if (signatureFile.length() > 0) {
+            val requestFile1 =
+                RequestBody.create("multipart/form-data".toMediaTypeOrNull(), signatureFile)
+            attachment1 =
+                MultipartBody.Part.createFormData("attachment1", signatureFile.name, requestFile1)
+        }
 
 
+        val frontImagePart: MultipartBody.Part? = attachment1
+
+        var studentdetailsmodel = RegularBusSubmitModel(PreferenceManager.getStudentID(mContext)!!,
+            "fhf","ngn","353","bbfvn","gfdsg","fdbg",
+            "vjk","jjkj","hjjhj","jhh","hggv",
+        "hjjkkj","hgug","gg","hhi","hhj")
+
+        val call: Call<ResponseBody> = ApiClient.getClient.request_for_bus_service(
+            "Bearer " + PreferenceManager.getUserCode(mContext),studentdetailsmodel, frontImagePart)
+        call.enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(
+                call: Call<ResponseBody>,
+                response: Response<ResponseBody>
+            ) {
+
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+              //  progressDialogP.dismiss()
+
+            }
+        })
     }
     private fun getCurrentLocation() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)

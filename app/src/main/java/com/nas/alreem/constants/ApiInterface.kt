@@ -9,6 +9,9 @@ import com.nas.alreem.activity.absence.model.PickupListModel
 import com.nas.alreem.activity.absence.model.RequestLeaveApiModel
 import com.nas.alreem.activity.absence.model.RequestLeaveModel
 import com.nas.alreem.activity.absence.model.RequestPickupApiModel
+import com.nas.alreem.activity.bus_service.model.DetailsResponseModel
+import com.nas.alreem.activity.bus_service.model.RegularBusSubmitModel
+import com.nas.alreem.activity.bus_service.model.StudentDetailsModel
 import com.nas.alreem.activity.bus_service.requestservice.model.RequestBusServiceListModel
 import com.nas.alreem.activity.bus_service.requestservice.model.RequestServiceApiModel
 import com.nas.alreem.activity.canteen.model.TimeExceedModel
@@ -132,6 +135,9 @@ import com.nas.alreem.fragment.student_information.model.StudentInfoModel
 import com.nas.alreem.fragment.time_table.model.apimodel.TimeTableApiDataModel
 import com.nas.alreem.fragment.time_table.model.apimodel.TimeTableApiModel
 import com.nas.alreem.fragment.time_table_new.model.TimeTableApiDataModelNew
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -1029,4 +1035,38 @@ interface ApiInterface {
         @Header("Authorization") token:String,
         @Body json: JsonObject?
     ): Call<VolunteerSubmitResponseModel>
+
+    @POST("student_details")
+    @Headers("Content-Type: application/json")
+    fun student_details(
+        @Header("Authorization") token:String,
+        @Body  studentdetailsmodel: StudentDetailsModel,
+    ): Call<DetailsResponseModel>
+    @Multipart
+    @POST("request_for_bus_service")
+    @Headers("Content-Type: application/json")
+    fun request_for_bus_service(
+        @Header("Authorization") token:String,
+        @Part("student_id") student_id: RequestBody?,
+        @Part("pickup") pickup: RequestBody?,
+        @Part("drop") drop: RequestBody?,
+        @Part("unique_id") unique_id: RequestBody?,
+        @Part("class_name") class_name: RequestBody?,
+        @Part("parent1_name") parent1_name: RequestBody?,
+        @Part("parent1_email") parent1_email: RequestBody?,
+        @Part("parent1_relationship") parent1_relationship: RequestBody?,
+        @Part("parent1_mobile") parent1_mobile: RequestBody?,
+        @Part("parent1_additionaltelephone") parent1_additionaltelephone: RequestBody?,
+        @Part("parent1_country") parent1_country: RequestBody?,
+        @Part("parent1_address") parent1_address: RequestBody?,
+        @Part("term") term: RequestBody?,
+        @Part("requested_date") requested_date: RequestBody?,
+        @Part("device_type") device_type: RequestBody?,
+        @Part("device_name") device_name: RequestBody?,
+        @Part("app_version") app_version: RequestBody?,
+
+       // @Body  regularbusSubmitmodel: RegularBusSubmitModel,
+        @Part image: MultipartBody.Part?
+    ): Call<ResponseBody>
+
 }

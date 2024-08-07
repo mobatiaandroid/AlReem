@@ -306,10 +306,58 @@
         android:visibility="gone"
         android:layout_marginTop="10dp"
         android:background="@drawable/rect_background_grey"
-        app:layout_constraintBottom_toTopOf="@+id/parentlinear"
+        app:layout_constraintBottom_toTopOf="@+id/termtext"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pickup"
         android:hint="@string/drop"/>
+    <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
+        android:id="@+id/termtext"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_margin="10dp"
+        android:text="@string/selecting_term"
+        app:layout_constraintBottom_toTopOf="@+id/termspinnerlayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/drop"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:id="@+id/termspinnerlayout"
+        app:layout_constraintBottom_toTopOf="@+id/parentlinear"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/termtext"
+        >
+
+        <Spinner
+            android:id="@+id/spinnerlist"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:popupBackground="@color/white"
+            android:spinnerMode="dropdown"
+            android:textColor="@color/black"
+            android:visibility="visible"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:background="@drawable/textfield_bg"/>
+        <!--android:background="@drawable/textfield_bg"-->
+        <com.nas.alreem.commonviews.CustomFontSansProTextBlack
+            android:id="@+id/option_txt"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+
+            android:textColor="@color/black"
+            android:visibility="gone"
+            android:gravity="center_vertical"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+        <!--
+                            android:background="@drawable/textfield_bg"
+        -->
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -320,7 +368,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
-        app:layout_constraintTop_toBottomOf="@id/drop"
+        app:layout_constraintTop_toBottomOf="@id/termspinnerlayout"
         android:id="@+id/parentlinear">
         <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
             android:id="@+id/parentinfo"
@@ -358,6 +406,7 @@
             android:gravity="center_vertical"
             android:textColor="@color/black"
             android:layout_marginLeft="10dp"
+            android:id="@+id/fathersname"
             android:layout_marginRight="10dp"
             android:background="@drawable/rect_background_grey"
             android:hint="@string/fathers_name"/>
@@ -371,6 +420,7 @@
             android:layout_marginTop="10dp"
             android:gravity="center_vertical"
             android:textColor="@color/black"
+            android:id="@+id/fathersno"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:background="@drawable/rect_background_grey"
@@ -385,6 +435,7 @@
             android:gravity="center_vertical"
             android:layout_marginTop="10dp"
             android:textColor="@color/black"
+            android:id="@+id/fathersmail"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:background="@drawable/rect_background_grey"
@@ -433,6 +484,7 @@
             android:textColor="@color/black"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"
+            android:id="@+id/mothersname"
             android:layout_marginRight="10dp"
             android:background="@drawable/rect_background_grey"
             android:hint="@string/mothers_name"/>
@@ -442,6 +494,7 @@
             android:hint="@string/mobile_no"
             android:padding="5dp"
             android:textSize="16sp"
+            android:id="@+id/mothersno"
             android:layout_marginTop="10dp"
             android:inputType="text"
             android:imeOptions="actionDone"
@@ -457,6 +510,7 @@
             android:padding="5dp"
             android:textSize="16sp"
             android:inputType="text"
+            android:id="@+id/mothersemail"
             android:imeOptions="actionDone"
             android:gravity="center_vertical"
             android:layout_marginTop="10dp"
@@ -735,14 +789,14 @@ app:layout_constraintTop_toBottomOf="@+id/addressinfo_linear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/signature"
-            android:layout_margin="20dp"
+            android:layout_margin="8dp"
             android:background="@drawable/digitalsig_bg"
             android:orientation="horizontal">
 
             <com.github.gcacace.signaturepad.views.SignaturePad
                 android:id="@+id/signature_pad"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
+                android:layout_height="160dp"
                 android:layout_margin="8dp"
                 android:visibility="visible" />
 
@@ -754,6 +808,7 @@ app:layout_constraintTop_toBottomOf="@+id/addressinfo_linear"
     android:layout_marginLeft="20dp"
     android:layout_marginRight="20dp"
     android:textColor="@color/white"
+    android:id="@+id/submit"
     android:background="@color/split_bg"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@+id/acknowledgementt"
