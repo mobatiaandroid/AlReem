@@ -15,9 +15,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
 
 
-class ExternalProviderRecyclerAdapter(mContext: Context        val term = RequestBody.create("text/plain".toMediaTypeOrNull(), documentType)
-
-                                      , mListViewArray: ArrayList<ExternalProvidersResponseModel.Data.Lists>)
+class ExternalProviderRecyclerAdapter(mContext: Context, mListViewArray: ArrayList<ExternalProvidersResponseModel.Data.Lists>)
     : RecyclerView.Adapter<ExternalProviderRecyclerAdapter.MyViewHolder>() {
     private val mContext: Context? = mContext
     private val mnNewsLetterModelArrayList: ArrayList<ExternalProvidersResponseModel.Data.Lists> = mListViewArray

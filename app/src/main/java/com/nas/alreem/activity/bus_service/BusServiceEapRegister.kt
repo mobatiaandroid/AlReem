@@ -1,19 +1,26 @@
 package com.nas.alreem.activity.bus_service
 
+import MyAdapter
 import android.Manifest
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.Window
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -23,8 +30,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.nas.alreem.R
 import com.nas.alreem.activity.bus_service.adapter.BusEapDaysAdapter
+import com.nas.alreem.activity.bus_service.model.StateVO
 import com.nas.alreem.activity.payments.model.InfoListModel
 import com.nas.alreem.constants.ConstantFunctions
 import java.util.Locale
@@ -33,7 +42,7 @@ import java.util.Locale
 class BusServiceEapRegister : AppCompatActivity() {
     lateinit var mContext: Context
     private lateinit var logoClickImg: ImageView
-    lateinit var recyclerview: RecyclerView
+    //lateinit var recyclerview: RecyclerView
     lateinit var back: ImageView
     lateinit var informationlist: ArrayList<InfoListModel>
     lateinit var heading: TextView
@@ -61,6 +70,13 @@ class BusServiceEapRegister : AppCompatActivity() {
 
     var latitude: Double = 0.0
     var longitude: Double = 0.0
+    val select_qualification: Array<String> = arrayOf(
+        "Select Qualification", "10th / Below", "12th", "Diploma", "UG",
+        "PG", "Phd"
+    )
+    lateinit var spinner:Spinner
+    var listVOs: ArrayList<StateVO> = ArrayList()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,7 +96,7 @@ class BusServiceEapRegister : AppCompatActivity() {
 
     private fun initfn() {
         eapdaysarray = ArrayList()
-        recyclerview = findViewById(R.id.daysrec)
+        //recyclerview = findViewById(R.id.daysrec)
         gpslocation = findViewById(R.id.gpslocation)
         street = findViewById(R.id.street)
         area = findViewById(R.id.area)
@@ -95,6 +111,19 @@ class BusServiceEapRegister : AppCompatActivity() {
         parentlinear = findViewById(R.id.parentlinear)
         downarrowImage = findViewById(R.id.downarrowImage)
         downarrowAddress = findViewById(R.id.downarrowAddress)
+        spinner = findViewById(R.id.daysrec)
+
+        for (i in 0 until select_qualification.size) {
+            val stateVO = StateVO()
+            stateVO.title = select_qualification[i]
+            stateVO.isSelected = false
+            listVOs.add(stateVO)
+        }
+        val myAdapter: MyAdapter = MyAdapter(
+            mContext, 0,
+            listVOs
+        )
+        spinner.adapter = myAdapter
         parentlinear.setOnClickListener {
 
             if(flag)
@@ -136,21 +165,34 @@ class BusServiceEapRegister : AppCompatActivity() {
 
 
         var linearLayoutManager = GridLayoutManager(mContext,2)
-        recyclerview.layoutManager = linearLayoutManager
-        eapdaysarray.add("All")
-        eapdaysarray.add("Monday")
-        eapdaysarray.add("Tuesday")
-        eapdaysarray.add("Wednesday")
-        eapdaysarray.add("Thursday")
-        eapdaysarray.add("Friday")
-        var newsLetterAdapter= BusEapDaysAdapter(eapdaysarray,mContext)
-        recyclerview.adapter=newsLetterAdapter
+       // recyclerview.layoutManager = linearLayoutManager
+      //  eapdaysarray.add("All")
+       // eapdaysarray.add("Monday")
+       // eapdaysarray.add("Tuesday")
+       // eapdaysarray.add("Wednesday")
+       // eapdaysarray.add("Thursday")
+       //// eapdaysarray.add("Friday")
+       // var newsLetterAdapter= BusEapDaysAdapter(eapdaysarray,mContext)
+       // recyclerview.adapter=newsLetterAdapter
         gpslocation.setOnClickListener {
             getAddressFromLocation(latitude, longitude,area,city,street)
 
 
 
         }
+    }
+
+
+
+    fun bottomSelectededDayspopup(context: Context, message: String, msgHead: String)
+    {
+        val dialog = BottomSheetDialog(mContext, R.style.CustomBottomSheetDialog)
+        val view = layoutInflater.inflate(R.layout.bottom_sheet_days_selected, null)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(false)
+        var recyclerdys = dialog.findViewById(R.id.recyclerdys) as? RecyclerView
+
+        dialog.show()
     }
     private fun shareLocation(latitude: Double, longitude: Double) {
         val uri = "https://maps.google.com/?q=$latitude,$longitude"

@@ -1,14 +1,18 @@
 package com.nas.alreem.activity.bus_service
 
 import android.Manifest
+import android.app.Dialog
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.Window
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
@@ -30,10 +34,12 @@ import com.github.gcacace.signaturepad.views.SignaturePad
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.nas.alreem.R
+import com.nas.alreem.activity.absence.model.EarlyPickupModel
 import com.nas.alreem.activity.bus_service.model.DetailsResponseModel
 import com.nas.alreem.activity.bus_service.model.RegularBusSubmitModel
 import com.nas.alreem.activity.bus_service.model.StudentDetailsModel
 import com.nas.alreem.activity.payments.model.InfoListModel
+import com.nas.alreem.activity.primary.model.ComingUpResponseModel
 import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.PreferenceManager
@@ -98,11 +104,6 @@ class BusServiceRegisterNew : AppCompatActivity() {
     lateinit var signature_pad : SignaturePad
     lateinit var signatureBitmap : Bitmap
     lateinit var signatureFile : File
-
-
-
-
-
     var flag:Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -118,8 +119,6 @@ class BusServiceRegisterNew : AppCompatActivity() {
         } else {
 
         }
-
-
 
     }
 
@@ -332,20 +331,24 @@ class BusServiceRegisterNew : AppCompatActivity() {
     {
 
         var attachment1: MultipartBody.Part? = null
-       /* val pickuptext = RequestBody.create("text/plain".toMediaTypeOrNull(), documentType)
-        val droptext = RequestBody.create("text/plain".toMediaTypeOrNull(), documentType)
-        val unigueid = RequestBody.create("text/plain".toMediaTypeOrNull(), documentType)
-        val classname = RequestBody.create("text/plain".toMediaTypeOrNull(), documentType)
-        val parent1name  = RequestBody.create("text/plain".toMediaTypeOrNull(), documentType)
-        val parent1relationship = RequestBody.create("text/plain".toMediaTypeOrNull(), documentType)
-        val parentmobile = RequestBody.create("text/plain".toMediaTypeOrNull(), documentType)
-        val parent1additionaltele = RequestBody.create("text/plain".toMediaTypeOrNull(), documentType)
-        val parent1country = RequestBody.create("text/plain".toMediaTypeOrNull(), documentType)
-        val parentaddress = RequestBody.create("text/plain".toMediaTypeOrNull(), documentType)
-        val term = RequestBody.create("text/plain".toMediaTypeOrNull(), documentType)
-        val tyeppp = RequestBody.create("text/plain".toMediaTypeOrNull(), documentType)
-        val term = RequestBody.create("text/plain".toMediaTypeOrNull(), documentType)
-        val term = RequestBody.create("text/plain".toMediaTypeOrNull(), documentType)*/
+        val pickuptext = RequestBody.create("text/plain".toMediaTypeOrNull(), pickuppoint.text.toString())
+        val droptext = RequestBody.create("text/plain".toMediaTypeOrNull(), droppoint.text.toString())
+        val classname = RequestBody.create("text/plain".toMediaTypeOrNull(),
+            student_year_text.text.toString()
+        )
+        val email = RequestBody.create("text/plain".toMediaTypeOrNull(), parent1email.text.toString())
+        val parent1name  = RequestBody.create("text/plain".toMediaTypeOrNull(), parenr1name.text.toString())
+        val parent1relationship = RequestBody.create("text/plain".toMediaTypeOrNull(), "documentType")
+        val parentmobile = RequestBody.create("text/plain".toMediaTypeOrNull(), parent1mobNo.text.toString())
+        val parent1additionaltele = RequestBody.create("text/plain".toMediaTypeOrNull(), "documentType")
+        val parent1country = RequestBody.create("text/plain".toMediaTypeOrNull(), "documentType")
+        val parentaddress = RequestBody.create("text/plain".toMediaTypeOrNull(), "documentType")
+        val term = RequestBody.create("text/plain".toMediaTypeOrNull(), "documentType")
+        val tyeppp = RequestBody.create("text/plain".toMediaTypeOrNull(), "1")
+        val device_type = RequestBody.create("text/plain".toMediaTypeOrNull(), "documentType")
+        val device_name = RequestBody.create("text/plain".toMediaTypeOrNull(), "documentType")
+        val app_version = RequestBody.create("text/plain".toMediaTypeOrNull(), "documentType")
+
 
         val student_id = RequestBody.create(
             "text/plain".toMediaTypeOrNull(),
@@ -355,32 +358,57 @@ class BusServiceRegisterNew : AppCompatActivity() {
             val requestFile1 =
                 RequestBody.create("multipart/form-data".toMediaTypeOrNull(), signatureFile)
             attachment1 =
-                MultipartBody.Part.createFormData("attachment1", signatureFile.name, requestFile1)
+                MultipartBody.Part.createFormData("signature", signatureFile.name, requestFile1)
         }
 
 
         val frontImagePart: MultipartBody.Part? = attachment1
 
-        var studentdetailsmodel = RegularBusSubmitModel(PreferenceManager.getStudentID(mContext)!!,
-            "fhf","ngn","353","bbfvn","gfdsg","fdbg",
-            "vjk","jjkj","hjjhj","jhh","hggv",
-        "hjjkkj","hgug","gg","hhi","hhj")
 
-        val call: Call<ResponseBody> = ApiClient.getClient.request_for_bus_service(
-            "Bearer " + PreferenceManager.getUserCode(mContext),studentdetailsmodel, frontImagePart)
-        call.enqueue(object : Callback<ResponseBody> {
+
+        val call: Call<EarlyPickupModel> = ApiClient.getClient.request_for_bus_service(
+            "Bearer " + PreferenceManager.getaccesstoken(mContext),student_id,pickuptext, droptext,
+            classname,parent1name,email,parent1relationship,parentmobile,parent1additionaltele,
+            parent1country,parentaddress,term,tyeppp,device_type,device_name,app_version,frontImagePart)
+        call.enqueue(object : Callback<EarlyPickupModel> {
             override fun onResponse(
-                call: Call<ResponseBody>,
-                response: Response<ResponseBody>
+                call: Call<EarlyPickupModel>,
+                response: Response<EarlyPickupModel>
             ) {
+                if (response.isSuccessful)
+                {
+                    if (response.body()!!.status==100)
+                    {
+                        showDialogueWithOkSuccess(mContext,"Successfully Submitted","Alert")
 
+                    }
+                }
             }
 
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+            override fun onFailure(call: Call<EarlyPickupModel>, t: Throwable) {
               //  progressDialogP.dismiss()
 
             }
         })
+    }
+    fun showDialogueWithOkSuccess(context: Context, message: String, msgHead: String)
+    {
+        val dialog = Dialog(context)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.dialog_common_error_alert)
+        var iconImageView = dialog.findViewById(R.id.iconImageView) as? ImageView
+        var alertHead = dialog.findViewById(R.id.alertHead) as? TextView
+        var text_dialog = dialog.findViewById(R.id.messageTxt) as? TextView
+        var btn_Ok = dialog.findViewById(R.id.btn_Ok) as Button
+        text_dialog?.text = message
+        alertHead?.text = msgHead
+        btn_Ok.setOnClickListener()
+        {
+            dialog.dismiss()
+        }
+        dialog.show()
     }
     private fun getCurrentLocation() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)

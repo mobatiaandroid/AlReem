@@ -1044,13 +1044,11 @@ interface ApiInterface {
     ): Call<DetailsResponseModel>
     @Multipart
     @POST("request_for_bus_service")
-    @Headers("Content-Type: application/json")
     fun request_for_bus_service(
         @Header("Authorization") token:String,
         @Part("student_id") student_id: RequestBody?,
         @Part("pickup") pickup: RequestBody?,
         @Part("drop") drop: RequestBody?,
-        @Part("unique_id") unique_id: RequestBody?,
         @Part("class_name") class_name: RequestBody?,
         @Part("parent1_name") parent1_name: RequestBody?,
         @Part("parent1_email") parent1_email: RequestBody?,
@@ -1060,13 +1058,11 @@ interface ApiInterface {
         @Part("parent1_country") parent1_country: RequestBody?,
         @Part("parent1_address") parent1_address: RequestBody?,
         @Part("term") term: RequestBody?,
-        @Part("requested_date") requested_date: RequestBody?,
+        @Part("type") type: RequestBody?,
         @Part("device_type") device_type: RequestBody?,
         @Part("device_name") device_name: RequestBody?,
         @Part("app_version") app_version: RequestBody?,
-
-       // @Body  regularbusSubmitmodel: RegularBusSubmitModel,
         @Part image: MultipartBody.Part?
-    ): Call<ResponseBody>
+    ): Call<EarlyPickupModel>
 
 }

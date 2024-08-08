@@ -211,19 +211,70 @@
                     android:text="Student Name"
                     android:textSize="14sp" />
             </LinearLayout>
+            <View
+                android:id="@+id/border"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/split_bg"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/eappinnerlayout"
+                app:layout_constraintTop_toBottomOf="@id/studentinfolinearesis"/>
             <com.nas.alreem.commonviews.CustomTextViewBold
-                android:id="@+id/eap_datials"
+                android:id="@+id/select_eaps"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="Eap Name"
+                android:text="Select EAP"
                 android:layout_marginLeft="20dp"
                 android:textColor="@color/black"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/studentinfolinearesis"
+                app:layout_constraintBottom_toTopOf="@+id/eappinnerlayout"
+                app:layout_constraintTop_toBottomOf="@id/border"
                 android:textSize="18sp" />
-            <com.nas.alreem.commonviews.CustomEditTextViewRegular
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="20dp"
+                android:id="@+id/eappinnerlayout"
+                app:layout_constraintBottom_toTopOf="@+id/select_days"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/select_eaps"
+                >
+
+                <Spinner
+                    android:id="@+id/spinnerlist"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:popupBackground="@color/white"
+                    android:spinnerMode="dropdown"
+                    android:textColor="@color/black"
+                    android:visibility="visible"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:background="@drawable/textfield_bg"/>
+                <!--android:background="@drawable/textfield_bg"-->
+                <com.nas.alreem.commonviews.CustomFontSansProTextBlack
+                    android:id="@+id/option_txt"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+
+                    android:textColor="@color/black"
+                    android:visibility="gone"
+                    android:gravity="center_vertical"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+                <!--
+                                    android:background="@drawable/textfield_bg"
+                -->
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <!--<com.nas.alreem.commonviews.CustomEditTextViewRegular
                 android:id="@+id/startandenddate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -233,7 +284,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/eap_datials"
-                android:textSize="18sp" />
+                android:textSize="18sp" />-->
 
             <com.nas.alreem.commonviews.CustomTextViewBold
                 android:id="@+id/select_days"
@@ -245,18 +296,66 @@
                 android:textColor="@color/black"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/startandenddate"
+                app:layout_constraintTop_toBottomOf="@id/eappinnerlayout"
                 android:textSize="18sp" />
-            <androidx.recyclerview.widget.RecyclerView
+            <Spinner
+                android:id="@+id/daysrec"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                app:layout_goneMarginLeft="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/select_days"/>
+            <!--<androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:id="@+id/daysrec"
                 android:layout_marginLeft="20dp"
-                app:layout_constraintTop_toBottomOf="@id/select_days">
+                >-->
 
-            </androidx.recyclerview.widget.RecyclerView>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:padding="5dp"
+                android:textSize="16sp"
+                android:inputType="text"
+                android:imeOptions="actionDone"
+                android:gravity="center_vertical"
+                android:id="@+id/pickup"
+                android:textColor="@color/black"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:visibility="visible"
+                app:layout_constraintBottom_toTopOf="@+id/drop"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/daysrec"
+                android:background="@drawable/rect_background_grey"
+                android:hint="@string/pick_up"/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:padding="5dp"
+                android:textSize="16sp"
+                android:inputType="text"
+                android:imeOptions="actionDone"
+                android:id="@+id/drop"
+                android:gravity="center_vertical"
+                android:textColor="@color/black"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:visibility="visible"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/rect_background_grey"
+                app:layout_constraintBottom_toTopOf="@+id/parentlinear"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/pickup"
+                android:hint="@string/drop"/>
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -266,7 +365,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
-                app:layout_constraintTop_toBottomOf="@id/daysrec"
+                app:layout_constraintTop_toBottomOf="@id/drop"
                 android:id="@+id/parentlinear">
                 <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
                     android:id="@+id/parentinfo"

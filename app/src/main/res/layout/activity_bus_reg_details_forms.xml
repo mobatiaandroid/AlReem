@@ -40,20 +40,20 @@
         android:textSize="20sp" />
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="35dp"
         android:id="@+id/studentinfolinear"
         android:orientation="horizontal"
-        android:weightSum="3"
+        android:weightSum="100"
         android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/person_info">
     <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
         android:id="@+id/student_name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_marginTop="10dp"
+        android:layout_weight="45"
         android:text="Student Name"
         android:textColor="@color/black"
         android:textSize="14sp" />
@@ -61,37 +61,33 @@
             android:id="@+id/colon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginTop="10dp"
-            android:text="             :"
-            android:textColor="@color/black"
-            android:textSize="14sp" />
+            android:text=":"
+            android:textColor="@color/black" />
         <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
             android:id="@+id/student_name_text"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginTop="10dp"
+            android:layout_weight="50"
             android:text="Student Name"
             android:textSize="14sp" />
 
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="35dp"
         android:id="@+id/studentinfolinearyear"
         android:orientation="horizontal"
-        android:weightSum="3"
+        android:weightSum="100"
         android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/studentinfolinear">
         <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
             android:id="@+id/student_year"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginTop="10dp"
+            android:layout_weight="45"
             android:text="Student Year"
             android:textColor="@color/black"
             android:textSize="14sp" />
@@ -99,35 +95,33 @@
             android:id="@+id/colon1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginTop="10dp"
-            android:text="                :"
+            android:text=":"
             android:textColor="@color/black"
-            android:textSize="14sp" />
+            />
         <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
             android:id="@+id/student_year_text"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginTop="10dp"
+            android:layout_weight="50"
             android:text="Student Name"
             android:textSize="14sp" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="35dp"
         android:id="@+id/studentinfolinearsection"
         android:orientation="horizontal"
         android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:weightSum="100"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/studentinfolinearyear">
         <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
             android:id="@+id/student_section"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="45"
-            android:layout_marginTop="10dp"
             android:text="Student Section"
             android:textColor="@color/black"
             android:textSize="14sp" />
@@ -135,36 +129,33 @@
             android:id="@+id/colon2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="45"
-            android:layout_marginTop="10dp"
-            android:text="         :"
+            android:text=":"
             android:textColor="@color/black"
-            android:textSize="14sp" />
+             />
         <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
             android:id="@+id/student_section_text"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="45"
-            android:layout_marginTop="10dp"
+            android:layout_weight="50"
             android:text="Student Name"
             android:textSize="14sp" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="35dp"
         android:id="@+id/studentinfolineardate"
         android:orientation="horizontal"
-        android:weightSum="3"
+        android:weightSum="100"
         android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/studentinfolinearsection">
         <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
             android:id="@+id/student_date_of_reg"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginTop="10dp"
+            android:layout_weight="45"
             android:text="Date Of Registration"
             android:textColor="@color/black"
             android:textSize="14sp" />
@@ -172,35 +163,33 @@
             android:id="@+id/colon3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginTop="10dp"
             android:text=":"
             android:textColor="@color/black"
-            android:textSize="14sp" />
+             />
         <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
             android:id="@+id/student_date_text"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginTop="10dp"
+            android:layout_weight="50"
             android:text="Student Name"
             android:textSize="14sp" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="35dp"
         android:id="@+id/studentinfolinearesis"
         android:orientation="horizontal"
         android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:weightSum="100"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/studentinfolineardate">
         <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
             android:id="@+id/student_esis_no"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="45"
-            android:layout_marginTop="10dp"
             android:text="ESIS Student No"
             android:textColor="@color/black"
             android:textSize="14sp" />
@@ -208,17 +197,13 @@
             android:id="@+id/colon4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="45"
-            android:layout_marginTop="10dp"
-            android:text="         :"
-            android:textColor="@color/black"
-            android:textSize="14sp" />
+            android:text=":"
+            android:textColor="@color/black" />
         <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
             android:id="@+id/student_esis_text"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="45"
-            android:layout_marginTop="10dp"
+            android:layout_weight="50"
             android:text="Student Name"
             android:textSize="14sp" />
     </LinearLayout>

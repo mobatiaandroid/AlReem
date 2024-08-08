@@ -16,7 +16,7 @@ class RegularBusSubmitModel (
     @SerializedName("parent1_country") var parent1_country:String,
     @SerializedName("parent1_address") var parent1_address:String,
     @SerializedName("term") var term:String,
-    @SerializedName("type") var requested_date:String,
+    @SerializedName("type") var type:String,
     @SerializedName("device_type") var device_type:String,
     @SerializedName("device_name") var device_name:String,
     @SerializedName("app_version") var app_version:String
