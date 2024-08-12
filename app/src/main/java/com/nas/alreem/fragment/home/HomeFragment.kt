@@ -5392,6 +5392,9 @@ class HomeFragment : Fragment(), View.OnClickListener {
                 textdata.equals(ConstantWords.communications, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_COMMUNICATION
                 }
+                textdata.equals(ConstantWords.bus_service, ignoreCase = true) -> {
+                    TAB_ID = ConstantWords.TAB_BUS_SERVICE
+                }
 
                 textdata.equals(ConstantWords.lunchbox, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_LUNCH_BOX
@@ -5903,7 +5906,11 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     mFragment = PrimaryFragment()
                     fragmentIntent(mFragment)
                 }
-
+                ConstantWords.TAB_BUS_SERVICE -> {
+                    PreferenceManager.setStudentID(mContext, "")
+                    mFragment = BusServiceFragmentNew()
+                    fragmentIntent(mFragment)
+                }
                 ConstantWords.TAB_SECONDARY -> {
                     PreferenceManager.setStudentID(mContext, "")
                     mFragment = SecondaryFragment()

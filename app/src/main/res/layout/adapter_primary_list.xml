@@ -41,6 +41,18 @@
                     android:paddingBottom="10dp"
                     android:singleLine="true"
                     android:textColor="@color/white" />
+                <com.nas.alreem.commonviews.CustomTextViewRegular
+                    android:id="@+id/status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="30dp"
+                    android:layout_toLeftOf="@+id/arrowImg"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:singleLine="true"
+                    android:textColor="@color/white" />
                 <ImageView
                     android:id="@+id/arrowImg"
                     android:layout_width="20dp"

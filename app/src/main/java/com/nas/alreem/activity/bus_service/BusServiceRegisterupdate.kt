@@ -23,6 +23,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.nas.alreem.R
 import com.nas.alreem.activity.bus_service.requestservice.RequestServiceListActivity
+import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.activity.payments.adapter.StudentListAdapter
 import com.nas.alreem.activity.payments.model.StudentList
 import com.nas.alreem.activity.payments.model.StudentListModel
@@ -31,6 +32,7 @@ import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.OnItemClickListener
 import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.constants.addOnItemClickListener
+import com.nas.alreem.fragment.bus_service.model.BannerModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -49,6 +51,17 @@ class BusServiceRegisterupdate : AppCompatActivity() {
     lateinit var studentNameTxt: TextView
     lateinit var progressDialogAdd: ProgressBar
     lateinit var studentSpinner: LinearLayout
+    lateinit var bannerImagePager:ImageView
+    private var description = ""
+    var contactEmail = ""
+    lateinit var heading: TextView
+    lateinit var btn_left:ImageView
+    lateinit var logoClickImgView:ImageView
+    var descriptionTV: TextView? = null
+    var mtitleRel: LinearLayout? = null
+    var mailImageView: ImageView? = null
+
+
 
 
 
@@ -62,6 +75,7 @@ class BusServiceRegisterupdate : AppCompatActivity() {
 
         if (ConstantFunctions.internetCheck(mContext)) {
             callStudentListApi()
+            getList()
 
         } else {
 
@@ -70,13 +84,31 @@ class BusServiceRegisterupdate : AppCompatActivity() {
     }
 
     private fun initfn() {
+        heading=findViewById(R.id.heading)
+        heading.text= "Registration Bus Service"
         studentSpinner = findViewById(R.id.studentSpinner)
         progressDialogAdd=findViewById(R.id.progressDialogAdd)
         studImg = findViewById<ImageView>(R.id.imagicon)
         studentNameTxt = findViewById<TextView>(R.id.studentName)
         externalCCA = findViewById<View>(R.id.myOrderRelative) as RelativeLayout
         ccaOption = findViewById<View>(R.id.addOrderRelative) as RelativeLayout
-        informationCCA = findViewById<View>(R.id.orderHistoryRelative) as RelativeLayout
+        informationCCA = findViewById<View>(R.id.informationRelative) as RelativeLayout
+        btn_left=findViewById(R.id.btn_left)
+        logoClickImgView=findViewById(R.id.logoClickImgView)
+       mailImageView = findViewById<View>(R.id.mailImageView) as ImageView
+        mtitleRel =findViewById<View>(R.id.title) as LinearLayout
+       descriptionTV =findViewById<View>(R.id.descriptionTitle) as TextView
+
+
+        bannerImagePager = findViewById(R.id.bannerImagePager)
+        btn_left.setOnClickListener(View.OnClickListener {
+            finish()
+        })
+        logoClickImgView.setOnClickListener(View.OnClickListener {
+            val intent = Intent(mContext, HomeActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent)
+        })
         ccaOption!!.setOnClickListener {
             val intent = Intent(mContext, BusServiceEapRegister::class.java)
             intent.putExtra("tab_type", "Bus Service")
@@ -100,6 +132,87 @@ class BusServiceRegisterupdate : AppCompatActivity() {
             startActivity(intent)
 
         }
+    }
+    private fun getList() {
+       // progress.visibility = View.VISIBLE
+        val token = PreferenceManager.getaccesstoken(mContext!!)
+        val call: Call<BannerModel> =
+            ApiClient.getClient.bus_service_form_banner( "Bearer $token")
+        call.enqueue(object : Callback<BannerModel> {
+            override fun onResponse(
+                call: Call<BannerModel>,
+                response: Response<BannerModel>
+            ) {
+               // progress.visibility = View.GONE
+
+                if (response.isSuccessful){
+                    if (response.body() != null){
+                        if (response.body()!!.status.toString() == "100"){
+                            val bannerImage: String = response.body()!!.responseArray!!.banner_image
+                            description = response.body()!!.responseArray!!.description!!
+                            contactEmail = response.body()!!.responseArray!!.contact_email!!
+//
+
+                            if (!bannerImage.equals("", ignoreCase = true)) {
+                                Glide.with(mContext!!).load(ConstantFunctions.replace(bannerImage)).fitCenter()
+
+                                    .centerCrop().into(bannerImagePager!!)
+
+//											bannerUrlImageArray = new ArrayList<>();
+//											bannerUrlImageArray.add(bannerImage);
+//											bannerImagePager.setAdapter(new ImagePagerDrawableAdapter(bannerUrlImageArray, getActivity()));
+                            } else {
+                                bannerImagePager!!.setBackgroundResource(R.drawable.default_banner)
+//											bannerImagePager.setBackgroundResource(R.drawable.ccas_banner);
+                            }
+                            println("contact mail$contactEmail")
+                            if (description.equals("", ignoreCase = true) && contactEmail.equals(
+                                    "",
+                                    ignoreCase = true
+                                )
+                            )
+                            {
+                                mtitleRel!!.visibility = View.GONE
+                            }
+                            else {
+                                mtitleRel!!.visibility = View.VISIBLE
+                            }
+                            if (description.equals("", ignoreCase = true)) {
+                                descriptionTV!!.visibility = View.GONE
+                            } else {
+                                descriptionTV!!.text = description
+                                descriptionTV!!.visibility = View.VISIBLE
+                                mtitleRel!!.visibility = View.VISIBLE
+                            }
+                            if (contactEmail.equals("", ignoreCase = true)) {
+                                println("contact mail1")
+                                mailImageView!!.visibility = View.GONE
+                            } else {
+                                println("contact mail2")
+                                mtitleRel!!.visibility = View.VISIBLE
+                                mailImageView!!.visibility = View.VISIBLE
+                            }
+                            // CCAFRegisterRel.setVisibility(View.VISIBLE);
+                            // CCAFRegisterRel.setVisibility(View.VISIBLE);
+
+                        }else{
+                            ConstantFunctions.showDialogueWithOk(mContext!!,getString(R.string.common_error),"Alert")
+                        }
+                    }else{
+                        ConstantFunctions.showDialogueWithOk(mContext!!,getString(R.string.common_error),"Alert")
+                    }
+                }else{
+                    ConstantFunctions.showDialogueWithOk(mContext!!,getString(R.string.common_error),"Alert")
+                }
+            }
+
+            override fun onFailure(call: Call<BannerModel>, t: Throwable) {
+                //progress.visibility = View.GONE
+
+                ConstantFunctions.showDialogueWithOk(mContext!!,getString(R.string.common_error),"Alert")
+            }
+
+        })
     }
     fun showStudentList(context: Context ,mStudentList : ArrayList<StudentList>)
     {

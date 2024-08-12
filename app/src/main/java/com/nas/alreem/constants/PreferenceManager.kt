@@ -1677,6 +1677,30 @@ class PreferenceManager {
             )
             return prefs.getString("categoriid", "")
         }
+        fun seteapselecteddates(
+            list: ArrayList<String>,
+            context: Context
+        ) {
+            val prefs = context.getSharedPreferences(PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            val editor = prefs.edit()
+            val gson = Gson()
+            val json = gson.toJson(list)
+            editor.putString("eapselecteddays", json)
+            editor.apply() // This line is IMPORTANT !!!
+        }
+
+        fun geteapselecteddates(context: Context): java.util.ArrayList<String>? {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME ,
+                Context.MODE_PRIVATE
+            )
+            val gson = Gson()
+            val json = prefs.getString("eapselecteddays", null)
+            val type = object : TypeToken<ArrayList<String>?>() {}.type
+            return gson.fromJson(json, type)
+        }
 
         /*fun getIsFirstTimeInPA(context: Context): Boolean {
             val prefs = context.getSharedPreferences(

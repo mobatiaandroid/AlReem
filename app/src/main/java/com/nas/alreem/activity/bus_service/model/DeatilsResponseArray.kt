@@ -18,4 +18,5 @@ class DeatilsResponseArray (
     @SerializedName("parent2_mobile") var parent2_mobile:String,
     @SerializedName("parent2_name") var parent2_name:String,
     @SerializedName("parent2_relationship") var parent2_relationship:String,
-    @SerializedName("terms") var terms:ArrayList<TermList>)
+    @SerializedName("terms") var terms:ArrayList<TermList>,
+    @SerializedName("eap_details") var eap_details:ArrayList<EAPList>)

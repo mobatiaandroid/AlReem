@@ -8,6 +8,7 @@
         <item>Calendar</item>
         <item>Payments</item>
         <item>Absence &amp; Early Pickup</item>
+        <item>Bus Service</item>
         <item>Lunch Box</item>
         <item>Shop</item>
         <item>Parent Essentials</item>
@@ -36,6 +37,7 @@
         <item>@drawable/calendar</item>
         <item>@drawable/payment</item>
         <item>@drawable/absence</item>
+        <item>@drawable/busstop64</item>
         <item>@drawable/lunchbox_icon</item>
         <item>@drawable/store64</item>
         <item>@drawable/parent</item>
@@ -335,7 +337,7 @@
 
 
     <string name="mothers_name">Mother\'s Name<font fgcolor="red">*</font></string>
-    <string name="fathers_name">Father\'s Name<font fgcolor="red">*</font></string>
+    <string name="fathers_name">parent\'s Name<font fgcolor="red">*</font></string>
     <string name="mobile_no">Mobile No<font fgcolor="red">*</font></string>
     <string name="email_bus">E-mail<font fgcolor="red">*</font></string>
     <string name="address">Residentials Address</string>
@@ -359,7 +361,7 @@
     <string name="enter_land_mark">enter land mark<font fgcolor="red">*</font></string>
     <string name="enter_signature_prompt">Please provide your signature!</string>
 
-    <string name="note">NOTE:<font fgcolor="black">In case of change of home, a request form must be submitted one week prior to changing of home.
+    <string name="note">NOTE:<font fgcolor="red">In case of change of home, a request form must be submitted one week prior to changing of home.
 If you wish to register your child for the EAP Bus Service a 50AED/ trip is charged separately.</font></string>
 
 
@@ -368,5 +370,11 @@ that I will abide by them.</string>
     <string name="sign">Signature of Parent/Guardian</string>
     <string name="pick_up">Pick Up Point</string>
     <string name="drop">Drop Point</string>
+    <string name="title">Title</string>
+    <string name="planned_leaves_head">Planned\nAbsence</string>
+    <string name="reg_planned_leaves">Register Planned Absence</string>
+    <string name="no_reg_planned_leaves">No Registered Planned Absence Found</string>
+
+    <string name="amount_bus">Amount</string>
 
 </resources>

@@ -3,12 +3,14 @@ package com.nas.alreem.activity.bus_service
 import android.Manifest
 import android.app.Dialog
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.location.Geocoder
 import android.location.Location
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -33,11 +35,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.github.gcacace.signaturepad.views.SignaturePad
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.nas.alreem.BuildConfig
 import com.nas.alreem.R
 import com.nas.alreem.activity.absence.model.EarlyPickupModel
 import com.nas.alreem.activity.bus_service.model.DetailsResponseModel
 import com.nas.alreem.activity.bus_service.model.RegularBusSubmitModel
 import com.nas.alreem.activity.bus_service.model.StudentDetailsModel
+import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.activity.payments.model.InfoListModel
 import com.nas.alreem.activity.primary.model.ComingUpResponseModel
 import com.nas.alreem.constants.ApiClient
@@ -66,8 +70,8 @@ class BusServiceRegisterNew : AppCompatActivity() {
     lateinit var backRelative: RelativeLayout
     lateinit var progressDialogAdd: ProgressBar
     lateinit var parentsdetailslinear : LinearLayout
-    lateinit var parentsdetailslinear1 : LinearLayout
-    lateinit var checkPassportLinear : LinearLayout
+  //  lateinit var parentsdetailslinear1 : LinearLayout
+   // lateinit var checkPassportLinear : LinearLayout
     lateinit var addresslinear : RelativeLayout
     lateinit var parentlinear : RelativeLayout
     lateinit var addressinfo_linear : LinearLayout
@@ -87,9 +91,9 @@ class BusServiceRegisterNew : AppCompatActivity() {
     lateinit var parenr1name : EditText
     lateinit var parent1mobNo : EditText
     lateinit var parent1email : EditText
-    lateinit var parent2name : EditText
-    lateinit var parent2email : EditText
-    lateinit var parent2mobno : EditText
+   // lateinit var parent2name : EditText
+   // lateinit var parent2email : EditText
+   // lateinit var parent2mobno : EditText
     var latitude: Double = 0.0
     var longitude: Double = 0.0
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -99,12 +103,15 @@ class BusServiceRegisterNew : AppCompatActivity() {
     lateinit var optionsArray : ArrayList<String>
     lateinit var optionArray: ArrayList<String>
     lateinit var submit : Button
+    var relationship =""
+    lateinit var contact1:EditText
 
     var selectedItem = ""
     lateinit var signature_pad : SignaturePad
     lateinit var signatureBitmap : Bitmap
     lateinit var signatureFile : File
     var flag:Boolean = true
+    lateinit var btn_left:ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -144,12 +151,14 @@ class BusServiceRegisterNew : AppCompatActivity() {
                     parenr1name.setText(responsedata!!.responseArray.parent1_name)
                     parent1mobNo.setText(responsedata!!.responseArray.parent1_mobile)
                     parent1email.setText(responsedata!!.responseArray.parent1_email)
-                    parent2name.setText(responsedata!!.responseArray.parent2_name)
-                    parent2mobno.setText(responsedata!!.responseArray.parent2_mobile)
-                    parent2email.setText(responsedata!!.responseArray.parent2_email)
+                 //   parent2name.setText(responsedata!!.responseArray.parent2_name)
+                 //   parent2mobno.setText(responsedata!!.responseArray.parent2_mobile)
+                  //  parent2email.setText(responsedata!!.responseArray.parent2_email)
 
-                    Log.e("response", apiResponse.toString())
-                    Log.e("response", responsedata!!.responseArray.terms.size.toString())
+                    relationship=responsedata!!.responseArray.parent1_relationship
+                    area.setText(responsedata!!.responseArray.parent1_country)
+                    street.setText(responsedata!!.responseArray.parent1_country)
+                    contact1.setText(responsedata!!.responseArray.parent1_additionaltelephone)
                     for (i in responsedata!!.responseArray.terms.indices){
                         optionArray.add(responsedata.responseArray.terms[i].name)
                     }
@@ -203,8 +212,8 @@ class BusServiceRegisterNew : AppCompatActivity() {
         heading=findViewById(R.id.heading)
         heading.text= "Regular Bus Service Registration Form"
         parentsdetailslinear=findViewById(R.id.parentsdetailslinear)
-        parentsdetailslinear1=findViewById(R.id.parentsdetailslinear1)
-        checkPassportLinear=findViewById(R.id.checkPassportLinear)
+        //parentsdetailslinear1=findViewById(R.id.parentsdetailslinear1)
+        //checkPassportLinear=findViewById(R.id.checkPassportLinear)
         addresslinear=findViewById(R.id.addresslinear)
         addressinfo_linear=findViewById(R.id.addressinfo_linear)
         parentlinear = findViewById(R.id.parentlinear)
@@ -216,9 +225,11 @@ class BusServiceRegisterNew : AppCompatActivity() {
         parenr1name = findViewById(R.id.fathersname)
         parent1mobNo = findViewById(R.id.fathersno)
         parent1email = findViewById(R.id.fathersmail)
-        parent2name = findViewById(R.id.mothersname)
-        parent2mobno = findViewById(R.id.mothersno)
-        parent2email = findViewById(R.id.mothersemail)
+        contact1=findViewById(R.id.contact1)
+
+        //parent2name = findViewById(R.id.mothersname)
+       // parent2mobno = findViewById(R.id.mothersno)
+       // parent2email = findViewById(R.id.mothersemail)
         submit = findViewById(R.id.submit)
 
         student_name_text = findViewById(R.id.student_name_text)
@@ -230,8 +241,16 @@ class BusServiceRegisterNew : AppCompatActivity() {
         area = findViewById(R.id.area)
         city = findViewById(R.id.city)
          spinnerList = findViewById<Spinner>(R.id.spinnerlist)
-
-
+        btn_left=findViewById(R.id.btn_left)
+        logoClickImgView=findViewById(R.id.logoClickImgView)
+        btn_left.setOnClickListener(View.OnClickListener {
+            finish()
+        })
+        logoClickImgView.setOnClickListener(View.OnClickListener {
+            val intent = Intent(mContext, HomeActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent)
+        })
 
         val yesNoRadioGroup = findViewById<RadioGroup>(R.id.radioGroup)
         val yesButton = findViewById<RadioButton>(R.id.radioYes)
@@ -260,8 +279,8 @@ class BusServiceRegisterNew : AppCompatActivity() {
             if(flag)
             {
                 parentsdetailslinear.visibility=View.VISIBLE
-                parentsdetailslinear1.visibility=View.VISIBLE
-                checkPassportLinear.visibility=View.VISIBLE
+               // parentsdetailslinear1.visibility=View.VISIBLE
+               // checkPassportLinear.visibility=View.VISIBLE
                 downarrowImage.rotation= 180F
               //  parentsdetailslinear1.visibility=View.VISIBLE
 
@@ -270,8 +289,8 @@ class BusServiceRegisterNew : AppCompatActivity() {
             else
             {
                 parentsdetailslinear.visibility=View.GONE
-                parentsdetailslinear1.visibility=View.GONE
-                checkPassportLinear.visibility=View.GONE
+               // parentsdetailslinear1.visibility=View.GONE
+               // checkPassportLinear.visibility=View.GONE
                 downarrowImage.rotation= 0F
 
             }
@@ -302,6 +321,21 @@ class BusServiceRegisterNew : AppCompatActivity() {
                 // Prompt the user to enter a signature
                 Toast.makeText(mContext, getString(R.string.enter_signature_prompt), Toast.LENGTH_SHORT).show()
             }
+            else if(selectedItem.equals("Please Select"))
+            {
+                Toast.makeText(mContext, "Please Select Term", Toast.LENGTH_SHORT).show()
+
+            }
+            /*else if(droppoint.text.isEmpty())
+            {
+                Toast.makeText(mContext, "Please Enter Drop point", Toast.LENGTH_SHORT).show()
+
+            }
+            else if(pickuppoint.text.isEmpty())
+            {
+                Toast.makeText(mContext, "Please Enter Pickup point", Toast.LENGTH_SHORT).show()
+
+            }*/
             else{
                 signatureBitmap = signature_pad.getSignatureBitmap()
                 signatureFile = bitmapToFile(signatureBitmap)
@@ -329,6 +363,10 @@ class BusServiceRegisterNew : AppCompatActivity() {
     }
     private fun submitApi(signatureFile: File)
     {
+        val manufacturer = Build.MANUFACTURER
+        val model = Build.MODEL
+        var device = manufacturer + model
+        val versionName: String = BuildConfig.VERSION_NAME
 
         var attachment1: MultipartBody.Part? = null
         val pickuptext = RequestBody.create("text/plain".toMediaTypeOrNull(), pickuppoint.text.toString())
@@ -338,16 +376,16 @@ class BusServiceRegisterNew : AppCompatActivity() {
         )
         val email = RequestBody.create("text/plain".toMediaTypeOrNull(), parent1email.text.toString())
         val parent1name  = RequestBody.create("text/plain".toMediaTypeOrNull(), parenr1name.text.toString())
-        val parent1relationship = RequestBody.create("text/plain".toMediaTypeOrNull(), "documentType")
+        val parent1relationship = RequestBody.create("text/plain".toMediaTypeOrNull(), relationship)
         val parentmobile = RequestBody.create("text/plain".toMediaTypeOrNull(), parent1mobNo.text.toString())
-        val parent1additionaltele = RequestBody.create("text/plain".toMediaTypeOrNull(), "documentType")
-        val parent1country = RequestBody.create("text/plain".toMediaTypeOrNull(), "documentType")
-        val parentaddress = RequestBody.create("text/plain".toMediaTypeOrNull(), "documentType")
-        val term = RequestBody.create("text/plain".toMediaTypeOrNull(), "documentType")
+        val parent1additionaltele = RequestBody.create("text/plain".toMediaTypeOrNull(), contact1.text.toString())
+        val parent1country = RequestBody.create("text/plain".toMediaTypeOrNull(), area.text.toString())
+        val parentaddress = RequestBody.create("text/plain".toMediaTypeOrNull(), street.text.toString())
+        val term = RequestBody.create("text/plain".toMediaTypeOrNull(), selectedItem)
         val tyeppp = RequestBody.create("text/plain".toMediaTypeOrNull(), "1")
-        val device_type = RequestBody.create("text/plain".toMediaTypeOrNull(), "documentType")
-        val device_name = RequestBody.create("text/plain".toMediaTypeOrNull(), "documentType")
-        val app_version = RequestBody.create("text/plain".toMediaTypeOrNull(), "documentType")
+        val device_type = RequestBody.create("text/plain".toMediaTypeOrNull(), "2")
+        val device_name = RequestBody.create("text/plain".toMediaTypeOrNull(), device)
+        val app_version = RequestBody.create("text/plain".toMediaTypeOrNull(), versionName)
 
 
         val student_id = RequestBody.create(
@@ -382,6 +420,11 @@ class BusServiceRegisterNew : AppCompatActivity() {
                         showDialogueWithOkSuccess(mContext,"Successfully Submitted","Alert")
 
                     }
+                    else if (response.body()!!.status==136)
+                    {
+                        showDialogueWithOkSuccess(mContext,"Already Submitted","Alert")
+
+                    }
                 }
             }
 
@@ -407,6 +450,9 @@ class BusServiceRegisterNew : AppCompatActivity() {
         btn_Ok.setOnClickListener()
         {
             dialog.dismiss()
+            val intent = Intent(mContext, BusServiceRegisterupdate::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent)
         }
         dialog.show()
     }

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
     <include
         android:id="@+id/includeRel"
@@ -11,13 +11,24 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/scroll"
+        android:layout_below="@+id/includeRel"
         android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
+            <com.nas.alreem.commonviews.CustomTextViewBold
+                android:id="@+id/stName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Name"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
             <LinearLayout
                 android:id="@+id/namelayout"
                 android:layout_width="match_parent"
@@ -26,35 +37,29 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
+                android:background="@drawable/textfield_bg"
                 android:orientation="horizontal"
-                android:weightSum="100">
-
-                <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
-                    android:id="@+id/stName"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="45"
-                    android:text="Name"
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
-
-                <com.nas.alreem.commonviews.CustomFontSansProTextBlack
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=":"
-                    android:textColor="@color/black"
-                    />
+               >
 
                 <com.nas.alreem.commonviews.CustomTextViewRegular
                     android:id="@+id/stnameValue"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:layout_weight="50"
                     android:text="Gayathri"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
             </LinearLayout>
+            <com.nas.alreem.commonviews.CustomTextViewBold
+                android:id="@+id/studClassTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Class"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
             <LinearLayout
                 android:id="@+id/studClassLinear"
                 android:layout_width="match_parent"
@@ -62,26 +67,9 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="5dp"
+                android:background="@drawable/textfield_bg"
                 android:gravity="center"
-                android:orientation="horizontal"
-                android:weightSum="100">
-
-                <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
-                    android:id="@+id/studClassTextView"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="45"
-                    android:text="Class"
-
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
-
-                <com.nas.alreem.commonviews.CustomFontSansProTextBlack
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=":"
-                    android:textColor="@color/black"
-                    />
+                android:orientation="horizontal">
 
                 <com.nas.alreem.commonviews.CustomTextViewRegular
                     android:id="@+id/studClassValue"
@@ -93,7 +81,16 @@
                     android:textColor="@color/black"
                     android:textSize="14sp" />
             </LinearLayout>
-
+            <com.nas.alreem.commonviews.CustomTextViewBold
+                android:id="@+id/leaveDateFrom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Parents Name"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
             <LinearLayout
                 android:id="@+id/fromlayout"
                 android:layout_width="match_parent"
@@ -101,30 +98,14 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="5dp"
+                android:background="@drawable/textfield_bg"
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:weightSum="100">
 
-                <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
-                    android:id="@+id/leaveDateFrom"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="45"
-                    android:text="Parents Name"
-
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
-
-                <com.nas.alreem.commonviews.CustomFontSansProTextBlack
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=":"
-                    android:textColor="@color/black"
-                    />
-
                 <com.nas.alreem.commonviews.CustomTextViewRegular
                     android:id="@+id/leaveDateFromValue"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="50"
@@ -132,7 +113,16 @@
                     android:textColor="@color/black"
                     android:textSize="14sp" />
             </LinearLayout>
-
+            <com.nas.alreem.commonviews.CustomTextViewBold
+                android:id="@+id/leaveDateTo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Mobile No"
+                android:textColor="@color/black"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:textSize="16sp" />
             <LinearLayout
                 android:id="@+id/tolayout"
                 android:layout_width="match_parent"
@@ -141,24 +131,8 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="5dp"
                 android:gravity="center"
-                android:orientation="horizontal"
-                android:weightSum="100">
-
-                <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
-                    android:id="@+id/leaveDateTo"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="45"
-                    android:text="Mobile No"
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
-
-                <com.nas.alreem.commonviews.CustomFontSansProTextBlack
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=":"
-                    android:textColor="@color/black"
-                    />
+                android:background="@drawable/textfield_bg"
+                android:orientation="horizontal">
 
                 <com.nas.alreem.commonviews.CustomTextViewRegular
                     android:id="@+id/leaveDateToValue"
@@ -170,6 +144,17 @@
                     android:textColor="@color/black"
                     android:textSize="14sp" />
             </LinearLayout>
+            <com.nas.alreem.commonviews.CustomTextViewBold
+                android:id="@+id/emailtext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="45"
+                android:text="Email"
+                android:textColor="@color/black"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:textSize="16sp" />
             <LinearLayout
                 android:id="@+id/emaillayout"
                 android:layout_width="match_parent"
@@ -177,28 +162,75 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="5dp"
+                android:background="@drawable/textfield_bg"
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:weightSum="100">
 
-                <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
-                    android:id="@+id/emailtext"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="45"
-                    android:text="Email"
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
-
-                <com.nas.alreem.commonviews.CustomFontSansProTextBlack
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=":"
-                    android:textColor="@color/black"
-                    />
-
                 <com.nas.alreem.commonviews.CustomTextViewRegular
                     android:id="@+id/emailvalue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="50"
+                    android:text="12/06/2017"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+            </LinearLayout>
+            <com.nas.alreem.commonviews.CustomTextViewBold
+                android:id="@+id/titiletext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/title"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+            <LinearLayout
+                android:id="@+id/titlelayout"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:background="@drawable/textfield_bg"
+                android:orientation="horizontal">
+
+                <com.nas.alreem.commonviews.CustomTextViewRegular
+                    android:id="@+id/titlevalue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="50"
+                    android:text="12/06/2017"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+            </LinearLayout>
+            <com.nas.alreem.commonviews.CustomTextViewBold
+                android:id="@+id/amounttext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/amount_bus"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+            <LinearLayout
+                android:id="@+id/amountlayout"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:background="@drawable/textfield_bg"
+                android:orientation="horizontal">
+
+                <com.nas.alreem.commonviews.CustomTextViewRegular
+                    android:id="@+id/amountvalue"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -207,7 +239,16 @@
                     android:textColor="@color/black"
                     android:textSize="14sp" />
             </LinearLayout>
-
+            <com.nas.alreem.commonviews.CustomTextViewBold
+                android:id="@+id/pickuptext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Pick Up Point"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
             <LinearLayout
                 android:id="@+id/pickuplayout"
                 android:layout_width="match_parent"
@@ -215,29 +256,16 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="5dp"
+                android:background="@drawable/textfield_bg"
                 android:gravity="center"
-                android:orientation="horizontal"
-                android:weightSum="100">
+                android:orientation="horizontal">
 
-                <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
-                    android:id="@+id/pickuptext"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="45"
-                    android:text="Pick Up Point"
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
 
-                <com.nas.alreem.commonviews.CustomFontSansProTextBlack
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=":"
-                    android:textColor="@color/black"
-                    />
+
 
                 <com.nas.alreem.commonviews.CustomTextViewRegular
                     android:id="@+id/pickupvalue"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="50"
@@ -245,6 +273,16 @@
                     android:textColor="@color/black"
                     android:textSize="14sp" />
             </LinearLayout>
+            <com.nas.alreem.commonviews.CustomTextViewBold
+                android:id="@+id/droptext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/drop"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
             <LinearLayout
                 android:id="@+id/droplayout"
                 android:layout_width="match_parent"
@@ -253,28 +291,13 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="5dp"
                 android:gravity="center"
+                android:background="@drawable/textfield_bg"
                 android:orientation="horizontal"
-                android:weightSum="100">
-
-                <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
-                    android:id="@+id/droptext"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="45"
-                    android:text="@string/drop"
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
-
-                <com.nas.alreem.commonviews.CustomFontSansProTextBlack
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=":"
-                    android:textColor="@color/black"
-                    />
+               >
 
                 <com.nas.alreem.commonviews.CustomTextViewRegular
                     android:id="@+id/dropvalue"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="50"
@@ -282,72 +305,42 @@
                     android:textColor="@color/black"
                     android:textSize="14sp" />
             </LinearLayout>
-            <LinearLayout
-                android:id="@+id/reasonlayout"
+            <com.nas.alreem.commonviews.CustomTextViewBold
+                android:id="@+id/reason"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:text="Address"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+            <LinearLayout
+                android:id="@+id/reasonlayout"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:background="@drawable/textfield_bg"
                 android:orientation="horizontal"
                 android:weightSum="100">
 
-                <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
-                    android:id="@+id/reason"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="45"
-                    android:layout_gravity="top"
-                    android:layout_marginLeft="7dp"
-                    android:text="Address"
+
+                <com.nas.alreem.commonviews.CustomTextViewRegular
+                    android:id="@+id/addressvalue"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="50"
+                    android:text="12/06/2017"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
 
-                <com.nas.alreem.commonviews.CustomFontSansProTextBlack
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=":"
-                    android:layout_gravity="top"
-                    android:textColor="@color/black"
-                    />
-
-                <!--<com.algubra.manager.CustomTextViewNormal
-                    android:id="@+id/reasonValue"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
-                    android:layout_weight="50"
-                    android:text="@string/test_msg"
-                    android:textColor="@color/black"
-                    android:textSize="14sp"
-                    android:singleLine="false"
-                    />-->
-
-
 
             </LinearLayout>
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginLeft="20dp"
-                android:background="@drawable/border_grey">
-                <com.nas.alreem.commonviews.CustomTextViewRegular
-                    android:id="@+id/reasonValue"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:padding="10dp"
-                    android:textColor="@color/black"
-                    android:textSize="14sp"
-                    android:layout_marginTop="10dp"
-                    android:singleLine="false"
-                    />
 
-            </ScrollView>
             <!--<com.nas.alreem.commonviews.CustomTextViewRegular
                 android:id="@+id/reasonValue"
                 android:layout_width="match_parent"
@@ -362,10 +355,34 @@
 
 
         </LinearLayout>
+
     </ScrollView>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/split_bg"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:textColor="@color/white"
+        android:id="@+id/paybutton"
+        android:text="Pay"/>
+    <ProgressBar
+        android:id="@+id/progressDialogAdd"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:indeterminateDrawable="@anim/customspinner"
+        android:visibility="gone"
+
+        />
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:id="@+id/relativepaid"
+        android:visibility="gone">
         <LinearLayout
             android:id="@+id/printLinear"
             android:layout_width="match_parent"
@@ -463,4 +480,5 @@
         </LinearLayout>
 
     </RelativeLayout>
-</LinearLayout>
+
+</RelativeLayout>

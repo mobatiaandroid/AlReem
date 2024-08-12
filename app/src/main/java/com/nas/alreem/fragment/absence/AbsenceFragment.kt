@@ -47,6 +47,7 @@ import com.nas.alreem.constants.OnItemClickListener
 import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.constants.addOnItemClickListener
 import com.nas.alreem.fragment.absence.adapter.PickuplistAdapter
+import com.nas.alreem.fragment.absence.model.AbsenceRequestListDetailModel
 import com.nas.alreem.fragment.parent_meetings.adapter.RequestAbsenceRecyclerAdapter
 import retrofit2.Call
 import retrofit2.Callback
@@ -74,11 +75,18 @@ class AbsenceFragment  : Fragment() {
     lateinit var pickupListSort:ArrayList<EarlyPickupListArray>
     lateinit var studentAbsenceCopy :ArrayList<AbsenceRequestListModel>
     var studentAbsenceArrayList = ArrayList<AbsenceRequestListModel>()
-
+    lateinit var studentPlannedCopy :ArrayList<AbsenceRequestListModel>
+    var studentPlannedArrayList = ArrayList<AbsenceRequestListModel>()
     lateinit var absence_btn:TextView
     lateinit var pickup_btn:TextView
     lateinit var heading:TextView
     lateinit var titleTextView:TextView
+    lateinit var plannedLeaves: TextView
+    lateinit var mPlannedListView: RecyclerView
+    lateinit var newRequestPlanned: TextView
+
+
+
 
     var select_val:Int=0
 
@@ -129,6 +137,11 @@ class AbsenceFragment  : Fragment() {
         mAbsenceListView.layoutManager = linearLayoutManager
         mAbsenceListView.itemAnimator = DefaultItemAnimator()
         absence_btn.setBackgroundResource(R.drawable.event_spinnerfill)
+        plannedLeaves=requireView().findViewById(R.id.plannedLeaves)
+        mPlannedListView = requireView().findViewById(R.id.mPlannedListView) as RecyclerView
+        newRequestPlanned = requireView().findViewById(R.id.newRequestPlanned)
+
+
         studentSpinner.setOnClickListener {
             showStudentList(mContext,studentListArrayList)
         }
@@ -379,10 +392,96 @@ class AbsenceFragment  : Fragment() {
             var pickuplistAdapter= PickuplistAdapter(mContext,pickup_list)
             mPickupListView.adapter=pickuplistAdapter
         }
+
+        plannedLeaves.setOnClickListener(View.OnClickListener {
+            select_val=2
+            callPlannedLeaves()
+            absence_btn.setBackgroundResource(R.drawable.event_greyfill)
+            absence_btn.setTextColor(Color.BLACK)
+            pickup_btn.setBackgroundResource(R.drawable.event_greyfill)
+            pickup_btn.setTextColor(Color.BLACK)
+            plannedLeaves.setBackgroundResource(R.drawable.event_spinnerfill)
+            plannedLeaves.setTextColor(Color.BLACK)
+            heading.text = "App Registered Planned Leaves"
+            mPickupListView.visibility = View.GONE
+            mPlannedListView.visibility = View.VISIBLE
+            mAbsenceListView.visibility = View.GONE
+            newRequestAbsence.visibility = View.GONE
+            newRequestPickup.visibility = View.GONE
+            newRequestPlanned.visibility = View.VISIBLE
+            mPlannedListView.layoutManager=LinearLayoutManager(mContext)
+            val studentInfoAdapter = RequestAbsenceRecyclerAdapter(studentPlannedArrayList)
+            mPlannedListView.adapter = studentInfoAdapter
+        })
         newRequestPickup.setOnClickListener {
             val intent = Intent(activity, RequestearlypickupActivity::class.java)
             activity?.startActivity(intent)
         }
+    }
+    fun callPlannedLeaves()
+    {
+        progressDialogAdd.visibility=View.VISIBLE
+        studentPlannedCopy=ArrayList()
+        studentPlannedArrayList=ArrayList()
+        // studentInfoArrayList.clear()
+        mAbsenceListView.visibility=View.GONE
+        mPickupListView.visibility=View.GONE
+        mPlannedListView.visibility=View.VISIBLE
+
+        val token = PreferenceManager.getaccesstoken(mContext)
+        val studentbody= ListAbsenceApiModel(PreferenceManager.getStudentID(mContext).toString(),0,20)
+
+        val call: Call<AbsenceListModel> = ApiClient.getClient.plannedList(studentbody,"Bearer "+token)
+        call.enqueue(object : Callback<AbsenceListModel>{
+            override fun onFailure(call: Call<AbsenceListModel>, t: Throwable) {
+                progressDialogAdd.visibility=View.GONE
+                //CommonFunctions.faliurepopup(mContext)
+
+            }
+            override fun onResponse(call: Call<AbsenceListModel>, response: Response<AbsenceListModel>) {
+                progressDialogAdd.visibility=View.GONE
+                if (response.body()!!.status==100)
+                {
+                    studentPlannedCopy.addAll(response.body()!!.responseArray.request)
+                    studentPlannedArrayList=studentPlannedCopy
+                   // Log.e("ArraySize",studentInfoArrayList.size.toString())
+                    if (studentPlannedArrayList.size>0)
+                    {
+                        mPlannedListView.visibility=View.VISIBLE
+                        val studentInfoAdapter = RequestAbsenceRecyclerAdapter(studentPlannedArrayList)
+                        mPlannedListView.adapter = studentInfoAdapter
+                    }
+                    else{
+                        Toast.makeText(mContext, mContext.resources.getString(R.string.no_reg_planned_leaves), Toast.LENGTH_SHORT).show()
+                        mPlannedListView.visibility=View.GONE
+                    }
+
+
+
+                }else {
+                    if (response.body()!!.status == 116) {
+
+                        callStudentLeaveInfo()
+                    } else {
+                        if (response.body()!!.status == 132) {
+                            studentPlannedCopy=ArrayList()
+                            studentPlannedArrayList.clear()
+                            val studentInfoAdapter = RequestAbsenceRecyclerAdapter(studentPlannedArrayList)
+                            mPlannedListView.adapter = studentInfoAdapter
+                            Toast.makeText(mContext,  mContext.resources.getString(R.string.no_reg_planned_leaves), Toast.LENGTH_SHORT).show()
+                            //validation check error
+                        } /*else {
+                            //check status code checks
+                            InternetCheckClass.checkApiStatusError(response.body()!!.status, mContext)
+                        }*/
+                    }
+
+                }
+
+
+            }
+
+        })
     }
     private fun callStudentLeaveInfo(){
         studentAbsenceCopy=ArrayList<AbsenceRequestListModel>()
