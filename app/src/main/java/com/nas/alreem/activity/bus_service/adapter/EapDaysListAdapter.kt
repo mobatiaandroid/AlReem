@@ -20,7 +20,6 @@ import okhttp3.RequestBody
 class EapDaysListAdapter(
     var context: Context,
     private val listState: ArrayList<StateVO>,
-    private val days: ArrayList<StateVj>,
     var selecteapdays: TextView
 ) :
     RecyclerView.Adapter<EapDaysListAdapter.MyViewHolder>() {
@@ -41,7 +40,7 @@ class EapDaysListAdapter(
     }
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
-        holder.mTextView.text = listState[position].title +"("+days[position].title+")"
+        holder.mTextView.text = listState[position].title +"("+listState[position].title+")"
 
         // To check whether checked event fires from getView() or user input
         isFromView = true
@@ -69,7 +68,7 @@ class EapDaysListAdapter(
 
 
                 new.add( listState[position].title!!)
-                new1.add(listState[position].title!!+"("+days[position].title+")")
+                new1.add(listState[position].title!!+"("+listState[position].title+")")
                 val cleanedString = new1.toString().replace("[", "").replace("]", "")
                 selecteapdays.text= cleanedString
                 Log.e("array", new1.toString())

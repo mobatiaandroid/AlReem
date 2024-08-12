@@ -42,6 +42,7 @@ import com.nas.alreem.BuildConfig
 import com.nas.alreem.R
 import com.nas.alreem.activity.absence.model.EarlyPickupModel
 import com.nas.alreem.activity.bus_service.adapter.EapDaysListAdapter
+import com.nas.alreem.activity.bus_service.model.DateListArray
 import com.nas.alreem.activity.bus_service.model.DetailsResponseModel
 import com.nas.alreem.activity.bus_service.model.StateVO
 import com.nas.alreem.activity.bus_service.model.StateVj
@@ -96,7 +97,7 @@ class BusServiceEapRegister : AppCompatActivity() {
 
     var latitude: Double = 0.0
     var longitude: Double = 0.0
-     var select_qualification: ArrayList<String> = ArrayList()
+      lateinit var select_qualification: ArrayList<DateListArray>
      var days: ArrayList<String> = ArrayList()
 
     lateinit var selecteapdays:TextView
@@ -318,7 +319,7 @@ class BusServiceEapRegister : AppCompatActivity() {
         var linearLayoutManager = LinearLayoutManager(mContext)
         recyclerdys!!.layoutManager = linearLayoutManager
 
-        var newsLetterAdapter= EapDaysListAdapter(mContext,listVOs,listVOy,selecteapdays)
+        var newsLetterAdapter= EapDaysListAdapter(mContext,listVOs,selecteapdays)
         recyclerdys!!.adapter=newsLetterAdapter
         close!!.setOnClickListener {
             bottomSheetDialog.dismiss()
@@ -354,6 +355,7 @@ class BusServiceEapRegister : AppCompatActivity() {
     }
     private fun callEapBusDetails() {
         optionArray = ArrayList()
+        select_qualification=ArrayList()
        // select_qualification= ArrayList()
        // days = ArrayList()
 
@@ -425,15 +427,33 @@ class BusServiceEapRegister : AppCompatActivity() {
                             id: Long
                         ) {
                             selectedItem = parent.getItemAtPosition(position).toString()
+
                            // for (i in subQuestion.indices){
                                 selectedItemid=subQuestion[position]
-                            for (j in responsedata!!.responseArray.eap_details.get(position).date_lists.indices){
-                                select_qualification.add(responsedata.responseArray.eap_details[position].
-                                date_lists.get(j).date)
-                                days.add(responsedata.responseArray.eap_details[position].
-                                date_lists.get(j).day)
+                            for (j in responsedata!!.responseArray.eap_details.get(position).date_lists.indices) {
+                                select_qualification.add(
+                                    responsedata.responseArray.eap_details[position].date_lists.get(j)
+                                )
+                               /* days.add(
+                                    responsedata.responseArray.eap_details[position].date_lists.get(
+                                        j
+                                    ).day
+                                )*/
                                 Log.e("select_qualification", select_qualification.size.toString())
                                 Log.e("days", days.size.toString())
+                            }
+
+                              /*  for (n in 0 until days.size) {
+                                    val stateVj = StateVj()
+                                    stateVj.title = days[n]
+                                    listVOy.add(stateVj)
+                                }*/
+                            for (i in 0 until select_qualification.size) {
+                                val stateVO = StateVO()
+                                stateVO.title = select_qualification[i].date
+                                stateVO.dates = select_qualification[i].day
+                                stateVO.isSelected = false
+                                listVOs.add(stateVO)
                             }
 
                           //  }
@@ -444,17 +464,7 @@ class BusServiceEapRegister : AppCompatActivity() {
                         override fun onNothingSelected(parent: AdapterView<*>?) {}
                     }
 
-                    for (i in 0 until select_qualification.size) {
-                        val stateVO = StateVO()
-                        stateVO.title = select_qualification[i]
-                        stateVO.isSelected = false
-                        listVOs.add(stateVO)
-                    }
-                    for (j in 0 until days.size) {
-                        val stateVj = StateVj()
-                        stateVj.title = days[j]
-                        listVOy.add(stateVj)
-                    }
+
 
                 }
 
