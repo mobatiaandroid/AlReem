@@ -198,7 +198,7 @@ class RequestplannedleavesActivity: AppCompatActivity() {
         val token = PreferenceManager.getaccesstoken(mContext)
         val absenceSuccessBody = RequestLeaveApiModel(PreferenceManager.getStudentID(mContext).toString(),new_fromdate,new_todate,reason)
         val call: Call<RequestLeaveModel> =
-            ApiClient.getClient.leaveRequest(absenceSuccessBody, "Bearer " + token)
+            ApiClient.getClient.plannedLeaveRequest(absenceSuccessBody, "Bearer " + token)
         call.enqueue(object : Callback<RequestLeaveModel> {
             override fun onFailure(call: Call<RequestLeaveModel>, t: Throwable) {
                 //mProgressRelLayout.visibility=View.INVISIBLE

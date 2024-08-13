@@ -21,5 +21,8 @@ class SummeryBusResponseArray (
   @SerializedName("type") var type:String,
   @SerializedName("status") var status:String,
   @SerializedName("title") var title:String,
-  @SerializedName("invoice") var invoice:ArrayList<InvoiceList>)
+  @SerializedName("invoice") var invoice:ArrayList<InvoiceList>,
+  @SerializedName("eap_dates") var eap_dates:ArrayList<String>)
+
+
 

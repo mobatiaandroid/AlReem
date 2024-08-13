@@ -26,7 +26,7 @@
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintTop_toBottomOf="@id/includeRel">
-    <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
+    <com.nas.alreem.commonviews.CustomTextViewBold
         android:id="@+id/person_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -831,5 +831,17 @@ app:layout_constraintTop_toBottomOf="@+id/addressinfo_linear"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/scroll"
         android:text="Submit"/>
+    <ProgressBar
+        android:id="@+id/progressDialogAdd"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerInParent="true"
+        android:indeterminateDrawable="@anim/customspinner"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>
 

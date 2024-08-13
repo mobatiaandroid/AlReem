@@ -25,6 +25,7 @@ import com.nas.alreem.activity.bus_service.model.PaymentGatewayApiModelBus
 import com.nas.alreem.activity.bus_service.model.PaymentSubmitBusApiModel
 import com.nas.alreem.activity.bus_service.model.PaymentSuccessResponseBusModel
 import com.nas.alreem.activity.home.HomeActivity
+import com.nas.alreem.activity.payments.model.StudentList
 import com.nas.alreem.activity.payments.model.payment_gateway.PaymentGatewayModel
 import com.nas.alreem.activity.payments.model.payment_token.PaymentTokenApiModel
 import com.nas.alreem.activity.payments.model.payment_token.PaymentTokenModel
@@ -59,6 +60,7 @@ class BusServiceDetailsNew : AppCompatActivity() {
     var address :String=""
     var status : String=""
     var title : String=""
+    var type : String=""
 
     var orderReff:String = ""
     var order_id : Int =0
@@ -84,20 +86,16 @@ lateinit var classname:TextView
     lateinit var amountlayout:LinearLayout
     lateinit var droptext:TextView
     lateinit var droplayout:LinearLayout
-
-
-
-
-
-
-
+    lateinit var datetext:TextView
+    lateinit var datevalue:TextView
+    lateinit var datelayout:LinearLayout
+     var eapdatesarray = ArrayList<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bus_service_details_page)
         mContext = this
         activity=this
-
         initfn()
         // progressDialogAdd.visibility = View.VISIBLE
         if (ConstantFunctions.internetCheck(mContext)) {
@@ -124,6 +122,16 @@ lateinit var classname:TextView
         refrenceorder=intent.getStringExtra("invoice").toString()
         paidDate=intent.getStringExtra("paidDate").toString()
         invoice_notes=intent.getStringExtra("invoicenotes").toString()
+        type=intent.getStringExtra("type").toString()
+        if (type.equals("EAP"))
+        {
+            eapdatesarray= intent.getStringArrayListExtra("eaparray")!!
+            Log.e("Array", eapdatesarray.toString())
+
+        }
+        else{
+
+        }
 
         heading=findViewById(R.id.heading)
         heading.text= "Registration Summery"
@@ -142,6 +150,9 @@ lateinit var classname:TextView
         Address=findViewById(R.id.addressvalue)
         btn_left=findViewById(R.id.btn_left)
         logoClickImgView=findViewById(R.id.logoClickImgView)
+        datetext=findViewById(R.id.datetext)
+        datevalue=findViewById(R.id.datevalue)
+        datelayout=findViewById(R.id.datelayout)
 
         amount_text=findViewById(R.id.amounttext)
         amountlayout=findViewById(R.id.amountlayout)
@@ -166,6 +177,18 @@ lateinit var classname:TextView
         else{
             droptext.visibility=View.VISIBLE
             droplayout.visibility=View.VISIBLE
+        }
+        if (type.equals("EAP"))
+        {
+            datetext.visibility=View.VISIBLE
+            datelayout.visibility=View.VISIBLE
+            val cleanedString = eapdatesarray.toString().replace("[", "").replace("]", "")
+
+            datevalue.text=cleanedString
+        }
+        else{
+            datetext.visibility=View.GONE
+            datelayout.visibility=View.GONE
         }
          classname.text=class_name
         parentname.text=parent_name

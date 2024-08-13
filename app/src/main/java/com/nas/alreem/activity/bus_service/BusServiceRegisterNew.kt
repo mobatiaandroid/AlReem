@@ -68,6 +68,7 @@ class BusServiceRegisterNew : AppCompatActivity() {
     lateinit var heading: TextView
     lateinit var logoClickImgView: ImageView
     lateinit var backRelative: RelativeLayout
+
     lateinit var progressDialogAdd: ProgressBar
     lateinit var parentsdetailslinear : LinearLayout
   //  lateinit var parentsdetailslinear1 : LinearLayout
@@ -113,6 +114,7 @@ class BusServiceRegisterNew : AppCompatActivity() {
     var flag:Boolean = true
     lateinit var btn_left:ImageView
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bus_reg_details_forms)
@@ -130,6 +132,8 @@ class BusServiceRegisterNew : AppCompatActivity() {
     }
 
     private fun callStudentDetails() {
+        progressDialogAdd.visibility=View.VISIBLE
+
         optionArray = ArrayList()
 
         var studentdetailsmodel = StudentDetailsModel(PreferenceManager.getStudentID(mContext)!!)
@@ -137,69 +141,83 @@ class BusServiceRegisterNew : AppCompatActivity() {
             studentdetailsmodel)
         call.enqueue(object : Callback<DetailsResponseModel> {
             override fun onFailure(call: Call<DetailsResponseModel>, t: Throwable) {
+                progressDialogAdd.visibility=View.GONE
+
             }
             override fun onResponse(call: Call<DetailsResponseModel>, response: Response<DetailsResponseModel>) {
                 val responsedata = response.body()
+                progressDialogAdd.visibility=View.GONE
+
                 if (response.isSuccessful()) {
 //
                     val apiResponse: DetailsResponseModel? = response.body()
-                    student_name_text.setText( responsedata!!.responseArray.student_detail.name)
-                    student_year_text.setText(responsedata!!.responseArray.student_detail.section)
-                    student_section_text.setText(responsedata!!.responseArray.student_detail.classs)
-                    student_date_text.setText(responsedata!!.responseArray.student_detail.enrolmentDate)
-                    student_esis_text.setText(responsedata!!.responseArray.student_detail.esis_number)
-                    parenr1name.setText(responsedata!!.responseArray.parent1_name)
-                    parent1mobNo.setText(responsedata!!.responseArray.parent1_mobile)
-                    parent1email.setText(responsedata!!.responseArray.parent1_email)
-                 //   parent2name.setText(responsedata!!.responseArray.parent2_name)
-                 //   parent2mobno.setText(responsedata!!.responseArray.parent2_mobile)
-                  //  parent2email.setText(responsedata!!.responseArray.parent2_email)
+                    if (responsedata?.responseArray != null) {
+                        student_name_text.setText(responsedata!!.responseArray.student_detail.name)
+                        student_year_text.setText(responsedata!!.responseArray.student_detail.section)
+                        student_section_text.setText(responsedata!!.responseArray.student_detail.classs)
+                        student_date_text.setText(responsedata!!.responseArray.student_detail.enrolmentDate)
+                        student_esis_text.setText(responsedata!!.responseArray.student_detail.esis_number)
+                        parenr1name.setText(responsedata!!.responseArray.parent1_name)
+                        parent1mobNo.setText(responsedata!!.responseArray.parent1_mobile)
+                        parent1email.setText(responsedata!!.responseArray.parent1_email)
+                        //   parent2name.setText(responsedata!!.responseArray.parent2_name)
+                        //   parent2mobno.setText(responsedata!!.responseArray.parent2_mobile)
+                        //  parent2email.setText(responsedata!!.responseArray.parent2_email)
 
-                    relationship=responsedata!!.responseArray.parent1_relationship
-                    area.setText(responsedata!!.responseArray.parent1_country)
-                    street.setText(responsedata!!.responseArray.parent1_country)
-                    contact1.setText(responsedata!!.responseArray.parent1_additionaltelephone)
-                    for (i in responsedata!!.responseArray.terms.indices){
-                        optionArray.add(responsedata.responseArray.terms[i].name)
-                    }
-                    Log.e("response", optionArray.size.toString())
-                    optionsArray = ArrayList()
-                    optionsArray.addAll(optionArray)
-                    Log.e("arraysizeoption", optionsArray.size.toString())
+                        relationship = responsedata!!.responseArray.parent1_relationship
+                        area.setText(responsedata!!.responseArray.parent1_country)
+                        street.setText(responsedata!!.responseArray.parent1_country)
+                        contact1.setText(responsedata!!.responseArray.parent1_additionaltelephone)
+                        for (i in responsedata!!.responseArray.terms.indices) {
+                            optionArray.add(responsedata.responseArray.terms[i].name)
+                        }
+                        Log.e("response", optionArray.size.toString())
+                        optionsArray = ArrayList()
+                        optionsArray.addAll(optionArray)
+                        Log.e("arraysizeoption", optionsArray.size.toString())
 
-                    dropDownList = ArrayList()
+                        dropDownList = ArrayList()
 
-                    dropDownList.add(0, "Please Select")
-                    for (i in 1..optionsArray.size) {
+                        dropDownList.add(0, "Please Select")
+                        for (i in 1..optionsArray.size) {
 //        for (i in optionsArray.indices) {
-                        dropDownList.add(optionsArray.get(i-1).toString())
-                    }
-                    val sp_adapter: ArrayAdapter<*> =
-                        ArrayAdapter<Any?>(mContext, R.layout.spinner_textview, dropDownList as List<Any?>)
-                    spinnerList.adapter = sp_adapter
+                            dropDownList.add(optionsArray.get(i - 1).toString())
+                        }
+                        val sp_adapter: ArrayAdapter<*> =
+                            ArrayAdapter<Any?>(
+                                mContext,
+                                R.layout.spinner_textview,
+                                dropDownList as List<Any?>
+                            )
+                        spinnerList.adapter = sp_adapter
 
-                    spinnerList.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                        override fun onItemSelected(
-                            parent: AdapterView<*>,
-                            view: View,
-                            position: Int,
-                            id: Long
-                        ) {
-                            selectedItem = parent.getItemAtPosition(position).toString()
-                            /* for (i in subQuestion.indices){
+                        spinnerList.onItemSelectedListener =
+                            object : AdapterView.OnItemSelectedListener {
+                                override fun onItemSelected(
+                                    parent: AdapterView<*>,
+                                    view: View,
+                                    position: Int,
+                                    id: Long
+                                ) {
+                                    selectedItem = parent.getItemAtPosition(position).toString()
+                                    /* for (i in subQuestion.indices){
                                  if (subQuestion[position].equals("")){
 
                                  }else{
 
                                  }
                              }*/
-                        }
+                                }
 
-                        override fun onNothingSelected(parent: AdapterView<*>?) {}
+                                override fun onNothingSelected(parent: AdapterView<*>?) {}
+                            }
+
+
                     }
+                    else{
+                        showDialogueWithOkSuccess(mContext,"No Term Found","Alert")
 
-
-
+                    }
                 }
 
             }
@@ -212,6 +230,8 @@ class BusServiceRegisterNew : AppCompatActivity() {
         heading=findViewById(R.id.heading)
         heading.text= "Regular Bus Service Registration Form"
         parentsdetailslinear=findViewById(R.id.parentsdetailslinear)
+        progressDialogAdd=findViewById(R.id.progressDialogAdd)
+
         //parentsdetailslinear1=findViewById(R.id.parentsdetailslinear1)
         //checkPassportLinear=findViewById(R.id.checkPassportLinear)
         addresslinear=findViewById(R.id.addresslinear)
@@ -363,6 +383,8 @@ class BusServiceRegisterNew : AppCompatActivity() {
     }
     private fun submitApi(signatureFile: File)
     {
+        progressDialogAdd.visibility=View.VISIBLE
+
         val manufacturer = Build.MANUFACTURER
         val model = Build.MODEL
         var device = manufacturer + model
@@ -413,6 +435,8 @@ class BusServiceRegisterNew : AppCompatActivity() {
                 call: Call<EarlyPickupModel>,
                 response: Response<EarlyPickupModel>
             ) {
+                progressDialogAdd.visibility=View.GONE
+
                 if (response.isSuccessful)
                 {
                     if (response.body()!!.status==100)
@@ -429,10 +453,41 @@ class BusServiceRegisterNew : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<EarlyPickupModel>, t: Throwable) {
-              //  progressDialogP.dismiss()
+                progressDialogAdd.visibility=View.GONE
+
+                //  progressDialogP.dismiss()
 
             }
         })
+    }
+    fun showDialogueWithOkSuccess(
+        context: Context,
+        message: String,
+        msgHead: String,
+        status: String
+    )
+    {
+        val dialog = Dialog(context)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.dialog_common_error_alert)
+        var iconImageView = dialog.findViewById(R.id.iconImageView) as? ImageView
+        var alertHead = dialog.findViewById(R.id.alertHead) as? TextView
+        var text_dialog = dialog.findViewById(R.id.messageTxt) as? TextView
+        var btn_Ok = dialog.findViewById(R.id.btn_Ok) as Button
+        text_dialog?.text = message
+        alertHead?.text = msgHead
+
+        btn_Ok.setOnClickListener()
+        {
+            dialog.dismiss()
+            val intent = Intent(mContext, BusServiceRegisterupdate::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent)
+
+        }
+        dialog.show()
     }
     fun showDialogueWithOkSuccess(context: Context, message: String, msgHead: String)
     {

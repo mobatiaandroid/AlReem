@@ -30,6 +30,7 @@ import com.nas.alreem.activity.absence.AbsenceDetailActivity
 import com.nas.alreem.activity.absence.EarlyPickupDetailActivity
 import com.nas.alreem.activity.absence.RequestabsenceActivity
 import com.nas.alreem.activity.absence.RequestearlypickupActivity
+import com.nas.alreem.activity.absence.RequestplannedleavesActivity
 import com.nas.alreem.activity.absence.model.AbsenceListModel
 import com.nas.alreem.activity.absence.model.AbsenceRequestListModel
 import com.nas.alreem.activity.absence.model.EarlyPickupListArray
@@ -157,6 +158,19 @@ class AbsenceFragment  : Fragment() {
                 activity?.startActivity(intent)
             }
         })
+
+        mPlannedListView.addOnItemClickListener(object: OnItemClickListener {
+            override fun onItemClicked(position: Int, view: View) {
+                // Your logic
+                val intent =Intent(activity,AbsenceDetailActivity::class.java)
+                intent.putExtra("studentName",PreferenceManager.getStudentName(mContext))
+                intent.putExtra("studentClass",PreferenceManager.getStudentClass(mContext))
+                intent.putExtra("fromDate",studentPlannedArrayList.get(position).from_date)
+                intent.putExtra("toDate",studentPlannedArrayList.get(position).to_date)
+                intent.putExtra("reason",studentPlannedArrayList.get(position).reason)
+                activity?.startActivity(intent)
+            }
+        })
         mPickupListView.addOnItemClickListener(object: OnItemClickListener {
             override fun onItemClicked(position: Int, view: View) {
                 // Your logic
@@ -177,6 +191,10 @@ class AbsenceFragment  : Fragment() {
                 "For planned absences please email your head of school","Alert")
 
 
+        })
+        newRequestPlanned.setOnClickListener(View.OnClickListener {
+            val intent =Intent(activity, RequestplannedleavesActivity::class.java)
+            activity?.startActivity(intent)
         })
     }
     fun callStudentListApi()
@@ -346,6 +364,10 @@ class AbsenceFragment  : Fragment() {
                     }
 
                 }
+                else if (select_val==2)
+                {
+                    callPlannedLeaves()
+                }
                 dialog.dismiss()
             }
         })
@@ -359,12 +381,16 @@ class AbsenceFragment  : Fragment() {
             absence_btn.setBackgroundResource(R.drawable.event_spinnerfill)
             absence_btn.setTextColor(Color.BLACK)
             pickup_btn.setBackgroundResource(R.drawable.event_greyfill)
+            plannedLeaves.setBackgroundResource(R.drawable.event_greyfill)
+            plannedLeaves.setTextColor(Color.BLACK)
             pickup_btn.setTextColor(Color.BLACK)
             heading.text = "App Registered Absences"
             mAbsenceListView.visibility = View.VISIBLE
             newRequestAbsence.visibility = View.VISIBLE
             mPickupListView.visibility = View.GONE
             newRequestPickup.visibility = View.GONE
+            newRequestPlanned.visibility = View.GONE
+
 
         }
         pickup_btn.setOnClickListener {
@@ -383,9 +409,12 @@ class AbsenceFragment  : Fragment() {
             absence_btn.setTextColor(Color.BLACK)
             pickup_btn.setBackgroundResource(R.drawable.event_spinnerfill)
             pickup_btn.setTextColor(Color.BLACK)
+            plannedLeaves.setBackgroundResource(R.drawable.event_greyfill)
+            plannedLeaves.setTextColor(Color.BLACK)
             heading.text = "App Registered Early Pickup"
             mAbsenceListView.visibility = View.GONE
             newRequestAbsence.visibility = View.GONE
+            newRequestPlanned.visibility = View.GONE
             mPickupListView.visibility = View.VISIBLE
             newRequestPickup.visibility = View.VISIBLE
             mPickupListView.layoutManager=LinearLayoutManager(mContext)
@@ -691,6 +720,10 @@ class AbsenceFragment  : Fragment() {
                     DialogFunctions.showInternetAlertDialog(mContext)
                 }
 
+            }
+            else if (select_val==2)
+            {
+                callPlannedLeaves()
             }
 
     }

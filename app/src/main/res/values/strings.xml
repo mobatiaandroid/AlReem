@@ -371,6 +371,8 @@ that I will abide by them.</string>
     <string name="pick_up">Pick Up Point</string>
     <string name="drop">Drop Point</string>
     <string name="title">Title</string>
+    <string name="selecteddates">Selected Dates</string>
+
     <string name="planned_leaves_head">Planned\nAbsence</string>
     <string name="reg_planned_leaves">Register Planned Absence</string>
     <string name="no_reg_planned_leaves">No Registered Planned Absence Found</string>

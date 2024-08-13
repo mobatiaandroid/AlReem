@@ -45,6 +45,9 @@ import com.nas.alreem.constants.addOnItemClickListener
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.Date
 
 class BusServiceSummery : AppCompatActivity() {
     lateinit var mContext: Context
@@ -106,6 +109,24 @@ class BusServiceSummery : AppCompatActivity() {
         recycler_view_cca.addOnItemClickListener(object: OnItemClickListener {
             override fun onItemClicked(position: Int, view: View) {
                 var address:String
+                 var eaparray: String=""
+                var eapdatesarray = ArrayList<String>()
+
+                for (j in summerylistaary[position].eap_dates.indices)
+                {
+                    eaparray=summerylistaary[position].eap_dates.get(j)
+                    Log.e("eaparray",eaparray)
+                    val fromDate=eaparray
+                    val inputFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd")
+                    val outputFormat: DateFormat = SimpleDateFormat("dd MMM yyyy")
+                    val inputDateStr = fromDate
+                    val date: Date = inputFormat.parse(inputDateStr)
+                    val outputDateStr: String = outputFormat.format(date)
+                    Log.e("outputDateStr",outputDateStr)
+                    eapdatesarray.add(outputDateStr)
+                }
+
+
                 address=summerylistaary[position].parent_country+" "+summerylistaary[position].parent_address
                 // Your logic
                 val intent = Intent(mContext, BusServiceDetailsNew::class.java)
@@ -122,6 +143,8 @@ class BusServiceSummery : AppCompatActivity() {
                 intent.putExtra("address",address)
                 intent.putExtra("status",summerylistaary[position].status)
                 intent.putExtra("title",summerylistaary[position].title)
+                intent.putStringArrayListExtra("eaparray",eapdatesarray)
+                intent.putExtra("type",summerylistaary[position].type)
 
 for (i in summerylistaary[position].invoice.indices )
 {

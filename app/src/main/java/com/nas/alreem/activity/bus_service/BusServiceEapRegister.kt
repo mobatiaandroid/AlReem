@@ -37,11 +37,13 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.Gson
+import com.google.gson.JsonParser
 import com.nas.alreem.BuildConfig
 import com.nas.alreem.R
 import com.nas.alreem.activity.absence.model.EarlyPickupModel
 import com.nas.alreem.activity.bus_service.adapter.EapDaysListAdapter
 import com.nas.alreem.activity.bus_service.model.DateListArray
+import com.nas.alreem.activity.bus_service.model.DeatilsResponseArray
 import com.nas.alreem.activity.bus_service.model.DetailsResponseModel
 import com.nas.alreem.activity.bus_service.model.EAPList
 import com.nas.alreem.activity.bus_service.model.StateVO
@@ -164,6 +166,8 @@ class BusServiceEapRegister : AppCompatActivity() {
         city = findViewById(R.id.city)
         heading = findViewById(R.id.heading)
         heading.text = "EAP Registration Form"
+        progressDialogAdd=findViewById(R.id.progressDialogAdd)
+
         parentsdetailslinear = findViewById(R.id.parentsdetailslinear)
         contact1 = findViewById(R.id.contact1)
         // parentsdetailslinear1=findViewById(R.id.parentsdetailslinear1)
@@ -264,7 +268,12 @@ class BusServiceEapRegister : AppCompatActivity() {
             } else if (pickuppoint.text.isEmpty()) {
                 Toast.makeText(mContext, "Please Enter Pickup point", Toast.LENGTH_SHORT).show()
 
-            } else {
+            }
+            else if (selecteapdays.text.equals("Please Select")) {
+                Toast.makeText(mContext, "Please Selected Dates", Toast.LENGTH_SHORT).show()
+
+            }
+            else {
                 signatureBitmap = signature_pad.getSignatureBitmap()
                 signatureFile = bitmapToFile(signatureBitmap)
 
@@ -345,6 +354,8 @@ class BusServiceEapRegister : AppCompatActivity() {
     }
 
     private fun callEapBusDetails() {
+        progressDialogAdd.visibility=View.VISIBLE
+
         optionArray = ArrayList()
         select_qualification = ArrayList()
         // select_qualification= ArrayList()
@@ -357,6 +368,8 @@ class BusServiceEapRegister : AppCompatActivity() {
         )
         call.enqueue(object : Callback<DetailsResponseModel> {
             override fun onFailure(call: Call<DetailsResponseModel>, t: Throwable) {
+                progressDialogAdd.visibility=View.GONE
+
             }
 
             override fun onResponse(
@@ -366,107 +379,119 @@ class BusServiceEapRegister : AppCompatActivity() {
                 val responsedata = response.body()
                 if (response.isSuccessful()) {
 //
+                    progressDialogAdd.visibility=View.GONE
+
                     val apiResponse: DetailsResponseModel? = response.body()
-                    student_name_text.setText(responsedata!!.responseArray.student_detail.name)
-                    student_year_text.setText(responsedata!!.responseArray.student_detail.section)
-                    student_section_text.setText(responsedata!!.responseArray.student_detail.classs)
-                    student_date_text.setText(responsedata!!.responseArray.student_detail.enrolmentDate)
-                    student_esis_text.setText(responsedata!!.responseArray.student_detail.esis_number)
-                    parenr1name.setText(responsedata!!.responseArray.parent1_name)
-                    parent1mobNo.setText(responsedata!!.responseArray.parent1_mobile)
-                    parent1email.setText(responsedata!!.responseArray.parent1_email)
-                    //parent2name.setText(responsedata!!.responseArray.parent2_name)
-                    //parent2mobno.setText(responsedata!!.responseArray.parent2_mobile)
-                    // parent2email.setText(responsedata!!.responseArray.parent2_email)
-                    eapDetailsArray.add(EAPList(0,"","","",ArrayList()))
-                    for (i in responsedata!!.responseArray.eap_details.indices) {
-                        eapDetailsArray.add(responsedata!!.responseArray.eap_details[i])
-                    }
-                    // Log.e("response", apiResponse.toString())
-                    //  Log.e("response", responsedata!!.responseArray.terms.size.toString())
-                    relationship = responsedata!!.responseArray.parent1_relationship
-                    area.setText(responsedata!!.responseArray.parent1_country)
-                    street.setText(responsedata!!.responseArray.parent1_country)
-                    contact1.setText(responsedata!!.responseArray.parent1_additionaltelephone)
-                    for (i in responsedata!!.responseArray.eap_details.indices) {
-                        optionArray.add(responsedata.responseArray.eap_details[i].title)
 
-                    }
 
-                    subQuestion = ArrayList()
-                    subQuestion.add("")
-                    for (i in 1..responsedata!!.responseArray.eap_details.size) {
-                        if (responsedata!!.responseArray.eap_details[i - 1].cca_days_id == null) {
-                            subQuestion.add("")
-                        } else {
-                            subQuestion.add(responsedata!!.responseArray.eap_details[i - 1].cca_days_id.toString())
+                    if (responsedata?.responseArray != null)
+                    {
+                        student_name_text.setText(responsedata!!.responseArray.student_detail.name)
+                        student_year_text.setText(responsedata!!.responseArray.student_detail.section)
+                        student_section_text.setText(responsedata!!.responseArray.student_detail.classs)
+                        student_date_text.setText(responsedata!!.responseArray.student_detail.enrolmentDate)
+                        student_esis_text.setText(responsedata!!.responseArray.student_detail.esis_number)
+                        parenr1name.setText(responsedata!!.responseArray.parent1_name)
+                        parent1mobNo.setText(responsedata!!.responseArray.parent1_mobile)
+                        parent1email.setText(responsedata!!.responseArray.parent1_email)
+                        //parent2name.setText(responsedata!!.responseArray.parent2_name)
+                        //parent2mobno.setText(responsedata!!.responseArray.parent2_mobile)
+                        // parent2email.setText(responsedata!!.responseArray.parent2_email)
+                        eapDetailsArray.add(EAPList(0,"","","",ArrayList()))
+                        for (i in responsedata!!.responseArray.eap_details.indices) {
+                            eapDetailsArray.add(responsedata!!.responseArray.eap_details[i])
+                        }
+                        // Log.e("response", apiResponse.toString())
+                        //  Log.e("response", responsedata!!.responseArray.terms.size.toString())
+                        relationship = responsedata!!.responseArray.parent1_relationship
+                        area.setText(responsedata!!.responseArray.parent1_country)
+                        street.setText(responsedata!!.responseArray.parent1_country)
+                        contact1.setText(responsedata!!.responseArray.parent1_additionaltelephone)
+                        for (i in responsedata!!.responseArray.eap_details.indices) {
+                            optionArray.add(responsedata.responseArray.eap_details[i].title)
+
                         }
 
-                    }
-                    // Log.e("response", optionArray.size.toString())
-                    optionsArray = ArrayList()
-                    optionsArray.addAll(optionArray)
-                    // Log.e("arraysizeoption", optionsArray.size.toString())
-
-                    dropDownList = ArrayList()
-
-                    dropDownList.add(0, "Please Select")
-                    for (i in 1..optionsArray.size) {
-//        for (i in optionsArray.indices) {
-                        dropDownList.add(optionsArray.get(i - 1).toString())
-                    }
-                    val sp_adapter: ArrayAdapter<*> =
-                        ArrayAdapter<Any?>(
-                            mContext,
-                            R.layout.spinner_textview,
-                            dropDownList as List<Any?>
-                        )
-                    spinnerList.adapter = sp_adapter
-
-                    spinnerList.onItemSelectedListener =
-                        object : AdapterView.OnItemSelectedListener {
-                            override fun onItemSelected(
-                                parent: AdapterView<*>,
-                                view: View,
-                                position: Int,
-                                id: Long
-                            ) {
-                                selectedItem = parent.getItemAtPosition(position).toString()
-                                selectedItemid = subQuestion[position]
-                                select_qualification.clear()
-//                                dateListArrayTemp = responsedata.responseArray.eap_details[position].date_lists
-                                dateListArrayTemp = eapDetailsArray[position].date_lists
-
-                                for (j in dateListArrayTemp.indices) {
-                                    select_qualification.add(dateListArrayTemp[j])
-                                    Log.e(
-                                        "select_qualification",
-                                        select_qualification.size.toString()
-                                    )
-                                    Log.e("days", days.size.toString())
-                                }
-
-                                /*  for (n in 0 until days.size) {
-                                      val stateVj = StateVj()
-                                      stateVj.title = days[n]
-                                      listVOy.add(stateVj)
-                                  }*/
-                                listVOs.clear()
-                                for (i in 0 until select_qualification.size) {
-                                    val stateVO = StateVO()
-                                    stateVO.title = select_qualification[i].date
-                                    stateVO.dates = select_qualification[i].day
-                                    stateVO.isSelected = false
-                                    listVOs.add(stateVO)
-                                }
-
-                                //  }
-
-
+                        subQuestion = ArrayList()
+                        subQuestion.add("")
+                        for (i in 1..responsedata!!.responseArray.eap_details.size) {
+                            if (responsedata!!.responseArray.eap_details[i - 1].cca_days_id == null) {
+                                subQuestion.add("")
+                            } else {
+                                subQuestion.add(responsedata!!.responseArray.eap_details[i - 1].cca_days_id.toString())
                             }
 
-                            override fun onNothingSelected(parent: AdapterView<*>?) {}
                         }
+                        // Log.e("response", optionArray.size.toString())
+                        optionsArray = ArrayList()
+                        optionsArray.addAll(optionArray)
+                        // Log.e("arraysizeoption", optionsArray.size.toString())
+
+                        dropDownList = ArrayList()
+
+                        dropDownList.add(0, "Please Select")
+                        for (i in 1..optionsArray.size) {
+//        for (i in optionsArray.indices) {
+                            dropDownList.add(optionsArray.get(i - 1).toString())
+                        }
+                        val sp_adapter: ArrayAdapter<*> =
+                            ArrayAdapter<Any?>(
+                                mContext,
+                                R.layout.spinner_textview,
+                                dropDownList as List<Any?>
+                            )
+                        spinnerList.adapter = sp_adapter
+
+                        spinnerList.onItemSelectedListener =
+                            object : AdapterView.OnItemSelectedListener {
+                                override fun onItemSelected(
+                                    parent: AdapterView<*>,
+                                    view: View,
+                                    position: Int,
+                                    id: Long
+                                ) {
+                                    selectedItem = parent.getItemAtPosition(position).toString()
+                                    selectedItemid = subQuestion[position]
+                                    select_qualification.clear()
+//                                dateListArrayTemp = responsedata.responseArray.eap_details[position].date_lists
+                                    dateListArrayTemp = eapDetailsArray[position].date_lists
+
+                                    for (j in dateListArrayTemp.indices) {
+                                        select_qualification.add(dateListArrayTemp[j])
+                                        Log.e(
+                                            "select_qualification",
+                                            select_qualification.size.toString()
+                                        )
+                                        Log.e("days", days.size.toString())
+                                    }
+
+                                    /*  for (n in 0 until days.size) {
+                                          val stateVj = StateVj()
+                                          stateVj.title = days[n]
+                                          listVOy.add(stateVj)
+                                      }*/
+                                    listVOs.clear()
+                                    for (i in 0 until select_qualification.size) {
+                                        val stateVO = StateVO()
+                                        stateVO.title = select_qualification[i].date
+                                        stateVO.dates = select_qualification[i].day
+                                        stateVO.isSelected = false
+                                        listVOs.add(stateVO)
+                                    }
+
+                                    //  }
+
+
+                                }
+
+                                override fun onNothingSelected(parent: AdapterView<*>?) {}
+                            }
+
+                    }
+                   else{
+                        showDialogueWithOkSuccess(mContext,"No Eap Found","Alert")
+
+                    }
 
 
                 }
@@ -477,6 +502,8 @@ class BusServiceEapRegister : AppCompatActivity() {
     }
 
     private fun submitApi(signatureFile: File) {
+        progressDialogAdd.visibility=View.VISIBLE
+
         val gson = Gson()
         val jsonArrayString = gson.toJson(PreferenceManager.geteapselecteddates(mContext))
         val manufacturer = Build.MANUFACTURER
@@ -559,6 +586,8 @@ class BusServiceEapRegister : AppCompatActivity() {
                 call: Call<EarlyPickupModel>,
                 response: Response<EarlyPickupModel>
             ) {
+                progressDialogAdd.visibility=View.GONE
+
                 if (response.isSuccessful) {
                     if (response.body()!!.status == 100) {
                         showDialogueWithOkSuccess(mContext, "Successfully Submitted", "Alert")
@@ -571,6 +600,8 @@ class BusServiceEapRegister : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<EarlyPickupModel>, t: Throwable) {
+                progressDialogAdd.visibility=View.GONE
+
                 //  progressDialogP.dismiss()
 
             }
@@ -673,4 +704,5 @@ class BusServiceEapRegister : AppCompatActivity() {
             e.printStackTrace()
         }
     }
+
 }

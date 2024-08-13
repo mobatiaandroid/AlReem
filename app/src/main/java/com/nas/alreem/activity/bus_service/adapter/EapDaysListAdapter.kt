@@ -15,6 +15,9 @@ import com.nas.alreem.activity.bus_service.model.StateVj
 import com.nas.alreem.constants.PreferenceManager
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.Date
 
 
 class EapDaysListAdapter(
@@ -40,7 +43,13 @@ class EapDaysListAdapter(
     }
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
-        holder.mTextView.text = listState[position].title +"("+listState[position].title+")"
+        val fromDate=listState[position].title
+        val inputFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd")
+        val outputFormat: DateFormat = SimpleDateFormat("dd MMM yyyy")
+        val inputDateStr = fromDate
+        val date: Date = inputFormat.parse(inputDateStr)
+        val outputDateStr: String = outputFormat.format(date)
+        holder.mTextView.text =outputDateStr +"("+listState[position].dates+")"
 
         // To check whether checked event fires from getView() or user input
         isFromView = true
@@ -68,7 +77,7 @@ class EapDaysListAdapter(
 
 
                 new.add( listState[position].title!!)
-                new1.add(listState[position].title!!+"("+listState[position].title+")")
+                new1.add(listState[position].title!!+"("+listState[position].dates+")")
                 val cleanedString = new1.toString().replace("[", "").replace("]", "")
                 selecteapdays.text= cleanedString
                 Log.e("array", new1.toString())

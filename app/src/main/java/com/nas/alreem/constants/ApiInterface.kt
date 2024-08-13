@@ -603,7 +603,7 @@ interface ApiInterface {
     fun plannedLeaveRequest(
         @Body requestLeave: RequestLeaveApiModel,
         @Header("Authorization") token:String
-    ): Call<ResponseBody>
+    ): Call<RequestLeaveModel>
     @GET("staff-departments")
     @Headers("Content-Type: application/json")
     fun staff_depatrtments(
