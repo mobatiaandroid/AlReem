@@ -68,6 +68,7 @@
                     android:id="@+id/student_name_text"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
                     android:layout_weight="50"
                     android:text="Student Name"
                     android:textSize="14sp" />
@@ -105,6 +106,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="50"
+                    android:layout_marginLeft="5dp"
                     android:text="Student Name"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -140,6 +142,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="45"
+                    android:layout_marginLeft="5dp"
                     android:text="Student Name"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -174,6 +177,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="50"
+                    android:layout_marginLeft="5dp"
                     android:text="Student Name"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -209,6 +213,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="45"
+                    android:layout_marginLeft="5dp"
                     android:text="Student Name"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -276,6 +281,7 @@
                     android:id="@+id/option_txt"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
+                    android:textSize="16sp"
 
                     android:textColor="@color/black"
                     android:visibility="gone"
@@ -350,6 +356,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:layout_marginTop="10dp"
+                android:textSize="16sp"
                 android:layout_marginLeft="10dp"
                 android:text="Please Select"
                />
@@ -376,9 +383,8 @@
 
             <EditText
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="45dp"
                 android:padding="5dp"
-                android:textSize="16sp"
                 android:inputType="text"
                 android:imeOptions="actionDone"
                 android:gravity="center_vertical"
@@ -388,16 +394,17 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
                 android:visibility="visible"
+                android:textSize="16sp"
+                android:textColorHint="@color/dark_grey1"
                 app:layout_constraintBottom_toTopOf="@+id/drop"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearchoosedays"
-                android:background="@drawable/rect_background_grey"
+                android:background="@drawable/textfield_bg"
                 android:hint="@string/pick_up"/>
             <EditText
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="45dp"
                 android:padding="5dp"
-                android:textSize="16sp"
                 android:inputType="text"
                 android:imeOptions="actionDone"
                 android:id="@+id/drop"
@@ -406,8 +413,10 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="10dp"
                 android:visibility="visible"
+                android:textSize="16sp"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/rect_background_grey"
+                android:textColorHint="@color/dark_grey1"
+                android:background="@drawable/textfield_bg"
                 app:layout_constraintBottom_toTopOf="@+id/parentlinear"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/pickup"
@@ -415,14 +424,20 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                android:background="@color/list_bg"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
-                app:layout_constraintTop_toBottomOf="@id/drop"
-                android:id="@+id/parentlinear">
+                android:id="@+id/parentlinear"
+                android:background="@color/split_bg"
+                app:layout_constraintTop_toBottomOf="@id/drop">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                android:background="@color/list_bg"
+                android:layout_marginBottom="6dp"
+                android:id="@+id/parentlinear1">
 
                 <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
                     android:id="@+id/parentinfo"
@@ -440,8 +455,11 @@
                     android:layout_width="30dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
+                    android:layout_marginRight="5dp"
                     android:src="@drawable/downarrow"
+
                     />
+            </RelativeLayout>
             </RelativeLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -465,8 +483,9 @@
                     android:textColor="@color/black"
                     android:layout_marginLeft="10dp"
                     android:id="@+id/fathersname"
+                    android:textColorHint="@color/dark_grey1"
                     android:layout_marginRight="10dp"
-                    android:background="@drawable/rect_background_grey"
+                    android:background="@drawable/textfield_bg"
                     android:hint="@string/fathers_name"/>
                 <EditText
                     android:layout_width="match_parent"
@@ -477,11 +496,12 @@
                     android:imeOptions="actionDone"
                     android:layout_marginTop="10dp"
                     android:gravity="center_vertical"
+                    android:textColorHint="@color/dark_grey1"
                     android:textColor="@color/black"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:id="@+id/fathersno"
-                    android:background="@drawable/rect_background_grey"
+                    android:background="@drawable/textfield_bg"
                     android:hint="@string/mobile_no"/>
                 <EditText
                     android:layout_width="match_parent"
@@ -494,9 +514,10 @@
                     android:layout_marginTop="10dp"
                     android:textColor="@color/black"
                     android:layout_marginLeft="10dp"
+                    android:textColorHint="@color/dark_grey1"
                     android:id="@+id/fathersmail"
                     android:layout_marginRight="10dp"
-                    android:background="@drawable/rect_background_grey"
+                    android:background="@drawable/textfield_bg"
                     android:hint="@string/email"/>
             </LinearLayout>
            <!-- <LinearLayout
@@ -577,13 +598,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
-                android:background="@color/list_bg"
-                app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
+                android:background="@color/split_bg"
+                android:id="@+id/addresslinear"
                 app:layout_constraintTop_toBottomOf="@id/parentsdetailslinear"
-                android:id="@+id/addresslinear">
+                >
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/list_bg"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginBottom="6dp"
+                android:id="@+id/addresslinear2">
 
                 <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
                     android:id="@+id/address_info"
@@ -602,9 +630,10 @@
                     android:id="@+id/downarrowAddress"
                     android:layout_alignParentRight="true"
                     android:src="@drawable/downarrow"
+                    android:layout_marginRight="5dp"
                     />
             </RelativeLayout>
-
+            </RelativeLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -656,9 +685,11 @@
                     android:gravity="center_vertical"
                     android:textColor="@color/black"
                     android:layout_marginTop="10dp"
+                    android:id="@+id/doorno"
                     android:layout_marginLeft="10dp"
+                    android:textColorHint="@color/dark_grey1"
                     android:layout_marginRight="10dp"
-                    android:background="@drawable/rect_background_grey"
+                    android:background="@drawable/textfield_bg"
                     android:hint="@string/door_no"/>
                 <EditText
                     android:layout_width="match_parent"
@@ -668,13 +699,15 @@
                     android:textSize="16sp"
                     android:id="@+id/street"
                     android:layout_marginTop="10dp"
+                    android:textColorHint="@color/dark_grey1"
                     android:inputType="text"
                     android:imeOptions="actionDone"
                     android:gravity="center_vertical"
                     android:textColor="@color/black"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:background="@drawable/rect_background_grey"/>
+                    android:background="@drawable/textfield_bg"
+                    />
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
@@ -685,10 +718,13 @@
                     android:imeOptions="actionDone"
                     android:gravity="center_vertical"
                     android:layout_marginTop="10dp"
+                    android:textColorHint="@color/dark_grey1"
+                    android:id="@+id/buildingname"
                     android:textColor="@color/black"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:background="@drawable/rect_background_grey"/>
+                    android:background="@drawable/textfield_bg"
+                    />
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
@@ -699,11 +735,13 @@
                     android:imeOptions="actionDone"
                     android:id="@+id/area"
                     android:gravity="center_vertical"
+                    android:textColorHint="@color/dark_grey1"
                     android:layout_marginTop="10dp"
                     android:textColor="@color/black"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:background="@drawable/rect_background_grey"/>
+                    android:background="@drawable/textfield_bg"
+                    />
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
@@ -714,11 +752,13 @@
                     android:id="@+id/city"
                     android:imeOptions="actionDone"
                     android:gravity="center_vertical"
+                    android:textColorHint="@color/dark_grey1"
                     android:layout_marginTop="10dp"
                     android:textColor="@color/black"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:background="@drawable/rect_background_grey"/>
+                    android:background="@drawable/textfield_bg"
+                    />
 
                 <com.nas.alreem.commonviews.CustomEditTextViewRegular
                     android:layout_width="match_parent"
@@ -735,7 +775,8 @@
                     android:textColor="@color/black"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:background="@drawable/rect_background_grey"/>
+                    android:background="@drawable/rect_background_grey"
+                    />
 
                 <EditText
                     android:layout_width="match_parent"
@@ -747,11 +788,14 @@
                     android:imeOptions="actionDone"
                     android:gravity="center_vertical"
                     android:layout_marginTop="10dp"
-                    android:visibility="gone"
+                    android:id="@+id/otherapprovered"
+                    android:textColorHint="@color/dark_grey1"
+                    android:visibility="visible"
                     android:textColor="@color/black"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:background="@drawable/rect_background_grey"/>
+                    android:background="@drawable/textfield_bg"
+                    />
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
@@ -761,12 +805,14 @@
                     android:inputType="text"
                     android:id="@+id/contact1"
                     android:imeOptions="actionDone"
+                    android:textColorHint="@color/dark_grey1"
                     android:gravity="center_vertical"
                     android:layout_marginTop="10dp"
                     android:textColor="@color/black"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:background="@drawable/rect_background_grey"/>
+                    android:background="@drawable/textfield_bg"
+                    />
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
@@ -776,11 +822,14 @@
                     android:inputType="text"
                     android:imeOptions="actionDone"
                     android:gravity="center_vertical"
+                    android:textColorHint="@color/dark_grey1"
                     android:layout_marginTop="10dp"
                     android:textColor="@color/black"
+                    android:visibility="gone"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:background="@drawable/rect_background_grey"/>
+                    android:background="@drawable/textfield_bg"
+                    />
                 <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
                     android:id="@+id/landmark"
                     android:layout_width="match_parent"
@@ -801,11 +850,14 @@
                     android:inputType="text"
                     android:imeOptions="actionDone"
                     android:gravity="center_vertical"
+                    android:textColorHint="@color/dark_grey1"
                     android:layout_marginTop="10dp"
+                    android:id="@+id/landmarkedittext"
                     android:textColor="@color/black"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:background="@drawable/rect_background_grey"/>
+                    android:background="@drawable/textfield_bg"
+                    />
             </LinearLayout>
             <RelativeLayout
                 android:id="@+id/acknowledgementt"

@@ -36,7 +36,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="45"
-                    android:text="Name"
+                    android:text=""
                     android:textColor="@color/black"
                     android:textSize="14sp" />
 
@@ -112,7 +112,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="45"
-                    android:text="Day of Pickup"
+                    android:text="First day of absence"
 
                     android:textColor="@color/black"
                     android:textSize="14sp" />
@@ -143,7 +143,6 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="5dp"
                 android:gravity="center"
-                android:visibility="gone"
                 android:orientation="horizontal"
                 android:weightSum="100">
 
@@ -152,7 +151,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="45"
-                    android:text="Time of Pickup"
+                    android:text="Return to school"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
 
@@ -174,43 +173,6 @@
                     android:textSize="14sp" />
             </LinearLayout>
             <LinearLayout
-                android:id="@+id/pickuplayout"
-                android:layout_width="match_parent"
-                android:layout_height="35dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="5dp"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:weightSum="100">
-
-                <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
-                    android:id="@+id/pickuptitle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="45"
-                    android:text="Pickup At"
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
-
-                <com.nas.alreem.commonviews.CustomFontSansProTextBlack
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=":"
-                    android:textColor="@color/black"
-                    />
-
-                <com.nas.alreem.commonviews.CustomTextViewRegular
-                    android:id="@+id/pickupbyName"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_weight="50"
-                    android:text="12/06/2017"
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
-            </LinearLayout>
-            <LinearLayout
                 android:id="@+id/statuslayout"
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
@@ -222,7 +184,7 @@
                 android:weightSum="100">
 
                 <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
-                    android:id="@+id/statustitle"
+                    android:id="@+id/status"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="45"
@@ -238,7 +200,7 @@
                     />
 
                 <com.nas.alreem.commonviews.CustomTextViewRegular
-                    android:id="@+id/status"
+                    android:id="@+id/statusValue"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -259,23 +221,36 @@
 
                 <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
                     android:id="@+id/reason"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="45"
                     android:layout_gravity="top"
-                    android:singleLine="true"
                     android:layout_marginLeft="7dp"
-                    android:text="Reason for Not Using The Bus"
+                    android:text="Reason for absence"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
 
                 <com.nas.alreem.commonviews.CustomFontSansProTextBlack
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=""
+                    android:text=":"
                     android:layout_gravity="top"
                     android:textColor="@color/black"
                     />
+
+                <!--<com.algubra.manager.CustomTextViewNormal
+                    android:id="@+id/reasonValue"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="50"
+                    android:text="@string/test_msg"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:singleLine="false"
+                    />-->
+
+
 
             </LinearLayout>
             <ScrollView
@@ -296,13 +271,11 @@
                     android:padding="10dp"
                     android:textColor="@color/black"
                     android:textSize="14sp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginBottom="4dp"
+                    android:layout_marginTop="10dp"
                     android:singleLine="false"
                     />
 
             </ScrollView>
-
             <LinearLayout
                 android:id="@+id/reasonRejectlayout"
                 android:layout_width="match_parent"
@@ -361,6 +334,5 @@
 
 
         </LinearLayout>
-
     </ScrollView>
 </LinearLayout>

@@ -131,7 +131,7 @@ class RequestBusServiceActivity : AppCompatActivity() {
                 "" +
                 "Evening")
         dropDownList =ArrayList()
-        dropDownList.add(0, "Not Using Bus Service At")
+        dropDownList.add(0, "Not Using Bus Service")
         for (i in 1..optionsArray.size) {
             dropDownList.add(optionsArray.get(i - 1).toString())
         }

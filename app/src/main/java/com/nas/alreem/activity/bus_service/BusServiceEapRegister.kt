@@ -86,6 +86,10 @@ class BusServiceEapRegister : AppCompatActivity() {
     lateinit var street: EditText
     lateinit var area: EditText
     lateinit var city: EditText
+    lateinit var landmarkedittext:EditText
+    lateinit var otherapprovered:EditText
+    lateinit var buildingname:EditText
+    lateinit var doorno:EditText
 
     lateinit var parentsdetailslinear: LinearLayout
 
@@ -200,6 +204,10 @@ class BusServiceEapRegister : AppCompatActivity() {
         signature_pad = findViewById(R.id.signature_pad)
         btn_left = findViewById(R.id.btn_left)
         logoClickImgView = findViewById(R.id.logoClickImgView)
+        landmarkedittext= findViewById(R.id.landmarkedittext)
+        otherapprovered=findViewById(R.id.otherapprovered)
+        buildingname=findViewById(R.id.buildingname)
+        doorno=findViewById(R.id.doorno)
         btn_left.setOnClickListener(View.OnClickListener {
             finish()
         })
@@ -271,6 +279,35 @@ class BusServiceEapRegister : AppCompatActivity() {
             }
             else if (selecteapdays.text.equals("Please Select")) {
                 Toast.makeText(mContext, "Please Selected Dates", Toast.LENGTH_SHORT).show()
+
+            }
+            else if(landmarkedittext.text.isEmpty())
+            {
+                Toast.makeText(mContext, "Please Enter LandMark ", Toast.LENGTH_SHORT).show()
+
+            }
+            else if(buildingname.text.isEmpty())
+            {
+                Toast.makeText(mContext, "Please Enter Building Name ", Toast.LENGTH_SHORT).show()
+
+            }
+            else if(doorno.text.isEmpty())
+            {
+                Toast.makeText(mContext, "Please Enter Door No ", Toast.LENGTH_SHORT).show()
+
+            }
+            else if(city.text.isEmpty())
+            {
+                Toast.makeText(mContext, "Please Enter Door No ", Toast.LENGTH_SHORT).show()
+
+            }
+            else if(area.text.isEmpty())
+            {
+                Toast.makeText(mContext, "Please Enter Door No ", Toast.LENGTH_SHORT).show()
+
+            } else if(street.text.isEmpty())
+            {
+                Toast.makeText(mContext, "Please Enter Door No ", Toast.LENGTH_SHORT).show()
 
             }
             else {
@@ -379,25 +416,25 @@ class BusServiceEapRegister : AppCompatActivity() {
                 val responsedata = response.body()
                 if (response.isSuccessful()) {
 //
-                    progressDialogAdd.visibility=View.GONE
+                    progressDialogAdd.visibility = View.GONE
 
                     val apiResponse: DetailsResponseModel? = response.body()
 
+                    Log.e("responseArray", response.body()!!.responseArray.toString())
 
-                    if (responsedata?.responseArray != null)
-                    {
-                        student_name_text.setText(responsedata!!.responseArray.student_detail.name)
-                        student_year_text.setText(responsedata!!.responseArray.student_detail.section)
-                        student_section_text.setText(responsedata!!.responseArray.student_detail.classs)
-                        student_date_text.setText(responsedata!!.responseArray.student_detail.enrolmentDate)
-                        student_esis_text.setText(responsedata!!.responseArray.student_detail.esis_number)
-                        parenr1name.setText(responsedata!!.responseArray.parent1_name)
-                        parent1mobNo.setText(responsedata!!.responseArray.parent1_mobile)
-                        parent1email.setText(responsedata!!.responseArray.parent1_email)
-                        //parent2name.setText(responsedata!!.responseArray.parent2_name)
-                        //parent2mobno.setText(responsedata!!.responseArray.parent2_mobile)
-                        // parent2email.setText(responsedata!!.responseArray.parent2_email)
-                        eapDetailsArray.add(EAPList(0,"","","",ArrayList()))
+                    student_name_text.setText(responsedata!!.responseArray.student_detail.name)
+                    student_year_text.setText(responsedata!!.responseArray.student_detail.section)
+                    student_section_text.setText(responsedata!!.responseArray.student_detail.classs)
+                    student_date_text.setText(responsedata!!.responseArray.student_detail.enrolmentDate)
+                    student_esis_text.setText(responsedata!!.responseArray.student_detail.esis_number)
+                    parenr1name.setText(responsedata!!.responseArray.parent1_name)
+                    parent1mobNo.setText(responsedata!!.responseArray.parent1_mobile)
+                    parent1email.setText(responsedata!!.responseArray.parent1_email)
+                    //parent2name.setText(responsedata!!.responseArray.parent2_name)
+                    //parent2mobno.setText(responsedata!!.responseArray.parent2_mobile)
+                    // parent2email.setText(responsedata!!.responseArray.parent2_email)
+                    if (responsedata.responseArray.eap_details.size > 0) {
+                        eapDetailsArray.add(EAPList(0, "", "", "", ArrayList()))
                         for (i in responsedata!!.responseArray.eap_details.indices) {
                             eapDetailsArray.add(responsedata!!.responseArray.eap_details[i])
                         }
@@ -488,11 +525,11 @@ class BusServiceEapRegister : AppCompatActivity() {
                             }
 
                     }
-                   else{
+
+                    else{
                         showDialogueWithOkSuccess(mContext,"No Eap Found","Alert")
 
                     }
-
 
                 }
 

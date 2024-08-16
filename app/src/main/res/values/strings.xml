@@ -361,7 +361,7 @@
     <string name="enter_land_mark">enter land mark<font fgcolor="red">*</font></string>
     <string name="enter_signature_prompt">Please provide your signature!</string>
 
-    <string name="note">NOTE:<font fgcolor="red">In case of change of home, a request form must be submitted one week prior to changing of home.
+    <string name="note">NOTE : <font fgcolor="red">In case of change of home, a request form must be submitted one week prior to changing of home.
 If you wish to register your child for the EAP Bus Service a 50AED/ trip is charged separately.</font></string>
 
 
@@ -378,5 +378,8 @@ that I will abide by them.</string>
     <string name="no_reg_planned_leaves">No Registered Planned Absence Found</string>
 
     <string name="amount_bus">Amount</string>
+    <string name="planned_absence">Planned Absence</string>
+
+
 
 </resources>

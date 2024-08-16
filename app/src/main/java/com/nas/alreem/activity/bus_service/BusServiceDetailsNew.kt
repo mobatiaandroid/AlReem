@@ -77,7 +77,6 @@ lateinit var classname:TextView
     lateinit var pickup:TextView
     lateinit var droppoint:TextView
     lateinit var Address:TextView
-    lateinit var relativepaid:RelativeLayout
     lateinit var heading: TextView
     lateinit var btn_left:ImageView
     lateinit var logoClickImgView:ImageView
@@ -137,7 +136,6 @@ lateinit var classname:TextView
         heading.text= "Registration Summery"
         paybutton=findViewById(R.id.paybutton)
         titlevalue = findViewById(R.id.titlevalue)
-        relativepaid = findViewById(R.id.relativepaid)
         progressDialogAdd=findViewById(R.id.progressDialogAdd)
         student_name=findViewById(R.id.stnameValue)
         classname=findViewById(R.id.studClassValue)

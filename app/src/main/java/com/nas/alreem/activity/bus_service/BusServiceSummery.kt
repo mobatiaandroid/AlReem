@@ -111,20 +111,26 @@ class BusServiceSummery : AppCompatActivity() {
                 var address:String
                  var eaparray: String=""
                 var eapdatesarray = ArrayList<String>()
+               if(summerylistaary[position].type.equals("EAP"))
+               {
+                   for (j in summerylistaary[position].eap_dates.indices)
+                   {
+                       eaparray=summerylistaary[position].eap_dates.get(j)
+                       Log.e("eaparray",eaparray)
+                       val fromDate=eaparray
+                       val inputFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd")
+                       val outputFormat: DateFormat = SimpleDateFormat("dd MMM yyyy")
+                       val inputDateStr = fromDate
+                       val date: Date = inputFormat.parse(inputDateStr)
+                       val outputDateStr: String = outputFormat.format(date)
+                       Log.e("outputDateStr",outputDateStr)
+                       eapdatesarray.add(outputDateStr)
+                   }
+               }
+                else{
 
-                for (j in summerylistaary[position].eap_dates.indices)
-                {
-                    eaparray=summerylistaary[position].eap_dates.get(j)
-                    Log.e("eaparray",eaparray)
-                    val fromDate=eaparray
-                    val inputFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd")
-                    val outputFormat: DateFormat = SimpleDateFormat("dd MMM yyyy")
-                    val inputDateStr = fromDate
-                    val date: Date = inputFormat.parse(inputDateStr)
-                    val outputDateStr: String = outputFormat.format(date)
-                    Log.e("outputDateStr",outputDateStr)
-                    eapdatesarray.add(outputDateStr)
-                }
+               }
+
 
 
                 address=summerylistaary[position].parent_country+" "+summerylistaary[position].parent_address

@@ -18,6 +18,7 @@ import android.view.Window
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -70,55 +71,66 @@ class BusServiceRegisterNew : AppCompatActivity() {
     lateinit var backRelative: RelativeLayout
 
     lateinit var progressDialogAdd: ProgressBar
-    lateinit var parentsdetailslinear : LinearLayout
-  //  lateinit var parentsdetailslinear1 : LinearLayout
-   // lateinit var checkPassportLinear : LinearLayout
-    lateinit var addresslinear : RelativeLayout
-    lateinit var parentlinear : RelativeLayout
-    lateinit var addressinfo_linear : LinearLayout
-    lateinit var downarrowImage : ImageView
-    lateinit var downarrowAddress : ImageView
-    lateinit var droppoint : EditText
-    lateinit var pickuppoint : EditText
-    lateinit var gpslocation : ImageView
-    lateinit var street : EditText
-    lateinit var area : EditText
-    lateinit var city : EditText
-    lateinit var student_name_text : TextView
-    lateinit var student_year_text : TextView
-    lateinit var student_section_text : TextView
-    lateinit var student_date_text : TextView
-    lateinit var student_esis_text : TextView
-    lateinit var parenr1name : EditText
-    lateinit var parent1mobNo : EditText
-    lateinit var parent1email : EditText
-   // lateinit var parent2name : EditText
-   // lateinit var parent2email : EditText
-   // lateinit var parent2mobno : EditText
+    lateinit var parentsdetailslinear: LinearLayout
+
+    //  lateinit var parentsdetailslinear1 : LinearLayout
+    // lateinit var checkPassportLinear : LinearLayout
+    lateinit var addresslinear: RelativeLayout
+    lateinit var parentlinear: RelativeLayout
+    lateinit var addressinfo_linear: LinearLayout
+    lateinit var downarrowImage: ImageView
+    lateinit var downarrowAddress: ImageView
+
+    //   lateinit var droppoint : EditText
+    //   lateinit var pickuppoint : EditText
+    lateinit var gpslocation: ImageView
+    lateinit var street: EditText
+    lateinit var area: EditText
+    lateinit var city: EditText
+    lateinit var student_name_text: TextView
+    lateinit var student_year_text: TextView
+    lateinit var student_section_text: TextView
+    lateinit var student_date_text: TextView
+    lateinit var student_esis_text: TextView
+    lateinit var parenr1name: EditText
+    lateinit var parent1mobNo: EditText
+    lateinit var parent1email: EditText
+
+    // lateinit var parent2name : EditText
+    // lateinit var parent2email : EditText
+    // lateinit var parent2mobno : EditText
     var latitude: Double = 0.0
     var longitude: Double = 0.0
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val LOCATION_PERMISSION_REQUEST_CODE = 1
-    lateinit var spinnerList : Spinner
-    lateinit var dropDownList : ArrayList<String>
-    lateinit var optionsArray : ArrayList<String>
+    lateinit var spinnerList: Spinner
+    lateinit var dropDownList: ArrayList<String>
+    lateinit var optionsArray: ArrayList<String>
     lateinit var optionArray: ArrayList<String>
-    lateinit var submit : Button
-    var relationship =""
-    lateinit var contact1:EditText
+    lateinit var submit: Button
+    var relationship = ""
+    lateinit var contact1: EditText
 
     var selectedItem = ""
-    lateinit var signature_pad : SignaturePad
-    lateinit var signatureBitmap : Bitmap
-    lateinit var signatureFile : File
-    var flag:Boolean = true
-    lateinit var btn_left:ImageView
+    lateinit var signature_pad: SignaturePad
+    lateinit var signatureBitmap: Bitmap
+    lateinit var signatureFile: File
+    var flag: Boolean = true
+    lateinit var btn_left: ImageView
+    lateinit var landmarkedittext: EditText
+    lateinit var otherapprovered: EditText
+    lateinit var buildingname: EditText
+    lateinit var doorno: EditText
+    lateinit var selectroot: TextView
+    var onway = ""
+    var twoway = ""
+    lateinit var termsconditionImg: CheckBox
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bus_reg_details_forms)
-        mContext=this
+        mContext = this
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         checkLocationPermission()
@@ -132,42 +144,49 @@ class BusServiceRegisterNew : AppCompatActivity() {
     }
 
     private fun callStudentDetails() {
-        progressDialogAdd.visibility=View.VISIBLE
+        progressDialogAdd.visibility = View.VISIBLE
 
         optionArray = ArrayList()
 
         var studentdetailsmodel = StudentDetailsModel(PreferenceManager.getStudentID(mContext)!!)
-        val call: Call<DetailsResponseModel> = ApiClient.getClient.student_details("Bearer " + PreferenceManager.getaccesstoken(mContext),
-            studentdetailsmodel)
+        val call: Call<DetailsResponseModel> = ApiClient.getClient.student_details(
+            "Bearer " + PreferenceManager.getaccesstoken(mContext),
+            studentdetailsmodel
+        )
         call.enqueue(object : Callback<DetailsResponseModel> {
             override fun onFailure(call: Call<DetailsResponseModel>, t: Throwable) {
-                progressDialogAdd.visibility=View.GONE
+                progressDialogAdd.visibility = View.GONE
 
             }
-            override fun onResponse(call: Call<DetailsResponseModel>, response: Response<DetailsResponseModel>) {
+
+            override fun onResponse(
+                call: Call<DetailsResponseModel>,
+                response: Response<DetailsResponseModel>
+            ) {
                 val responsedata = response.body()
-                progressDialogAdd.visibility=View.GONE
+                progressDialogAdd.visibility = View.GONE
 
                 if (response.isSuccessful()) {
 //
                     val apiResponse: DetailsResponseModel? = response.body()
-                    if (responsedata?.responseArray != null) {
-                        student_name_text.setText(responsedata!!.responseArray.student_detail.name)
-                        student_year_text.setText(responsedata!!.responseArray.student_detail.section)
-                        student_section_text.setText(responsedata!!.responseArray.student_detail.classs)
-                        student_date_text.setText(responsedata!!.responseArray.student_detail.enrolmentDate)
-                        student_esis_text.setText(responsedata!!.responseArray.student_detail.esis_number)
-                        parenr1name.setText(responsedata!!.responseArray.parent1_name)
-                        parent1mobNo.setText(responsedata!!.responseArray.parent1_mobile)
-                        parent1email.setText(responsedata!!.responseArray.parent1_email)
-                        //   parent2name.setText(responsedata!!.responseArray.parent2_name)
-                        //   parent2mobno.setText(responsedata!!.responseArray.parent2_mobile)
-                        //  parent2email.setText(responsedata!!.responseArray.parent2_email)
 
-                        relationship = responsedata!!.responseArray.parent1_relationship
-                        area.setText(responsedata!!.responseArray.parent1_country)
-                        street.setText(responsedata!!.responseArray.parent1_country)
-                        contact1.setText(responsedata!!.responseArray.parent1_additionaltelephone)
+                    student_name_text.setText(responsedata!!.responseArray.student_detail.name)
+                    student_year_text.setText(responsedata!!.responseArray.student_detail.section)
+                    student_section_text.setText(responsedata!!.responseArray.student_detail.classs)
+                    student_date_text.setText(responsedata!!.responseArray.student_detail.enrolmentDate)
+                    student_esis_text.setText(responsedata!!.responseArray.student_detail.esis_number)
+                    parenr1name.setText(responsedata!!.responseArray.parent1_name)
+                    parent1mobNo.setText(responsedata!!.responseArray.parent1_mobile)
+                    parent1email.setText(responsedata!!.responseArray.parent1_email)
+                    //   parent2name.setText(responsedata!!.responseArray.parent2_name)
+                    //   parent2mobno.setText(responsedata!!.responseArray.parent2_mobile)
+                    //  parent2email.setText(responsedata!!.responseArray.parent2_email)
+
+                    relationship = responsedata!!.responseArray.parent1_relationship
+                    area.setText(responsedata!!.responseArray.parent1_country)
+                    street.setText(responsedata!!.responseArray.parent1_country)
+                    contact1.setText(responsedata!!.responseArray.parent1_additionaltelephone)
+                    if (responsedata.responseArray.terms.size > 0) {
                         for (i in responsedata!!.responseArray.terms.indices) {
                             optionArray.add(responsedata.responseArray.terms[i].name)
                         }
@@ -213,9 +232,8 @@ class BusServiceRegisterNew : AppCompatActivity() {
                             }
 
 
-                    }
-                    else{
-                        showDialogueWithOkSuccess(mContext,"No Term Found","Alert")
+                    } else {
+                        showDialogueWithOkSuccess(mContext, "No Term Found", "Alert")
 
                     }
                 }
@@ -227,29 +245,29 @@ class BusServiceRegisterNew : AppCompatActivity() {
 
     private fun initfn() {
 
-        heading=findViewById(R.id.heading)
-        heading.text= "Regular Bus Service Registration Form"
-        parentsdetailslinear=findViewById(R.id.parentsdetailslinear)
-        progressDialogAdd=findViewById(R.id.progressDialogAdd)
+        heading = findViewById(R.id.heading)
+        heading.text = "Regular Bus Service Registration Form"
+        parentsdetailslinear = findViewById(R.id.parentsdetailslinear)
+        progressDialogAdd = findViewById(R.id.progressDialogAdd)
 
         //parentsdetailslinear1=findViewById(R.id.parentsdetailslinear1)
         //checkPassportLinear=findViewById(R.id.checkPassportLinear)
-        addresslinear=findViewById(R.id.addresslinear)
-        addressinfo_linear=findViewById(R.id.addressinfo_linear)
+        addresslinear = findViewById(R.id.addresslinear)
+        addressinfo_linear = findViewById(R.id.addressinfo_linear)
         parentlinear = findViewById(R.id.parentlinear)
         downarrowImage = findViewById(R.id.downarrowImage)
         downarrowAddress = findViewById(R.id.downarrowAddress)
-        droppoint = findViewById(R.id.drop)
-        pickuppoint = findViewById(R.id.pickup)
+        //  droppoint = findViewById(R.id.drop)
+        //  pickuppoint = findViewById(R.id.pickup)
         gpslocation = findViewById(R.id.gpslocation)
         parenr1name = findViewById(R.id.fathersname)
         parent1mobNo = findViewById(R.id.fathersno)
         parent1email = findViewById(R.id.fathersmail)
-        contact1=findViewById(R.id.contact1)
+        contact1 = findViewById(R.id.contact1)
 
         //parent2name = findViewById(R.id.mothersname)
-       // parent2mobno = findViewById(R.id.mothersno)
-       // parent2email = findViewById(R.id.mothersemail)
+        // parent2mobno = findViewById(R.id.mothersno)
+        // parent2email = findViewById(R.id.mothersemail)
         submit = findViewById(R.id.submit)
 
         student_name_text = findViewById(R.id.student_name_text)
@@ -260,9 +278,16 @@ class BusServiceRegisterNew : AppCompatActivity() {
         street = findViewById(R.id.street)
         area = findViewById(R.id.area)
         city = findViewById(R.id.city)
-         spinnerList = findViewById<Spinner>(R.id.spinnerlist)
-        btn_left=findViewById(R.id.btn_left)
-        logoClickImgView=findViewById(R.id.logoClickImgView)
+        spinnerList = findViewById<Spinner>(R.id.spinnerlist)
+        btn_left = findViewById(R.id.btn_left)
+        logoClickImgView = findViewById(R.id.logoClickImgView)
+
+        landmarkedittext = findViewById(R.id.landmarkedittext)
+        otherapprovered = findViewById(R.id.otherapprovered)
+        buildingname = findViewById(R.id.buildingname)
+        doorno = findViewById(R.id.doorno)
+        selectroot = findViewById(R.id.selectroot)
+        termsconditionImg = findViewById(R.id.termsconditionImg)
         btn_left.setOnClickListener(View.OnClickListener {
             finish()
         })
@@ -275,99 +300,142 @@ class BusServiceRegisterNew : AppCompatActivity() {
         val yesNoRadioGroup = findViewById<RadioGroup>(R.id.radioGroup)
         val yesButton = findViewById<RadioButton>(R.id.radioYes)
         val noButton = findViewById<RadioButton>(R.id.radioNo)
+        val radiooneway = findViewById<RadioGroup>(R.id.radiooneway)
+        val radiopickup = findViewById<RadioButton>(R.id.radiopickup)
+        val radiodrop = findViewById<RadioButton>(R.id.radiodrop)
 
         yesButton.setOnCheckedChangeListener { compoundButton, b ->
             if (b) {
-                pickuppoint.visibility=View.VISIBLE
-                droppoint.visibility=View.GONE
+                onway = "0"
+                selectroot.visibility = View.VISIBLE
+                radiooneway.visibility = View.VISIBLE
             }
         }
         noButton.setOnCheckedChangeListener { compoundButton, b ->
             if (b) {
-                pickuppoint.visibility=View.VISIBLE
-                droppoint.visibility=View.VISIBLE
+                twoway = "1"
+                selectroot.visibility = View.GONE
+                radiooneway.visibility = View.GONE
             }
         }
         gpslocation.setOnClickListener {
-            getAddressFromLocation(latitude, longitude,area,city,street)
-
+            getAddressFromLocation(latitude, longitude, area, city, street)
 
 
         }
         parentlinear.setOnClickListener {
 
-            if(flag)
-            {
-                parentsdetailslinear.visibility=View.VISIBLE
-               // parentsdetailslinear1.visibility=View.VISIBLE
-               // checkPassportLinear.visibility=View.VISIBLE
-                downarrowImage.rotation= 180F
-              //  parentsdetailslinear1.visibility=View.VISIBLE
+            if (flag) {
+                parentsdetailslinear.visibility = View.VISIBLE
+                // parentsdetailslinear1.visibility=View.VISIBLE
+                // checkPassportLinear.visibility=View.VISIBLE
+                downarrowImage.rotation = 180F
+                //  parentsdetailslinear1.visibility=View.VISIBLE
 
 
-            }
-            else
-            {
-                parentsdetailslinear.visibility=View.GONE
-               // parentsdetailslinear1.visibility=View.GONE
-               // checkPassportLinear.visibility=View.GONE
-                downarrowImage.rotation= 0F
+            } else {
+                parentsdetailslinear.visibility = View.GONE
+                // parentsdetailslinear1.visibility=View.GONE
+                // checkPassportLinear.visibility=View.GONE
+                downarrowImage.rotation = 0F
 
             }
             flag = !flag
         }
         addresslinear.setOnClickListener {
-            if(flag)
-            {
-                addressinfo_linear.visibility=View.VISIBLE
-                downarrowAddress.rotation=180f
+            if (flag) {
+                addressinfo_linear.visibility = View.VISIBLE
+                downarrowAddress.rotation = 180f
 
 
-            }
-            else
-            {
-                addressinfo_linear.visibility=View.GONE
-                downarrowAddress.rotation=0f
+            } else {
+                addressinfo_linear.visibility = View.GONE
+                downarrowAddress.rotation = 0f
 
             }
             flag = !flag
         }
 
-         signature_pad = findViewById(R.id.signature_pad)
+        signature_pad = findViewById(R.id.signature_pad)
 
 
         submit.setOnClickListener {
             if (signature_pad.isEmpty()) {
                 // Prompt the user to enter a signature
-                Toast.makeText(mContext, getString(R.string.enter_signature_prompt), Toast.LENGTH_SHORT).show()
-            }
-            else if(selectedItem.equals("Please Select"))
-            {
+                Toast.makeText(
+                    mContext,
+                    getString(R.string.enter_signature_prompt),
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else if (selectedItem.equals("Please Select")) {
                 Toast.makeText(mContext, "Please Select Term", Toast.LENGTH_SHORT).show()
 
             }
-            /*else if(droppoint.text.isEmpty())
-            {
-                Toast.makeText(mContext, "Please Enter Drop point", Toast.LENGTH_SHORT).show()
+            /* else if(droppoint.text.isEmpty())
+             {
+                 Toast.makeText(mContext, "Please Enter Drop point", Toast.LENGTH_SHORT).show()
 
-            }
-            else if(pickuppoint.text.isEmpty())
-            {
-                Toast.makeText(mContext, "Please Enter Pickup point", Toast.LENGTH_SHORT).show()
+             }
+             else if(pickuppoint.text.isEmpty())
+             {
+                 Toast.makeText(mContext, "Please Enter Pickup point", Toast.LENGTH_SHORT).show()
 
-            }*/
-            else{
-                signatureBitmap = signature_pad.getSignatureBitmap()
-                signatureFile = bitmapToFile(signatureBitmap)
-                submitApi(signatureFile)
+             }*/
+            else if (!termsconditionImg.isChecked) {
+                Toast.makeText(
+                    mContext,
+                    "Please agree to terms and conditions",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else if (!yesButton.isChecked || !noButton.isChecked) {
+                Toast.makeText(mContext, "Please Select One Way Or Two Way", Toast.LENGTH_SHORT)
+                    .show()
+            } else if (landmarkedittext.text.isEmpty()) {
+                Toast.makeText(mContext, "Please Enter LandMark ", Toast.LENGTH_SHORT).show()
+
+            } else if (buildingname.text.isEmpty()) {
+                Toast.makeText(mContext, "Please Enter Building Name ", Toast.LENGTH_SHORT).show()
+
+            } else if (doorno.text.isEmpty()) {
+                Toast.makeText(mContext, "Please Enter Door No ", Toast.LENGTH_SHORT).show()
+
+            } else if (city.text.isEmpty()) {
+                Toast.makeText(mContext, "Please Enter Door No ", Toast.LENGTH_SHORT).show()
+
+            } else if (area.text.isEmpty()) {
+                Toast.makeText(mContext, "Please Enter Door No ", Toast.LENGTH_SHORT).show()
+
+            } else if (street.text.isEmpty()) {
+                Toast.makeText(mContext, "Please Enter Door No ", Toast.LENGTH_SHORT).show()
+
+            } else {
+                if (yesButton.isChecked) {
+                    if (!radiopickup.isChecked || !radiodrop.isChecked) {
+                        Toast.makeText(
+                            mContext,
+                            "Please Select your one way path",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                    } else {
+                        signatureBitmap = signature_pad.getSignatureBitmap()
+                        signatureFile = bitmapToFile(signatureBitmap)
+                        submitApi(signatureFile)
+                    }
+                } else if (noButton.isChecked) {
+                    signatureBitmap = signature_pad.getSignatureBitmap()
+                    signatureFile = bitmapToFile(signatureBitmap)
+                    submitApi(signatureFile)
+                }
+
 
             }
 
         }
 
 
-
     }
+
     private fun bitmapToFile(bitmap: Bitmap): File {
         val signatureFile = File(mContext.externalCacheDir, "signature.png")
         try {
@@ -381,9 +449,9 @@ class BusServiceRegisterNew : AppCompatActivity() {
         }
         return signatureFile
     }
-    private fun submitApi(signatureFile: File)
-    {
-        progressDialogAdd.visibility=View.VISIBLE
+
+    private fun submitApi(signatureFile: File) {
+        progressDialogAdd.visibility = View.VISIBLE
 
         val manufacturer = Build.MANUFACTURER
         val model = Build.MODEL
@@ -391,18 +459,27 @@ class BusServiceRegisterNew : AppCompatActivity() {
         val versionName: String = BuildConfig.VERSION_NAME
 
         var attachment1: MultipartBody.Part? = null
-        val pickuptext = RequestBody.create("text/plain".toMediaTypeOrNull(), pickuppoint.text.toString())
-        val droptext = RequestBody.create("text/plain".toMediaTypeOrNull(), droppoint.text.toString())
-        val classname = RequestBody.create("text/plain".toMediaTypeOrNull(),
+        val pickuptext =
+            RequestBody.create("text/plain".toMediaTypeOrNull(), " pickuppoint.text.toString()")
+        val droptext =
+            RequestBody.create("text/plain".toMediaTypeOrNull(), "droppoint.text.toString()")
+        val classname = RequestBody.create(
+            "text/plain".toMediaTypeOrNull(),
             student_year_text.text.toString()
         )
-        val email = RequestBody.create("text/plain".toMediaTypeOrNull(), parent1email.text.toString())
-        val parent1name  = RequestBody.create("text/plain".toMediaTypeOrNull(), parenr1name.text.toString())
+        val email =
+            RequestBody.create("text/plain".toMediaTypeOrNull(), parent1email.text.toString())
+        val parent1name =
+            RequestBody.create("text/plain".toMediaTypeOrNull(), parenr1name.text.toString())
         val parent1relationship = RequestBody.create("text/plain".toMediaTypeOrNull(), relationship)
-        val parentmobile = RequestBody.create("text/plain".toMediaTypeOrNull(), parent1mobNo.text.toString())
-        val parent1additionaltele = RequestBody.create("text/plain".toMediaTypeOrNull(), contact1.text.toString())
-        val parent1country = RequestBody.create("text/plain".toMediaTypeOrNull(), area.text.toString())
-        val parentaddress = RequestBody.create("text/plain".toMediaTypeOrNull(), street.text.toString())
+        val parentmobile =
+            RequestBody.create("text/plain".toMediaTypeOrNull(), parent1mobNo.text.toString())
+        val parent1additionaltele =
+            RequestBody.create("text/plain".toMediaTypeOrNull(), contact1.text.toString())
+        val parent1country =
+            RequestBody.create("text/plain".toMediaTypeOrNull(), area.text.toString())
+        val parentaddress =
+            RequestBody.create("text/plain".toMediaTypeOrNull(), street.text.toString())
         val term = RequestBody.create("text/plain".toMediaTypeOrNull(), selectedItem)
         val tyeppp = RequestBody.create("text/plain".toMediaTypeOrNull(), "1")
         val device_type = RequestBody.create("text/plain".toMediaTypeOrNull(), "2")
@@ -425,48 +502,59 @@ class BusServiceRegisterNew : AppCompatActivity() {
         val frontImagePart: MultipartBody.Part? = attachment1
 
 
-
         val call: Call<EarlyPickupModel> = ApiClient.getClient.request_for_bus_service(
-            "Bearer " + PreferenceManager.getaccesstoken(mContext),student_id,pickuptext, droptext,
-            classname,parent1name,email,parent1relationship,parentmobile,parent1additionaltele,
-            parent1country,parentaddress,term,tyeppp,device_type,device_name,app_version,frontImagePart)
+            "Bearer " + PreferenceManager.getaccesstoken(mContext),
+            student_id,
+            pickuptext,
+            droptext,
+            classname,
+            parent1name,
+            email,
+            parent1relationship,
+            parentmobile,
+            parent1additionaltele,
+            parent1country,
+            parentaddress,
+            term,
+            tyeppp,
+            device_type,
+            device_name,
+            app_version,
+            frontImagePart
+        )
         call.enqueue(object : Callback<EarlyPickupModel> {
             override fun onResponse(
                 call: Call<EarlyPickupModel>,
                 response: Response<EarlyPickupModel>
             ) {
-                progressDialogAdd.visibility=View.GONE
+                progressDialogAdd.visibility = View.GONE
 
-                if (response.isSuccessful)
-                {
-                    if (response.body()!!.status==100)
-                    {
-                        showDialogueWithOkSuccess(mContext,"Successfully Submitted","Alert")
+                if (response.isSuccessful) {
+                    if (response.body()!!.status == 100) {
+                        showDialogueWithOkSuccess(mContext, "Successfully Submitted", "Alert")
 
-                    }
-                    else if (response.body()!!.status==136)
-                    {
-                        showDialogueWithOkSuccess(mContext,"Already Submitted","Alert")
+                    } else if (response.body()!!.status == 136) {
+                        showDialogueWithOkSuccess(mContext, "Already Submitted", "Alert")
 
                     }
                 }
             }
 
             override fun onFailure(call: Call<EarlyPickupModel>, t: Throwable) {
-                progressDialogAdd.visibility=View.GONE
+                progressDialogAdd.visibility = View.GONE
 
                 //  progressDialogP.dismiss()
 
             }
         })
     }
+
     fun showDialogueWithOkSuccess(
         context: Context,
         message: String,
         msgHead: String,
         status: String
-    )
-    {
+    ) {
         val dialog = Dialog(context)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -489,8 +577,8 @@ class BusServiceRegisterNew : AppCompatActivity() {
         }
         dialog.show()
     }
-    fun showDialogueWithOkSuccess(context: Context, message: String, msgHead: String)
-    {
+
+    fun showDialogueWithOkSuccess(context: Context, message: String, msgHead: String) {
         val dialog = Dialog(context)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -511,9 +599,11 @@ class BusServiceRegisterNew : AppCompatActivity() {
         }
         dialog.show()
     }
+
     private fun getCurrentLocation() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-            == PackageManager.PERMISSION_GRANTED) {
+            == PackageManager.PERMISSION_GRANTED
+        ) {
 
             fusedLocationClient.lastLocation
                 .addOnSuccessListener(this) { location: Location? ->
@@ -530,17 +620,26 @@ class BusServiceRegisterNew : AppCompatActivity() {
                 }
         }
     }
+
     private fun checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                LOCATION_PERMISSION_REQUEST_CODE)
+                LOCATION_PERMISSION_REQUEST_CODE
+            )
         } else {
             getCurrentLocation()
         }
     }
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
@@ -551,6 +650,7 @@ class BusServiceRegisterNew : AppCompatActivity() {
             }
         }
     }
+
     private fun getAddressFromLocation(
         latitude: Double,
         longitude: Double,
@@ -566,7 +666,7 @@ class BusServiceRegisterNew : AppCompatActivity() {
                 val address = addresses[0]
                 // Do something with the address
                 val fullAddress = address.getAddressLine(0) // Get the full address
-                Log.e("Address",fullAddress)
+                Log.e("Address", fullAddress)
 
                 val city = addresses[0].locality
                 val state = addresses[0].adminArea

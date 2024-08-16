@@ -28,6 +28,7 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.nas.alreem.R
 import com.nas.alreem.activity.absence.AbsenceDetailActivity
 import com.nas.alreem.activity.absence.EarlyPickupDetailActivity
+import com.nas.alreem.activity.absence.PlannedDetailActivity
 import com.nas.alreem.activity.absence.RequestabsenceActivity
 import com.nas.alreem.activity.absence.RequestearlypickupActivity
 import com.nas.alreem.activity.absence.RequestplannedleavesActivity
@@ -48,6 +49,7 @@ import com.nas.alreem.constants.OnItemClickListener
 import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.constants.addOnItemClickListener
 import com.nas.alreem.fragment.absence.adapter.PickuplistAdapter
+import com.nas.alreem.fragment.absence.adapter.RequestPlannedRecyclerAdapter
 import com.nas.alreem.fragment.absence.model.AbsenceRequestListDetailModel
 import com.nas.alreem.fragment.parent_meetings.adapter.RequestAbsenceRecyclerAdapter
 import retrofit2.Call
@@ -162,12 +164,14 @@ class AbsenceFragment  : Fragment() {
         mPlannedListView.addOnItemClickListener(object: OnItemClickListener {
             override fun onItemClicked(position: Int, view: View) {
                 // Your logic
-                val intent =Intent(activity,AbsenceDetailActivity::class.java)
+                val intent =Intent(activity,PlannedDetailActivity::class.java)
                 intent.putExtra("studentName",PreferenceManager.getStudentName(mContext))
                 intent.putExtra("studentClass",PreferenceManager.getStudentClass(mContext))
                 intent.putExtra("fromDate",studentPlannedArrayList.get(position).from_date)
                 intent.putExtra("toDate",studentPlannedArrayList.get(position).to_date)
                 intent.putExtra("reason",studentPlannedArrayList.get(position).reason)
+                intent.putExtra("status",studentPlannedArrayList.get(position).status)
+                intent.putExtra("reason_for_rejection",studentPlannedArrayList.get(position).reason_for_rejection)
                 activity?.startActivity(intent)
             }
         })
@@ -477,7 +481,7 @@ class AbsenceFragment  : Fragment() {
                     if (studentPlannedArrayList.size>0)
                     {
                         mPlannedListView.visibility=View.VISIBLE
-                        val studentInfoAdapter = RequestAbsenceRecyclerAdapter(studentPlannedArrayList)
+                        val studentInfoAdapter = RequestPlannedRecyclerAdapter(studentPlannedArrayList)
                         mPlannedListView.adapter = studentInfoAdapter
                     }
                     else{
@@ -495,7 +499,7 @@ class AbsenceFragment  : Fragment() {
                         if (response.body()!!.status == 132) {
                             studentPlannedCopy=ArrayList()
                             studentPlannedArrayList.clear()
-                            val studentInfoAdapter = RequestAbsenceRecyclerAdapter(studentPlannedArrayList)
+                            val studentInfoAdapter = RequestPlannedRecyclerAdapter(studentPlannedArrayList)
                             mPlannedListView.adapter = studentInfoAdapter
                             Toast.makeText(mContext,  mContext.resources.getString(R.string.no_reg_planned_leaves), Toast.LENGTH_SHORT).show()
                             //validation check error

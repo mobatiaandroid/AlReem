@@ -15,24 +15,25 @@ import com.nas.alreem.activity.bus_service.model.SummeryBusResponseArray
 class BusserviceSummeryAdapter(private var communicationList: ArrayList<SummeryBusResponseArray>, var context: Context) :
     RecyclerView.Adapter<BusserviceSummeryAdapter.MyViewHolder>() {
     inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var listTxtTitle: TextView = view.findViewById(R.id.listTxtTitle)
-        var statusof: TextView = view.findViewById(R.id.status)
+        var listTxtTitle: TextView = view.findViewById(R.id.listDate)
+        var statusof: TextView = view.findViewById(R.id.listStatus)
 
     }
     @NonNull
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.adapter_primary_list, parent, false)
+            .inflate(R.layout.adapter_absence_leave_recycelr, parent, false)
         return MyViewHolder(itemView)
     }
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
         holder.listTxtTitle.text = communicationList[position].title
+        holder.statusof.visibility=View.VISIBLE
+
         if (communicationList[position].status.equals("0"))
         {
             holder.statusof.text ="PENDING"
-           // holder.statusof.setTextColor(R.color.white)
-            holder.statusof.setTextColor(context.getResources().getColor(R.color.canteen_date_orange))
+           holder.statusof.setTextColor(context.getResources().getColor(R.color.rel_seven))
 
         }
         else if(communicationList[position].status.equals("1"))
@@ -40,7 +41,7 @@ class BusserviceSummeryAdapter(private var communicationList: ArrayList<SummeryB
             holder.statusof.text ="PAY"
             holder.statusof.setTextColor(context.getResources().getColor(R.color.split_bg))
 
-           // holder.statusof.setTextColor(R.color.split_bg)
+
 
         }
         else if(communicationList[position].status.equals("2"))
