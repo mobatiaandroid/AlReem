@@ -93,7 +93,7 @@
             android:layout_marginRight="10dp"
             android:layout_weight="60"
             android:orientation="horizontal"
-            android:weightSum="2"
+            android:weightSum="3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/lihead">
@@ -145,7 +145,7 @@
                     android:textColor="@color/white" />
             </LinearLayout>
 
-            <!--<LinearLayout
+            <LinearLayout
                 android:id="@+id/lostcardLinear"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -167,7 +167,7 @@
                     android:layout_height="wrap_content"
                     android:text="Lost ID Card"
                     android:textColor="@color/white" />
-            </LinearLayout>-->
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
     <ProgressBar

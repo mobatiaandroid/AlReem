@@ -80,7 +80,7 @@ class HomeListAdapter(
             } else {
                 badge.setVisibility(View.GONE)
             }
-        } else if (position == 4) {
+        } else if (position == 23) {
             if (!PreferenceManager.getNoticeBadge(context)
                     .equals("0") && !PreferenceManager.getNoticeEditedBadge(context)
                     .equals("0")
@@ -105,7 +105,7 @@ class HomeListAdapter(
             } else {
                badge.setVisibility(View.GONE)
             }
-        }   else if (position == 15) {
+        }   else if (position == 14) {
             System.out.println(
                 "report badge" + PreferenceManager.getReportsBadge(context) + "report edited badge" + PreferenceManager.getReportsEditedBadge(
                     context
@@ -165,7 +165,7 @@ class HomeListAdapter(
             } else {
                 badge.setVisibility(View.GONE)
             }
-        } else if (position == 5) {
+        } else if (position == 4) {
             if (!PreferenceManager.getPaymentitem_badge(context)
                     .equals("0") && !PreferenceManager.getPaymentitem_edit_badge(context)
                     .equals("0")

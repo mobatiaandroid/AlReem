@@ -192,7 +192,7 @@ class LostCardPaymentActivity : AppCompatActivity() {
         val token = PreferenceManager.getaccesstoken(mContext)
         val paymentGatewayBody = PaymentGatewayApiModel(amount,PreferenceManager.getEmailId(mContext).toString(),
             mechantorderRef, stud_name!!,"","NAS","","Abu Dhabi",
-            paymentToken,"wallet_topup")
+            paymentToken,"lost_card")
         val call: Call<PaymentGatewayModel> =
             ApiClient.getClient.payment_gateway(paymentGatewayBody, "Bearer " + token)
         call.enqueue(object : Callback<PaymentGatewayModel> {
@@ -237,35 +237,45 @@ class LostCardPaymentActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        Log.d("request_code", requestCode.toString())
-        Log.d("resultt_code", resultCode.toString())
-        if (data == null) {
-            Toast.makeText(mContext, "transaction cancelled", Toast.LENGTH_SHORT).show()
-            finish()
-        } else {
+
             if (requestCode == 101) {
-                val cardPaymentData = CardPaymentData.getFromIntent(data)
-                Log.d("PAYMM 101", cardPaymentData.code.toString())
-                Log.d("PAYMM 101", cardPaymentData.reason.toString())
-                if (cardPaymentData.code == 2) {
-                    val JSONData =
-                        "{\"details\":[{" + "\"student_id\":\"" + PreferenceManager.getStudentID(
-                            mContext
-                        ) + "\"," +
-                                "\"amount\":\"" + payAmount + "\"," +
-                                "\"keycode\":\"" + merchantOrderReference + "\"" + "}]}"
-                    println("JSON DATA URL$JSONData")
-                    CallWalletSubmission(JSONData)
-                } else {
-                    finish()
-                    Toast.makeText(mContext, "Transaction failed", Toast.LENGTH_SHORT).show()
+                when (resultCode) {
+                    Activity.RESULT_OK -> onCardPaymentResponse(
+                        CardPaymentData.getFromIntent(data!!)
+                    )
+                    Activity.RESULT_CANCELED ->{
+                        Toast.makeText(mContext, "Transaction Failed", Toast.LENGTH_SHORT).show();
+
+                    }
                 }
             }
-        }
+
     }
 
-
-    private fun CallWalletSubmission(data: String) {
+    fun onCardPaymentResponse(data: CardPaymentData) {
+        when (data.code) {
+            CardPaymentData.STATUS_PAYMENT_AUTHORIZED,
+            CardPaymentData.STATUS_PAYMENT_CAPTURED -> {
+                if (ConstantFunctions.internetCheck(mContext))
+                {
+                    CallWalletSubmission()
+                }
+                else
+                {
+                    DialogFunctions.showInternetAlertDialog(mContext)
+                }
+            }
+            CardPaymentData.STATUS_PAYMENT_FAILED -> {
+                Toast.makeText(mContext, "Transaction Failed", Toast.LENGTH_SHORT).show();
+            }
+            CardPaymentData.STATUS_GENERIC_ERROR -> {
+                Toast.makeText(mContext, data.reason, Toast.LENGTH_SHORT).show();
+            }
+            else -> IllegalArgumentException(
+                "Unknown payment response (${data.reason})")
+        }
+    }
+    private fun CallWalletSubmission() {
         val deviceBrand = Build.MANUFACTURER
         val deviceModel = Build.MODEL
         val osVersion = Build.VERSION.RELEASE

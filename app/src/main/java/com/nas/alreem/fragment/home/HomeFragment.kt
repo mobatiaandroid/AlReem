@@ -5377,8 +5377,10 @@ class HomeFragment : Fragment(), View.OnClickListener {
         }
 
         private fun getTabId(textdata: String) {
-            when {
+            Log.e("textdata",textdata)
+            Log.e("textdat1",ConstantWords.timetable)
 
+            when {
 
                 textdata.equals(ConstantWords.calendar, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_CALENDAR
@@ -5427,7 +5429,12 @@ class HomeFragment : Fragment(), View.OnClickListener {
                 textdata.equals(ConstantWords.shop, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_SHOP
                 }
-
+                textdata.equals(ConstantWords.timetable, ignoreCase = true) -> {
+                    TAB_ID = ConstantWords.TAB_TIMETABLE
+                }
+                textdata.equals(ConstantWords.intention, ignoreCase = true) -> {
+                    TAB_ID = ConstantWords.TAB_INTENTIONS
+                }
                 textdata.equals(ConstantWords.gallery, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_GALLERY
                 }
@@ -5669,6 +5676,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
 
     private fun CHECKINTENTVALUE(intentTabId: String) {
+        Log.e("tabid",TAB_ID)
         TAB_ID = intentTabId
         var mFragment: Fragment? = null
         if (PreferenceManager.getaccesstoken(mContext).equals("")) {
@@ -5846,20 +5854,20 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     getReEnrollmentStatus()
                 }
 
-                /* ConstantWords.TAB_INTENTIONS -> {
+                 ConstantWords.TAB_INTENTIONS -> {
                      mFragment = Intentionfragment()
                      fragmentIntent(mFragment)
-                 }*/
+                 }
 
                 ConstantWords.TAB_STUDENT_INFORMATION -> {
                     mFragment = StudentInformationFragment()
                     fragmentIntent(mFragment)
                 }
 
-                /*  ConstantWords.TAB_TIMETABLE -> {
+                  ConstantWords.TAB_TIMETABLE -> {
                       mFragment = TimeTableFragmentNew()
                       fragmentIntent(mFragment)
-                  }*/
+                  }
 
                 ConstantWords.TAB_SHOP -> {
                     mFragment = ShopFragment()

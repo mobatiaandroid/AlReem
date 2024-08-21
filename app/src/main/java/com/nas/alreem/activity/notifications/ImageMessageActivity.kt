@@ -91,6 +91,8 @@ class ImageMessageActivity : AppCompatActivity(){
     }
     fun callMessageDetailAPI()
     {
+        progressDialog.visibility = View.VISIBLE
+
         val token = PreferenceManager.getaccesstoken(mContext)
         val studentbody= MessageDetailApiModel(id)
         val call: Call<MessageDetailModel> = ApiClient.getClient.notifictaionDetail(studentbody,"Bearer "+token)

@@ -40,7 +40,7 @@ class CanteenFragment  : Fragment() {
     lateinit var information_image: LinearLayout
     lateinit var payment_image: LinearLayout
     lateinit var staffLinear: LinearLayout
-    //lateinit var lostcardLinear: LinearLayout
+    lateinit var lostcardLinear: LinearLayout
     lateinit var bannerImg:ImageView
     lateinit var title: TextView
     lateinit var description: TextView
@@ -81,7 +81,7 @@ class CanteenFragment  : Fragment() {
     //    progress.visibility=View.GONE
         email_icon = view?.findViewById(R.id.email_icon)!!
         progress = view?.findViewById(R.id.progress)!!
-       // lostcardLinear = view?.findViewById(R.id.lostcardLinear)!!
+        lostcardLinear = view?.findViewById(R.id.lostcardLinear)!!
         preorder_image = view?.findViewById(R.id.preOrderLinear)!!
         information_image = view?.findViewById(R.id.informationLinear)!!
         payment_image = view?.findViewById(R.id.paymentLinear)!!
@@ -93,12 +93,12 @@ class CanteenFragment  : Fragment() {
     }
     private fun onClick() {
 
-       /* lostcardLinear.setOnClickListener {
+        lostcardLinear.setOnClickListener {
             val i = Intent(mContext, LostCardMainActivity::class.java)
             PreferenceManager.setStudentID(mContext,"")
 
             mContext.startActivity(i)
-        }*/
+        }
         email_icon.setOnClickListener {
             showSendEmailDialog()
         }

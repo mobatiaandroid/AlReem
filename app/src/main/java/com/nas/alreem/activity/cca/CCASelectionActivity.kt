@@ -70,6 +70,8 @@ class CCASelectionActivity : AppCompatActivity() {
     var textViewStudName: TextView? = null
     var messageTxt: TextView? = null
     var mCCAsActivityAdapter: CCAsActivityAdapter? = null
+    var onpausekey:String?="0"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -111,6 +113,7 @@ class CCASelectionActivity : AppCompatActivity() {
 
         }
         backRelative.setOnClickListener {
+            onpausekey="1"
             if(ccaedit==0)
             {
                 //Log.e("keyvalue", AppController.keyy!!)
@@ -892,6 +895,7 @@ class CCASelectionActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        onpausekey="1"
         if(ccaedit==0)
         {
             if(AppController.keyy.equals("1"))
@@ -913,6 +917,18 @@ class CCASelectionActivity : AppCompatActivity() {
             finish()
         }
 
+
+    }
+    override fun onPause() {
+        super.onPause()
+        if(onpausekey=="0")
+        {
+            ccacancelAPI()
+        }
+        else
+        {
+
+        }
 
     }
 

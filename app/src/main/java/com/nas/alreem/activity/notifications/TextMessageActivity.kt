@@ -81,6 +81,8 @@ class TextMessageActivity : AppCompatActivity() {
     }
 
     fun callMessageDetailAPI() {
+        progressDialog.visibility = View.VISIBLE
+
         val token = PreferenceManager.getaccesstoken(mContext)
         val studentbody = MessageDetailApiModel(id)
         val call: Call<MessageDetailModel> =
