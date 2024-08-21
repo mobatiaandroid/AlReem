@@ -348,6 +348,38 @@
                     android:textSize="14sp" />
             </LinearLayout>
             <com.nas.alreem.commonviews.CustomTextViewBold
+                android:id="@+id/LandMark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/land_mark"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+            <LinearLayout
+                android:id="@+id/landlayout"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:background="@drawable/textfield_bg"
+                android:orientation="horizontal"
+                >
+
+                <com.nas.alreem.commonviews.CustomTextViewRegular
+                    android:id="@+id/landvalue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="50"
+                    android:text="12/06/2017"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+            </LinearLayout>
+            <com.nas.alreem.commonviews.CustomTextViewBold
                 android:id="@+id/reason"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

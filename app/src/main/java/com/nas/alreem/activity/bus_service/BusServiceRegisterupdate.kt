@@ -110,7 +110,7 @@ class BusServiceRegisterupdate : AppCompatActivity() {
             startActivity(intent)
         })
         ccaOption!!.setOnClickListener {
-            val intent = Intent(mContext, BusServiceEapRegister::class.java)
+            val intent = Intent(mContext, BusServiceRegisterNew::class.java)
             intent.putExtra("tab_type", "Bus Service")
             startActivity(intent)
         }
@@ -127,7 +127,7 @@ class BusServiceRegisterupdate : AppCompatActivity() {
             PreferenceManager.setStudIdForCCA(mContext!!, "")
             // PreferenceManager.setStudentID(mContext!!, "")
 
-            val intent = Intent(mContext, BusServiceRegisterNew::class.java)
+            val intent = Intent(mContext, BusServiceEapRegister::class.java)
             intent.putExtra("tab_type", "ECA Options")
             startActivity(intent)
 

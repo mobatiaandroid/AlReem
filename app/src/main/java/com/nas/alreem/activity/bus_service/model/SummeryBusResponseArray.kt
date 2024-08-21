@@ -13,7 +13,7 @@ class SummeryBusResponseArray (
   @SerializedName("parent_mobile") var parent_mobile:String,
   @SerializedName("parent_country") var parent_country:String,
   @SerializedName("parent_address") var parent_address:String,
-
+  @SerializedName("landmark") var landmark:String,
   @SerializedName("pickup_point") var pickup_point:String,
 @SerializedName("drop_point") var drop_point:String,
 @SerializedName("academic_year") var academic_year:String,
@@ -21,6 +21,7 @@ class SummeryBusResponseArray (
   @SerializedName("type") var type:String,
   @SerializedName("status") var status:String,
   @SerializedName("title") var title:String,
+  @SerializedName("way") var way:String,
   @SerializedName("invoice") var invoice:ArrayList<InvoiceList>,
   @SerializedName("eap_dates") var eap_dates:ArrayList<String>)
 

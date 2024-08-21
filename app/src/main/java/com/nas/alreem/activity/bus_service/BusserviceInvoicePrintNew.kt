@@ -74,6 +74,10 @@ class BusserviceInvoicePrintNew :AppCompatActivity(){
 
     var itam_name :String?=""
     var quantity: String?=""
+    var droppint : String?=""
+    var pickuppoint : String?=""
+    var way : String?=""
+    var type : String?=""
     var itemsList: ArrayList<ShopModel>? = ArrayList<ShopModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -102,6 +106,12 @@ class BusserviceInvoicePrintNew :AppCompatActivity(){
         payment_type = extras!!.getString("payment_type")
         itam_name  = extras!!.getString("name")
         quantity  = extras!!.getString("quantity")
+
+        way  = extras!!.getString("way")
+        type  = extras!!.getString("type")
+        droppint  = extras!!.getString("droppoint")
+        pickuppoint  = extras!!.getString("pickupoint")
+
         itemsList = PreferenceManager.getOrderArrayList(nContext)
 
         printLinearClick = findViewById(R.id.printLinearClick)
@@ -201,7 +211,7 @@ class BusserviceInvoicePrintNew :AppCompatActivity(){
         PayBusRecActivity().loadWebViewWithDataPrint(
             mWebView!!,br,paidby, orderId!!,
             paidby,amount,paidDate,invoice,payment_type,
-            PreferenceManager.getStudentName(nContext!!),tr_no, title!!
+            PreferenceManager.getStudentName(nContext!!),tr_no, title!!,way,pickuppoint,droppint,type
         )
         /*var sb = StringBuffer()
         var eachLine = ""

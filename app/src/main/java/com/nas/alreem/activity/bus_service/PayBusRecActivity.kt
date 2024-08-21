@@ -13,12 +13,22 @@ class PayBusRecActivity: AppCompatActivity() {
 
     fun main() {}
     fun loadWebViewWithDataPrint(
-        paymentWeb: WebView, br: BufferedReader,
+        paymentWeb: WebView,
+        br: BufferedReader,
         parent_name: String?,
         order_id: String,
-        student_id: String?, amount: String?, created_on: String?,
-        invoice_note: String?, payment_type: String?,
-        student_name: String?, trn_no: String?, title: String
+        student_id: String?,
+        amount: String?,
+        created_on: String?,
+        invoice_note: String?,
+        payment_type: String?,
+        student_name: String?,
+        trn_no: String?,
+        title: String,
+        way: String?,
+        pickuppoint: String?,
+        droppint: String?,
+        type: String?
     ) {
         var student_name = student_name
 
@@ -41,23 +51,55 @@ class PayBusRecActivity: AppCompatActivity() {
         }
         var fullHtml = sb.toString()
         if (fullHtml.length > 0) {
-            fullHtml = fullHtml.replace("###amount###", amount!!)
-            fullHtml = fullHtml.replace("###order_Id###", order_id!!)
-            fullHtml = fullHtml.replace("###ParentName###", student_name!!)
-            fullHtml = fullHtml.replace("###Date###", created_on!!)
-            fullHtml = fullHtml.replace("###paidBy###", invoice_note!!)
-           // fullHtml = fullHtml.replace("###quantity###", itemsList!!.get(0).quantity.toString())
-            fullHtml = fullHtml.replace("###trn_no###", trn_no!!)
-            fullHtml = fullHtml.replace("###payment_type###", payment_type!!)
-            // fullHtml = fullHtml.replace("###paidBy###", "Done");
-            fullHtml = fullHtml.replace("###title###", title!!)
-            paymentWeb.loadDataWithBaseURL(
-                "file:///android_asset/images/",
-                fullHtml,
-                "text/html; charset=utf-8",
-                "utf-8",
-                "about:blank"
-            )
+            if (type.equals("EAP"))
+            {
+                fullHtml = fullHtml.replace("###amount###", amount!!)
+                fullHtml = fullHtml.replace("###order_Id###", order_id!!)
+                fullHtml = fullHtml.replace("###ParentName###", student_name!!)
+                fullHtml = fullHtml.replace("###Date###", created_on!!)
+                fullHtml = fullHtml.replace("###paidBy###", invoice_note!!)
+                // fullHtml = fullHtml.replace("###quantity###", itemsList!!.get(0).quantity.toString())
+                fullHtml = fullHtml.replace("###droptext###", droppint!!)
+                fullHtml = fullHtml.replace("###pickuptext###", pickuppoint!!)
+                fullHtml = fullHtml.replace("###drop###", "Drop Point"!!)
+                fullHtml = fullHtml.replace("###pickup###", "PickUP Point"!!)
+
+                fullHtml = fullHtml.replace("###trn_no###", trn_no!!)
+                fullHtml = fullHtml.replace("###payment_type###", payment_type!!)
+                // fullHtml = fullHtml.replace("###paidBy###", "Done");
+                fullHtml = fullHtml.replace("###title###", title!!)
+                paymentWeb.loadDataWithBaseURL(
+                    "file:///android_asset/images/",
+                    fullHtml,
+                    "text/html; charset=utf-8",
+                    "utf-8",
+                    "about:blank"
+                )
+            }
+            else
+            {
+                fullHtml = fullHtml.replace("###amount###", amount!!)
+                fullHtml = fullHtml.replace("###order_Id###", order_id!!)
+                fullHtml = fullHtml.replace("###ParentName###", student_name!!)
+                fullHtml = fullHtml.replace("###Date###", created_on!!)
+                fullHtml = fullHtml.replace("###paidBy###", invoice_note!!)
+                fullHtml = fullHtml.replace("###droptext###", way!!)
+                fullHtml = fullHtml.replace("###pickuptext###", "-")
+                fullHtml = fullHtml.replace("###trn_no###", trn_no!!)
+                fullHtml = fullHtml.replace("###payment_type###", payment_type!!)
+                fullHtml = fullHtml.replace("###drop###", "One Way"!!)
+                fullHtml = fullHtml.replace("###pickup###", "Two Way"!!)
+                // fullHtml = fullHtml.replace("###paidBy###", "Done");
+                fullHtml = fullHtml.replace("###title###", title!!)
+                paymentWeb.loadDataWithBaseURL(
+                    "file:///android_asset/images/",
+                    fullHtml,
+                    "text/html; charset=utf-8",
+                    "utf-8",
+                    "about:blank"
+                )
+            }
+
         }
     }
 }

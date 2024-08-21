@@ -170,7 +170,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/ccaImg"
                                 android:layout_centerHorizontal="true"
-                                android:text="EAP Registration"
+                                android:text="Regular Bus Registration"
                                 android:textColor="@color/white" />
                             <com.nas.alreem.commonviews.CustomTextViewRegular
                                 android:id="@+id/ccaDot"
@@ -210,7 +210,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_below="@+id/external"
-                                    android:text="Regular Bus Registration"
+                                    android:text="EAP Registration"
                                     android:textColor="@color/white"
                                     android:layout_centerHorizontal="true"/>
                             </RelativeLayout>
@@ -234,7 +234,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_below="@+id/information"
                                     android:layout_centerHorizontal="true"
-                                    android:text="Registration Summery"
+                                    android:text="Registration Summary"
                                     android:textColor="@color/white" />
                             </RelativeLayout>
                         </LinearLayout>

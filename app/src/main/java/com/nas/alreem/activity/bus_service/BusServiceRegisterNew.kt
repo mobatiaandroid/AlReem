@@ -122,8 +122,8 @@ class BusServiceRegisterNew : AppCompatActivity() {
     lateinit var buildingname: EditText
     lateinit var doorno: EditText
     lateinit var selectroot: TextView
-    var onway = ""
-    var twoway = ""
+    var direction = ""
+    var waytype = ""
     lateinit var termsconditionImg: CheckBox
 
 
@@ -306,16 +306,30 @@ class BusServiceRegisterNew : AppCompatActivity() {
 
         yesButton.setOnCheckedChangeListener { compoundButton, b ->
             if (b) {
-                onway = "0"
+                waytype = "0"
                 selectroot.visibility = View.VISIBLE
                 radiooneway.visibility = View.VISIBLE
             }
         }
         noButton.setOnCheckedChangeListener { compoundButton, b ->
             if (b) {
-                twoway = "1"
+                waytype = "1"
                 selectroot.visibility = View.GONE
                 radiooneway.visibility = View.GONE
+            }
+        }
+        radiopickup.setOnCheckedChangeListener { compoundButton, b ->
+            if (b) {
+                direction = "1"
+               // selectroot.visibility = View.VISIBLE
+               // radiooneway.visibility = View.VISIBLE
+            }
+        }
+        radiodrop.setOnCheckedChangeListener { compoundButton, b ->
+            if (b) {
+                direction = "0"
+              //selectroot.visibility = View.GONE
+               // radiooneway.visibility = View.GONE
             }
         }
         gpslocation.setOnClickListener {
@@ -381,13 +395,7 @@ class BusServiceRegisterNew : AppCompatActivity() {
                  Toast.makeText(mContext, "Please Enter Pickup point", Toast.LENGTH_SHORT).show()
 
              }*/
-            else if (!termsconditionImg.isChecked) {
-                Toast.makeText(
-                    mContext,
-                    "Please agree to terms and conditions",
-                    Toast.LENGTH_SHORT
-                ).show()
-            } else if (!yesButton.isChecked || !noButton.isChecked) {
+             else if (yesNoRadioGroup.checkedRadioButtonId==-1) {
                 Toast.makeText(mContext, "Please Select One Way Or Two Way", Toast.LENGTH_SHORT)
                     .show()
             } else if (landmarkedittext.text.isEmpty()) {
@@ -400,17 +408,24 @@ class BusServiceRegisterNew : AppCompatActivity() {
                 Toast.makeText(mContext, "Please Enter Door No ", Toast.LENGTH_SHORT).show()
 
             } else if (city.text.isEmpty()) {
-                Toast.makeText(mContext, "Please Enter Door No ", Toast.LENGTH_SHORT).show()
+                Toast.makeText(mContext, "Please Enter City ", Toast.LENGTH_SHORT).show()
 
             } else if (area.text.isEmpty()) {
-                Toast.makeText(mContext, "Please Enter Door No ", Toast.LENGTH_SHORT).show()
+                Toast.makeText(mContext, "Please Enter Area ", Toast.LENGTH_SHORT).show()
 
             } else if (street.text.isEmpty()) {
-                Toast.makeText(mContext, "Please Enter Door No ", Toast.LENGTH_SHORT).show()
+                Toast.makeText(mContext, "Please Enter Street ", Toast.LENGTH_SHORT).show()
 
-            } else {
+            }
+            else if (!termsconditionImg.isChecked) {
+                Toast.makeText(
+                    mContext,
+                    "Please agree to terms and conditions",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }else {
                 if (yesButton.isChecked) {
-                    if (!radiopickup.isChecked || !radiodrop.isChecked) {
+                    if (radiooneway.checkedRadioButtonId==-1) {
                         Toast.makeText(
                             mContext,
                             "Please Select your one way path",
@@ -460,9 +475,11 @@ class BusServiceRegisterNew : AppCompatActivity() {
 
         var attachment1: MultipartBody.Part? = null
         val pickuptext =
-            RequestBody.create("text/plain".toMediaTypeOrNull(), " pickuppoint.text.toString()")
-        val droptext =
-            RequestBody.create("text/plain".toMediaTypeOrNull(), "droppoint.text.toString()")
+            RequestBody.create("text/plain".toMediaTypeOrNull(), landmarkedittext.text.toString())
+        val waytypevalue =
+            RequestBody.create("text/plain".toMediaTypeOrNull(), waytype)
+        val direction =
+            RequestBody.create("text/plain".toMediaTypeOrNull(), direction)
         val classname = RequestBody.create(
             "text/plain".toMediaTypeOrNull(),
             student_year_text.text.toString()
@@ -479,7 +496,8 @@ class BusServiceRegisterNew : AppCompatActivity() {
         val parent1country =
             RequestBody.create("text/plain".toMediaTypeOrNull(), area.text.toString())
         val parentaddress =
-            RequestBody.create("text/plain".toMediaTypeOrNull(), street.text.toString())
+            RequestBody.create("text/plain".toMediaTypeOrNull(), doorno.text.toString()+","+ street.text.toString()+","+buildingname.text.toString()+
+           "," +area.text.toString()+","+city.text.toString())
         val term = RequestBody.create("text/plain".toMediaTypeOrNull(), selectedItem)
         val tyeppp = RequestBody.create("text/plain".toMediaTypeOrNull(), "1")
         val device_type = RequestBody.create("text/plain".toMediaTypeOrNull(), "2")
@@ -506,14 +524,14 @@ class BusServiceRegisterNew : AppCompatActivity() {
             "Bearer " + PreferenceManager.getaccesstoken(mContext),
             student_id,
             pickuptext,
-            droptext,
+            waytypevalue,
+            direction,
             classname,
             parent1name,
             email,
             parent1relationship,
             parentmobile,
             parent1additionaltele,
-            parent1country,
             parentaddress,
             term,
             tyeppp,

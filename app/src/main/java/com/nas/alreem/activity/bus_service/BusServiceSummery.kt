@@ -133,7 +133,7 @@ class BusServiceSummery : AppCompatActivity() {
 
 
 
-                address=summerylistaary[position].parent_country+" "+summerylistaary[position].parent_address
+                //address=summerylistaary[position].parent_country+" "+summerylistaary[position].parent_address
                 // Your logic
                 val intent = Intent(mContext, BusServiceDetailsNew::class.java)
                 intent.putExtra("id",summerylistaary[position].id)
@@ -145,12 +145,15 @@ class BusServiceSummery : AppCompatActivity() {
                 intent.putExtra("email",summerylistaary[position].parent_email)
                 intent.putExtra("pickup",summerylistaary[position].pickup_point)
                 intent.putExtra("droppoint",summerylistaary[position].drop_point)
-                intent.putExtra("droppoint",summerylistaary[position].drop_point)
-                intent.putExtra("address",address)
+               // intent.putExtra("droppoint",summerylistaary[position].drop_point)
+                intent.putExtra("address",summerylistaary[position].parent_address)
                 intent.putExtra("status",summerylistaary[position].status)
                 intent.putExtra("title",summerylistaary[position].title)
                 intent.putStringArrayListExtra("eaparray",eapdatesarray)
                 intent.putExtra("type",summerylistaary[position].type)
+               // Log.e("way",summerylistaary[position].way)
+                intent.putExtra("way",summerylistaary[position].way)
+                intent.putExtra("landmark",summerylistaary[position].landmark)
 
 for (i in summerylistaary[position].invoice.indices )
 {

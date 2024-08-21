@@ -11,89 +11,94 @@ import androidx.annotation.NonNull
 import androidx.recyclerview.widget.RecyclerView
 import com.nas.alreem.R
 import com.nas.alreem.activity.bus_service.model.StateVO
-import com.nas.alreem.activity.bus_service.model.StateVj
 import com.nas.alreem.constants.PreferenceManager
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 
-
 class EapDaysListAdapter(
-    var context: Context,
+    private val context: Context,
     private val listState: ArrayList<StateVO>,
-    var selecteapdays: TextView
-) :
-    RecyclerView.Adapter<EapDaysListAdapter.MyViewHolder>() {
+    private val selecteapdays: TextView
+) : RecyclerView.Adapter<EapDaysListAdapter.MyViewHolder>() {
+
     private var isFromView = false
-    private val new: ArrayList<String> = ArrayList()
-    private val new1: ArrayList<String> = ArrayList()
 
     inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-       // var listTxtTitle: TextView = view.findViewById(R.id.daySpinnerList)
-         var mTextView: TextView=view. findViewById(R.id.text)
-         var mCheckBox: CheckBox=view. findViewById(R.id.checkbox)
+        val mTextView: TextView = view.findViewById(R.id.text)
+        val mCheckBox: CheckBox = view.findViewById(R.id.checkbox)
     }
+
     @NonNull
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.spinner_checkbox_dropdown, parent, false)
         return MyViewHolder(itemView)
     }
-    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
-        val fromDate=listState[position].title
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        val fromDate = listState[position].title
         val inputFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd")
         val outputFormat: DateFormat = SimpleDateFormat("dd MMM yyyy")
         val inputDateStr = fromDate
         val date: Date = inputFormat.parse(inputDateStr)
         val outputDateStr: String = outputFormat.format(date)
-        holder.mTextView.text =outputDateStr +"("+listState[position].dates+")"
+        holder.mTextView.text = "$outputDateStr (${listState[position].dates})"
 
         // To check whether checked event fires from getView() or user input
         isFromView = true
         holder.mCheckBox.isChecked = listState[position].isSelected
         isFromView = false
 
-       // holder.mCheckBox.visibility = if (position == 0) View.INVISIBLE else View.VISIBLE
         holder.mCheckBox.tag = position
         holder.mCheckBox.setOnCheckedChangeListener { buttonView, isChecked ->
             val getPosition = buttonView.tag as Int
             if (!isFromView) {
                 listState[getPosition].isSelected = isChecked
                 Log.e("isselected", listState[getPosition].isSelected.toString())
-            }
 
-            if (isChecked) {
-                val selectedText = holder.mTextView.text
-                // Handle the selected TextView
-                for (i in listState.indices)
-                {
-                    listState[position].title
-                   // Log.e("title", listState[position].title!!)
-                }
-              //  println("Selected TextView Text: $selectedText")
-                val fromDate=listState[position].title
+                // Update the TextView with the cleaned string based on listState
+                updateSelectedDays()
+                PreferenceManager.seteapselecteddates(getSelectedDates(), context)
+                Log.e("getdays", PreferenceManager.geteapselecteddates(context).toString())
+            }
+        }
+    }
+
+    override fun getItemCount(): Int {
+        Log.e("size", listState.size.toString())
+        return listState.size
+    }
+
+    private fun updateSelectedDays() {
+        val selectedDays = listState
+            .filter { it.isSelected }
+            .joinToString(", ") {
+                val fromDate = it.title
                 val inputFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd")
                 val outputFormat: DateFormat = SimpleDateFormat("dd MMM yyyy")
                 val inputDateStr = fromDate
                 val date: Date = inputFormat.parse(inputDateStr)
                 val outputDateStr: String = outputFormat.format(date)
-
-                new.add( listState[position].title!!)
-                new1.add(outputDateStr+"("+listState[position].dates+")")
-                val cleanedString = new1.toString().replace("[", "").replace("]", "")
-                selecteapdays.text= cleanedString
-                Log.e("array", new1.toString())
-                PreferenceManager.seteapselecteddates(new,context)
-
+                "$outputDateStr (${it.dates})"
             }
-        }
-    }
-    override fun getItemCount(): Int {
-Log.e("size", listState.size.toString())
-        return listState.size
 
+        if (selectedDays.equals(""))
+        {
+            selecteapdays.text = "Please Select"
+            Log.e("selectedDays", selectedDays)
+        }
+        else{
+            selecteapdays.text = selectedDays
+            Log.e("selectedDays", selectedDays)
+        }
+
+    }
+
+    private fun getSelectedDates(): ArrayList<String> {
+        return listState
+            .filter { it.isSelected }
+            .map { it.title!! }
+            .toCollection(ArrayList())
     }
 }

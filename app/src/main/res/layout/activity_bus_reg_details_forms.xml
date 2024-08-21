@@ -223,90 +223,9 @@
         android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/pickupquestion"
-        app:layout_constraintTop_toBottomOf="@id/studentinfolinearesis"/>
-    <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
-        android:id="@+id/pickupquestion"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:text="Please Select One way or two way"
-        android:textSize="16sp"
-        android:layout_marginLeft="16dp"
-        android:textColor="@color/black"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/radioGroup"
-        app:layout_constraintTop_toBottomOf="@id/border"/>
-    <RadioGroup
-        android:id="@+id/radioGroup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/pickupquestion"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/selectroot"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <RadioButton
-            android:id="@+id/radioYes"
-            android:buttonTint="@color/split_bg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="4dp"
-            android:text="One Way" />
-
-        <RadioButton
-            android:id="@+id/radioNo"
-            android:buttonTint="@color/split_bg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:text="Two Way" />
-    </RadioGroup>
-    <com.nas.alreem.commonviews.CustomTextViewBold
-        android:id="@+id/selectroot"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:text="Pick Your One-Way Path"
-        android:visibility="gone"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/radiooneway"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup"
-        android:textColor="@color/black"
-        android:textSize="13sp" />
-    <RadioGroup
-        android:id="@+id/radiooneway"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="5dp"
-        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/termtext"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/selectroot">
+        app:layout_constraintTop_toBottomOf="@id/studentinfolinearesis"/>
 
-        <RadioButton
-            android:id="@+id/radiopickup"
-            android:buttonTint="@color/split_bg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="4dp"
-            android:text="School to Home" />
-
-        <RadioButton
-            android:id="@+id/radiodrop"
-            android:buttonTint="@color/split_bg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Home to School" />
-    </RadioGroup>
   <!--  <EditText
         android:layout_width="match_parent"
         android:layout_height="40dp"
@@ -353,7 +272,7 @@
         android:text="@string/selecting_term"
         app:layout_constraintBottom_toTopOf="@+id/linearchoose"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radiooneway"
+        app:layout_constraintTop_toBottomOf="@+id/border"
         android:textColor="@color/black"
         android:textSize="16sp" />
     <LinearLayout
@@ -832,7 +751,88 @@
             android:background="@drawable/textfield_bg"
             />
     </LinearLayout>
+    <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
+        android:id="@+id/pickupquestion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Please Select One way or two way"
+        android:textSize="16sp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/radioGroup"
+        app:layout_constraintTop_toBottomOf="@id/addressinfo_linear"/>
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/selectroot"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pickupquestion"
+        app:layout_constraintEnd_toEndOf="parent">
 
+        <RadioButton
+            android:id="@+id/radioYes"
+            android:buttonTint="@color/split_bg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="4dp"
+            android:text="One Way" />
+
+        <RadioButton
+            android:id="@+id/radioNo"
+            android:buttonTint="@color/split_bg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:text="Two Way" />
+    </RadioGroup>
+    <com.nas.alreem.commonviews.CustomTextViewBold
+        android:id="@+id/selectroot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:text="Pick Your One-Way Path"
+        android:visibility="gone"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/radiooneway"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup"
+        android:textColor="@color/black"
+        android:textSize="13sp" />
+    <RadioGroup
+        android:id="@+id/radiooneway"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="5dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/acknowledgementt"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/selectroot">
+
+        <RadioButton
+            android:id="@+id/radiopickup"
+            android:buttonTint="@color/split_bg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="4dp"
+            android:text="School to Home" />
+
+        <RadioButton
+            android:id="@+id/radiodrop"
+            android:buttonTint="@color/split_bg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Home to School" />
+    </RadioGroup>
     <RelativeLayout
         android:id="@+id/acknowledgementt"
         android:layout_width="match_parent"
@@ -841,7 +841,7 @@
         android:layout_marginRight="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="10dp"
-app:layout_constraintTop_toBottomOf="@+id/addressinfo_linear"
+app:layout_constraintTop_toBottomOf="@+id/radiooneway"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         tools:layout_editor_absoluteY="560dp">
@@ -857,26 +857,22 @@ app:layout_constraintTop_toBottomOf="@+id/addressinfo_linear"
             android:text="@string/note"
             android:textSize="13sp"
             android:textStyle="bold" />
+        <CheckBox
+            android:id="@+id/termsconditionImg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_below="@+id/note"/>
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/linearagree"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
             android:orientation="horizontal"
             android:layout_below="@+id/note"
             android:layout_marginTop="10dp"
             app:layout_constraintBottom_toTopOf="@+id/linearLayout5"
             app:layout_constraintTop_toBottomOf="@+id/signature">
-
-
-            <CheckBox
-                android:id="@+id/termsconditionImg"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginBottom="50dp"
-                app:layout_constraintTop_toTopOf="parent" />
-
 
             <com.nas.alreem.commonviews.CustomFontSansProTextBlackSemiBold
                 android:id="@+id/acknowledgement"
@@ -884,7 +880,6 @@ app:layout_constraintTop_toBottomOf="@+id/addressinfo_linear"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:layout_margin="8dp"
                 android:layout_marginTop="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:text="@string/acknowledgement"

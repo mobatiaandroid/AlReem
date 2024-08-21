@@ -19,6 +19,7 @@ import android.view.Window
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -143,6 +144,9 @@ class BusServiceEapRegister : AppCompatActivity() {
     lateinit var contact1: EditText
     var dateListArrayTemp: ArrayList<DateListArray> = ArrayList()
     var eapDetailsArray: ArrayList<EAPList> = ArrayList()
+    lateinit var termsconditionImg: CheckBox
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -171,6 +175,7 @@ class BusServiceEapRegister : AppCompatActivity() {
         heading = findViewById(R.id.heading)
         heading.text = "EAP Registration Form"
         progressDialogAdd=findViewById(R.id.progressDialogAdd)
+        termsconditionImg = findViewById(R.id.termsconditionImg)
 
         parentsdetailslinear = findViewById(R.id.parentsdetailslinear)
         contact1 = findViewById(R.id.contact1)
@@ -220,6 +225,7 @@ class BusServiceEapRegister : AppCompatActivity() {
             if (selectedItem.equals("Please Select")) {
                 Toast.makeText(mContext, "Please Select Eap", Toast.LENGTH_SHORT).show()
             } else {
+                //selecteapdays.setText("")
                 bottomSelectededDayspopup(mContext)
 
             }
@@ -298,17 +304,24 @@ class BusServiceEapRegister : AppCompatActivity() {
             }
             else if(city.text.isEmpty())
             {
-                Toast.makeText(mContext, "Please Enter Door No ", Toast.LENGTH_SHORT).show()
+                Toast.makeText(mContext, "Please Enter City ", Toast.LENGTH_SHORT).show()
 
             }
             else if(area.text.isEmpty())
             {
-                Toast.makeText(mContext, "Please Enter Door No ", Toast.LENGTH_SHORT).show()
+                Toast.makeText(mContext, "Please Enter Area ", Toast.LENGTH_SHORT).show()
 
             } else if(street.text.isEmpty())
             {
-                Toast.makeText(mContext, "Please Enter Door No ", Toast.LENGTH_SHORT).show()
+                Toast.makeText(mContext, "Please Enter Street ", Toast.LENGTH_SHORT).show()
 
+            }
+            else if (!termsconditionImg.isChecked) {
+                Toast.makeText(
+                    mContext,
+                    "Please agree to terms and conditions",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
             else {
                 signatureBitmap = signature_pad.getSignatureBitmap()
@@ -357,6 +370,7 @@ class BusServiceEapRegister : AppCompatActivity() {
 
         var newsLetterAdapter = EapDaysListAdapter(mContext, listVOs, selecteapdays)
         recyclerdys!!.adapter = newsLetterAdapter
+        newsLetterAdapter.notifyDataSetChanged()
         close!!.setOnClickListener {
             bottomSheetDialog.dismiss()
         }
@@ -569,9 +583,10 @@ class BusServiceEapRegister : AppCompatActivity() {
         val parent1additionaltele =
             RequestBody.create("text/plain".toMediaTypeOrNull(), contact1.text.toString())
         val parent1country =
-            RequestBody.create("text/plain".toMediaTypeOrNull(), area.text.toString())
+            RequestBody.create("text/plain".toMediaTypeOrNull(), landmarkedittext.text.toString())
         val parentaddress =
-            RequestBody.create("text/plain".toMediaTypeOrNull(), street.text.toString())
+            RequestBody.create("text/plain".toMediaTypeOrNull(), doorno.text.toString()+","+ street.text.toString()+","+buildingname.text.toString()+
+                    "," +area.text.toString()+","+city.text.toString())
         val cca_id = RequestBody.create("text/plain".toMediaTypeOrNull(), selectedItemid)
         val cca_dates = RequestBody.create("application/json".toMediaTypeOrNull(), jsonArrayString)
         println("ccadates" + cca_dates)

@@ -61,6 +61,8 @@ class BusServiceDetailsNew : AppCompatActivity() {
     var status : String=""
     var title : String=""
     var type : String=""
+    var landmark : String=""
+    var way : String=""
 
     var orderReff:String = ""
     var order_id : Int =0
@@ -88,6 +90,10 @@ lateinit var classname:TextView
     lateinit var datetext:TextView
     lateinit var datevalue:TextView
     lateinit var datelayout:LinearLayout
+    lateinit var landlayout:LinearLayout
+    lateinit var landvalue:TextView
+    lateinit var pickuptext:TextView
+    lateinit var pickuplayout:LinearLayout
      var eapdatesarray = ArrayList<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -106,7 +112,6 @@ lateinit var classname:TextView
 
     private fun initfn() {
         id= intent.getIntExtra("id",0).toString()
-        Log.e("id",id)
         amount=intent.getStringExtra("amount").toString()
         status=intent.getStringExtra("status").toString()
         name=intent.getStringExtra("name").toString()
@@ -122,6 +127,9 @@ lateinit var classname:TextView
         paidDate=intent.getStringExtra("paidDate").toString()
         invoice_notes=intent.getStringExtra("invoicenotes").toString()
         type=intent.getStringExtra("type").toString()
+        landmark=intent.getStringExtra("landmark").toString()
+        Log.e("address",address)
+
         if (type.equals("EAP"))
         {
             eapdatesarray= intent.getStringArrayListExtra("eaparray")!!
@@ -129,6 +137,7 @@ lateinit var classname:TextView
 
         }
         else{
+            way=intent.getStringExtra("way").toString()
 
         }
 
@@ -156,6 +165,11 @@ lateinit var classname:TextView
         amountlayout=findViewById(R.id.amountlayout)
         droptext=findViewById(R.id.droptext)
         droplayout=findViewById(R.id.droplayout)
+
+        landlayout=findViewById(R.id.landlayout)
+        landvalue=findViewById(R.id.landvalue)
+        pickuptext=findViewById(R.id.pickuptext)
+        pickuplayout=findViewById(R.id.pickuplayout)
         if (amount.equals("0"))
         {
             amount_text.visibility=View.GONE
@@ -180,23 +194,31 @@ lateinit var classname:TextView
         {
             datetext.visibility=View.VISIBLE
             datelayout.visibility=View.VISIBLE
+            droptext.visibility=View.VISIBLE
+            droplayout.visibility=View.VISIBLE
             val cleanedString = eapdatesarray.toString().replace("[", "").replace("]", "")
-
             datevalue.text=cleanedString
+            pickup.text=pickup_point
         }
         else{
             datetext.visibility=View.GONE
             datelayout.visibility=View.GONE
+            droptext.visibility=View.GONE
+            droplayout.visibility=View.GONE
+            pickuptext.setText("Direction")
+            pickup.setText(way)
+
         }
          classname.text=class_name
         parentname.text=parent_name
         mobileno.text=mobile_no
         email.text=email_te
         amounttext.text=amount
-        pickup.text=pickup_point
+
         droppoint.text=drop_point
         Address.text=address
         titlevalue.text=title
+        landvalue.text=landmark
 if (status.equals("0"))
 {
     paybutton.setText("PENDING")
@@ -234,6 +256,10 @@ else if (status.equals("3"))
                 intent.putExtra("paidby", name)
                 intent.putExtra("paidDate", paidDate)
                 intent.putExtra("tr_no", "")
+                intent.putExtra("way", way)
+                intent.putExtra("droppoint", drop_point)
+                intent.putExtra("pickupoint", pickup_point)
+                intent.putExtra("type", type)
 
 
                 intent.putExtra(

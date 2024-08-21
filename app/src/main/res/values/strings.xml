@@ -370,6 +370,7 @@ that I will abide by them.</string>
     <string name="sign">Signature of Parent/Guardian</string>
     <string name="pick_up">Pick Up Point</string>
     <string name="drop">Drop Point</string>
+    <string name="landmark">Land Mark</string>
     <string name="title">Title</string>
     <string name="selecteddates">Selected Dates</string>
 
