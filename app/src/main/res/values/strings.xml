@@ -17,8 +17,10 @@
         <item>Secondary</item>
         <!--
         <item>Performing Arts</item>
--->
+-->        <item>Intentions</item>
+
         <item>Reports</item>
+        <item>Timetable</item>
         <item>Forms</item>
         <item>Enrichment</item>
         <item>Parent Meetings</item>
@@ -45,8 +47,9 @@
         <item>@drawable/secondary</item>
         <!--
         <item>@drawable/arts</item>
--->
+-->        <item>@drawable/question</item>
         <item>@drawable/report_side</item>
+        <item>@drawable/time_table_side</item>
         <item>@drawable/permission_slip</item>
         <item>@drawable/ccas</item>
         <item>@drawable/parentevening</item>

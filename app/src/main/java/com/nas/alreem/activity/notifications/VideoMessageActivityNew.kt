@@ -99,6 +99,7 @@ class VideoMessageActivityNew : AppCompatActivity() {
     }
 
     private fun callMessageDetailAPI() {
+        progressDialog.visibility = View.VISIBLE
         val token = PreferenceManager.getaccesstoken(mContext)
         val studentBody = MessageDetailApiModel(id)
         val call: Call<MessageDetailModel> = ApiClient.getClient.notifictaionDetail(studentBody, "Bearer $token")
