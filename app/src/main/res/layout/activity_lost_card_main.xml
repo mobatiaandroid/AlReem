@@ -110,33 +110,35 @@
             android:id="@+id/card_walletbalance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            app:cardElevation="20dp"
             android:layout_below="@id/studentSpinner"
-            >
-
-        <RelativeLayout
-
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
-            android:padding="5dp">
+            app:cardElevation="5dp">
 
-            <TextView
-                android:id="@+id/instructionTxt"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="5dp"
-                android:padding="10dp"
-                android:text="@string/aed"
-                android:textColor="@color/black"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:padding="5dp">
 
-                />
-        </RelativeLayout>
+                <TextView
+                    android:id="@+id/instructionTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:padding="10dp"
+                    android:text="@string/aed"
+                    android:textColor="@color/black"
+
+                    />
+            </RelativeLayout>
         </androidx.cardview.widget.CardView>
 
         <com.nas.alreem.commonviews.CustomFontSansProTextBlack

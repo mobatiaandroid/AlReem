@@ -8,7 +8,7 @@
         <item>Calendar</item>
         <item>Payments</item>
         <item>Absence &amp; Early Pickup</item>
-        <item>Bus Service</item>
+       <!-- <item>Bus Service</item>-->
         <item>Lunch Box</item>
         <item>Shop</item>
         <item>Parent Essentials</item>
@@ -39,7 +39,7 @@
         <item>@drawable/calendar</item>
         <item>@drawable/payment</item>
         <item>@drawable/absence</item>
-        <item>@drawable/busstop64</item>
+        <!--<item>@drawable/busstop64</item>-->
         <item>@drawable/lunchbox_icon</item>
         <item>@drawable/store64</item>
         <item>@drawable/parent</item>

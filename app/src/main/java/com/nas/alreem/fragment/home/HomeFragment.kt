@@ -5394,9 +5394,9 @@ class HomeFragment : Fragment(), View.OnClickListener {
                 textdata.equals(ConstantWords.communications, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_COMMUNICATION
                 }
-                textdata.equals(ConstantWords.bus_service, ignoreCase = true) -> {
+               /* textdata.equals(ConstantWords.bus_service, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_BUS_SERVICE
-                }
+                }*/
 
                 textdata.equals(ConstantWords.lunchbox, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_LUNCH_BOX
@@ -5770,7 +5770,62 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     )
 
                 }
+                ConstantWords.TAB_SHOP -> {
+                    DialogFunctions.commonErrorAlertDialog(
+                        mContext.resources.getString(R.string.alert),
+                        mContext.resources.getString(R.string.feature_only_for_registered_user),
+                        mContext
+                    )
 
+                }
+                ConstantWords.TAB_STUDENT_INFORMATION -> {
+                    DialogFunctions.commonErrorAlertDialog(
+                        mContext.resources.getString(R.string.alert),
+                        mContext.resources.getString(R.string.feature_only_for_registered_user),
+                        mContext
+                    )
+
+                }
+                ConstantWords.TAB_EARLY_YEARS -> {
+                    DialogFunctions.commonErrorAlertDialog(
+                        mContext.resources.getString(R.string.alert),
+                        mContext.resources.getString(R.string.feature_only_for_registered_user),
+                        mContext
+                    )
+
+                }
+                ConstantWords.TAB_PRIMARY -> {
+                    DialogFunctions.commonErrorAlertDialog(
+                        mContext.resources.getString(R.string.alert),
+                        mContext.resources.getString(R.string.feature_only_for_registered_user),
+                        mContext
+                    )
+
+                }
+                ConstantWords.TAB_SECONDARY -> {
+                    DialogFunctions.commonErrorAlertDialog(
+                        mContext.resources.getString(R.string.alert),
+                        mContext.resources.getString(R.string.feature_only_for_registered_user),
+                        mContext
+                    )
+
+                }
+                ConstantWords.TAB_INTENTIONS -> {
+                    DialogFunctions.commonErrorAlertDialog(
+                        mContext.resources.getString(R.string.alert),
+                        mContext.resources.getString(R.string.feature_only_for_registered_user),
+                        mContext
+                    )
+
+                }
+                ConstantWords.TAB_TIMETABLE -> {
+                    DialogFunctions.commonErrorAlertDialog(
+                        mContext.resources.getString(R.string.alert),
+                        mContext.resources.getString(R.string.feature_only_for_registered_user),
+                        mContext
+                    )
+
+                }
                 ConstantWords.TAB_ABOUT_US -> {
                     mFragment = AboutUsFragment()
                     fragmentIntent(mFragment)
@@ -5914,11 +5969,11 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     mFragment = PrimaryFragment()
                     fragmentIntent(mFragment)
                 }
-                ConstantWords.TAB_BUS_SERVICE -> {
+                /*ConstantWords.TAB_BUS_SERVICE -> {
                     PreferenceManager.setStudentID(mContext, "")
                     mFragment = BusServiceFragmentNew()
                     fragmentIntent(mFragment)
-                }
+                }*/
                 ConstantWords.TAB_SECONDARY -> {
                     PreferenceManager.setStudentID(mContext, "")
                     mFragment = SecondaryFragment()
