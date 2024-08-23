@@ -8,9 +8,9 @@
         <item>Calendar</item>
         <item>Payments</item>
         <item>Absence &amp; Early Pickup</item>
-       <!-- <item>Bus Service</item>-->
         <item>Lunch Box</item>
         <item>Shop</item>
+        <item>Bus Service</item>
         <item>Parent Essentials</item>
         <item>Re-Enrolment</item>
         <item>Early Years</item>
@@ -39,9 +39,9 @@
         <item>@drawable/calendar</item>
         <item>@drawable/payment</item>
         <item>@drawable/absence</item>
-        <!--<item>@drawable/busstop64</item>-->
         <item>@drawable/lunchbox_icon</item>
         <item>@drawable/store64</item>
+        <item>@drawable/busstop64</item>
         <item>@drawable/parent</item>
         <item>@drawable/re_enrollment</item>
         <item>@drawable/earlyyears</item>
@@ -347,7 +347,7 @@
     <string name="ackwolegemnt">Acknowlegment</string>
 
     <string name="parents_details">Parents Details</string>
-    <string name="selecting_term">Selecting Terms</string>
+    <string name="selecting_term">Please Select Term Options</string>
 
 
     <string name="door_no">Door No / Villa No<font fgcolor="red">*</font></string>
@@ -371,8 +371,9 @@ If you wish to register your child for the EAP Bus Service a 50AED/ trip is char
     <string name="acknowledgement">I hereby acknowledge that I have read, understand and accept the rules for my child travelling by the school bus and certify
 that I will abide by them.</string>
     <string name="sign">Signature of Parent/Guardian</string>
-    <string name="pick_up">Pick Up Point</string>
-    <string name="drop">Drop Point</string>
+    <string name="drop">Drop Point<font fgcolor="red">*</font></string>
+    <string name="pick_up">Pick Up Point<font fgcolor="red">*</font></string>
+
     <string name="landmark">Land Mark</string>
     <string name="title">Title</string>
     <string name="selecteddates">Selected Dates</string>

@@ -178,13 +178,15 @@ class BusServiceRegisterNew : AppCompatActivity() {
                     parenr1name.setText(responsedata!!.responseArray.parent1_name)
                     parent1mobNo.setText(responsedata!!.responseArray.parent1_mobile)
                     parent1email.setText(responsedata!!.responseArray.parent1_email)
+                    otherapprovered.setText(responsedata!!.responseArray.parent1_relationship)
+
                     //   parent2name.setText(responsedata!!.responseArray.parent2_name)
                     //   parent2mobno.setText(responsedata!!.responseArray.parent2_mobile)
                     //  parent2email.setText(responsedata!!.responseArray.parent2_email)
 
                     relationship = responsedata!!.responseArray.parent1_relationship
                     area.setText(responsedata!!.responseArray.parent1_country)
-                    street.setText(responsedata!!.responseArray.parent1_country)
+                    street.setText(responsedata!!.responseArray.parent1_address1)
                     contact1.setText(responsedata!!.responseArray.parent1_additionaltelephone)
                     if (responsedata.responseArray.terms.size > 0) {
                         for (i in responsedata!!.responseArray.terms.indices) {
@@ -197,7 +199,7 @@ class BusServiceRegisterNew : AppCompatActivity() {
 
                         dropDownList = ArrayList()
 
-                        dropDownList.add(0, "Please Select")
+                        dropDownList.add(0, "Please Select Term")
                         for (i in 1..optionsArray.size) {
 //        for (i in optionsArray.indices) {
                             dropDownList.add(optionsArray.get(i - 1).toString())
@@ -209,7 +211,6 @@ class BusServiceRegisterNew : AppCompatActivity() {
                                 dropDownList as List<Any?>
                             )
                         spinnerList.adapter = sp_adapter
-
                         spinnerList.onItemSelectedListener =
                             object : AdapterView.OnItemSelectedListener {
                                 override fun onItemSelected(
@@ -374,14 +375,7 @@ class BusServiceRegisterNew : AppCompatActivity() {
 
 
         submit.setOnClickListener {
-            if (signature_pad.isEmpty()) {
-                // Prompt the user to enter a signature
-                Toast.makeText(
-                    mContext,
-                    getString(R.string.enter_signature_prompt),
-                    Toast.LENGTH_SHORT
-                ).show()
-            } else if (selectedItem.equals("Please Select")) {
+             if (selectedItem.equals("Please Select Term")) {
                 Toast.makeText(mContext, "Please Select Term", Toast.LENGTH_SHORT).show()
 
             }
@@ -398,10 +392,16 @@ class BusServiceRegisterNew : AppCompatActivity() {
              else if (yesNoRadioGroup.checkedRadioButtonId==-1) {
                 Toast.makeText(mContext, "Please Select One Way Or Two Way", Toast.LENGTH_SHORT)
                     .show()
-            } else if (landmarkedittext.text.isEmpty()) {
-                Toast.makeText(mContext, "Please Enter LandMark ", Toast.LENGTH_SHORT).show()
+            } else if (radiooneway.checkedRadioButtonId==-1) {
+            Toast.makeText(
+                mContext,
+                "Please Select direction",
+                Toast.LENGTH_SHORT
+            ).show()
 
-            } else if (buildingname.text.isEmpty()) {
+        }
+
+             else if (buildingname.text.isEmpty()) {
                 Toast.makeText(mContext, "Please Enter Building Name ", Toast.LENGTH_SHORT).show()
 
             } else if (doorno.text.isEmpty()) {
@@ -417,18 +417,31 @@ class BusServiceRegisterNew : AppCompatActivity() {
                 Toast.makeText(mContext, "Please Enter Street ", Toast.LENGTH_SHORT).show()
 
             }
-            else if (!termsconditionImg.isChecked) {
+             else if (landmarkedittext.text.isEmpty()) {
+                 Toast.makeText(mContext, "Please Enter LandMark ", Toast.LENGTH_SHORT).show()
+
+             }
+             else if (!termsconditionImg.isChecked) {
+                 Toast.makeText(
+                     mContext,
+                     "Please agree to terms and conditions",
+                     Toast.LENGTH_SHORT
+                 ).show()
+             }
+            else if (signature_pad.isEmpty()) {
+                // Prompt the user to enter a signature
                 Toast.makeText(
                     mContext,
-                    "Please agree to terms and conditions",
+                    getString(R.string.enter_signature_prompt),
                     Toast.LENGTH_SHORT
                 ).show()
-            }else {
+            }
+            else {
                 if (yesButton.isChecked) {
                     if (radiooneway.checkedRadioButtonId==-1) {
                         Toast.makeText(
                             mContext,
-                            "Please Select your one way path",
+                            "Please Select direction",
                             Toast.LENGTH_SHORT
                         ).show()
 

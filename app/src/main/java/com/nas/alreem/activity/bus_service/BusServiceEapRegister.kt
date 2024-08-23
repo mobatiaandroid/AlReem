@@ -266,14 +266,7 @@ class BusServiceEapRegister : AppCompatActivity() {
 
 
         submit.setOnClickListener {
-            if (signature_pad.isEmpty()) {
-                // Prompt the user to enter a signature
-                Toast.makeText(
-                    mContext,
-                    getString(R.string.enter_signature_prompt),
-                    Toast.LENGTH_SHORT
-                ).show()
-            } else if (selectedItem.equals("Please Select")) {
+            if (selectedItem.equals("Please Select")) {
                 Toast.makeText(mContext, "Please Select Eap", Toast.LENGTH_SHORT).show()
 
             } else if (droppoint.text.isEmpty()) {
@@ -287,9 +280,11 @@ class BusServiceEapRegister : AppCompatActivity() {
                 Toast.makeText(mContext, "Please Selected Dates", Toast.LENGTH_SHORT).show()
 
             }
-            else if(landmarkedittext.text.isEmpty())
+
+
+            else if(doorno.text.isEmpty())
             {
-                Toast.makeText(mContext, "Please Enter LandMark ", Toast.LENGTH_SHORT).show()
+                Toast.makeText(mContext, "Please Enter Door No ", Toast.LENGTH_SHORT).show()
 
             }
             else if(buildingname.text.isEmpty())
@@ -297,9 +292,14 @@ class BusServiceEapRegister : AppCompatActivity() {
                 Toast.makeText(mContext, "Please Enter Building Name ", Toast.LENGTH_SHORT).show()
 
             }
-            else if(doorno.text.isEmpty())
+            else if(street.text.isEmpty())
             {
-                Toast.makeText(mContext, "Please Enter Door No ", Toast.LENGTH_SHORT).show()
+                Toast.makeText(mContext, "Please Enter Street ", Toast.LENGTH_SHORT).show()
+
+            }
+            else if(area.text.isEmpty())
+            {
+                Toast.makeText(mContext, "Please Enter Area ", Toast.LENGTH_SHORT).show()
 
             }
             else if(city.text.isEmpty())
@@ -307,13 +307,9 @@ class BusServiceEapRegister : AppCompatActivity() {
                 Toast.makeText(mContext, "Please Enter City ", Toast.LENGTH_SHORT).show()
 
             }
-            else if(area.text.isEmpty())
+            else if(landmarkedittext.text.isEmpty())
             {
-                Toast.makeText(mContext, "Please Enter Area ", Toast.LENGTH_SHORT).show()
-
-            } else if(street.text.isEmpty())
-            {
-                Toast.makeText(mContext, "Please Enter Street ", Toast.LENGTH_SHORT).show()
+                Toast.makeText(mContext, "Please Enter LandMark ", Toast.LENGTH_SHORT).show()
 
             }
             else if (!termsconditionImg.isChecked) {
@@ -323,6 +319,15 @@ class BusServiceEapRegister : AppCompatActivity() {
                     Toast.LENGTH_SHORT
                 ).show()
             }
+            else if (signature_pad.isEmpty()) {
+                // Prompt the user to enter a signature
+                Toast.makeText(
+                    mContext,
+                    getString(R.string.enter_signature_prompt),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
             else {
                 signatureBitmap = signature_pad.getSignatureBitmap()
                 signatureFile = bitmapToFile(signatureBitmap)
@@ -444,6 +449,7 @@ class BusServiceEapRegister : AppCompatActivity() {
                     parenr1name.setText(responsedata!!.responseArray.parent1_name)
                     parent1mobNo.setText(responsedata!!.responseArray.parent1_mobile)
                     parent1email.setText(responsedata!!.responseArray.parent1_email)
+                    otherapprovered.setText(responsedata!!.responseArray.parent1_relationship)
                     //parent2name.setText(responsedata!!.responseArray.parent2_name)
                     //parent2mobno.setText(responsedata!!.responseArray.parent2_mobile)
                     // parent2email.setText(responsedata!!.responseArray.parent2_email)
@@ -456,7 +462,7 @@ class BusServiceEapRegister : AppCompatActivity() {
                         //  Log.e("response", responsedata!!.responseArray.terms.size.toString())
                         relationship = responsedata!!.responseArray.parent1_relationship
                         area.setText(responsedata!!.responseArray.parent1_country)
-                        street.setText(responsedata!!.responseArray.parent1_country)
+                        street.setText(responsedata!!.responseArray.parent1_address1)
                         contact1.setText(responsedata!!.responseArray.parent1_additionaltelephone)
                         for (i in responsedata!!.responseArray.eap_details.indices) {
                             optionArray.add(responsedata.responseArray.eap_details[i].title)
@@ -587,6 +593,8 @@ class BusServiceEapRegister : AppCompatActivity() {
         val parentaddress =
             RequestBody.create("text/plain".toMediaTypeOrNull(), doorno.text.toString()+","+ street.text.toString()+","+buildingname.text.toString()+
                     "," +area.text.toString()+","+city.text.toString())
+        val item = RequestBody.create("text/plain".toMediaTypeOrNull(), selectedItem)
+
         val cca_id = RequestBody.create("text/plain".toMediaTypeOrNull(), selectedItemid)
         val cca_dates = RequestBody.create("application/json".toMediaTypeOrNull(), jsonArrayString)
         println("ccadates" + cca_dates)
@@ -626,6 +634,7 @@ class BusServiceEapRegister : AppCompatActivity() {
             parent1country,
             parentaddress,
             tyeppp,
+            item,
             cca_dates,
             cca_id,
             device_type,

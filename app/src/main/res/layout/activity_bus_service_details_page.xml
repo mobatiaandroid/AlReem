@@ -319,7 +319,7 @@
                 android:id="@+id/droptext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/drop"
+                android:text="Drop point"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"

@@ -99,7 +99,7 @@
                                 android:layout_height="40dp"
                                 android:layout_marginTop="3dp"
                                 android:layout_centerHorizontal="true"
-                                android:src="@drawable/cca_sign_up"/>
+                                android:src="@drawable/publictransport"/>
 
                             <com.nas.alreem.commonviews.CustomTextViewRegular
                                 android:layout_width="wrap_content"

@@ -5432,6 +5432,9 @@ class HomeFragment : Fragment(), View.OnClickListener {
                 textdata.equals(ConstantWords.timetable, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_TIMETABLE
                 }
+                textdata.equals(ConstantWords.bus_service, ignoreCase = true) -> {
+                    TAB_ID = ConstantWords.TAB_BUS_SERVICE
+                }
                 textdata.equals(ConstantWords.intention, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_INTENTIONS
                 }
@@ -5826,6 +5829,14 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     )
 
                 }
+                ConstantWords.TAB_BUS_SERVICE -> {
+                    DialogFunctions.commonErrorAlertDialog(
+                        mContext.resources.getString(R.string.alert),
+                        mContext.resources.getString(R.string.feature_only_for_registered_user),
+                        mContext
+                    )
+
+                }
                 ConstantWords.TAB_ABOUT_US -> {
                     mFragment = AboutUsFragment()
                     fragmentIntent(mFragment)
@@ -5900,10 +5911,10 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     mFragment = CommunicationFragment()
                     fragmentIntent(mFragment)
                 }
-                /* ConstantWords.TAB_BUS_SERVICE -> {
+                 ConstantWords.TAB_BUS_SERVICE -> {
                      mFragment = BusServiceFragmentNew()
                      fragmentIntent(mFragment)
-                 }*/
+                 }
 
                 ConstantWords.TAB_REENROLMENT -> {
                     getReEnrollmentStatus()

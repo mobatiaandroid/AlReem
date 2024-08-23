@@ -66,6 +66,7 @@ import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.constants.WebViewTextActivity
 import com.nas.alreem.fragment.about_us.AboutUsFragment
 import com.nas.alreem.fragment.absence.AbsenceFragment
+import com.nas.alreem.fragment.bus_service.BusServiceFragmentNew
 import com.nas.alreem.fragment.calendar.CalendarFragment
 import com.nas.alreem.fragment.canteen.CanteenFragment
 import com.nas.alreem.fragment.cca.CCAFragment
@@ -601,19 +602,30 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                     }
                     7->
                     {
-                       /* val intent = Intent(mContext, PreOrderActivity_new::class.java)
-                        startActivity(intent)*/
+
                         mFragment = ShopFragment()
                         replaceFragmentsSelected(position)
-
+//                        DialogFunctions.commonErrorAlertDialog("Coming Soon!","This Feature will be available shortly",
+//                            mContext
+//                        )
                     }
                     8->
+                    {
+                       /* val intent = Intent(mContext, PreOrderActivity_new::class.java)
+                        startActivity(intent)*/
+                        PreferenceManager.setStudentID(mContext,"")
+                        mFragment = BusServiceFragmentNew()
+                        replaceFragmentsSelected(position)
+
+
+                    }
+                    9->
                     {
                         //Primary
                         mFragment = ParentsEssentialFragment()
                         replaceFragmentsSelected(position)
                     }
-                    9->
+                    10->
                     {
                         //Secondary
                         reEnroll(mContext)
@@ -621,21 +633,21 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
 
                     }
 
-                    10->
+                    11->
                     {
                         //Early years
                         mFragment = EarlyYearsFragment()
                         replaceFragmentsSelected(position)
 
                     }
-                    11->
+                    12->
                     {
                         //Primary
                         mFragment = PrimaryFragment()
                         replaceFragmentsSelected(position)
 
                     }
-                    12->
+                    13->
                     {
                         //Secondary
                         mFragment = SecondaryFragment()
@@ -669,35 +681,35 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                         replaceFragmentsSelected(position)
 
                     }*/
-                    13->
+                    14->
                     {
                         //CCa
                         PreferenceManager.setStudentID(mContext,"")
                         mFragment = Intentionfragment()
                         replaceFragmentsSelected(position)
                     }
-                    14->
+                    15->
                     {
                         //CCa
                         PreferenceManager.setStudentID(mContext,"")
                         mFragment = ReportsFragment()
                         replaceFragmentsSelected(position)
                     }
-                    15->
+                    16->
                     {
                         //Parents meeting
                         PreferenceManager.setStudentID(mContext,"")
                         mFragment = TimeTableFragmentNew()
                         replaceFragmentsSelected(position)
                     }
-                    16->
+                    17->
                     {
                         //Gallery
                         PreferenceManager.setStudentID(mContext,"")
                         mFragment = PermissionSlipFragmentNew()
                         replaceFragmentsSelected(position)
                     }
-                    17->
+                    18->
                     {
                         //Gallery
                         mFragment = CCAFragment()
@@ -709,19 +721,19 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                         mFragment = ParentAssociationsFragment()
                         replaceFragmentsSelected(position)
                     }*/
-                    18->
+                    19->
                     {
                         //Gallery
                         mFragment = ParentMeetingsFragment()
                         replaceFragmentsSelected(position)
                     }
-                    19->
+                    20->
                     {
                         //Gallery
                         mFragment = GalleryFragment()
                         replaceFragmentsSelected(position)
                     }
-                    20->
+                    21->
                     {
                         //About Us
 
@@ -745,7 +757,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                             replaceFragmentsSelected(position)
                         }
                     }
-                    21->
+                    22->
                     {
                         // Contact Us
                         mFragment = AboutUsFragment()

@@ -1114,6 +1114,7 @@ interface ApiInterface {
         @Part("landmark") parent1_country: RequestBody?,
         @Part("parent1_address") parent1_address: RequestBody?,
         @Part("type") type: RequestBody?,
+        @Part("term") term: RequestBody?,
         @Part("cca_dates") cca_dates: RequestBody?,
         @Part("cca_day_id") cca_day_id: RequestBody?,
         @Part("device_type") device_type: RequestBody?,

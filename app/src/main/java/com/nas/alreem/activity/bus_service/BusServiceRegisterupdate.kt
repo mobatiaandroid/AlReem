@@ -61,12 +61,6 @@ class BusServiceRegisterupdate : AppCompatActivity() {
     var mtitleRel: LinearLayout? = null
     var mailImageView: ImageView? = null
 
-
-
-
-
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bus_reg_new)

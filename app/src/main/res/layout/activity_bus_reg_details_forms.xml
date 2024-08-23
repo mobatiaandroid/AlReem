@@ -429,6 +429,24 @@
             android:layout_marginRight="10dp"
             android:background="@drawable/textfield_bg"
             android:hint="@string/email"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:hint="@string/other_Approved"
+            android:padding="5dp"
+            android:textSize="16sp"
+            android:inputType="text"
+            android:visibility="visible"
+            android:imeOptions="actionDone"
+            android:gravity="center_vertical"
+            android:layout_marginTop="10dp"
+            android:id="@+id/otherapprovered"
+            android:textColorHint="@color/dark_grey1"
+            android:textColor="@color/black"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/textfield_bg"
+            />
     </LinearLayout>
   <!--  <LinearLayout
         android:id="@+id/checkPassportLinear"
@@ -684,7 +702,7 @@
             android:imeOptions="actionDone"
             android:gravity="center_vertical"
             android:layout_marginTop="10dp"
-            android:id="@+id/otherapprovered"
+            android:id="@+id/otherapproveredd"
             android:textColorHint="@color/dark_grey1"
             android:textColor="@color/black"
             android:layout_marginLeft="10dp"
