@@ -159,7 +159,7 @@ var bannerarray = ArrayList<String>()
 lateinit var mContext: Context
 lateinit var current_date: String
 var currentPage: Int = 0
-private val NOTICE_TIME_OUT: Long = 5000
+private val NOTICE_TIME_OUT: Long = 6000
 var currentPageSurvey = 0
 var survey_satisfation_status = 0
 private var surveyEmail = ""
@@ -6062,7 +6062,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
             intent.putExtra("heading", noticeTitle)
             startActivity(intent)
         }
-        Glide.with(context).load(notice).centerCrop().into(bannerImg)
+        Glide.with(context).load(notice).into(bannerImg)
         closeImg.setOnClickListener {
 
             if (PreferenceManager.getSurvey(mContext) === 1) {
