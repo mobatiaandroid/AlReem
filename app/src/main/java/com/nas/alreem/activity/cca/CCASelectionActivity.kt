@@ -114,7 +114,7 @@ class CCASelectionActivity : AppCompatActivity() {
         backRelative.setOnClickListener {
             if(ccaedit==0)
             {
-                //Log.e("keyvalue", AppController.keyy!!)
+                Log.e("keyvalue", AppController.keyy!!)
                 if(AppController.keyy.equals("1"))
                 {
                     showApiAlert(mContext,"Leaving this page will cancel all reserved activities for this schedule. Do you want to continue?","Confirm")
@@ -315,7 +315,12 @@ class CCASelectionActivity : AppCompatActivity() {
 
 
         for (i in 0 until AppController.weekList!!.size) {
+            Log.e("arraysize", CCADetailModelArrayList!!.size.toString())
+
             for (j in CCADetailModelArrayList!!.indices) {
+                Log.e("weekarray", AppController.weekList!!.get(i).weekDay!!)
+                Log.e("ccadetailsarray", CCADetailModelArrayList!!.get(j).day!!)
+
                 if (AppController.weekList!!.get(i).weekDay.equals(
                         CCADetailModelArrayList!!.get(j).day)
                 ) {

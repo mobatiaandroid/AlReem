@@ -3,7 +3,6 @@ package com.nas.alreem.activity.canteen
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -126,12 +125,15 @@ class MyorderActivity:AppCompatActivity() {
                 progressDialogAdd.visibility=View.GONE
              //   progressDialogAdd.hide()
                 if (responsedata!!.status==100) {
+                    totalAmount =
+                        responsedata.responseArray.whole_total
+
                     dateRecyclerView.visibility=View.VISIBLE
                     noItemTxt.visibility=View.GONE
                     dateRecyclerView.layoutManager = LinearLayoutManager(nContext)
                     dateRecyclerView.adapter = MyorderDatesAdapter(response.body()!!.responseArray.data,
                         nContext,studentID,dateRecyclerView,
-                        bottomLinear,itemLinear,noItemTxt,progressDialogAdd,amountTxt)
+                        bottomLinear,itemLinear,noItemTxt,progressDialogAdd,amountTxt,totalAmount)
                     bottomLinear.visibility= View.VISIBLE
                     itemLinear.visibility= View.VISIBLE
                     amountTxt.text=response.body()!!.responseArray.whole_total.toString()+" AED"

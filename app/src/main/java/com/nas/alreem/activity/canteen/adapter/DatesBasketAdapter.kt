@@ -13,18 +13,30 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.downloader.Progress
 import com.nas.alreem.R
 import com.nas.alreem.activity.canteen.model.canteen_cart.CanteenCartResModel
 import com.nas.alreem.activity.canteen.model.canteen_cart.CartItemsListModel
 import com.nas.alreem.constants.ConstantFunctions
 
 
-class DatesBasketAdapter (var cartdate_list:ArrayList<CanteenCartResModel>, var nContext: Context
-                          , var ordered_user_type:String, var student_id:String, var parent_id:String,
-                          var staff_id:String, var itemtxt:TextView, var amnttxt:TextView,
-                          var itemLinear:LinearLayout, var noItemTxt:ImageView,
-                          var dateRec:RecyclerView, var progress:ProgressBar) :
+class DatesBasketAdapter(
+    var cartdate_list: ArrayList<CanteenCartResModel>,
+    var nContext: Context
+    ,
+    var ordered_user_type: String,
+    var student_id: String,
+    var parent_id: String,
+    var staff_id: String,
+    var itemtxt: TextView,
+    var amnttxt: TextView,
+    var itemLinear: LinearLayout,
+    var noItemTxt: ImageView,
+    var dateRec: RecyclerView,
+    var progress: ProgressBar,
+    var WalletAmount: Int,
+   var  TotalOrderedAmount: Int,
+    var cart_totoal: Int
+) :
     RecyclerView.Adapter<DatesBasketAdapter.ViewHolder>() {
     lateinit var itemslist:ArrayList<CartItemsListModel>
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
@@ -46,7 +58,7 @@ class DatesBasketAdapter (var cartdate_list:ArrayList<CanteenCartResModel>, var 
         llm.orientation = LinearLayoutManager.VERTICAL
         val spacing = 5 // 50px
 
-
+Log.e("cartdate", cartdate_list[position].delivery_date.toString())
         holder.totalAmountTxt.text = "Total      " + cartdate_list[position].total_amount.toString() + "AED"
         holder.itemDateTxt.text = ConstantFunctions.dateParsingToddMMMyyyyBasket(cartdate_list[position].delivery_date)
         holder.closeImg.setOnClickListener(View.OnClickListener { })
@@ -56,7 +68,8 @@ class DatesBasketAdapter (var cartdate_list:ArrayList<CanteenCartResModel>, var 
             student_id,
             parent_id,
             staff_id,
-            cartdate_list[position].delivery_date,itemtxt,amnttxt,itemLinear,noItemTxt,dateRec,progress)
+            cartdate_list[position].delivery_date,itemtxt,amnttxt,itemLinear,noItemTxt,dateRec,progress,
+            cartdate_list[position].total_amount.toString(),WalletAmount,TotalOrderedAmount,cart_totoal)
         holder.cartItemRecycler.adapter=adptr
 
 

@@ -1720,4 +1720,44 @@ class PreferenceManager {
             editor.commit()
         }*/
     }
+
+    fun setwalletAmout(context: Context, color: Int) {
+        val prefs = context.getSharedPreferences(
+            PREFSNAME, Context.MODE_PRIVATE
+        )
+        val editor = prefs.edit()
+        editor.putInt("walletamount", color)
+        editor.apply()
+    }
+
+    fun getWalletAmount(context: Context): Int {
+        val prefs = context.getSharedPreferences(
+            PREFSNAME,
+            Context.MODE_PRIVATE
+        )
+        return prefs.getInt(
+            "walletamount", context.resources
+                .getColor(R.color.transparent)
+        )
+    }
+
+    fun setcartamounttotal(context: Context, result: Int) {
+        val prefs = context.getSharedPreferences(
+            PREFSNAME, Context.MODE_PRIVATE
+        )
+        val editor = prefs.edit()
+        editor.putInt("cartamounttotal", result)
+        editor.apply()
+    }
+
+    fun getcartamounttotal(context: Context): Int {
+        val prefs = context.getSharedPreferences(
+            PREFSNAME,
+            Context.MODE_PRIVATE
+        )
+        return prefs.getInt(
+            "cartamounttotal", context.resources
+                .getColor(R.color.transparent)
+        )
+    }
 }

@@ -15,6 +15,8 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import com.nas.alreem.R
+import com.nas.alreem.activity.canteen.model.canteen_cart.CanteenCartResModel
+import com.nas.alreem.activity.canteen.model.canteen_cart.ItemsModel
 import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -23,6 +25,8 @@ import java.util.Locale
 
 class ConstantFunctions {
     companion object{
+
+        lateinit var cart_list: ArrayList<CanteenCartResModel>
 
         fun isEmailValid(email: String): Boolean {
             return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()

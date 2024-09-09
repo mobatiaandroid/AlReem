@@ -397,6 +397,8 @@ mProgressRelLayout.visibility=View.VISIBLE
                     WalletAmount=response!!.body()!!.responseArray.wallet_balance
                     walletbalance.setText(WalletAmount.toString())
                     mProgressRelLayout.visibility=View.GONE
+                    PreferenceManager().setwalletAmout(nContext,WalletAmount)
+
                 }else
                 {
 

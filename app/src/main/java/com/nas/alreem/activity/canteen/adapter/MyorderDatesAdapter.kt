@@ -5,7 +5,6 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,16 +28,24 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MyorderDatesAdapter (val preorders_list: ArrayList<PreOrdersListModel>, var mcontext: Context,
-                           var studentID:String, var dateRecyclerView:RecyclerView, var bottom:LinearLayout,
-                           var item:LinearLayout, var noitem:ImageView, var progress:ProgressBar,var amountTxt:TextView) :
+class MyorderDatesAdapter(
+    val preorders_list: ArrayList<PreOrdersListModel>,
+    var mcontext: Context,
+    var studentID: String,
+    var dateRecyclerView: RecyclerView,
+    var bottom: LinearLayout,
+    var item: LinearLayout,
+    var noitem: ImageView,
+    var progress: ProgressBar,
+    var amountTxt: TextView,
+    var totalAmount: String
+) :
     RecyclerView.Adapter<MyorderDatesAdapter.ViewHolder>() {
    lateinit var mAdapter: MyorderItemsAdapter
     var ordered_user_type = ""
     var student_id = ""
     var parent_id = ""
     var staff_id = ""
-    var totalAmount = ""
     var WalletAmount = 0
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val view: View = LayoutInflater.from(viewGroup.context)
@@ -76,7 +83,7 @@ class MyorderDatesAdapter (val preorders_list: ArrayList<PreOrdersListModel>, va
             parent_id,
             staff_id,
             totalAmount,
-            WalletAmount,dateRecyclerView,bottom,item,noitem,progress,amountTxt)
+            WalletAmount,dateRecyclerView,bottom,item,noitem,progress,amountTxt,preorders_list[position].total_amount)
 
 
         holder.closeImg.setOnClickListener {
@@ -189,8 +196,18 @@ class MyorderDatesAdapter (val preorders_list: ArrayList<PreOrdersListModel>, va
                 if (responsedata!!.status==100) {
                     amountTxt.text=response.body()!!.responseArray.whole_total.toString()
                     dateRecyclerView.layoutManager = LinearLayoutManager(mcontext)
-                    dateRecyclerView.adapter = MyorderDatesAdapter(response.body()!!.responseArray.data,
-                        mcontext,studentID,dateRecyclerView,bottom,item,noitem,progress,amountTxt)
+                    dateRecyclerView.adapter = MyorderDatesAdapter(
+                        response.body()!!.responseArray.data,
+                        mcontext,
+                        studentID,
+                        dateRecyclerView,
+                        bottom,
+                        item,
+                        noitem,
+                        progress,
+                        amountTxt,
+                        totalAmount
+                    )
 
                 }
                 else if (response.body()!!.status==132)

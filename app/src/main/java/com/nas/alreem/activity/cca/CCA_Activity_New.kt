@@ -572,6 +572,7 @@ class CCA_Activity_New:AppCompatActivity() {
                                 "CCA_Detail",
                                 mCCAmodelArrayList!![position].details
                             )*/
+                            AppController.keyy="0"
                             intent.putExtra("tab_type", tab_type)
                             PreferenceManager.saveDetailsArrayList(mContext, mCCAmodelArrayList!![position].details)
                             // PreferenceManager.setStudentID(mContext, stud_id)
@@ -592,7 +593,7 @@ class CCA_Activity_New:AppCompatActivity() {
                             ConstantFunctions.showDialogueWithOk(mContext,"No Data Available","Alert")
                         }
                     } else {
-                        ConstantFunctions.showDialogueWithOk(mContext,"EAP Sign-Up Closed","Alert")
+                        ConstantFunctions.showDialogueWithOk(mContext,"Enrichment Sign-Up Closed","Alert")
 
                     }
                 } else if (mCCAmodelArrayList!![position].isAttendee.equals("1")) {
@@ -616,7 +617,7 @@ class CCA_Activity_New:AppCompatActivity() {
                         startActivity(intent)
                     }
                     else{
-                        val intent = Intent(mContext, CCAsReviewAfterSubmissionActivity::class.java)
+                        val intent = Intent(mContext, CCAsReviewEditAfterSubmissionActivity::class.java)
                         intent.putExtra("tab_type", tab_type)
                         //intent.putExtra("CCA_Detail", mCCAmodelArrayList!![position].getDetails())
                         intent.putExtra("submissiondateover", mCCAmodelArrayList!![position].isSubmissionDateOver)
