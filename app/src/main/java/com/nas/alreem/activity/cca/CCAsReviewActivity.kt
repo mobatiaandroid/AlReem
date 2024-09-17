@@ -484,7 +484,7 @@ class CCAsReviewActivity : AppCompatActivity() {
                             showDialogAlert(
                                 mContext as Activity,
                                 "Success",
-                                "You are able to make changes until the closing date. After the closing date selections are final",
+                                "Your current Enrichment options are selected and confirmed. If you need to make any changes, Please use the edit option",
                                 R.drawable.tickicon,
                                 R.drawable.round,
                             )

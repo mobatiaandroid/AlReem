@@ -27,6 +27,8 @@ class ConstantFunctions {
     companion object{
 
         lateinit var cart_list: ArrayList<CanteenCartResModel>
+        lateinit var idList:ArrayList<Int>
+
 
         fun isEmailValid(email: String): Boolean {
             return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()

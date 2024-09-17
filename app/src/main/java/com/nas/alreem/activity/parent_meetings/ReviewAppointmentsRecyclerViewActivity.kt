@@ -46,7 +46,7 @@ class ReviewAppointmentsRecyclerViewActivity:AppCompatActivity() {
     lateinit var progressDialogAdd: ProgressBar
     lateinit var review_rec: RecyclerView
     lateinit var review_list: ArrayList<ReviewListModel>
-    lateinit var idList:ArrayList<Int>
+    //lateinit var idList:ArrayList<Int>
     lateinit var home_icon: ImageView
     lateinit var confirm_tv: TextView
     var confimVisibility:Boolean=false
@@ -67,11 +67,12 @@ class ReviewAppointmentsRecyclerViewActivity:AppCompatActivity() {
         confirm_tv=findViewById(R.id.confirmTV)
         review_list = ArrayList()
         review_rec = findViewById(R.id.recycler_review)
-        idList= ArrayList()
+        ConstantFunctions.idList= ArrayList()
 
         if (ConstantFunctions.internetCheck(mContext))
         {
             reviewlistcall()
+
         }
         else
         {
@@ -90,6 +91,7 @@ class ReviewAppointmentsRecyclerViewActivity:AppCompatActivity() {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)
         })
+
         confirm_tv.setOnClickListener {
             showerrorConfirm(mContext,"Do you want to confirm appointment?","Alert")
             //callConfirmPta()
@@ -97,6 +99,7 @@ class ReviewAppointmentsRecyclerViewActivity:AppCompatActivity() {
     }
     private fun reviewlistcall(){
         review_list=ArrayList()
+
         progressDialogAdd.visibility = View.VISIBLE
         val token = PreferenceManager.getaccesstoken(mContext)
 
@@ -114,8 +117,9 @@ class ReviewAppointmentsRecyclerViewActivity:AppCompatActivity() {
                     if (review_list.size>0){
                         progressDialogAdd.visibility = View.GONE
                         review_rec.layoutManager= LinearLayoutManager(mContext)
+
                         var review_adapter= ReviewAdapter(mContext,review_list,ReviewAppointmentsRecyclerViewActivity(),
-                            progressDialogAdd,review_rec,idList,confirm_tv)
+                            progressDialogAdd,review_rec,confirm_tv)
                         review_rec.adapter=review_adapter
                     }else{
                         DialogFunctions.commonErrorAlertDialog("Alert","No Appointments Available.",mContext)
@@ -123,7 +127,8 @@ class ReviewAppointmentsRecyclerViewActivity:AppCompatActivity() {
 
                     for (i in review_list.indices){
                         if (review_list[i].status==2&&review_list[i].booking_open.equals("y")){
-                            idList.add(review_list[i].id.toInt())
+                            ConstantFunctions.idList.add(review_list[i].id.toInt())
+
                             // confirm_tv.visibility=View.VISIBLE
                             confimVisibility=true
 
@@ -132,6 +137,7 @@ class ReviewAppointmentsRecyclerViewActivity:AppCompatActivity() {
                            // confirm_tv.visibility=View.GONE
                         }
                     }
+
                     if (confimVisibility==true){
                         confirm_tv.visibility=View.VISIBLE
                     }else{
@@ -178,8 +184,9 @@ class ReviewAppointmentsRecyclerViewActivity:AppCompatActivity() {
     private fun callConfirmPta(){
         progressDialogAdd.visibility = View.VISIBLE
         val token = PreferenceManager.getaccesstoken(mContext)
-        var idString:String=idList.toString()
+        var idString:String=ConstantFunctions.idList.toString()
         val ptaconfirmSuccessBody = PtaConfirmApiModel(idString)
+        Log.e("idstring",idString)
         val call: Call<PtaConfirmModel> = ApiClient.getClient.pta_confirm(ptaconfirmSuccessBody,"Bearer "+token)
         call.enqueue(object : Callback<PtaConfirmModel> {
             override fun onFailure(call: Call<PtaConfirmModel>, t: Throwable) {

@@ -213,8 +213,18 @@ class CCAsChoiceListActivityAdapter :
                 ccaDetailModelArrayList!![ccaDetailpos].choiceitem1Id=(mCCAmodelArrayList[position].cca_item_id)
             }
             else{
-                holder.confirmationImageview.setBackgroundResource(R.drawable.close_icon_with_white)
-                holder.listTxtView.setTextColor(mContext.resources.getColor(R.color.black))
+                if (mCCAmodelArrayList[position].slot_remaining_count!!<0)
+                {
+                    holder.listTxtView.alpha = 0.5f
+                    holder.confirmationImageview.setImageResource(R.drawable.disablecrossicon)
+                    holder.listTxtView.setTextColor(mContext.resources.getColor(R.color.grey))
+                }
+                else
+                {
+                    holder.confirmationImageview.setBackgroundResource(R.drawable.close_icon_with_white)
+                    holder.listTxtView.setTextColor(mContext.resources.getColor(R.color.black))
+                }
+
             }
 
 

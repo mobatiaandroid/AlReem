@@ -40,8 +40,7 @@ import java.util.Locale
 
 internal class ReviewAdapter (var mContext: Context, var review_list:ArrayList<ReviewListModel>,
                               var reviewActivity:ReviewAppointmentsRecyclerViewActivity,
-                              var progressDialogAdd: ProgressBar, var review_rec: RecyclerView,
-                              var idList:ArrayList<Int>, var confirm_tv: TextView
+                              var progressDialogAdd: ProgressBar, var review_rec: RecyclerView, var confirm_tv: TextView
 ) :
     RecyclerView.Adapter<ReviewAdapter.MyViewHolder>() {
     lateinit var id_list:ArrayList<Int>
@@ -71,12 +70,14 @@ internal class ReviewAdapter (var mContext: Context, var review_list:ArrayList<R
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 progressDialogAdd.visibility=View.GONE
         // reviewActivity.fnctiondemo()
+        ConstantFunctions.idList= ArrayList()
+
         holder.student_name.text = review_list[position].student
         holder.student_class.text = review_list[position].class_name
         holder.staff_name.text = review_list[position].staff
         for (i in review_list.indices){
             if (review_list[i].status==2&&review_list[i].booking_open.equals("y")){
-                idList.add(review_list[i].id.toInt())
+                ConstantFunctions.idList.add(review_list[i].id.toInt())
                 // confirm_tv.visibility=View.VISIBLE
                 confimVisibility=true
 
@@ -275,7 +276,7 @@ progressDialogAdd.visibility=View.GONE
                     if (review_list.size>0){
                         review_rec.layoutManager= LinearLayoutManager(mContext)
                         var review_adapter= ReviewAdapter(mContext,review_list,ReviewAppointmentsRecyclerViewActivity(),
-                            progressDialogAdd,review_rec,idList,confirm_tv)
+                            progressDialogAdd,review_rec,confirm_tv)
                         review_rec.adapter=review_adapter
                     }else{
                         DialogFunctions.commonErrorAlertDialog("Alert","No Appointments Available.",mContext)
@@ -283,7 +284,7 @@ progressDialogAdd.visibility=View.GONE
 
                     for (i in review_list.indices){
                         if (review_list[i].status.equals("2")&&review_list[i].booking_open.equals("y")){
-                            idList.add(review_list[i].id.toInt())
+                            ConstantFunctions.idList.add(review_list[i].id.toInt())
                             // confirm_tv.visibility=View.VISIBLE
                             confimVisibility=true
 
@@ -494,6 +495,7 @@ progressDialogAdd.visibility=View.GONE
         val token = PreferenceManager.getaccesstoken(mContext)
         var idString:String=idList.toString()
         val ptaconfirmSuccessBody = PtaConfirmApiModel(idString)
+        Log.e("idstring",idString)
         val call: Call<PtaConfirmModel> = ApiClient.getClient.pta_confirm(ptaconfirmSuccessBody,"Bearer "+token)
         call.enqueue(object : Callback<PtaConfirmModel> {
             override fun onFailure(call: Call<PtaConfirmModel>, t: Throwable) {
