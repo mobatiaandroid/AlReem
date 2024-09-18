@@ -490,9 +490,15 @@ class CCAsReviewActivity : AppCompatActivity() {
                             )
 
                         }
-                        else if (response.body()!!.status!!.equals(109))
+                        else if (response.body()!!.status!!.equals(124))
                         {
-
+                            showDialogAlert(
+                                mContext as Activity,
+                                "Alert",
+                                "Sorry , You Must Select Activities or None For All Days",
+                                R.drawable.tickicon,
+                                R.drawable.round,
+                            )
 
                         }
                         else{
