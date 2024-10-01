@@ -765,6 +765,14 @@ interface ApiInterface {
         @Header("Authorization") token: String
     ): Call<CCASubmitResponseModel>
 
+    @POST("cca-reserve-list")
+    @Headers("Content-Type: application/json")
+    fun ccareservelist
+    (
+        @Body body: CCAReviewRequestModel,
+        @Header("Authorization") token: String
+    ): Call<CCAReviewReservedResponseModel>
+
     @POST("cca-reserve-cancel")
     @Headers("Content-Type: application/json")
     fun ccareservecancel(

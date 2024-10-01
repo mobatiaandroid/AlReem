@@ -574,6 +574,7 @@ class CCA_Activity_New:AppCompatActivity() {
                             )*/
                             AppController.keyy="0"
                             intent.putExtra("tab_type", tab_type)
+                            intent.putExtra("ccaedit", 0)
                             PreferenceManager.saveDetailsArrayList(mContext, mCCAmodelArrayList!![position].details)
                             // PreferenceManager.setStudentID(mContext, stud_id)
                             PreferenceManager.setkeyvalue(mContext,"0")

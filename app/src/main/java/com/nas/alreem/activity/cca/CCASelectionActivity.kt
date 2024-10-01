@@ -70,6 +70,8 @@ class CCASelectionActivity : AppCompatActivity() {
     var textViewStudName: TextView? = null
     var messageTxt: TextView? = null
     var mCCAsActivityAdapter: CCAsActivityAdapter? = null
+    var backButtonTrigger = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,9 +90,9 @@ class CCASelectionActivity : AppCompatActivity() {
         progress = findViewById(R.id.progress)
         extras = intent.extras
         logoclick.setOnClickListener {
-
             if(AppController.keyy.equals("1"))
             {
+
                 if(ccaedit==0)
                 {
                     showApiLogoAlert(mContext,"Leaving this page will cancel all reserved activities for this schedule. Do you want to continue?","Confirm")
@@ -98,6 +100,8 @@ class CCASelectionActivity : AppCompatActivity() {
                 }
                 else
                 {
+
+
                     val mIntent = Intent(mContext, HomeActivity::class.java)
                     mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                     startActivity(mIntent)
@@ -105,6 +109,8 @@ class CCASelectionActivity : AppCompatActivity() {
             }
             else
             {
+
+                backButtonTrigger = true
                 val mIntent = Intent(mContext, HomeActivity::class.java)
                 mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 startActivity(mIntent)
@@ -112,9 +118,10 @@ class CCASelectionActivity : AppCompatActivity() {
 
         }
         backRelative.setOnClickListener {
+            backButtonTrigger = true
+
             if(ccaedit==0)
             {
-                Log.e("keyvalue", AppController.keyy!!)
                 if(AppController.keyy.equals("1"))
                 {
                     showApiAlert(mContext,"Leaving this page will cancel all reserved activities for this schedule. Do you want to continue?","Confirm")
@@ -138,6 +145,7 @@ class CCASelectionActivity : AppCompatActivity() {
         if (extras != null) {
             tab_type = extras!!.getString("tab_type")!!
             ccaedit = extras!!.getInt("ccaedit", 0)
+
             // keyy=extras!!.getString("keyvalue")!!
             //            pos = extras.getInt("pos");
             CCADetailModelArrayList =
@@ -232,7 +240,25 @@ class CCASelectionActivity : AppCompatActivity() {
 //            }
 
             if(AppController.filledFlag == 1){
+                backButtonTrigger = true
+
 //            if (filled) {
+                if (ccaedit==0)
+                {
+                    val mInent = Intent(mContext, CCAsReviewActivity_New::class.java)
+                    intent.putExtra("ccaedit",ccaedit)
+                    //intent.putExtra("keyvalue", keyy)
+
+                    //Log.e("ccaedit", keyy)
+
+                    AppController.CCADetailModelArrayList.clear()
+                    for (i in CCADetailModelArrayList!!.indices){
+                        AppController.CCADetailModelArrayList.add(CCADetailModelArrayList!![i])
+                    }
+                    //  intent.putExtra("ccaedit", ccaedit)
+                   //  intent.putExtra("detail_array", CCADetailModelArrayList)
+                    startActivity(mInent)
+                }
                 val mInent = Intent(mContext, CCAsReviewActivity::class.java)
                 intent.putExtra("ccaedit",ccaedit)
                 //intent.putExtra("keyvalue", keyy)
@@ -244,7 +270,7 @@ class CCASelectionActivity : AppCompatActivity() {
                     AppController.CCADetailModelArrayList.add(CCADetailModelArrayList!![i])
                 }
                 //  intent.putExtra("ccaedit", ccaedit)
-                intent.putExtra("detail_array", CCADetailModelArrayList)
+               intent.putExtra("detail_array", CCADetailModelArrayList)
                 startActivity(mInent)
             } else {
                 ConstantFunctions.showDialogueWithOk(mContext,"Select choice for all available days","Alert")
@@ -359,7 +385,7 @@ class CCASelectionActivity : AppCompatActivity() {
                     recycler_review!!.adapter = mCCAsActivityAdapter
                     textViewCCAaSelect!!.visibility = View.GONE
                     TVselectedForWeek!!.visibility = View.GONE
-                    AppController.weekList!!.get(0).choiceStatus=("2")
+                    AppController.weekList!!.get(6).choiceStatus=("2")
                     //   AppController.weekList!!.get(0).choiceStatus1=("2")
                     //                    Toast.makeText(mContext, "ECA choice not available.", Toast.LENGTH_SHORT).show();
                 }
@@ -414,7 +440,7 @@ class CCASelectionActivity : AppCompatActivity() {
                     mCCAsActivityAdapter.notifyDataSetChanged()
                     AppController.weekList!!.get(position).choiceStatus=("2")
                     //AppController.weekList!!.get(position).choiceStatus1=("2")
-                    Toast.makeText(mContext, "EAP choice not available", Toast.LENGTH_SHORT)
+                    Toast.makeText(mContext, "No Enrichment choices for this day", Toast.LENGTH_SHORT)
                         .show()
                 } else {
                     textViewCCAaSelect!!.visibility = View.VISIBLE
@@ -746,6 +772,7 @@ class CCASelectionActivity : AppCompatActivity() {
         dialogButton.setOnClickListener {
             if (ConstantFunctions.internetCheck(mContext))
             {
+                backButtonTrigger = true
                 ccacancelLogoAPI()
             }
             else
@@ -868,17 +895,42 @@ class CCASelectionActivity : AppCompatActivity() {
         })
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.e("destroy", "destroy")
+    }
 
+    override fun onPause() {
+        super.onPause()
+        Log.e("onPause", "onPause")
+        if(ccaedit==0)
+            {
+                if (!backButtonTrigger) {
+                    ccacancelAPI()
+                }
+            }
+
+    }
+
+    override fun onStop() {
+        super.onStop()
+//        Log.e("onStop", "onStop")
+//        val mIntent = Intent(mContext, CCA_Activity_New::class.java)
+//        mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+//
+//        startActivity(mIntent)
+    }
     fun getWeekday(weekDay: Int): String? {
         var day = ""
         when (weekDay) {
-            0 -> day = "Sunday"
-            1 -> day = "Monday"
-            2 -> day = "Tuesday"
-            3 -> day = "Wednesday"
-            4 -> day = "Thursday"
-            5 -> day = "Friday"
-            6 -> day = "Saturday"
+            0 -> day = "Monday"
+            1 -> day = "Tuesday"
+            2 -> day = "Wednesday"
+            3 -> day = "Thursday"
+            4 -> day = "Friday"
+            5 -> day = "Saturday"
+            6 -> day = "Sunday"
+
         }
         return day
     }
@@ -886,18 +938,21 @@ class CCASelectionActivity : AppCompatActivity() {
     fun getWeekdayMMM(weekDay: Int): String? {
         var day = ""
         when (weekDay) {
-            0 -> day = "SUN"
-            1 -> day = "MON"
-            2 -> day = "TUE"
-            3 -> day = "WED"
-            4 -> day = "THU"
-            5 -> day = "FRI"
-            6 -> day = "SAT"
+            0 -> day = "MON"
+            1 -> day = "TUE"
+            2 -> day = "WED"
+            3 -> day = "THU"
+            4 -> day = "FRI"
+            5 -> day = "SAT"
+            6 -> day = "SUN"
+
         }
         return day
     }
 
     override fun onBackPressed() {
+        backButtonTrigger = true
+
         if(ccaedit==0)
         {
             if(AppController.keyy.equals("1"))
