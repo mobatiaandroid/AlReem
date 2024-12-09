@@ -118,6 +118,7 @@ class IntentionDetailedView : AppCompatActivity() {
          if (flag==2)
         {
             Log.e("2","2")
+
 if (selectedoptionanswer.equals(""))
 {
     linear_Option_question.visibility = View.GONE
