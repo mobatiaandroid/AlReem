@@ -94,6 +94,20 @@
         <item name="android:gravity">center_vertical</item>
         <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
     </style>
+
+    <style name="BottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/BottomSheetStyle</item>
+    </style>
+    <style name="BottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@color/white</item>
+    </style>
+    <style name="CustomShapeAppearanceBottomSheetDialog" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopRight">16dp</item>
+        <item name="cornerSizeTopLeft">16dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+    </style>
     <style name="MyDatePickerStyle" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorAccent">#FF018786</item>
         <!--selected Item color-->

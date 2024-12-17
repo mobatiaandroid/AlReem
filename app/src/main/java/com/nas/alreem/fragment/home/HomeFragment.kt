@@ -159,7 +159,7 @@ var bannerarray = ArrayList<String>()
 lateinit var mContext: Context
 lateinit var current_date: String
 var currentPage: Int = 0
-private val NOTICE_TIME_OUT: Long = 5000
+private val NOTICE_TIME_OUT: Long = 6000
 var currentPageSurvey = 0
 var survey_satisfation_status = 0
 private var surveyEmail = ""
@@ -5394,6 +5394,9 @@ class HomeFragment : Fragment(), View.OnClickListener {
                 textdata.equals(ConstantWords.communications, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_COMMUNICATION
                 }
+               /* textdata.equals(ConstantWords.bus_service, ignoreCase = true) -> {
+                    TAB_ID = ConstantWords.TAB_BUS_SERVICE
+                }*/
 
                 textdata.equals(ConstantWords.lunchbox, ignoreCase = true) -> {
                     TAB_ID = ConstantWords.TAB_LUNCH_BOX
@@ -5767,7 +5770,62 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     )
 
                 }
+                ConstantWords.TAB_SHOP -> {
+                    DialogFunctions.commonErrorAlertDialog(
+                        mContext.resources.getString(R.string.alert),
+                        mContext.resources.getString(R.string.feature_only_for_registered_user),
+                        mContext
+                    )
 
+                }
+                ConstantWords.TAB_STUDENT_INFORMATION -> {
+                    DialogFunctions.commonErrorAlertDialog(
+                        mContext.resources.getString(R.string.alert),
+                        mContext.resources.getString(R.string.feature_only_for_registered_user),
+                        mContext
+                    )
+
+                }
+                ConstantWords.TAB_EARLY_YEARS -> {
+                    DialogFunctions.commonErrorAlertDialog(
+                        mContext.resources.getString(R.string.alert),
+                        mContext.resources.getString(R.string.feature_only_for_registered_user),
+                        mContext
+                    )
+
+                }
+                ConstantWords.TAB_PRIMARY -> {
+                    DialogFunctions.commonErrorAlertDialog(
+                        mContext.resources.getString(R.string.alert),
+                        mContext.resources.getString(R.string.feature_only_for_registered_user),
+                        mContext
+                    )
+
+                }
+                ConstantWords.TAB_SECONDARY -> {
+                    DialogFunctions.commonErrorAlertDialog(
+                        mContext.resources.getString(R.string.alert),
+                        mContext.resources.getString(R.string.feature_only_for_registered_user),
+                        mContext
+                    )
+
+                }
+                ConstantWords.TAB_INTENTIONS -> {
+                    DialogFunctions.commonErrorAlertDialog(
+                        mContext.resources.getString(R.string.alert),
+                        mContext.resources.getString(R.string.feature_only_for_registered_user),
+                        mContext
+                    )
+
+                }
+                ConstantWords.TAB_TIMETABLE -> {
+                    DialogFunctions.commonErrorAlertDialog(
+                        mContext.resources.getString(R.string.alert),
+                        mContext.resources.getString(R.string.feature_only_for_registered_user),
+                        mContext
+                    )
+
+                }
                 ConstantWords.TAB_ABOUT_US -> {
                     mFragment = AboutUsFragment()
                     fragmentIntent(mFragment)
@@ -5911,7 +5969,11 @@ class HomeFragment : Fragment(), View.OnClickListener {
                     mFragment = PrimaryFragment()
                     fragmentIntent(mFragment)
                 }
-
+                /*ConstantWords.TAB_BUS_SERVICE -> {
+                    PreferenceManager.setStudentID(mContext, "")
+                    mFragment = BusServiceFragmentNew()
+                    fragmentIntent(mFragment)
+                }*/
                 ConstantWords.TAB_SECONDARY -> {
                     PreferenceManager.setStudentID(mContext, "")
                     mFragment = SecondaryFragment()
@@ -6000,7 +6062,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
             intent.putExtra("heading", noticeTitle)
             startActivity(intent)
         }
-        Glide.with(context).load(notice).centerCrop().into(bannerImg)
+        Glide.with(context).load(notice).into(bannerImg)
         closeImg.setOnClickListener {
 
             if (PreferenceManager.getSurvey(mContext) === 1) {

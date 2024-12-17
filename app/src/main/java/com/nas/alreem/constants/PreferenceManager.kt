@@ -1677,6 +1677,30 @@ class PreferenceManager {
             )
             return prefs.getString("categoriid", "")
         }
+        fun seteapselecteddates(
+            list: ArrayList<String>,
+            context: Context
+        ) {
+            val prefs = context.getSharedPreferences(PREFSNAME,
+                Context.MODE_PRIVATE
+            )
+            val editor = prefs.edit()
+            val gson = Gson()
+            val json = gson.toJson(list)
+            editor.putString("eapselecteddays", json)
+            editor.apply() // This line is IMPORTANT !!!
+        }
+
+        fun geteapselecteddates(context: Context): java.util.ArrayList<String>? {
+            val prefs = context.getSharedPreferences(
+                PREFSNAME ,
+                Context.MODE_PRIVATE
+            )
+            val gson = Gson()
+            val json = prefs.getString("eapselecteddays", null)
+            val type = object : TypeToken<ArrayList<String>?>() {}.type
+            return gson.fromJson(json, type)
+        }
 
         /*fun getIsFirstTimeInPA(context: Context): Boolean {
             val prefs = context.getSharedPreferences(
@@ -1695,5 +1719,45 @@ class PreferenceManager {
             editor.putBoolean("is_first_pe", result)
             editor.commit()
         }*/
+    }
+
+    fun setwalletAmout(context: Context, color: Int) {
+        val prefs = context.getSharedPreferences(
+            PREFSNAME, Context.MODE_PRIVATE
+        )
+        val editor = prefs.edit()
+        editor.putInt("walletamount", color)
+        editor.apply()
+    }
+
+    fun getWalletAmount(context: Context): Int {
+        val prefs = context.getSharedPreferences(
+            PREFSNAME,
+            Context.MODE_PRIVATE
+        )
+        return prefs.getInt(
+            "walletamount", context.resources
+                .getColor(R.color.transparent)
+        )
+    }
+
+    fun setcartamounttotal(context: Context, result: Int) {
+        val prefs = context.getSharedPreferences(
+            PREFSNAME, Context.MODE_PRIVATE
+        )
+        val editor = prefs.edit()
+        editor.putInt("cartamounttotal", result)
+        editor.apply()
+    }
+
+    fun getcartamounttotal(context: Context): Int {
+        val prefs = context.getSharedPreferences(
+            PREFSNAME,
+            Context.MODE_PRIVATE
+        )
+        return prefs.getInt(
+            "cartamounttotal", context.resources
+                .getColor(R.color.transparent)
+        )
     }
 }

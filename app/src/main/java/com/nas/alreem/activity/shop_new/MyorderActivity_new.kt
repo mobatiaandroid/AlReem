@@ -133,9 +133,18 @@ class MyorderActivity_new : AppCompatActivity() {
                     dateRecyclerView.visibility= View.VISIBLE
                     noItemTxt.visibility= View.GONE
                     dateRecyclerView.layoutManager = LinearLayoutManager(nContext)
-                    dateRecyclerView.adapter = MyorderDatesAdapter(response.body()!!.responseArray.data,
-                        nContext,studentID,dateRecyclerView,
-                        bottomLinear,itemLinear,noItemTxt,progressDialogAdd,amountTxt)
+                    dateRecyclerView.adapter = MyorderDatesAdapter(
+                        response.body()!!.responseArray.data,
+                        nContext,
+                        studentID,
+                        dateRecyclerView,
+                        bottomLinear,
+                        itemLinear,
+                        noItemTxt,
+                        progressDialogAdd,
+                        amountTxt,
+                        totalAmount
+                    )
                     bottomLinear.visibility= View.VISIBLE
                     itemLinear.visibility= View.VISIBLE
                     amountTxt.text=response.body()!!.responseArray.whole_total.toString()+" AED"

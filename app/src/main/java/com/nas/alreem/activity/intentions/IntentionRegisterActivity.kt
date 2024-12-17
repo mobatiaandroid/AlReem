@@ -26,6 +26,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -110,6 +112,7 @@ class IntentionRegisterActivity : AppCompatActivity(){
     lateinit var parentname : TextView
     lateinit var email : TextView
     lateinit var desc : TextView
+    lateinit var progress: ProgressBar
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -131,6 +134,7 @@ class IntentionRegisterActivity : AppCompatActivity(){
     @RequiresApi(Build.VERSION_CODES.N)
     private fun initfn() {
         optionArray = ArrayList()
+        progress = findViewById(R.id.progressDialogAdd)
         heading = findViewById(R.id.heading)
         subQuestionLinearLayout = findViewById(R.id.linear_choose1)
         answerTV = findViewById(R.id.answerTxt2)
@@ -280,7 +284,6 @@ class IntentionRegisterActivity : AppCompatActivity(){
         }
         sub_btn.setOnClickListener {
 
-
             if (selectedItem.equals("") || selectedItem.equals("Please Select"))
             {
 
@@ -289,15 +292,43 @@ class IntentionRegisterActivity : AppCompatActivity(){
                     mContext,
                     "You didn't enter any data of your child. Please Enter data and Submit", "Alert")*/
             } else {
-                if(answerTV.text.trim().equals(""))
+
+                if(answerTV.text.toString().equals(""))
                 {
-                    Toast.makeText(mContext, " Please Enter The Contents", Toast.LENGTH_SHORT).show()
+                    if (subQuestionLinearLayout.isVisible)
+                    {
+                        Toast.makeText(mContext, "Please Enter The Contents", Toast.LENGTH_SHORT).show()
+
+                    }
+                    else
+                    {
+
+                        showSubmitConfirm(
+                            mContext,
+                            "Would you like to submit?",
+                            "Alert", selectedItem, position,intention_id)
+                    }
                 }
                 else{
-                    showSubmitConfirm(
-                        mContext,
-                        "Would you like to submit?",
-                        "Alert", selectedItem, position,intention_id)
+                    if (subQuestionLinearLayout.isVisible)
+                    {
+
+                        showSubmitConfirm(
+                            mContext,
+                            "Would you like to submit?",
+                            "Alert", selectedItem, position,intention_id)
+
+                    }
+                    else
+                    {
+                        answerTV.setText("")
+                        showSubmitConfirm(
+                            mContext,
+                            "Would you like to submit?",
+                            "Alert", selectedItem, position,intention_id)
+                    }
+
+
                 }
 
             }
@@ -354,7 +385,7 @@ class IntentionRegisterActivity : AppCompatActivity(){
         position: Int,
         intensionId: Int
     ) {
-
+        progress.visibility=View.VISIBLE
         primaryArrayList= ArrayList()
         // optionsArray = ArrayList()
        // progress.visibility = View.VISIBLE
@@ -369,12 +400,16 @@ class IntentionRegisterActivity : AppCompatActivity(){
         val call: Call<StudentInfoModel> = ApiClient.getClient.intensionstatusupdate(body,"Bearer "+token)
         call.enqueue(object : Callback<StudentInfoModel> {
             override fun onFailure(call: Call<StudentInfoModel>, t: Throwable) {
+                progress.visibility=View.GONE
+
                 Log.e("Error", t.localizedMessage)
               //  progress.visibility = View.GONE
             }
             override fun onResponse(call: Call<StudentInfoModel>, response: Response<StudentInfoModel>) {
                // progress.visibility = View.GONE
                 //val arraySize :Int = response.body()!!.responseArray.studentList.size
+                progress.visibility=View.GONE
+
                 val responsedata = response.body()
                 Log.e("size","size")
                 if (responsedata != null) {
@@ -385,9 +420,10 @@ class IntentionRegisterActivity : AppCompatActivity(){
                             showSuccessReEnrollAlert(
                                 mContext, " Thank you\n" , "Success", dialog1)
                         }
-                        else
+                        else if (response.body()!!.status==136)
                         {
-
+                            showSuccessReEnrollAlert(
+                                mContext, " Already Submit\n" , "Success", dialog1)
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()

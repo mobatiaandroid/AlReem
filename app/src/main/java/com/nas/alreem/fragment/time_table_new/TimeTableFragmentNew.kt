@@ -640,7 +640,7 @@ class TimeTableFragmentNew : Fragment() {
                                                 mPeriod.thursday =
                                                     mTimetableApiArrayList.get(t).subject_name
                                             }
-                                            if (mTimetableApiArrayList.get(t).day.equals("Friday")) {
+                                            else if (mTimetableApiArrayList.get(t).day.equals("Friday")) {
                                                 fr = fr + 1
                                                 var dayModel = DayModelNew()
                                                 dayModel.id = mTimetableApiArrayList.get(t).id

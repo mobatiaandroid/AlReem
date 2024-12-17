@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nas.alreem.R
+import com.nas.alreem.activity.cca.adapter.CCAfinalReviewAfterSubmissionAdapter
 import com.nas.alreem.activity.cca.adapter.CCAfinalReviewEditAfterSubmissionAdapter
 import com.nas.alreem.activity.cca.model.*
 import com.nas.alreem.activity.home.HomeActivity
@@ -118,6 +119,7 @@ class CCAsReviewEditAfterSubmissionActivity : AppCompatActivity() {
             //  Log.e("loation1", CCADetailModelArrayList!!.get(0).choice1.toString())
             // Log.e("Location2", CCADetailModelArrayList!!.get(0).location2.toString())
             PreferenceManager.saveDetailsArrayList(mContext, CCADetailModelArrayList)
+            Log.e("arraysizeedit", CCADetailModelArrayList!!.size.toString())
             startActivity(intent)
         }
 //        home = headermanager.getLogoButton()
@@ -188,8 +190,9 @@ class CCAsReviewEditAfterSubmissionActivity : AppCompatActivity() {
                                             )
                                         }
                                     }
+
                                 }
-                                val mCCAsActivityAdapter = CCAfinalReviewEditAfterSubmissionAdapter(
+                                val mCCAsActivityAdapter = CCAfinalReviewAfterSubmissionAdapter(
                                     mContext,
                                     mCCADetailModelArrayList!!
                                 )
@@ -197,7 +200,7 @@ class CCAsReviewEditAfterSubmissionActivity : AppCompatActivity() {
                                     mCCAsActivityAdapter
                                 )
                             } else {
-                                val mCCAsActivityAdapter = CCAfinalReviewEditAfterSubmissionAdapter(
+                                val mCCAsActivityAdapter = CCAfinalReviewAfterSubmissionAdapter(
                                     mContext,
                                     mCCADetailModelArrayList!!
                                 )
@@ -251,8 +254,10 @@ class CCAsReviewEditAfterSubmissionActivity : AppCompatActivity() {
                 if (choice1.cca_item_name != null) {
                     mCCAModel.choice1 = choice1.cca_item_name
                   //  Log.e("Satrttime", choice1.cca_item_start_time!!)
+                    mCCAModel.cca_details_id = choice1.cca_details_id.toString()
                     mCCAModel.cca_item_start_time = choice1.cca_item_start_time
                     mCCAModel.cca_item_end_time = choice1.cca_item_end_time
+                    mCCAModel.attending_status = choice1.attending_status
                     if (choice1.cca_item_description != null){
                         mCCAModel.cca_item_description = choice1.cca_item_description
 //                        mCCAModel.cca_item_description_2 = ""

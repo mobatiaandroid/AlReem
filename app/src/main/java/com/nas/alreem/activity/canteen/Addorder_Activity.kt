@@ -150,12 +150,14 @@ class Addorder_Activity : AppCompatActivity() {
         basketbtn.setOnClickListener {
             val intent = Intent(nContext, Myorderbasket_Activity::class.java)
             intent.putExtra("date", date_selected)
+            finish()
             nContext.startActivity(intent)
         }
 
         bottomview.setOnClickListener(View.OnClickListener {
             val intent = Intent(nContext, Myorderbasket_Activity::class.java)
             intent.putExtra("date", date_selected)
+            finish()
             nContext.startActivity(intent)
         })
 

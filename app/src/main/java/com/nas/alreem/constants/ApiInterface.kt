@@ -9,6 +9,13 @@ import com.nas.alreem.activity.absence.model.PickupListModel
 import com.nas.alreem.activity.absence.model.RequestLeaveApiModel
 import com.nas.alreem.activity.absence.model.RequestLeaveModel
 import com.nas.alreem.activity.absence.model.RequestPickupApiModel
+import com.nas.alreem.activity.bus_service.model.DetailsResponseModel
+import com.nas.alreem.activity.bus_service.model.PaymentGatewayApiModelBus
+import com.nas.alreem.activity.bus_service.model.PaymentSubmitBusApiModel
+import com.nas.alreem.activity.bus_service.model.PaymentSuccessResponseBusModel
+import com.nas.alreem.activity.bus_service.model.RegularBusSubmitModel
+import com.nas.alreem.activity.bus_service.model.StudentDetailsModel
+import com.nas.alreem.activity.bus_service.model.SummeryBusResponseModel
 import com.nas.alreem.activity.bus_service.requestservice.model.RequestBusServiceListModel
 import com.nas.alreem.activity.bus_service.requestservice.model.RequestServiceApiModel
 import com.nas.alreem.activity.canteen.model.TimeExceedModel
@@ -132,6 +139,9 @@ import com.nas.alreem.fragment.student_information.model.StudentInfoModel
 import com.nas.alreem.fragment.time_table.model.apimodel.TimeTableApiDataModel
 import com.nas.alreem.fragment.time_table.model.apimodel.TimeTableApiModel
 import com.nas.alreem.fragment.time_table_new.model.TimeTableApiDataModelNew
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -384,6 +394,12 @@ interface ApiInterface {
         @Body  paymentGateway: PaymentGatewayApiModelShop,
         @Header("Authorization") token:String
     ): Call<PaymentGatewayModel>
+    @POST("network_payment_gateway_creating_an_order")
+    @Headers("Content-Type: application/json")
+    fun payment_gateway_bus(
+        @Body  paymentGateway: PaymentGatewayApiModelBus,
+        @Header("Authorization") token:String
+    ): Call<PaymentGatewayModel>
     //payment success
     @POST("submit_payment")
     @Headers("Content-Type: application/json")
@@ -576,7 +592,18 @@ interface ApiInterface {
         @Body  absenceApiModel: ListAbsenceApiModel,
         @Header("Authorization") token:String
     ): Call<AbsenceListModel>
-
+    @POST("planned_leave/request")
+    @Headers("Content-Type: application/json")
+    fun plannedList(
+        @Body  absenceApiModel: ListAbsenceApiModel,
+        @Header("Authorization") token:String
+    ): Call<AbsenceListModel>
+    @POST("request/planned_leave")
+    @Headers("Content-Type: application/json")
+    fun plannedLeaveRequest(
+        @Body requestLeave: RequestLeaveApiModel,
+        @Header("Authorization") token:String
+    ): Call<RequestLeaveModel>
     @GET("staff-departments")
     @Headers("Content-Type: application/json")
     fun staff_depatrtments(
@@ -737,6 +764,14 @@ interface ApiInterface {
         @Body body: CCAReservetRequestModel,
         @Header("Authorization") token: String
     ): Call<CCASubmitResponseModel>
+
+    @POST("cca-reserve-list")
+    @Headers("Content-Type: application/json")
+    fun ccareservelist
+    (
+        @Body body: CCAReviewRequestModel,
+        @Header("Authorization") token: String
+    ): Call<CCAReviewReservedResponseModel>
 
     @POST("cca-reserve-cancel")
     @Headers("Content-Type: application/json")
@@ -1029,4 +1064,85 @@ interface ApiInterface {
         @Header("Authorization") token:String,
         @Body json: JsonObject?
     ): Call<VolunteerSubmitResponseModel>
+
+    @POST("student_details")
+    @Headers("Content-Type: application/json")
+    fun student_details(
+        @Header("Authorization") token:String,
+        @Body  studentdetailsmodel: StudentDetailsModel,
+    ): Call<DetailsResponseModel>
+    @Multipart
+    @POST("request_for_bus_service")
+    fun request_for_bus_service(
+        @Header("Authorization") token:String,
+        @Part("student_id") student_id: RequestBody?,
+        @Part("landmark") pickup: RequestBody?,
+        @Part("way_type") drop: RequestBody?,
+        @Part("direction") direction: RequestBody?,
+        @Part("class_name") class_name: RequestBody?,
+        @Part("parent1_name") parent1_name: RequestBody?,
+        @Part("parent1_email") parent1_email: RequestBody?,
+        @Part("parent1_relationship") parent1_relationship: RequestBody?,
+        @Part("parent1_mobile") parent1_mobile: RequestBody?,
+        @Part("parent1_additionaltelephone") parent1_additionaltelephone: RequestBody?,
+        @Part("parent1_address") parent1_address: RequestBody?,
+        @Part("term") term: RequestBody?,
+        @Part("type") type: RequestBody?,
+        @Part("device_type") device_type: RequestBody?,
+        @Part("device_name") device_name: RequestBody?,
+        @Part("app_version") app_version: RequestBody?,
+        @Part image: MultipartBody.Part?
+    ): Call<EarlyPickupModel>
+    @POST("eap_bus_details")
+    @Headers("Content-Type: application/json")
+    fun eap_bus_details(
+        @Header("Authorization") token:String,
+        @Body  studentdetailsmodel: StudentDetailsModel,
+    ): Call<DetailsResponseModel>
+    @POST("bus_payment_summary")
+    @Headers("Content-Type: application/json")
+    fun bus_payment_summary(
+        @Header("Authorization") token:String,
+        @Body  studentdetailsmodel: StudentDetailsModel,
+    ): Call<SummeryBusResponseModel>
+
+    @Multipart
+    @POST("request_for_bus_service")
+    fun request_for_bus_service_eap(
+        @Header("Authorization") token:String,
+        @Part("student_id") student_id: RequestBody?,
+        @Part("pickup") pickup: RequestBody?,
+        @Part("drop") drop: RequestBody?,
+        @Part("class_name") class_name: RequestBody?,
+        @Part("parent1_name") parent1_name: RequestBody?,
+        @Part("parent1_email") parent1_email: RequestBody?,
+        @Part("parent1_relationship") parent1_relationship: RequestBody?,
+        @Part("parent1_mobile") parent1_mobile: RequestBody?,
+        @Part("parent1_additionaltelephone") parent1_additionaltelephone: RequestBody?,
+        @Part("landmark") parent1_country: RequestBody?,
+        @Part("parent1_address") parent1_address: RequestBody?,
+        @Part("type") type: RequestBody?,
+        @Part("cca_dates") cca_dates: RequestBody?,
+        @Part("cca_day_id") cca_day_id: RequestBody?,
+        @Part("device_type") device_type: RequestBody?,
+        @Part("device_name") device_name: RequestBody?,
+        @Part("app_version") app_version: RequestBody?,
+        @Part image: MultipartBody.Part?
+    ): Call<EarlyPickupModel>
+
+    @POST("submit_busservice_payment")
+    @Headers("Content-Type: application/json")
+    fun submit_busservice_payment(
+        @Body  paymentGateway: PaymentSubmitBusApiModel,
+        @Header("Authorization") token:String
+    ): Call<PaymentSuccessResponseBusModel>
+
+    @POST("bus_service_form_banner")
+    @Headers("Content-Type: application/json")
+    fun bus_service_form_banner
+                (
+        @Header("Authorization") token: String
+    ): Call<BannerModel>
+
+
 }

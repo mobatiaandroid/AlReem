@@ -59,4 +59,7 @@
     <color name="orange_circle">#ff7d00</color>
     <color name="nas_green">#009933</color>
 
+    <color name="grey_unchecked">#ACADAC</color>
+
+
 </resources>

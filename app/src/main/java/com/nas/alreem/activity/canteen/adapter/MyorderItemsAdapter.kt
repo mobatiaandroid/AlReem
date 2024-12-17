@@ -1,13 +1,16 @@
 package com.nas.alreem.activity.canteen.adapter
 
-import android.app.Activity
+import android.app.Dialog
 import android.content.Context
+import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
-import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
 import com.nas.alreem.R
+import com.nas.alreem.activity.canteen.CanteenPaymentActivity
 import com.nas.alreem.activity.canteen.model.myorders.CancelCanteenPreorderItemId
 import com.nas.alreem.activity.canteen.model.myorders.PreOrdersModel
 import com.nas.alreem.activity.canteen.model.myorders.Preorderitems_list
@@ -30,11 +34,22 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 
-class MyorderItemsAdapter (val itemlist: ArrayList<Preorderitems_list>, var mcontext: Context,
-                           var ordered_user_type: String, var student_id:String,
-                           var parent_id: String, var staff_id:String, var totalAmount:String,
-                           var  WalletAmount:Int, var dateRecyclerView: RecyclerView, var bottom:LinearLayout,
-                           var item:LinearLayout, var noitem: ImageView, var progress:ProgressBar,var amountTxt:TextView
+class MyorderItemsAdapter(
+    val itemlist: ArrayList<Preorderitems_list>,
+    var mcontext: Context,
+    var ordered_user_type: String,
+    var student_id: String,
+    var parent_id: String,
+    var staff_id: String,
+    var totalAmount: String,
+    var WalletAmount: Int,
+    var dateRecyclerView: RecyclerView,
+    var bottom: LinearLayout,
+    var item: LinearLayout,
+    var noitem: ImageView,
+    var progress: ProgressBar,
+    var amountTxt: TextView,
+    var totalAmount1: String
 ) :
     RecyclerView.Adapter<MyorderItemsAdapter.ViewHolder>() {
 
@@ -135,12 +150,49 @@ class MyorderItemsAdapter (val itemlist: ArrayList<Preorderitems_list>, var mcon
             canteen_cart_id = itemlist[position].id
             quantity = newValue.toString()
             if (newValue != 0) {
+                if (newValue > oldValue) {
+                    val totalAmt = java.lang.Float.valueOf(totalAmount)
+                    CartTotalAmount =
+                        totalAmt.toFloat() + itemlist.get(position).price.toFloat()
+                    BalanceWalletAmount = PreferenceManager().getWalletAmount(mcontext) - totalAmt
+                    if (PreferenceManager().getWalletAmount(mcontext) > totalAmount.toInt()) {
+                        BalanceConfirmWalletAmount = BalanceWalletAmount - CartTotalAmount
+                       // Log.e("totalamount",totalAmount)
+                       // Log.e("BalanceWalletAmount", BalanceWalletAmount.toString())
+                       // Log.e("BalanceConfirmWalletAmount", BalanceConfirmWalletAmount.toString())
+                       // Log.e("CartAmount", CartTotalAmount.toString())
+                      //  Log.e("wallet", PreferenceManager().getWalletAmount(mcontext).toString())
+                        if (PreferenceManager().getWalletAmount(mcontext) > CartTotalAmount) {
 
-                // Quantity Change
-                UpdatePreOrderQuantity(canteen_cart_id,newValue.toString())
-                //getCartUpdate(URL_CANTEEN_CONFIRMED_ORDER_EDIT,canteen_cart_id,quantity);
-                //  getAddToCart(URL_CANTEEN_ADD_TO_CART,position,String.valueOf(newValue));
-                //cart update
+                            UpdatePreOrderQuantity(canteen_cart_id, newValue.toString())
+                        } else {
+                            holder.cartitemcount.number = oldValue.toString()
+                            showInsufficientBal(
+                                mcontext,
+                                "Alert",
+                                "Insufficient balance please top up wallet",
+                                R.drawable.exclamationicon,
+                                R.drawable.round
+                            )
+                        }
+                    } else {
+                        holder.cartitemcount.number = oldValue.toString()
+                        showInsufficientBal(
+                            mcontext,
+                            "Alert",
+                            "Insufficient balance please top up wallet",
+                            R.drawable.exclamationicon,
+                            R.drawable.round
+                        )
+                    }
+                    // Quantity Change
+                    //getCartUpdate(URL_CANTEEN_CONFIRMED_ORDER_EDIT,canteen_cart_id,quantity);
+                    //  getAddToCart(URL_CANTEEN_ADD_TO_CART,position,String.valueOf(newValue));
+                    //cart update
+                } else {
+                    UpdatePreOrderQuantity(canteen_cart_id, newValue.toString())
+
+                }
             }
             else {
 
@@ -263,9 +315,12 @@ class MyorderItemsAdapter (val itemlist: ArrayList<Preorderitems_list>, var mcon
                 progress.visibility=View.GONE
                 if (responsedata!!.status==100) {
                     amountTxt.text=response.body()!!.responseArray.whole_total.toString()
+                    totalAmount=response.body()!!.responseArray.whole_total
                     dateRecyclerView.layoutManager = LinearLayoutManager(mcontext)
-                    dateRecyclerView.adapter = MyorderDatesAdapter(response.body()!!.responseArray.data, mcontext,student_id,
-                        dateRecyclerView,bottom,item,noitem,progress,amountTxt)
+                    dateRecyclerView.adapter = MyorderDatesAdapter(
+                        response.body()!!.responseArray.data, mcontext, student_id,
+                        dateRecyclerView, bottom, item, noitem, progress, amountTxt, totalAmount
+                    )
 
                 }
                 else if (response.body()!!.status==132)
@@ -286,5 +341,38 @@ class MyorderItemsAdapter (val itemlist: ArrayList<Preorderitems_list>, var mcon
 
         //dateRecyclerView.adapter = MyorderDatesAdapter(mMyOrderArrayList, nContext)
 
+    }
+    fun showInsufficientBal(
+        activity: Context?,
+        msgHead: String?,
+        msg: String?,
+        ico: Int,
+        bgIcon: Int
+    ) {
+        val dialog = Dialog(activity!!)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.dialog_ok_cancel)
+        val icon = dialog.findViewById<View>(R.id.iconImageView) as ImageView
+        icon.setBackgroundResource(bgIcon)
+        icon.setImageResource(ico)
+        val text = dialog.findViewById<View>(R.id.text_dialog) as TextView
+        val textHead = dialog.findViewById<View>(R.id.alertHead) as TextView
+        text.text = msg
+        textHead.text = msgHead
+        val dialogButton = dialog.findViewById<View>(R.id.btn_Ok) as Button
+        dialogButton.setOnClickListener {
+            val intent = Intent(
+                mcontext,
+                CanteenPaymentActivity::class.java
+            )
+            dialog.dismiss()
+            mcontext.startActivity(intent)
+
+        }
+        val dialogButtonCancel = dialog.findViewById<View>(R.id.btn_Cancel) as Button
+        dialogButtonCancel.setOnClickListener { dialog.dismiss() }
+        dialog.show()
     }
 }

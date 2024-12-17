@@ -1,12 +1,11 @@
 package com.nas.alreem.activity.canteen.adapter
 
-import android.app.Activity
 import android.app.Dialog
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
-import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -18,8 +17,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
-import com.downloader.Progress
 import com.nas.alreem.R
+import com.nas.alreem.activity.canteen.CanteenPaymentActivity
 import com.nas.alreem.activity.canteen.model.add_to_cart.CanteenCartRemoveApiModel
 import com.nas.alreem.activity.canteen.model.add_to_cart.CanteenCartRemoveModel
 import com.nas.alreem.activity.canteen.model.add_to_cart.CanteenCartUpdateApiModel
@@ -35,20 +34,29 @@ import com.nas.alreem.constants.PreferenceManager
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.*
-import kotlin.collections.ArrayList
 
-class BasketItemsAdapter (
-    var items_list: ArrayList<CartItemsListModel>, var mcontext: Context, var ordered_user_type:String,
-    var student_id:String,
-    var parent_id:String,
-    var staff_id:String,
-    var delivery_date:String,
-    var itemtxt:TextView, var amnttxt:TextView, var itemLinear:LinearLayout, var noItemTxt:ImageView,
-    var dateRec:RecyclerView, var progress:ProgressBar) :
+class BasketItemsAdapter(
+    var items_list: ArrayList<CartItemsListModel>,
+    var mcontext: Context,
+    var ordered_user_type: String,
+    var student_id: String,
+    var parent_id: String,
+    var staff_id: String,
+    var delivery_date: String,
+    var itemtxt: TextView,
+    var amnttxt: TextView,
+    var itemLinear: LinearLayout,
+    var noItemTxt: ImageView,
+    var dateRec: RecyclerView,
+    var progress: ProgressBar,
+    var totalAmount: String,
+    var WalletAmount: Int,
+    var TotalOrderedAmount: Int,
+    var cart_totoal: Int
+) :
 
     RecyclerView.Adapter<BasketItemsAdapter.ViewHolder>() {
-    lateinit var cart_list: ArrayList<CanteenCartResModel>
+   // lateinit var cart_list: ArrayList<CanteenCartResModel>
     var cartTotalAmount:Int=0
     var cartTotalItems:Int=0
     var quantity = ""
@@ -56,9 +64,13 @@ class BasketItemsAdapter (
     var apiCall:Int = 0
     var homeBannerUrlImageArray: java.util.ArrayList<String>? = null
     var currentPage = 0
+    var BalanceWalletAmount = 0f
+    var BalanceConfirmWalletAmount = 0f
+    var CartTotalAmount = 0f
+    var carttotalfull = 0
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val view: View = LayoutInflater.from(viewGroup.context)
-            .inflate(R.layout.basket_itemlist_adapter, viewGroup, false)
+            .inflate(R.layout.basket_itemlist_adapter_canteen, viewGroup, false)
         return ViewHolder(view)
     }
 
@@ -79,9 +91,57 @@ class BasketItemsAdapter (
             quantity = newValue.toString()
 
             if (newValue != 0) {
-                progress.visibility=View.VISIBLE
-                updateCart(items_list[position].id.toString(),position,quantity)
-                notifyDataSetChanged()
+               // Log.e("newValue", newValue.toString())
+                //Log.e("totalamount",totalAmount)
+                //Log.e("TotalOrderedAmount", TotalOrderedAmount.toString())
+               // Log.e("cart_totoal", cart_totoal.toString())
+
+                if (newValue > oldValue) {
+                    progress.visibility = View.VISIBLE
+
+                    val totalAmt = java.lang.Float.valueOf(totalAmount)
+                    CartTotalAmount =
+                        cart_totoal + items_list.get(position).price.toFloat()
+                    carttotalfull=TotalOrderedAmount+CartTotalAmount.toInt()
+                   // Log.e("carttotalfull", carttotalfull.toString())
+
+                    BalanceWalletAmount = PreferenceManager().getWalletAmount(mcontext) - totalAmt
+                    if (PreferenceManager().getWalletAmount(mcontext) > carttotalfull) {
+                        BalanceConfirmWalletAmount = BalanceWalletAmount - CartTotalAmount
+                       // Log.e("BalanceWalletAmount", BalanceWalletAmount.toString())
+                       // Log.e("BalanceConfirmWalletAmount", BalanceConfirmWalletAmount.toString())
+                       // Log.e("CartAmount", CartTotalAmount.toString())
+                      //  Log.e("wallet", PreferenceManager().getWalletAmount(mcontext).toString())
+
+
+                        if (PreferenceManager().getWalletAmount(mcontext) > CartTotalAmount) {
+                            updateCart(items_list[position].id.toString(), position, quantity)
+                            notifyDataSetChanged()
+                        } else {
+                            holder.cartitemcount.number = oldValue.toString()
+                            showInsufficientBal(
+                                mcontext,
+                                "Alert",
+                                "Insufficient balance please top up wallet",
+                                R.drawable.exclamationicon,
+                                R.drawable.round
+                            )
+                        }
+                    } else {
+                        holder.cartitemcount.number = oldValue.toString()
+                        showInsufficientBal(
+                            mcontext,
+                            "Alert",
+                            "Insufficient balance please top up wallet",
+                            R.drawable.exclamationicon,
+                            R.drawable.round
+                        )
+                    }
+                }
+                else {
+                    updateCart(items_list[position].id.toString(), position, quantity)
+                    notifyDataSetChanged()
+                }
             } else {
                 progress.visibility=View.VISIBLE
                 cancelCart(position)
@@ -208,7 +268,7 @@ class BasketItemsAdapter (
         }
     }
     private fun getcanteen_cart(){
-        cart_list= ArrayList()
+        ConstantFunctions.cart_list= ArrayList()
         cartTotalAmount=0
         cartTotalItems=0
         progress.visibility=View.VISIBLE
@@ -228,19 +288,24 @@ class BasketItemsAdapter (
                 if (responsedata!!.status==100) {
                     //progress.visibility = View.GONE
                     itemLinear.visibility=View.VISIBLE
-                    cart_list=response!!.body()!!.responseArray.data
-                    for (i in cart_list.indices){
+                    cart_totoal =
+                        response!!.body()!!.responseArray.cart_totoal
+                   PreferenceManager().setcartamounttotal(mcontext,cart_totoal)
+                    TotalOrderedAmount =
+                        response!!.body()!!.responseArray.previous_orders_total
+                    ConstantFunctions. cart_list=response!!.body()!!.responseArray.data
+                    for (i in ConstantFunctions.cart_list.indices){
 
-                        cartTotalAmount=cartTotalAmount + cart_list[i].total_amount
+                        cartTotalAmount=cartTotalAmount + ConstantFunctions.cart_list[i].total_amount
                     }
                     if (cartTotalAmount==0){
                         //bottomView.visibility=View.GONE
                     }else{
                         //bottomView.visibility=View.VISIBLE
-                        for (i in cart_list.indices){
+                        for (i in ConstantFunctions.cart_list.indices){
 
-                            for (j in cart_list[i].items.indices){
-                                cartTotalItems=cartTotalItems + cart_list[i].items[j].quantity
+                            for (j in ConstantFunctions.cart_list[i].items.indices){
+                                cartTotalItems=cartTotalItems +ConstantFunctions. cart_list[i].items[j].quantity
                             }
                         }
 
@@ -250,8 +315,23 @@ class BasketItemsAdapter (
                     dateRec.visibility=View.VISIBLE
                     dateRec.layoutManager = LinearLayoutManager(mcontext)
                     dateRec.adapter =
-                        DatesBasketAdapter(cart_list, mcontext,ordered_user_type,student_id,parent_id,staff_id,
-                            itemtxt,amnttxt,itemLinear,noItemTxt,dateRec,progress)
+                        DatesBasketAdapter(
+                            ConstantFunctions. cart_list,
+                            mcontext,
+                            ordered_user_type,
+                            student_id,
+                            parent_id,
+                            staff_id,
+                            itemtxt,
+                            amnttxt,
+                            itemLinear,
+                            noItemTxt,
+                            dateRec,
+                            progress,
+                            WalletAmount,
+                            TotalOrderedAmount,
+                            cart_totoal
+                        )
                     notifyDataSetChanged()
                 }
                 else if (response.body()!!.status==132)
@@ -297,7 +377,7 @@ class BasketItemsAdapter (
                      mCartDetailArrayList.get(position).setItemCart(true)
                      mCartDetailArrayList.get(position).setCartItemId(canteen_cart_id)*/
 
-                   // Myorderbasket_Activity().getcanteen_cart()
+                 //  Myorderbasket_Activity().getcanteen_cart_new(progress,mcontext)
                    getcanteen_cart()
                     notifyDataSetChanged()
 
@@ -351,5 +431,38 @@ class BasketItemsAdapter (
 
         })
     }
+    fun showInsufficientBal(
+        activity: Context?,
+        msgHead: String?,
+        msg: String?,
+        ico: Int,
+        bgIcon: Int
+    ) {
+        val dialog = Dialog(activity!!)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.dialog_ok_cancel)
+        val icon = dialog.findViewById<View>(R.id.iconImageView) as ImageView
+        icon.setBackgroundResource(bgIcon)
+        icon.setImageResource(ico)
+        val text = dialog.findViewById<View>(R.id.text_dialog) as TextView
+        val textHead = dialog.findViewById<View>(R.id.alertHead) as TextView
+        text.text = msg
+        textHead.text = msgHead
+        val dialogButton = dialog.findViewById<View>(R.id.btn_Ok) as Button
+        dialogButton.setOnClickListener {
+            val intent = Intent(
+                mcontext,
+                CanteenPaymentActivity::class.java
+            )
+            dialog.dismiss()
+            mcontext.startActivity(intent)
 
+        }
+        val dialogButtonCancel = dialog.findViewById<View>(R.id.btn_Cancel) as Button
+        dialogButtonCancel.setOnClickListener { dialog.dismiss()
+            progress.visibility=View.GONE}
+        dialog.show()
+    }
 }

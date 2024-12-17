@@ -11,10 +11,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.*
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nas.alreem.R
+import com.nas.alreem.activity.cca.CCA_Activity_New
 import com.nas.alreem.activity.cca.CCAsReviewAfterSubmissionActivity
+import com.nas.alreem.activity.cca.CCAsReviewEditAfterSubmissionActivity
 import com.nas.alreem.activity.cca.model.CCACancelRequestModel
 import com.nas.alreem.activity.cca.model.CCACancelResponseModel
 import com.nas.alreem.activity.cca.model.CCAReviewAfterSubmissionModel
@@ -296,6 +299,10 @@ class CCAfinalReviewAfterSubmissionAdapter(
             holder.attendanceListIcon.visibility = View.VISIBLE
         }
         holder.deleteChoice1.setOnClickListener {
+            Log.e("click1","click1")
+            Log.e("attending_status", mCCADetailModelArrayList[position].attending_status!!)
+            Log.e("cca_details_id", mCCADetailModelArrayList[position].cca_details_id!!)
+
             if (mCCADetailModelArrayList[position].attending_status.equals("1")) {
                 showDialogAlertDelete(
                     mContext as Context,
@@ -312,6 +319,8 @@ class CCAfinalReviewAfterSubmissionAdapter(
             }
         }
         holder.deleteChoice2.setOnClickListener {
+            Log.e("click2","click2")
+
             if (mCCADetailModelArrayList[position].attending_status2.equals("1")) {
                 showDialogAlertDelete(
                     mContext as Context,
@@ -636,11 +645,14 @@ class CCAfinalReviewAfterSubmissionAdapter(
             val dialogButton = dialog.findViewById<View>(R.id.btn_Ok) as Button
             dialogButton.setOnClickListener { v ->
                 dialog.dismiss()
+                val intent = Intent(activity, CCAsReviewEditAfterSubmissionActivity::class.java)
+                activity.startActivity(intent)
                 activity.startActivity(
                     Intent(
                         v.context,
-                        CCAsReviewAfterSubmissionActivity::class.java
+                        CCA_Activity_New::class.java
                     ).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+
                 )
             }
             dialog.show()

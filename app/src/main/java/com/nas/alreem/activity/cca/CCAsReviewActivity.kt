@@ -333,8 +333,8 @@ class CCAsReviewActivity : AppCompatActivity() {
             showDialogReviewSubmit(
                 mContext as Activity,
                 "Confirm",
-                "Do you want to confirm this EAP?",
-                R.drawable.exclamationicon,
+                "Do you want to confirm this Enrichment?",
+                R.drawable.questionmark_icon,
                 R.drawable.round,jsonString
             )
         })
@@ -414,7 +414,7 @@ class CCAsReviewActivity : AppCompatActivity() {
                             showDialogAlert(
                                 mContext as Activity,
                                 "Success",
-                                "You are able to make changes until the closing date. After the closing date selections are final",
+                                "Your current Enrichment options are selected and confirmed. If you need to make any changes, Please use the edit option.",
                                 R.drawable.tickicon,
                                 R.drawable.round,
                             )
@@ -484,15 +484,21 @@ class CCAsReviewActivity : AppCompatActivity() {
                             showDialogAlert(
                                 mContext as Activity,
                                 "Success",
-                                "You are able to make changes until the closing date. After the closing date selections are final",
+                                "Your current Enrichment options are selected and confirmed. If you need to make any changes, Please use the edit option",
                                 R.drawable.tickicon,
                                 R.drawable.round,
                             )
 
                         }
-                        else if (response.body()!!.status!!.equals(109))
+                        else if (response.body()!!.status!!.equals(124))
                         {
-
+                            showDialogAlert(
+                                mContext as Activity,
+                                "Alert",
+                                "Sorry , You Must Select Activities or None For All Days",
+                                R.drawable.tickicon,
+                                R.drawable.round,
+                            )
 
                         }
                         else{

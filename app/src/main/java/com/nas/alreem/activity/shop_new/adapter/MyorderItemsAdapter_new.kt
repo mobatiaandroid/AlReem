@@ -266,8 +266,10 @@ class MyorderItemsAdapter_new (val itemlist: ArrayList<Preorderitems_list>, var 
                 if (responsedata!!.status==100) {
                     amountTxt.text=response.body()!!.responseArray.whole_total.toString()
                     dateRecyclerView.layoutManager = LinearLayoutManager(mcontext)
-                    dateRecyclerView.adapter = MyorderDatesAdapter(response.body()!!.responseArray.data, mcontext,student_id,
-                        dateRecyclerView,bottom,item,noitem,progress,amountTxt)
+                    dateRecyclerView.adapter = MyorderDatesAdapter(
+                        response.body()!!.responseArray.data, mcontext, student_id,
+                        dateRecyclerView, bottom, item, noitem, progress, amountTxt, totalAmount
+                    )
 
                 }
                 else if (response.body()!!.status==132)
