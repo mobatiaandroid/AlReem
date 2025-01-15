@@ -105,10 +105,13 @@ class LostCardMainActivity : AppCompatActivity() {
     private val relMain: RelativeLayout? = null
     var studentsModelArrayList : ArrayList<StudentList> = ArrayList<StudentList>()
     lateinit var progressDialogAdd: ProgressBar
+    lateinit var activity: Activity
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lost_card_main)
         mContext = this
+        activity=this
         //        mActivity=getActivity();
         firstVisit = true
         initialiseUI()
@@ -129,6 +132,11 @@ class LostCardMainActivity : AppCompatActivity() {
 
     override fun onResume() {
         progressDialogAdd.visibility=View.GONE
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
        // progressBarDialog.dismiss()
         super.onResume()
     }
@@ -137,7 +145,7 @@ class LostCardMainActivity : AppCompatActivity() {
         progressDialogAdd.visibility=View.VISIBLE
         studentsModelArrayList.clear()
         studentList.clear()
-        val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+ PreferenceManager.getaccesstoken(mContext))
+        val call: Call<StudentListModel> = ApiClient(mContext).getClient.studentList("Bearer "+ PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<StudentListModel> {
             override fun onResponse(
                 call: Call<StudentListModel?>,
@@ -332,7 +340,7 @@ class LostCardMainActivity : AppCompatActivity() {
 
     private fun fetchInstructionsAPI() {
 
-        val call: Call<LostCardIntructionResponseModel> = ApiClient.getClient.get_lost_card_instruction("Bearer "+ PreferenceManager.getaccesstoken(mContext))
+        val call: Call<LostCardIntructionResponseModel> = ApiClient(mContext).getClient.get_lost_card_instruction("Bearer "+ PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<LostCardIntructionResponseModel> {
             override fun onResponse(
                 call: Call<LostCardIntructionResponseModel?>,
@@ -385,7 +393,6 @@ if(responsedata.responsecode.equals("200"))
                                 "\"users_id\":\"" + PreferenceManager.getUserCode(mContext) + "\"," +
                                 "\"amount\":\"" + payAmount + "\"," +
                                 "\"keycode\":\"" + merchantOrderReference + "\"" + "}]}"
-                    println("JSON DATA URL$JSONData")
                     CallWalletSubmission(JSONData)
                 } else {
                     Toast.makeText(mContext, "Transaction failed", Toast.LENGTH_SHORT).show()
@@ -468,7 +475,6 @@ if(responsedata.responsecode.equals("200"))
                     }
 
                     override fun onLongClickItem(v: View?, position: Int) {
-                        println("On Long Click Item interface")
                     }
                 })
         )

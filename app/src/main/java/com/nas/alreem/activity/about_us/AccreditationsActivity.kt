@@ -37,12 +37,15 @@ class AccreditationsActivity : Activity(), AdapterView.OnItemClickListener
     //    ViewPager bannerImagePager;
     var bannerUrlImageArray = ArrayList<String?>()
     private var mTermsCalendarListView: ListView? = null
-    override fun onCreate(savedInstanceState: Bundle?) {
+        lateinit var activity: Activity
+
+        override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chatterbox_list)
         //		Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this,
 //				LoginActivity.class));
         mContext = this
+            activity = this
         initialiseUI()
     }
 
@@ -72,7 +75,6 @@ class AccreditationsActivity : Activity(), AdapterView.OnItemClickListener
             mAboutUsListArray = PreferenceManager.getAboutsArrayList(mContext)
             bannner_img = extras!!.getString("banner_image")
             title = extras!!.getString("title")
-            println("Image url--$bannner_img")
 
             //desc=extras.getString("desc");
             //title=extras.getString("title");
@@ -112,4 +114,12 @@ class AccreditationsActivity : Activity(), AdapterView.OnItemClickListener
         val recyclerViewAdapter = AccreditationsRecyclerViewAdapter(mContext, mAboutUsListArray!!)
         mTermsCalendarListView!!.adapter = recyclerViewAdapter
     }
+        override fun onResume() {
+            super.onResume()
+            if (!ConstantFunctions.runMethod.equals("Dev")) {
+                if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                    ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+                }
+            }
+        }
 }

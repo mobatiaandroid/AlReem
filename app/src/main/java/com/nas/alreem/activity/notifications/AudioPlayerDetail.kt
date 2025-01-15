@@ -53,6 +53,7 @@ class AudioPlayerDetail : AppCompatActivity() {
     var updated_at: String = ""
     var url: String = ""
     private lateinit var progressDialog: ProgressBar
+    lateinit var activity: Activity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,6 +64,7 @@ class AudioPlayerDetail : AppCompatActivity() {
         audio_updated = extras.getString("audio_updated")!!
 
         mContext = this
+        activity=this
         heading = findViewById(R.id.heading)
         btn_left = findViewById(R.id.btn_left)
         logoClickImgView = findViewById(R.id.logoClickImgView)
@@ -123,7 +125,7 @@ class AudioPlayerDetail : AppCompatActivity() {
         val token = PreferenceManager.getaccesstoken(mContext)
         val studentbody= MessageDetailApiModel(audio_id)
         progressDialog.visibility = View.VISIBLE
-        val call: Call<MessageDetailModel> = ApiClient.getClient.notifictaionDetail(studentbody,"Bearer "+token)
+        val call: Call<MessageDetailModel> = ApiClient(mContext).getClient.notifictaionDetail(studentbody,"Bearer "+token)
         call.enqueue(object : Callback<MessageDetailModel> {
             override fun onFailure(call: Call<MessageDetailModel>, t: Throwable) {
               //  progressDialog.visibility = View.GONE
@@ -142,7 +144,6 @@ class AudioPlayerDetail : AppCompatActivity() {
                     updated_at = response.body()!!.responseArray.notificationArray.updated_at
                     url = response.body()!!.responseArray.notificationArray.url
                     player.play(url)
-                    println("MSGRESPONSEAUDIO:" + response.body()!!.responseArray.notificationArray.url)
                 }   else
                 {
 
@@ -164,6 +165,12 @@ class AudioPlayerDetail : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         player.onResume()
+
+            if (!ConstantFunctions.runMethod.equals("Dev")) {
+                if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                    ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+                }
+                   }
 
     }
 

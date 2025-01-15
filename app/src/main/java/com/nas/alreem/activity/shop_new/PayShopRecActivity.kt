@@ -1,16 +1,20 @@
 package com.nas.alreem.activity.shop_new
 
+import android.app.Activity
 import android.content.Context
 import android.webkit.WebView
 import androidx.appcompat.app.AppCompatActivity
 import com.nas.alreem.activity.shop_new.model.ShopModel
+import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.PreferenceManager
 import java.io.BufferedReader
 import java.io.IOException
 
 class PayShopRecActivity: AppCompatActivity() {
-     var context: Context?=null
+     lateinit var context: Context
     var student_name: String? = null
+    lateinit var activity: Activity
+
     //var itemsList: ArrayList<ShopModel>? = ArrayList<ShopModel>()
 
     fun main() {}
@@ -25,6 +29,7 @@ class PayShopRecActivity: AppCompatActivity() {
         var student_name = student_name
 
         context = context
+        activity=this
        // itemsList = PreferenceManager.getOrderArrayList(context!!)
 
         student_name = student_name
@@ -60,6 +65,14 @@ class PayShopRecActivity: AppCompatActivity() {
                 "utf-8",
                 "about:blank"
             )
+        }
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(context)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
         }
     }
 }

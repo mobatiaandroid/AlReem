@@ -349,7 +349,7 @@ class RequestBusServiceActivity : AppCompatActivity() {
             PreferenceManager.getStudentID(mContext).toString(),new_date,
             "00:00:00",reason,pickupby,2,devicename,"1.0")
         val call: Call<EarlyPickupModel> =
-            ApiClient.getClient.requestbusservice(pickupSuccessBody, "Bearer " + token)
+            ApiClient(mContext).getClient.requestbusservice(pickupSuccessBody, "Bearer " + token)
         call.enqueue(object : Callback<EarlyPickupModel> {
             override fun onFailure(call: Call<EarlyPickupModel>, t: Throwable) {
 
@@ -397,7 +397,7 @@ class RequestBusServiceActivity : AppCompatActivity() {
     {
         progressDialogAdd.visibility= View.VISIBLE
         studentListArrayList= ArrayList()
-        val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+ PreferenceManager.getaccesstoken(mContext))
+        val call: Call<StudentListModel> = ApiClient(mContext).getClient.studentList("Bearer "+ PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<StudentListModel> {
             override fun onFailure(call: Call<StudentListModel>, t: Throwable) {
                 progressDialogAdd.visibility= View.GONE

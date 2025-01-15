@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.permission_slips
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -78,6 +79,8 @@ class FormDetailActivityNew : AppCompatActivity(){
     lateinit var choose_option : TextView
     lateinit var arrowimg : ImageView
     lateinit var selected_option : TextView
+    lateinit var activity: Activity
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,6 +93,7 @@ class FormDetailActivityNew : AppCompatActivity(){
     @RequiresApi(Build.VERSION_CODES.P)
     private fun init() {
         mContext = this
+        activity=this
         optionArray = ArrayList()
         titletext=findViewById(R.id.heading)
         logoClickImgView = findViewById(R.id.logoClickImgView)
@@ -266,7 +270,7 @@ Log.e("Success","Success")
             "1.0"
         )
         val call: Call<PermissionResponseModel> =
-            ApiClient.getClient.permsnlistResponse(permsnresBody, "Bearer " + token)
+            ApiClient(mContext).getClient.permsnlistResponse(permsnresBody, "Bearer " + token)
         call.enqueue(object : Callback<PermissionResponseModel> {
             override fun onFailure(call: Call<PermissionResponseModel>, t: Throwable) {
                 progressDialog.visibility = View.GONE
@@ -331,5 +335,13 @@ Log.e("Success","Success")
             finish()
         }
         dialog.show()
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 }

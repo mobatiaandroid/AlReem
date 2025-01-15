@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.canteen
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -81,6 +82,7 @@ class Myorderbasket_Activity : AppCompatActivity() {
     lateinit var id:String
     lateinit var title:TextView
     lateinit var progressDialogAdd:ProgressBar
+    lateinit var activity: Activity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,6 +95,7 @@ class Myorderbasket_Activity : AppCompatActivity() {
     private fun initfn() {
         //date = intent.getStringExtra("date").toString()
         nContext = this
+        activity = this
         progress=findViewById(R.id.progressDialog)
         logoClickImg=findViewById(R.id.logoclick)
         back = findViewById(R.id.back)
@@ -227,7 +230,7 @@ class Myorderbasket_Activity : AppCompatActivity() {
     private fun wallet_details(){
         val token = PreferenceManager.getaccesstoken(nContext)
         var canteenCart= WalletBalanceApiModel(PreferenceManager.getStudentID(nContext).toString())
-        val call: Call<WalletBalanceModel> = ApiClient.getClient.get_wallet_balance(canteenCart,"Bearer "+token)
+        val call: Call<WalletBalanceModel> = ApiClient(nContext).getClient.get_wallet_balance(canteenCart,"Bearer "+token)
         call.enqueue(object : Callback<WalletBalanceModel> {
             override fun onFailure(call: Call<WalletBalanceModel>, t: Throwable) {
 
@@ -255,7 +258,7 @@ class Myorderbasket_Activity : AppCompatActivity() {
         progressDialogAdd.visibility=View.VISIBLE
         val token = PreferenceManager.getaccesstoken(nContext)
         var canteenCart= CanteenCartApiModel(PreferenceManager.getStudentID(nContext).toString())
-        val call: Call<CanteenCartModel> = ApiClient.getClient.get_canteen_cart(canteenCart,"Bearer "+token)
+        val call: Call<CanteenCartModel> = ApiClient(nContext).getClient.get_canteen_cart(canteenCart,"Bearer "+token)
         call.enqueue(object : Callback<CanteenCartModel> {
             override fun onFailure(call: Call<CanteenCartModel>, t: Throwable) {
 
@@ -354,7 +357,7 @@ class Myorderbasket_Activity : AppCompatActivity() {
         val token = PreferenceManager.getaccesstoken(nContext)
         progressDialogAdd.visibility=View.VISIBLE
         var canteenCart= CanteenPreorderApiModel(PreferenceManager.getStudentID(nContext).toString(),itemArray)
-        val call: Call<CanteenPreorderModel> = ApiClient.getClient.canteen_preorder(canteenCart,"Bearer "+token)
+        val call: Call<CanteenPreorderModel> = ApiClient(nContext).getClient.canteen_preorder(canteenCart,"Bearer "+token)
         call.enqueue(object : Callback<CanteenPreorderModel> {
             override fun onFailure(call: Call<CanteenPreorderModel>, t: Throwable) {
                 progressDialogAdd.visibility=View.GONE
@@ -508,5 +511,13 @@ class Myorderbasket_Activity : AppCompatActivity() {
             dialog.dismiss()
         }
         dialog.show()
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(nContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 }

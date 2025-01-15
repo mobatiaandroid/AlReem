@@ -94,7 +94,7 @@ class SecondaryFragment  : Fragment() {
     {
         progressDialogAdd.visibility=View.VISIBLE
         primaryArrayList= ArrayList()
-        val call: Call<PrimaryResponseModel> = ApiClient.getClient.secondaryList()
+        val call: Call<PrimaryResponseModel> = ApiClient(mContext).getClient.secondaryList()
         call.enqueue(object : Callback<PrimaryResponseModel> {
             override fun onFailure(call: Call<PrimaryResponseModel>, t: Throwable) {
                 progressDialogAdd.visibility=View.GONE

@@ -1,6 +1,7 @@
 package com.nas.alreem.activity.primary
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -38,11 +39,14 @@ class PrimaryActivity : AppCompatActivity(){
     lateinit var backRelative: RelativeLayout
     lateinit var primaryList:ArrayList<PrimaryFileModel>
     var title:String=""
+    lateinit var activity: Activity
+
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_priamry)
         mContext=this
+        activity=this
         initUI()
 
     }
@@ -101,6 +105,14 @@ class PrimaryActivity : AppCompatActivity(){
 
 
         })
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 
 }

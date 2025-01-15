@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.cca
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -54,10 +55,13 @@ class CCAsReviewEditAfterSubmissionActivity : AppCompatActivity() {
     var datestringChoice2: ArrayList<CCAAttendanceModel>? = null
     var submissiondateover = "-1"
     var CCADetailModelArrayList: ArrayList<CCADetailModel>? = null
+    lateinit var activity: Activity
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ccas_review_edit_after_submission)
         mContext = this
+        activity=this
         progressBar = findViewById(R.id.progress)
         titleTextView = findViewById(R.id.heading)
         back = findViewById(R.id.btn_left)
@@ -119,7 +123,6 @@ class CCAsReviewEditAfterSubmissionActivity : AppCompatActivity() {
             //  Log.e("loation1", CCADetailModelArrayList!!.get(0).choice1.toString())
             // Log.e("Location2", CCADetailModelArrayList!!.get(0).location2.toString())
             PreferenceManager.saveDetailsArrayList(mContext, CCADetailModelArrayList)
-            Log.e("arraysizeedit", CCADetailModelArrayList!!.size.toString())
             startActivity(intent)
         }
 //        home = headermanager.getLogoButton()
@@ -165,7 +168,7 @@ class CCAsReviewEditAfterSubmissionActivity : AppCompatActivity() {
         )
         val token = PreferenceManager.getaccesstoken(mContext)
         val call: Call<CCAReviewResponseModel> =
-            ApiClient.getClient.ccaReview(body, "Bearer $token")
+            ApiClient(mContext).getClient.ccaReview(body, "Bearer $token")
         progressBar.visibility = View.VISIBLE
         call.enqueue(object : Callback<CCAReviewResponseModel> {
             override fun onResponse(
@@ -429,6 +432,14 @@ class CCAsReviewEditAfterSubmissionActivity : AppCompatActivity() {
 
         mCCADetailModelArrayList!!.add(mCCAModel)
 
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 
 }

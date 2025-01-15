@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.cca
 
+import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import android.app.Dialog
 import android.content.Context
@@ -64,10 +65,13 @@ class CCA_Activity_New:AppCompatActivity() {
     var recycler_review: RecyclerView? = null
     var recyclerViewLayoutManager: GridLayoutManager? = null
     var mCCAsActivityAdapter: CCAsListActivityAdapter? = null
+    lateinit var activity: Activity
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cca)
         mContext = this
+        activity=this
         initilaiseUI()
         AppController.keyy="0"
         logoclick.setOnClickListener {
@@ -167,7 +171,7 @@ class CCA_Activity_New:AppCompatActivity() {
     private fun getStudentList() {
         progress.visibility = View.VISIBLE
         val token = PreferenceManager.getaccesstoken(mContext)
-        val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+token)
+        val call: Call<StudentListModel> = ApiClient(mContext).getClient.studentList("Bearer "+token)
         call.enqueue(object : Callback<StudentListModel> {
             override fun onFailure(call: Call<StudentListModel>, t: Throwable) {
                 // Log.e("Error", t.localizedMessage)
@@ -259,7 +263,7 @@ class CCA_Activity_New:AppCompatActivity() {
         val body = CCAListRequestModel(studId)
         val token = PreferenceManager.getaccesstoken(mContext)
         val call: Call<CCAListResponseModel> =
-            ApiClient.getClient.getCCAList( body,"Bearer $token")
+            ApiClient(mContext).getClient.getCCAList( body,"Bearer $token")
         progress.visibility = View.VISIBLE
         call.enqueue(object : Callback<CCAListResponseModel> {
             override fun onResponse(
@@ -655,7 +659,7 @@ class CCA_Activity_New:AppCompatActivity() {
 
         val token = PreferenceManager.getaccesstoken(mContext)
         val call: Call<CCASubmitResponseModel> =
-            ApiClient.getClient.readstatusupdate( model,"Bearer $token")
+            ApiClient(mContext).getClient.readstatusupdate( model,"Bearer $token")
         // progressBar.visibility = View.VISIBLE
         call.enqueue(object : Callback<CCASubmitResponseModel> {
             override fun onResponse(
@@ -702,5 +706,13 @@ class CCA_Activity_New:AppCompatActivity() {
             }
 
         })
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 }

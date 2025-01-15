@@ -126,7 +126,7 @@ class GalleryFragment : Fragment() {
     private fun callGalleryThumnail()
     {
 
-        val call: Call<ThumnailResponseModel> = ApiClient.getClient.galleryThumbNail("Bearer "+PreferenceManager.getaccesstoken(mContext))
+        val call: Call<ThumnailResponseModel> = ApiClient(mContext).getClient.galleryThumbNail("Bearer "+PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<ThumnailResponseModel> {
             override fun onFailure(call: Call<ThumnailResponseModel>, t: Throwable) {
                 progressDialogAdd.visibility=View.GONE

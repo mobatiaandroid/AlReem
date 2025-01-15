@@ -1,6 +1,7 @@
 package com.nas.alreem.activity.lost_card
 
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -68,6 +69,8 @@ class LostCardPrintPaymentActivity : AppCompatActivity() {
     var invoice_note:String=""
     var payment_type:String=""
     var from_time:String=""
+    lateinit var activity: Activity
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,6 +87,7 @@ class LostCardPrintPaymentActivity : AppCompatActivity() {
     }
     private fun initfn(){
         nContext = this
+        activity=this
         parent_name=intent.getStringExtra("parent_name").toString()
         title=intent.getStringExtra("title").toString()
         email=intent.getStringExtra("email").toString()
@@ -359,6 +363,14 @@ Log.e("CreatedOn",created_on)
                 "Print is not supported below Android KITKAT Version",
                 Toast.LENGTH_SHORT
             ).show()
+        }
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(nContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
         }
     }
 }

@@ -434,7 +434,7 @@ class TimeTableFragment : Fragment() {
         val token = PreferenceManager.getaccesstoken(mContext)
         val calendarBody = TimeTableApiModel(studentId)
         val call: Call<TimeTableApiDataModel> =
-            ApiClient.getClient.timetable(calendarBody, "Bearer " + token)
+            ApiClient(mContext).getClient.timetable(calendarBody, "Bearer " + token)
         call.enqueue(object : Callback<TimeTableApiDataModel> {
             override fun onFailure(call: Call<TimeTableApiDataModel>, t: Throwable) {
                 progressDialog.visibility = View.GONE
@@ -900,7 +900,7 @@ class TimeTableFragment : Fragment() {
 
     fun callStudentListApi() {
         val token = PreferenceManager.getaccesstoken(mContext)
-        val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer " + token)
+        val call: Call<StudentListModel> = ApiClient(mContext).getClient.studentList("Bearer " + token)
         call.enqueue(object : Callback<StudentListModel> {
             override fun onFailure(call: Call<StudentListModel>, t: Throwable) {
             }
@@ -913,7 +913,6 @@ class TimeTableFragment : Fragment() {
                 if (response.body()!!.status == 100) {
 
                     studentListArrayList.addAll(response.body()!!.responseArray.studentList)
-                    System.out.println("CalendarResoponse" + response.body())
                     if (PreferenceManager.getStudentID(mContext).equals("")) {
                         studentName = studentListArrayList.get(0).name
                         studentImg = studentListArrayList.get(0).photo

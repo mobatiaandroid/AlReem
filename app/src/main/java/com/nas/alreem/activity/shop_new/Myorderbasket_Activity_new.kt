@@ -95,6 +95,7 @@ class Myorderbasket_Activity_new : AppCompatActivity() {
     lateinit var title: TextView
     lateinit var progressDialogAdd: ProgressBar
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.canteen_myorderbasket_new)
@@ -231,7 +232,7 @@ finish()
     private fun wallet_details(){
         val token = PreferenceManager.getaccesstoken(nContext)
         var canteenCart= WalletBalanceApiModel(PreferenceManager.getStudentID(nContext).toString())
-        val call: Call<WalletBalanceModel> = ApiClient.getClient.get_wallet_balance(canteenCart,"Bearer "+token)
+        val call: Call<WalletBalanceModel> = ApiClient(nContext).getClient.get_wallet_balance(canteenCart,"Bearer "+token)
         call.enqueue(object : Callback<WalletBalanceModel> {
             override fun onFailure(call: Call<WalletBalanceModel>, t: Throwable) {
 
@@ -258,7 +259,7 @@ finish()
         progressDialogAdd.visibility= View.VISIBLE
         val token = PreferenceManager.getaccesstoken(nContext)
         var canteenCart= CanteenCartApiModel(PreferenceManager.getStudentID(nContext).toString())
-        val call: Call<GetShopCartResponseModel> = ApiClient.getClient.get_shop_cart(canteenCart,"Bearer "+token)
+        val call: Call<GetShopCartResponseModel> = ApiClient(nContext).getClient.get_shop_cart(canteenCart,"Bearer "+token)
         call.enqueue(object : Callback<GetShopCartResponseModel> {
             override fun onFailure(call: Call<GetShopCartResponseModel>, t: Throwable) {
 
@@ -337,7 +338,7 @@ finish()
         val token = PreferenceManager.getaccesstoken(nContext)
         progressDialogAdd.visibility= View.VISIBLE
         var canteenCart= CanteenPreorderApiModel(PreferenceManager.getStudentID(nContext).toString(),itemArray)
-        val call: Call<CanteenPreorderModel> = ApiClient.getClient.canteen_preorder(canteenCart,"Bearer "+token)
+        val call: Call<CanteenPreorderModel> = ApiClient(nContext).getClient.canteen_preorder(canteenCart,"Bearer "+token)
         call.enqueue(object : Callback<CanteenPreorderModel> {
             override fun onFailure(call: Call<CanteenPreorderModel>, t: Throwable) {
                 progressDialogAdd.visibility= View.GONE
@@ -473,7 +474,7 @@ finish()
         val token = PreferenceManager.getaccesstoken(nContext)
         val paymentTokenBody = PaymentTokenApiModel( PreferenceManager.getStudentID(nContext).toString(),"shop")
         val call: Call<PaymentTokenModel> =
-            ApiClient.getClient.payment_token(paymentTokenBody, "Bearer " + token)
+            ApiClient(nContext).getClient.payment_token(paymentTokenBody, "Bearer " + token)
         call.enqueue(object : Callback<PaymentTokenModel> {
             override fun onFailure(call: Call<PaymentTokenModel>, t: Throwable) {
                 progressDialogAdd.visibility = View.GONE
@@ -536,7 +537,7 @@ finish()
             mechantorderRef, PreferenceManager.getStudentName(nContext)!!,"","NAS","","Abu Dhabi",
             paymentToken,"wallet_topup")
         val call: Call<PaymentGatewayModel> =
-            ApiClient.getClient.payment_gateway(paymentGatewayBody, "Bearer " + token)
+            ApiClient(nContext).getClient.payment_gateway(paymentGatewayBody, "Bearer " + token)
         call.enqueue(object : Callback<PaymentGatewayModel> {
             override fun onFailure(call: Call<PaymentGatewayModel>, t: Throwable) {
                 progressDialogAdd.visibility = View.GONE
@@ -594,7 +595,7 @@ finish()
         paramObject.addProperty("device_name", devicename)
         paramObject.addProperty("app_version", version)
         val call: Call<StudentShopCardResponseModel> =
-            ApiClient.getClient.shop_order_submit("Bearer " + PreferenceManager.getaccesstoken(nContext), paramObject)
+            ApiClient(nContext).getClient.shop_order_submit("Bearer " + PreferenceManager.getaccesstoken(nContext), paramObject)
         call.enqueue(object : Callback<StudentShopCardResponseModel> {
             override fun onFailure(call: Call<StudentShopCardResponseModel>, t: Throwable) {
                 progressDialogAdd.visibility = View.GONE
@@ -678,5 +679,13 @@ finish()
             dialog.dismiss()
         }
         dialog.show()
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(nContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 }

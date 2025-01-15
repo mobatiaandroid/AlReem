@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.absence
 
+import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.Context
@@ -81,6 +82,8 @@ class RequestplannedleavesActivity: AppCompatActivity() {
     lateinit var sdate: Date
     lateinit var edate: Date
     var elapsedDays:Long = 0
+    lateinit var activity: Activity
+
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -88,6 +91,7 @@ class RequestplannedleavesActivity: AppCompatActivity() {
         setContentView(R.layout.activity_leave_request)
 
         mContext=this
+        activity=this
         initfn()
         if (ConstantFunctions.internetCheck(mContext)) {
 //            progressDialog.visibility= View.VISIBLE
@@ -198,7 +202,7 @@ class RequestplannedleavesActivity: AppCompatActivity() {
         val token = PreferenceManager.getaccesstoken(mContext)
         val absenceSuccessBody = RequestLeaveApiModel(PreferenceManager.getStudentID(mContext).toString(),new_fromdate,new_todate,reason)
         val call: Call<RequestLeaveModel> =
-            ApiClient.getClient.plannedLeaveRequest(absenceSuccessBody, "Bearer " + token)
+            ApiClient(mContext).getClient.plannedLeaveRequest(absenceSuccessBody, "Bearer " + token)
         call.enqueue(object : Callback<RequestLeaveModel> {
             override fun onFailure(call: Call<RequestLeaveModel>, t: Throwable) {
                 //mProgressRelLayout.visibility=View.INVISIBLE
@@ -301,7 +305,7 @@ class RequestplannedleavesActivity: AppCompatActivity() {
     {
         progressDialogAdd.visibility=View.VISIBLE
         studentListArrayList= ArrayList()
-        val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+ PreferenceManager.getaccesstoken(mContext))
+        val call: Call<StudentListModel> = ApiClient(mContext).getClient.studentList("Bearer "+ PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<StudentListModel> {
             override fun onFailure(call: Call<StudentListModel>, t: Throwable) {
                 progressDialogAdd.visibility=View.GONE
@@ -472,5 +476,13 @@ class RequestplannedleavesActivity: AppCompatActivity() {
         }
         dialog.show()
 
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 }

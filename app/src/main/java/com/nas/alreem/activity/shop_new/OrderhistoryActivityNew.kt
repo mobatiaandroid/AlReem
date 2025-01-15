@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.shop_new
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -45,6 +46,8 @@ class OrderhistoryActivityNew  : AppCompatActivity(){
     lateinit var order_summery: ArrayList<ShopItemHistoryModel>
     lateinit var preorderhis_itemlist: ArrayList<String>
     var studentID:String=""
+    lateinit var activity: Activity
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.canteen_orderhistory)
@@ -62,6 +65,7 @@ class OrderhistoryActivityNew  : AppCompatActivity(){
 
     private fun initfn() {
         nContext = this
+        activity=this
         studentID=intent.getStringExtra("StudentId").toString()
         logoClickImg=findViewById(R.id.logoclick)
         back = findViewById(R.id.back)
@@ -95,7 +99,7 @@ class OrderhistoryActivityNew  : AppCompatActivity(){
 
         val studentbody= ShopHistoryModel(studentIdStr!!,"0","20")
 
-        val call: Call<ShopHistoryItemResponseModel> = ApiClient.getClient.get_shop_items_history(studentbody,"Bearer "+ PreferenceManager.getaccesstoken(nContext))
+        val call: Call<ShopHistoryItemResponseModel> = ApiClient(nContext).getClient.get_shop_items_history(studentbody,"Bearer "+ PreferenceManager.getaccesstoken(nContext))
         call.enqueue(object : Callback<ShopHistoryItemResponseModel> {
             override fun onResponse(
                 call: Call<ShopHistoryItemResponseModel?>,
@@ -175,4 +179,12 @@ class OrderhistoryActivityNew  : AppCompatActivity(){
        finish()
 
    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(nContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
+    }
 }

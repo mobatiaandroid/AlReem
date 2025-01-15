@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nas.alreem.R
 import com.nas.alreem.activity.home.HomeActivity
+import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.HeaderManager
 import com.nas.alreem.recyclermanager.DividerItemDecoration
 import com.nas.alreem.recyclermanager.ItemOffsetDecoration
@@ -39,9 +40,12 @@ class ParentsAssociationMainActivity : AppCompatActivity() {
     lateinit var mRecyclerView: RecyclerView
     var extras: Bundle? = null
     var tab_type: String? = null
+    lateinit var activity: Activity
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mContext = this
+        activity=this
         setContentView(R.layout.parentsactivityrecyclerview)
         initUI()
     }
@@ -121,6 +125,14 @@ class ParentsAssociationMainActivity : AppCompatActivity() {
                     override fun onLongClickItem(v: View?, position: Int) {}
                 })
         )
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 }
 

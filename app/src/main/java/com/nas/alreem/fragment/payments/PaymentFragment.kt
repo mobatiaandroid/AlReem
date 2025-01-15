@@ -108,7 +108,7 @@ class PaymentFragment : Fragment() {
     private fun callPaymentBannerApi()
     {
         progressDialogAdd.visibility=View.VISIBLE
-        val call: Call<PaymentResponseModel> = ApiClient.getClient.paymentBanner("Bearer "+PreferenceManager.getaccesstoken(mContext))
+        val call: Call<PaymentResponseModel> = ApiClient(mContext).getClient.paymentBanner("Bearer "+PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<PaymentResponseModel> {
             override fun onFailure(call: Call<PaymentResponseModel>, t: Throwable) {
                 progressDialogAdd.visibility=View.GONE
@@ -248,7 +248,7 @@ class PaymentFragment : Fragment() {
     {
 
         val sendMailBody = SendEmailApiModel( staffEmail, title, message)
-        val call: Call<SignUpResponseModel> = ApiClient.getClient.sendEmailStaff(sendMailBody, "Bearer " + PreferenceManager.getaccesstoken(mContext))
+        val call: Call<SignUpResponseModel> = ApiClient(mContext).getClient.sendEmailStaff(sendMailBody, "Bearer " + PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<SignUpResponseModel> {
             override fun onFailure(call: Call<SignUpResponseModel>, t: Throwable) {
                 //progressDialog.visibility = View.GONE

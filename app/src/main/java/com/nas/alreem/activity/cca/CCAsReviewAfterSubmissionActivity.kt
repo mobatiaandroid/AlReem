@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.cca
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -52,10 +53,13 @@ class CCAsReviewAfterSubmissionActivity : AppCompatActivity() {
     var datestringChoice1: ArrayList<CCAAttendanceModel>? = null
     var datestringChoice2: ArrayList<CCAAttendanceModel>? = null
     var submissiondateover = "-1"
+    lateinit var activity: Activity
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ccas_review_after_submission)
         mContext = this
+        activity=this
         titleTextView = findViewById(R.id.heading)
         back = findViewById(R.id.btn_left)
         backRelative = findViewById(R.id.backRelative)
@@ -146,7 +150,7 @@ class CCAsReviewAfterSubmissionActivity : AppCompatActivity() {
         )
         val token = PreferenceManager.getaccesstoken(mContext)
         val call: Call<CCAReviewResponseModel> =
-            ApiClient.getClient.ccaReview(body, "Bearer $token")
+            ApiClient(mContext).getClient.ccaReview(body, "Bearer $token")
         progressBar.visibility = View.VISIBLE
         call.enqueue(object : Callback<CCAReviewResponseModel> {
             override fun onResponse(
@@ -483,10 +487,17 @@ class CCAsReviewAfterSubmissionActivity : AppCompatActivity() {
         }
         mCCAModel.calendarDaysChoice1 = datestringChoice1
         mCCAModel.calendarDaysChoice2 = datestringChoice2
-        println("ch:::$ch")
 
         if (ch == 1) {
             mCCADetailModelArrayList!!.add(mCCAModel)
+        }
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
         }
     }
 }

@@ -68,7 +68,7 @@ lateinit var rec: RecyclerView
            mParentAssociationEventsModelArrayList[mainPosition].getEventItemList().get(mPosition)
                .getEventItemStatusList().get(datePosition).getEventId()
        )
-       val call: Call<VolunteerSubmitResponseModel> = ApiClient.getClient.parent_assoc_events_attending_or_not_new("Bearer " + PreferenceManager.getaccesstoken(mContext),
+       val call: Call<VolunteerSubmitResponseModel> = ApiClient(mContext).getClient.parent_assoc_events_attending_or_not_new("Bearer " + PreferenceManager.getaccesstoken(mContext),
            paramObject)
        call.enqueue(object : Callback<VolunteerSubmitResponseModel> {
            override fun onFailure(call: Call<VolunteerSubmitResponseModel>, t: Throwable) {
@@ -568,7 +568,7 @@ lateinit var rec: RecyclerView
         parentAssociationEventsModelsArrayList
         val paramObject = JsonObject()
         paramObject.addProperty("student_id", PreferenceManager.getStudentID(context))
-        val call: Call<ParentAssociationEventResponseModel> = ApiClient.getClient.parent_assoc_events(
+        val call: Call<ParentAssociationEventResponseModel> = ApiClient(context).getClient.parent_assoc_events(
             "Bearer " + PreferenceManager.getaccesstoken(context),
             paramObject
         )

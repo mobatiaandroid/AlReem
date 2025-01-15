@@ -1,12 +1,15 @@
 package com.nas.alreem.activity.splash
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.Debug
 import android.os.Handler
+import android.util.Log
 import android.view.View
 import android.view.Window
 import android.widget.Button
@@ -17,44 +20,48 @@ import com.nas.alreem.R
 import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.activity.login.LoginActivity
 import com.nas.alreem.activity.settings.TutorialActivity
+import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.PreferenceManager
 import com.scottyab.rootbeer.RootBeer
 
 class SplashActivity : AppCompatActivity() {
     lateinit var mContext: Context
     private val SPLASH_TIME_OUT:Long = 3000
+    lateinit var activity: Activity
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
-        mContext=this
+        mContext = this
+        activity= this
         val rootBeer = RootBeer(mContext)
         if (rootBeer.isRooted()) {
             showDeviceIsRootedPopUp(mContext)
-        }
-        else{
+        } else if (isDebuggerConnected()) {
+            showDeviceIsRootedPopUp(mContext)
+        } else if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+         else {
             Handler().postDelayed({
 
-                if (PreferenceManager.getFirstTime(mContext).equals(""))
-                {
+                if (PreferenceManager.getFirstTime(mContext).equals("")) {
                     val intent = Intent(mContext, TutorialActivity::class.java)
-                    PreferenceManager.setFirtTime(mContext,"First")
+                    PreferenceManager.setFirtTime(mContext, "First")
                     startActivity(intent)
                     finish()
-                }
-                else{
-                    if (PreferenceManager.getaccesstoken(mContext).equals(""))
-                    {
-                        PreferenceManager.setNoticeFirtTime(mContext,"")
+                } else {
+                    if (PreferenceManager.getaccesstoken(mContext).equals("")) {
+                        PreferenceManager.setNoticeFirtTime(mContext, "")
                         PreferenceManager.setIsSurveyHomeVisible(mContext, false)
                         PreferenceManager.setIsEnrollmentHomeVisible(mContext, false)
                         startActivity(Intent(this, LoginActivity::class.java))
                         finish()
 
-                    }
-                    else
-                    {
-                        PreferenceManager.setNoticeFirtTime(mContext,"")
+                    } else {
+                        PreferenceManager.setNoticeFirtTime(mContext, "")
                         PreferenceManager.setIsSurveyHomeVisible(mContext, false)
                         PreferenceManager.setIsEnrollmentHomeVisible(mContext, false)
                         startActivity(Intent(this, HomeActivity::class.java))
@@ -64,6 +71,34 @@ class SplashActivity : AppCompatActivity() {
                 }
 
 
+            }, SPLASH_TIME_OUT)
+        }
+    }
+        else{
+            Handler().postDelayed({
+
+                if (PreferenceManager.getFirstTime(mContext).equals("")) {
+                    val intent = Intent(mContext, TutorialActivity::class.java)
+                    PreferenceManager.setFirtTime(mContext, "First")
+                    startActivity(intent)
+                    finish()
+                } else {
+                    if (PreferenceManager.getaccesstoken(mContext).equals("")) {
+                        PreferenceManager.setNoticeFirtTime(mContext, "")
+                        PreferenceManager.setIsSurveyHomeVisible(mContext, false)
+                        PreferenceManager.setIsEnrollmentHomeVisible(mContext, false)
+                        startActivity(Intent(this, LoginActivity::class.java))
+                        finish()
+
+                    } else {
+                        PreferenceManager.setNoticeFirtTime(mContext, "")
+                        PreferenceManager.setIsSurveyHomeVisible(mContext, false)
+                        PreferenceManager.setIsEnrollmentHomeVisible(mContext, false)
+                        startActivity(Intent(this, HomeActivity::class.java))
+                        finish()
+
+                    }
+                }
 
 
             }, SPLASH_TIME_OUT)
@@ -95,5 +130,7 @@ class SplashActivity : AppCompatActivity() {
 //		});
         dialog.show()
     }
-
+    fun isDebuggerConnected(): Boolean {
+        return Debug.isDebuggerConnected()
+    }
 }

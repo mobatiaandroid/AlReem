@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.calendar
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -39,10 +40,13 @@ class TermCalendarActivity : AppCompatActivity() {
     lateinit var recycler_view_list: RecyclerView
     lateinit var linearLayoutManager: LinearLayoutManager
     lateinit var termListArrayList:ArrayList<TermCalendarListModel>
+    lateinit var activity: Activity
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_term_calendar)
         mContext=this
+        activity=this
         relativeHeader = findViewById(R.id.relativeHeader)
         initUI()
         if (ConstantFunctions.internetCheck(mContext)) {
@@ -106,7 +110,7 @@ class TermCalendarActivity : AppCompatActivity() {
         termListArrayList= ArrayList()
 //        progressDialog.visibility=View.VISIBLE
         val token = PreferenceManager.getaccesstoken(mContext)
-        val call: Call<TermCalendarResponseModel> = ApiClient.getClient.termCalendar("Bearer " + token)
+        val call: Call<TermCalendarResponseModel> = ApiClient(mContext).getClient.termCalendar("Bearer " + token)
         call.enqueue(object : Callback<TermCalendarResponseModel> {
             override fun onFailure(call: Call<TermCalendarResponseModel>, t: Throwable) {
 //                progressDialog.visibility=View.GONE
@@ -162,6 +166,14 @@ class TermCalendarActivity : AppCompatActivity() {
                 }
             }
         })
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 
 }

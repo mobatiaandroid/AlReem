@@ -1,6 +1,7 @@
 package com.nas.alreem.activity.communication.newesletters
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -48,12 +49,15 @@ class NewsLetterListActivity : AppCompatActivity(){
     lateinit var newsLetterArrayList:ArrayList<CommunicationDataModel>
     lateinit var extras: Bundle
     var category_id:String ?=""
+    lateinit var activity: Activity
+
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_newsletter_list)
         mContext=this
+        activity=this
         initUI()
         if (ConstantFunctions.internetCheck(mContext))
         {
@@ -120,7 +124,7 @@ class NewsLetterListActivity : AppCompatActivity(){
         val token = PreferenceManager.getaccesstoken(mContext)
         val paramObject = JsonObject()
         paramObject.addProperty("category_id", category_id)
-        val call: Call<CommunicationResponseModel> = ApiClient.getClient.newsletter("Bearer "+token,paramObject)
+        val call: Call<CommunicationResponseModel> = ApiClient(mContext).getClient.newsletter("Bearer "+token,paramObject)
         call.enqueue(object : Callback<CommunicationResponseModel> {
             override fun onFailure(call: Call<CommunicationResponseModel>, t: Throwable) {
 
@@ -162,6 +166,14 @@ class NewsLetterListActivity : AppCompatActivity(){
         })
 
 
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 
 }

@@ -60,11 +60,14 @@ class SurveyListActivity: AppCompatActivity(){
     private val EMAIL_PATTERN =
         "^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$"
     private val pattern = "^([a-zA-Z ]*)$"
+    lateinit var activity: Activity
+
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_survey_list)
         mContext=this
+        activity=this
         initUI()
         if (ConstantFunctions.internetCheck(mContext))
         {
@@ -123,7 +126,7 @@ class SurveyListActivity: AppCompatActivity(){
     {
         progressDialogAdd.visibility= View.VISIBLE
         surveyArrayList= ArrayList()
-        val call: Call<SurveyListResponseModel> = ApiClient.getClient.surveyList("Bearer "+ PreferenceManager.getaccesstoken(mContext))
+        val call: Call<SurveyListResponseModel> = ApiClient(mContext).getClient.surveyList("Bearer "+ PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<SurveyListResponseModel> {
             override fun onFailure(call: Call<SurveyListResponseModel>, t: Throwable) {
                 progressDialogAdd.visibility= View.GONE
@@ -168,7 +171,7 @@ class SurveyListActivity: AppCompatActivity(){
         currentPageSurvey=0
         progressDialogAdd.visibility= View.VISIBLE
         var model=SurveyDetailApiModel(surveyID)
-        val call: Call<SurveyDetailResponseModel> = ApiClient.getClient.surveyDetail(model,"Bearer "+ PreferenceManager.getaccesstoken(mContext))
+        val call: Call<SurveyDetailResponseModel> = ApiClient(mContext).getClient.surveyDetail(model,"Bearer "+ PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<SurveyDetailResponseModel> {
             override fun onFailure(call: Call<SurveyDetailResponseModel>, t: Throwable) {
                 progressDialogAdd.visibility= View.GONE
@@ -308,7 +311,7 @@ class SurveyListActivity: AppCompatActivity(){
         var model=SurveySubmitApiModel(survey_ID.toString(), status.toString(),mAnswerList)
 
 
-         val call: Call<SurveySubmitResponseModel> = ApiClient.getClient.surveysubmit(model,"Bearer "+ PreferenceManager.getaccesstoken(mContext))
+         val call: Call<SurveySubmitResponseModel> = ApiClient(mContext).getClient.surveysubmit(model,"Bearer "+ PreferenceManager.getaccesstoken(mContext))
          call.enqueue(object : Callback<SurveySubmitResponseModel> {
              override fun onFailure(call: Call<SurveySubmitResponseModel>, t: Throwable) {
                  progressDialogAdd.visibility= View.GONE
@@ -858,7 +861,7 @@ class SurveyListActivity: AppCompatActivity(){
         progressDialogAdd.visibility= View.VISIBLE
 
         val sendMailBody = SendEmailApiModel( staffEmail, title, message)
-        val call: Call<SignUpResponseModel> = ApiClient.getClient.sendEmailStaff(sendMailBody, "Bearer " + PreferenceManager.getaccesstoken(mContext))
+        val call: Call<SignUpResponseModel> = ApiClient(mContext).getClient.sendEmailStaff(sendMailBody, "Bearer " + PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<SignUpResponseModel> {
             override fun onFailure(call: Call<SignUpResponseModel>, t: Throwable) {
                 progressDialogAdd.visibility = View.GONE
@@ -1035,5 +1038,13 @@ class SurveyListActivity: AppCompatActivity(){
             dialog.dismiss()
         }
         dialog.show()
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 }

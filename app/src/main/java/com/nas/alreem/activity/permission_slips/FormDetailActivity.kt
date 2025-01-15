@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.permission_slips
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -52,6 +53,8 @@ class FormDetailActivity: AppCompatActivity()  {
     var student_class:String=""
     var declrtn_txt:String=""
     var status_slip:String=""
+    lateinit var activity: Activity
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_permission_slip_detail)
@@ -61,6 +64,7 @@ class FormDetailActivity: AppCompatActivity()  {
     }
     private fun init() {
         mContext = this
+        activity=this
         titletext=findViewById(R.id.heading)
         logoClickImgView = findViewById(R.id.logoClickImgView)
         descriptn=findViewById(R.id.descrtn_txt)
@@ -255,5 +259,13 @@ class FormDetailActivity: AppCompatActivity()  {
             finish()
         }
         dialog.show()
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 }

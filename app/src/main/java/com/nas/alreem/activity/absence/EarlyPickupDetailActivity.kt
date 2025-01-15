@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.absence
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -12,6 +13,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.nas.alreem.R
 import com.nas.alreem.activity.home.HomeActivity
+import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.ConstantWords
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -40,11 +42,14 @@ class EarlyPickupDetailActivity: AppCompatActivity() {
     var reason_pickup:String=""
     var status_pickup:String=""
     var reason_for_rejection:String=""
+    lateinit var activity: Activity
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bus_service_details)
 
         mContext=this
+        activity = this
         initfn()
 
     }
@@ -119,5 +124,13 @@ class EarlyPickupDetailActivity: AppCompatActivity() {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)
         })
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 }

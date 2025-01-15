@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.shop_new
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -75,6 +76,8 @@ class Addorder_Activity_new : AppCompatActivity()  {
     lateinit var total_items: TextView
     lateinit var total_price: TextView
     var firstVisit: Boolean? = null
+    lateinit var activity: Activity
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.shop_addorder)
@@ -95,6 +98,7 @@ class Addorder_Activity_new : AppCompatActivity()  {
 
     private fun initfn() {
         nContext = this
+        activity=this
         back = findViewById(R.id.back)
         logoClickImg=findViewById(R.id.logoclick)
         title = findViewById(R.id.titleTextView)
@@ -173,7 +177,7 @@ class Addorder_Activity_new : AppCompatActivity()  {
         progressDialogP.show()
 
         val token = PreferenceManager.getaccesstoken(nContext)
-        val call: Call<CatListModel> = ApiClient.getClient.get_shop_categories("Bearer "+token)
+        val call: Call<CatListModel> = ApiClient(nContext).getClient.get_shop_categories("Bearer "+token)
         call.enqueue(object : Callback<CatListModel> {
             override fun onFailure(call: Call<CatListModel>, t: Throwable) {
             }
@@ -261,7 +265,7 @@ class Addorder_Activity_new : AppCompatActivity()  {
     {
         // progressDialogAdd.visibility=View.VISIBLE
         studentListArrayList= ArrayList()
-        val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+ PreferenceManager.getaccesstoken(nContext))
+        val call: Call<StudentListModel> = ApiClient(nContext).getClient.studentList("Bearer "+ PreferenceManager.getaccesstoken(nContext))
         call.enqueue(object : Callback<StudentListModel> {
             override fun onFailure(call: Call<StudentListModel>, t: Throwable) {
                 // progressDialogAdd.visibility=View.GONE
@@ -348,7 +352,7 @@ class Addorder_Activity_new : AppCompatActivity()  {
         val token = PreferenceManager.getaccesstoken(nContext)
         var canteenItems= ShopItemsApiModel(
             PreferenceManager.getStudentID(nContext)!!,def_cat_id)
-        val call: Call<ItemsListModel_new> = ApiClient.getClient.get_shop_items(canteenItems,"Bearer "+token)
+        val call: Call<ItemsListModel_new> = ApiClient(nContext).getClient.get_shop_items(canteenItems,"Bearer "+token)
         call.enqueue(object : Callback<ItemsListModel_new> {
             override fun onFailure(call: Call<ItemsListModel_new>, t: Throwable) {
                 progressDialogP.hide()
@@ -427,7 +431,7 @@ class Addorder_Activity_new : AppCompatActivity()  {
         val token = PreferenceManager.getaccesstoken(nContext)
         var canteenItems= ShopItemsApiModel(
             PreferenceManager.getStudentID(nContext).toString(),cat_selected)
-        val call: Call<ItemsListModel_new> = ApiClient.getClient.get_shop_items(canteenItems,"Bearer "+token)
+        val call: Call<ItemsListModel_new> = ApiClient(nContext).getClient.get_shop_items(canteenItems,"Bearer "+token)
         call.enqueue(object : Callback<ItemsListModel_new> {
             override fun onFailure(call: Call<ItemsListModel_new>, t: Throwable) {
                 progressDialogP.hide()
@@ -520,7 +524,7 @@ class Addorder_Activity_new : AppCompatActivity()  {
         progressDialogP.show()
         val token = PreferenceManager.getaccesstoken(nContext)
         var canteenCart= CanteenCartApiModel( PreferenceManager.getStudentID(nContext)!!)
-        val call: Call<GetShopCartResponseModel> = ApiClient.getClient.get_shop_cart(canteenCart,"Bearer "+token)
+        val call: Call<GetShopCartResponseModel> = ApiClient(nContext).getClient.get_shop_cart(canteenCart,"Bearer "+token)
         call.enqueue(object : Callback<GetShopCartResponseModel> {
             override fun onFailure(call: Call<GetShopCartResponseModel>, t: Throwable) {
                 progressDialogP.hide()
@@ -593,6 +597,11 @@ class Addorder_Activity_new : AppCompatActivity()  {
             getcanteen_cart()
         } else {
             DialogFunctions.showInternetAlertDialog(nContext)
+        }
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(nContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
         }
 
         super.onResume()

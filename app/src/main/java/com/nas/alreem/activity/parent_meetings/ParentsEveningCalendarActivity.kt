@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.parent_meetings
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -58,6 +59,8 @@ class ParentsEveningCalendarActivity:AppCompatActivity() {
     var count_year:Int?=null
     val dateTextView = arrayOfNulls<TextView>(42)
     lateinit var datesToPlot:ArrayList<String>
+    lateinit var activity: Activity
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,6 +68,7 @@ class ParentsEveningCalendarActivity:AppCompatActivity() {
         setContentView(R.layout.parent_meetings_calendar_activity)
 
         mContext=this
+        activity=this
         initfn()
         headerfnc()
         daysinweek()
@@ -360,7 +364,7 @@ class ParentsEveningCalendarActivity:AppCompatActivity() {
         progressDialogAdd.visibility = View.VISIBLE
         val token = PreferenceManager.getaccesstoken(mContext)
         val ptadatesSuccessBody = PtaDatesApiModel(studentId,staffId)
-        val call: Call<PtaDatesModel> = ApiClient.getClient.pta_allotted_dates(ptadatesSuccessBody,"Bearer "+token)
+        val call: Call<PtaDatesModel> = ApiClient(mContext).getClient.pta_allotted_dates(ptadatesSuccessBody,"Bearer "+token)
         call.enqueue(object : Callback<PtaDatesModel> {
             override fun onFailure(call: Call<PtaDatesModel>, t: Throwable) {
                 progressDialogAdd.visibility = View.GONE
@@ -419,6 +423,14 @@ class ParentsEveningCalendarActivity:AppCompatActivity() {
             }
 
         })
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 
 }

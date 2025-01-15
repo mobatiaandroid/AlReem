@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.shop_new
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -24,6 +25,7 @@ import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.DialogFunctions
 import com.nas.alreem.constants.PreferenceManager
+import com.nas.alreem.fragment.home.mContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -60,6 +62,8 @@ class MyorderActivity_new : AppCompatActivity() {
     lateinit var title: TextView
     lateinit var basket: ImageView
     lateinit var progressDialogAdd: ProgressBar
+    lateinit var activity: Activity
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,6 +81,7 @@ class MyorderActivity_new : AppCompatActivity() {
     }
     private fun initfn(){
         nContext=this
+        activity=this
         studentID=intent.getStringExtra("StudentId").toString()
         logoClickImg=findViewById(R.id.logoclick)
         back=findViewById(R.id.back)
@@ -119,7 +124,7 @@ class MyorderActivity_new : AppCompatActivity() {
 //        progressDialogAdd.show()
         val token = PreferenceManager.getaccesstoken(nContext)
         var model= OrderHistoryApiModel(studentID,"0","100")
-        val call: Call<PreOrdersModel> = ApiClient.getClient.canteen_myorder_history(model,"Bearer "+token)
+        val call: Call<PreOrdersModel> = ApiClient(nContext).getClient.canteen_myorder_history(model,"Bearer "+token)
         call.enqueue(object : Callback<PreOrdersModel> {
             override fun onFailure(call: Call<PreOrdersModel>, t: Throwable) {
                 progressDialogAdd.visibility= View.GONE
@@ -186,5 +191,13 @@ class MyorderActivity_new : AppCompatActivity() {
             //dateRecyclerView.adapter = MyorderDatesAdapter(mMyOrderArrayList, nContext)
 
         })
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(nContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 }

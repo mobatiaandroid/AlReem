@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.settings
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -32,12 +33,15 @@ class TermsOfServiceActivity  : AppCompatActivity(){
     lateinit var logoClickImgView: ImageView
     lateinit var progressDialogAdd: ProgressBar
     lateinit var backRelative: RelativeLayout
+    lateinit var activity: Activity
+
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_terms_of_service)
         mContext=this
+        activity=this
         initUI()
         if (ConstantFunctions.internetCheck(mContext))
         {
@@ -93,10 +97,8 @@ class TermsOfServiceActivity  : AppCompatActivity(){
         webView.webChromeClient = object : WebChromeClient() {
             override fun onProgressChanged(view: WebView, newProgress: Int) {
                 progressDialogAdd.visibility = View.VISIBLE
-                println("testing2")
                 if (newProgress == 100)
                 {
-                    println("testing1")
                     progressDialogAdd.visibility = View.GONE
 
                 }
@@ -106,7 +108,7 @@ class TermsOfServiceActivity  : AppCompatActivity(){
 
     fun callTermsOfService()
     {
-        val call: Call<TermsOfServiceResponseModel> = ApiClient.getClient.termsOfService("Bearer "+PreferenceManager.getaccesstoken(mContext))
+        val call: Call<TermsOfServiceResponseModel> = ApiClient(mContext).getClient.termsOfService("Bearer "+PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<TermsOfServiceResponseModel> {
             override fun onFailure(call: Call<TermsOfServiceResponseModel>, t: Throwable) {
                 progressDialogAdd.visibility=View.GONE
@@ -151,6 +153,14 @@ class TermsOfServiceActivity  : AppCompatActivity(){
             }
 
         })
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 
 }

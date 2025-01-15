@@ -295,7 +295,7 @@ else{
         val paymentSuccessBody = PaymentSubmitBusApiModel(PreferenceManager.getStudentID(mContext).toString(),
             id,orderReff,"2",device,versionName)
         val call: Call<PaymentSuccessResponseBusModel> =
-            ApiClient.getClient.submit_busservice_payment(paymentSuccessBody, "Bearer " + token)
+            ApiClient(mContext).getClient.submit_busservice_payment(paymentSuccessBody, "Bearer " + token)
         call.enqueue(object : Callback<PaymentSuccessResponseBusModel> {
             override fun onFailure(call: Call<PaymentSuccessResponseBusModel>, t: Throwable) {
                 progressDialogAdd.visibility= View.GONE
@@ -334,7 +334,7 @@ if (response.body()!!.status==100)
             mechantorderRef, PreferenceManager.getStudentName(mContext)!!,"","NAS","","Abu Dhabi",
             paymentToken,"bus_service", id,PreferenceManager.getStudentID(mContext).toString())
         val call: Call<PaymentGatewayModel> =
-            ApiClient.getClient.payment_gateway_bus(paymentGatewayBody, "Bearer " + token)
+            ApiClient(mContext).getClient.payment_gateway_bus(paymentGatewayBody, "Bearer " + token)
         call.enqueue(object : Callback<PaymentGatewayModel> {
             override fun onFailure(call: Call<PaymentGatewayModel>, t: Throwable) {
                 progressDialogAdd.visibility = View.GONE
@@ -379,7 +379,7 @@ if (response.body()!!.status==100)
         val token = PreferenceManager.getaccesstoken(mContext)
         val paymentTokenBody = PaymentTokenApiModel( PreferenceManager.getStudentID(mContext).toString(),"bus_service")
         val call: Call<PaymentTokenModel> =
-            ApiClient.getClient.payment_token(paymentTokenBody, "Bearer " + token)
+            ApiClient(mContext).getClient.payment_token(paymentTokenBody, "Bearer " + token)
         call.enqueue(object : Callback<PaymentTokenModel> {
             override fun onFailure(call: Call<PaymentTokenModel>, t: Throwable) {
                 progressDialogAdd.visibility = View.GONE

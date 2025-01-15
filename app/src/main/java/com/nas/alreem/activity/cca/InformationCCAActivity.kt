@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.cca
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -46,10 +47,13 @@ class InformationCCAActivity : AppCompatActivity() {
     var stud_img = ""
     var section = ""
     private val mListViewArray: ArrayList<CCaInformationList> = ArrayList()
+    lateinit var activity: Activity
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_information_ccaactivity)
         mContext = this
+        activity=this
         initilaiseUI()
         logoclick.setOnClickListener {
             val mIntent = Intent(mContext, HomeActivity::class.java)
@@ -77,7 +81,7 @@ class InformationCCAActivity : AppCompatActivity() {
         val body = CCAInfoRequestModel("0","10")
         val token = PreferenceManager.getaccesstoken(mContext)
         val call: Call<CCAInfoResponseModel> =
-            ApiClient.getClient.getCCAInfo(body, "Bearer $token")
+            ApiClient(mContext).getClient.getCCAInfo(body, "Bearer $token")
         progressBar.visibility = View.VISIBLE
         call.enqueue(object : Callback<CCAInfoResponseModel> {
             override fun onResponse(
@@ -180,5 +184,13 @@ class InformationCCAActivity : AppCompatActivity() {
 
         })
 
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 }

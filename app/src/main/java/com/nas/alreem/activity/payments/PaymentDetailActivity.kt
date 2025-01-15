@@ -95,6 +95,7 @@ class PaymentDetailActivity : AppCompatActivity() {
     lateinit var logoClickImgView: ImageView
     lateinit var backRelative: RelativeLayout
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_paymentdetails)
@@ -243,7 +244,7 @@ class PaymentDetailActivity : AppCompatActivity() {
         val token = PreferenceManager.getaccesstoken(context)
         val paymentTokenBody = PaymentTokenApiModel( PreferenceManager.getStudentID(context).toString(),"fee_payment")
         val call: Call<PaymentTokenModel> =
-            ApiClient.getClient.payment_token(paymentTokenBody, "Bearer " + token)
+            ApiClient(context).getClient.payment_token(paymentTokenBody, "Bearer " + token)
         call.enqueue(object : Callback<PaymentTokenModel> {
             override fun onFailure(call: Call<PaymentTokenModel>, t: Throwable) {
                 mProgressRelLayout.visibility = View.GONE
@@ -300,7 +301,7 @@ class PaymentDetailActivity : AppCompatActivity() {
             mechantorderRef,student_name,"","ABUBHABI","","Abu Dhabi",
             payment_token,"fee_payment")
         val call: Call<PaymentGatewayModel> =
-            ApiClient.getClient.payment_gateway(paymentGatewayBody, "Bearer " + token)
+            ApiClient(context).getClient.payment_gateway(paymentGatewayBody, "Bearer " + token)
         call.enqueue(object : Callback<PaymentGatewayModel> {
             override fun onFailure(call: Call<PaymentGatewayModel>, t: Throwable) {
                 mProgressRelLayout.visibility = View.GONE
@@ -414,7 +415,7 @@ class PaymentDetailActivity : AppCompatActivity() {
         val paymentSuccessBody = PaymentSubmitApiModel(PreferenceManager.getStudentID(context).toString(),
             id,orderRef)
         val call: Call<PaymentSubmitModel> =
-            ApiClient.getClient.submit_payment(paymentSuccessBody, "Bearer " + token)
+            ApiClient(context).getClient.submit_payment(paymentSuccessBody, "Bearer " + token)
         call.enqueue(object : Callback<PaymentSubmitModel> {
             override fun onFailure(call: Call<PaymentSubmitModel>, t: Throwable) {
                 mProgressRelLayout.visibility= View.GONE
@@ -574,6 +575,14 @@ class PaymentDetailActivity : AppCompatActivity() {
                 "Print is not supported below Android KITKAT Version",
                 Toast.LENGTH_SHORT
             ).show()
+        }
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(context)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
         }
     }
 

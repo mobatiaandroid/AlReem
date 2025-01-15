@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.nas.alreem.R
 import com.nas.alreem.activity.home.HomeActivity
+import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.PDFViewerActivity
 import com.nas.alreem.constants.WebLinkActivity
 import com.nas.alreem.fragment.primary.model.PrimaryFileModel
@@ -43,14 +44,17 @@ class ShopInformationActivity : AppCompatActivity(){
    // var headermanager: HeaderManager? = null
     var back: ImageView? = null
     var home: ImageView? = null
-    private var mContext: Context? = null
+    private lateinit var mContext: Context
     private var mListViewArray: ArrayList<PrimaryFileModel>? = null
    // var progressBarDialog: ProgressBarDialog? = null
+   lateinit var activity: Activity
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shop_information)
         mContext = this
+        activity =this
         initUI()
        // if (AppUtils.checkInternet(mContext)) {
             getMusicAcademyInfoList()
@@ -135,7 +139,14 @@ class ShopInformationActivity : AppCompatActivity(){
     private fun getMusicAcademyInfoList() {
 
     }
-
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
+    }
 
    /* @Throws(JSONException::class)
     private fun getSearchValues(Object: JSONObject): SecondaryModel {

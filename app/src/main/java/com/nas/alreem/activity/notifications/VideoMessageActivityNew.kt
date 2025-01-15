@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.notifications
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -46,11 +47,14 @@ class VideoMessageActivityNew : AppCompatActivity() {
     private lateinit var contentWebView: WebView
     private lateinit var youtubeWebView: WebView
     private lateinit var progressDialog: ProgressBar
+    lateinit var activity: Activity
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video_message_new)
         mContext = this
+        activity=this
         id = intent.getStringExtra("id").orEmpty()
         title = intent.getStringExtra("title").orEmpty()
         initUI()
@@ -81,9 +85,7 @@ class VideoMessageActivityNew : AppCompatActivity() {
         youtubeWebView.webChromeClient = object : WebChromeClient() {
             override fun onProgressChanged(view: WebView, newProgress: Int) {
                 progressDialog.visibility = View.VISIBLE
-                println("testing2")
                 if (newProgress == 100) {
-                    println("testing1")
                     progressDialog.visibility = View.GONE
 
                 }
@@ -102,7 +104,7 @@ class VideoMessageActivityNew : AppCompatActivity() {
         progressDialog.visibility = View.VISIBLE
         val token = PreferenceManager.getaccesstoken(mContext)
         val studentBody = MessageDetailApiModel(id)
-        val call: Call<MessageDetailModel> = ApiClient.getClient.notifictaionDetail(studentBody, "Bearer $token")
+        val call: Call<MessageDetailModel> = ApiClient(mContext).getClient.notifictaionDetail(studentBody, "Bearer $token")
 
         call.enqueue(object : Callback<MessageDetailModel> {
             override fun onFailure(call: Call<MessageDetailModel>, t: Throwable) {
@@ -223,12 +225,18 @@ class VideoMessageActivityNew : AppCompatActivity() {
         youtubeWebView.webChromeClient = object : WebChromeClient() {
             override fun onProgressChanged(view: WebView, newProgress: Int) {
                 progressDialog.visibility = View.VISIBLE
-                println("testing2")
                 if (newProgress == 100) {
-                    println("testing1")
                     progressDialog.visibility = View.GONE
 
                 }
+            }
+        }
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
             }
         }
     }

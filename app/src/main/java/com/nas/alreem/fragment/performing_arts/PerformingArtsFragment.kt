@@ -231,7 +231,7 @@ class PerformingArtsFragment : Fragment
 
     private fun callPerformingArtsListAPI() {
       //  progressBarDialog.show()
-        val service: ApiInterface = ApiClient.getClient
+        val service: ApiInterface = ApiClient(mContext).getClient
         val call: Call<PerformingResponseModel> = service.performing_arts(
             "Bearer " + PreferenceManager.getaccesstoken(mContext)
         )

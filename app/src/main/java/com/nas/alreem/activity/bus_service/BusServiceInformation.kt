@@ -87,7 +87,7 @@ class BusServiceInformation : AppCompatActivity() {
 
         val token = PreferenceManager.getaccesstoken(mContext)
 
-        val call: Call<InfoCanteenModel> = ApiClient.getClient.getBusServiceInfo("Bearer "+token)
+        val call: Call<InfoCanteenModel> = ApiClient(mContext).getClient.getBusServiceInfo("Bearer "+token)
         call.enqueue(object : Callback<InfoCanteenModel> {
             override fun onFailure(call: Call<InfoCanteenModel>, t: Throwable) {
                 progressDialogAdd.visibility=View.GONE

@@ -96,7 +96,7 @@ class SixthFormFragment : Fragment() {
     {
         progressDialogAdd.visibility= View.VISIBLE
         primaryArrayList= ArrayList()
-        val call: Call<PrimaryResponseModel> = ApiClient.getClient.earlyYearsList()
+        val call: Call<PrimaryResponseModel> = ApiClient(mContext).getClient.earlyYearsList()
         call.enqueue(object : Callback<PrimaryResponseModel> {
             override fun onFailure(call: Call<PrimaryResponseModel>, t: Throwable) {
                 progressDialogAdd.visibility= View.GONE

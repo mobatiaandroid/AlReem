@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.staff_directory
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -52,12 +53,14 @@ class StaffDirectoryActivity:AppCompatActivity() {
     lateinit var filtered: ArrayList<StaffDeptListModel>
     var cat_id:Int=0
     var cat_name:String=""
+    lateinit var activity: Activity
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_staff_directory)
-
         mContext=this
+        activity=this
         initfn()
         if (ConstantFunctions.internetCheck(mContext))
         {
@@ -164,7 +167,7 @@ class StaffDirectoryActivity:AppCompatActivity() {
         val token = PreferenceManager.getaccesstoken(mContext)
         progressDialogAdd.visibility=View.VISIBLE
         staffCatList= ArrayList()
-        val call: Call<StaffCatListResponseModel> = ApiClient.getClient.staff_depatrtments("Bearer "+token)
+        val call: Call<StaffCatListResponseModel> = ApiClient(mContext).getClient.staff_depatrtments("Bearer "+token)
         call.enqueue(object : Callback<StaffCatListResponseModel> {
             override fun onFailure(call: Call<StaffCatListResponseModel>, t: Throwable) {
                 progressDialogAdd.visibility=View.GONE
@@ -187,5 +190,13 @@ class StaffDirectoryActivity:AppCompatActivity() {
             }
 
         })
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 }

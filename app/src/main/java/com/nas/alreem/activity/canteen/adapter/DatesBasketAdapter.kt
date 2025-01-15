@@ -58,7 +58,7 @@ class DatesBasketAdapter(
         llm.orientation = LinearLayoutManager.VERTICAL
         val spacing = 5 // 50px
 
-Log.e("cartdate", cartdate_list[position].delivery_date.toString())
+
         holder.totalAmountTxt.text = "Total      " + cartdate_list[position].total_amount.toString() + "AED"
         holder.itemDateTxt.text = ConstantFunctions.dateParsingToddMMMyyyyBasket(cartdate_list[position].delivery_date)
         holder.closeImg.setOnClickListener(View.OnClickListener { })

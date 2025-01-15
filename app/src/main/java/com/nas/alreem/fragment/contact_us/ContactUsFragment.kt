@@ -155,8 +155,6 @@ class ContactUsFragment  : Fragment(), LocationListener,
                 if (location != null) {
                     lat = location.latitude
                     long = location.longitude
-                    println("lat---$lat")
-                    println("lat---$long")
                 }
             }
         }
@@ -221,7 +219,7 @@ class ContactUsFragment  : Fragment(), LocationListener,
     {
         progressDialogAdd.visibility=View.VISIBLE
         contactUsArrayList= ArrayList()
-        val call: Call<ContactUsResponseModel> = ApiClient.getClient.contactUs()
+        val call: Call<ContactUsResponseModel> = ApiClient(mContext).getClient.contactUs()
         call.enqueue(object : Callback<ContactUsResponseModel> {
             override fun onFailure(call: Call<ContactUsResponseModel>, t: Throwable) {
                 progressDialogAdd.visibility=View.GONE

@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.absence
 
+import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.app.TimePickerDialog
@@ -84,12 +85,15 @@ class RequestearlypickupActivity:AppCompatActivity() {
     lateinit var sdate: Date
     lateinit var edate: Date
     var elapsedDays:Long = 0
+    lateinit var activity: Activity
+
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_request_earlypickup)
 
         mContext=this
+        activity=this
         initfn()
 
         if (ConstantFunctions.internetCheck(mContext)) {
@@ -296,7 +300,7 @@ class RequestearlypickupActivity:AppCompatActivity() {
         val pickupSuccessBody = RequestPickupApiModel(PreferenceManager.getStudentID(mContext).toString(),new_date,
             time,reason,pickupby,2,devicename,"1.0")
         val call: Call<EarlyPickupModel> =
-            ApiClient.getClient.pickupRequest(pickupSuccessBody, "Bearer " + token)
+            ApiClient(mContext).getClient.pickupRequest(pickupSuccessBody, "Bearer " + token)
         call.enqueue(object : Callback<EarlyPickupModel> {
             override fun onFailure(call: Call<EarlyPickupModel>, t: Throwable) {
 
@@ -337,7 +341,7 @@ class RequestearlypickupActivity:AppCompatActivity() {
     {
         progressDialogAdd.visibility=View.VISIBLE
         studentListArrayList= ArrayList()
-        val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+ PreferenceManager.getaccesstoken(mContext))
+        val call: Call<StudentListModel> = ApiClient(mContext).getClient.studentList("Bearer "+ PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<StudentListModel> {
             override fun onFailure(call: Call<StudentListModel>, t: Throwable) {
                 progressDialogAdd.visibility=View.GONE
@@ -508,5 +512,13 @@ class RequestearlypickupActivity:AppCompatActivity() {
         }
         dialog.show()
 
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
     }

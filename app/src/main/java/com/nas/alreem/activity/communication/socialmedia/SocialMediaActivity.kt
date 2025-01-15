@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.communication.socialmedia
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.ActivityNotFoundException
 import android.content.Context
@@ -45,11 +46,14 @@ class SocialMediaActivity : AppCompatActivity(){
         java.util.ArrayList<SocialMediaModel>()
     private val mSocialMediaArraylistInstagram: java.util.ArrayList<SocialMediaModel> =
         java.util.ArrayList<SocialMediaModel>()
+    lateinit var activity: Activity
+
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_social_media)
         mContext=this
+        activity=this
         initUI()
 
         if (ConstantFunctions.internetCheck(mContext))
@@ -65,7 +69,7 @@ class SocialMediaActivity : AppCompatActivity(){
 
     private fun SocialMediaApi() {
         val token = PreferenceManager.getaccesstoken(mContext)
-        val call: Call<SocialMediaResponseModel> = ApiClient.getClient.social_media("Bearer "+token)
+        val call: Call<SocialMediaResponseModel> = ApiClient(mContext).getClient.social_media("Bearer "+token)
         call.enqueue(object : Callback<SocialMediaResponseModel> {
             override fun onFailure(call: Call<SocialMediaResponseModel>, t: Throwable) {
 
@@ -363,12 +367,18 @@ class SocialMediaActivity : AppCompatActivity(){
                         }
 
                         override fun onLongClickItem(v: View?, position: Int) {
-                            println("On Long Click Item interface")
                         }
                     })
             )
             dialog.show()
         }
 
-
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
+    }
 }

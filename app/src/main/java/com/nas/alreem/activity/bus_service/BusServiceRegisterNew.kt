@@ -149,7 +149,7 @@ class BusServiceRegisterNew : AppCompatActivity() {
         optionArray = ArrayList()
 
         var studentdetailsmodel = StudentDetailsModel(PreferenceManager.getStudentID(mContext)!!)
-        val call: Call<DetailsResponseModel> = ApiClient.getClient.student_details(
+        val call: Call<DetailsResponseModel> = ApiClient(mContext).getClient.student_details(
             "Bearer " + PreferenceManager.getaccesstoken(mContext),
             studentdetailsmodel
         )
@@ -520,7 +520,7 @@ class BusServiceRegisterNew : AppCompatActivity() {
         val frontImagePart: MultipartBody.Part? = attachment1
 
 
-        val call: Call<EarlyPickupModel> = ApiClient.getClient.request_for_bus_service(
+        val call: Call<EarlyPickupModel> = ApiClient(mContext).getClient.request_for_bus_service(
             "Bearer " + PreferenceManager.getaccesstoken(mContext),
             student_id,
             pickuptext,
@@ -695,7 +695,6 @@ class BusServiceRegisterNew : AppCompatActivity() {
                 citye.setText(state)
                 street.setText(city)
 
-                println("Address: $fullAddress")
 
 
             }

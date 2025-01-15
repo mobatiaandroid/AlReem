@@ -251,7 +251,6 @@ class CalendarListAdapter(
                     break
                 }
             }
-            println("addToCalendar---$addToCalendar")
             if (addToCalendar) {
 
                 if (year != -1 && month != -1 && day != -1 && hour != -1 && min != -1) {

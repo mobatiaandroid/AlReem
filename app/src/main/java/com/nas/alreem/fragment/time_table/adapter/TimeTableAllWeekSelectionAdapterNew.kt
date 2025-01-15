@@ -82,8 +82,6 @@ class TimeTableAllWeekSelectionAdapterNew(
             try {
                 val sdf = SimpleDateFormat("HH:mm")
                 val dateObj: Date = sdf.parse(time)
-                println(dateObj)
-                println(SimpleDateFormat("hh:mm a").format(dateObj))
                 holder.timeBreak.text = SimpleDateFormat("hh:mm a").format(dateObj)
             } catch (e: ParseException) {
                 e.printStackTrace()
@@ -101,8 +99,6 @@ class TimeTableAllWeekSelectionAdapterNew(
             try {
                 val sdf = SimpleDateFormat("HH:mm")
                 val dateObj: Date = sdf.parse(time)
-                println(dateObj)
-                println(SimpleDateFormat("hh:mm a").format(dateObj))
                 holder.timeBreak.text = SimpleDateFormat("hh:mm a").format(dateObj)
             } catch (e: ParseException) {
                 e.printStackTrace()
@@ -232,9 +228,7 @@ class TimeTableAllWeekSelectionAdapterNew(
             if (holder.tutor1.text.toString().equals("", ignoreCase = true)) {
             } else {
                 isClick = true
-//                System.out.println(
-//                    "mon:::" + mPeriodModel.get(position).getTimeTableListM().size()
-//                )
+//
                 val itemView = LayoutInflater.from(mContext)
                     .inflate(R.layout.popup_timetable_activity, null, false)
                 val recycler_view_timetable: RecyclerView =

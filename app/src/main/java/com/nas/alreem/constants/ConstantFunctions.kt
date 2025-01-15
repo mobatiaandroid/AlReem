@@ -9,6 +9,8 @@ import android.graphics.drawable.ColorDrawable
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
+import android.provider.Settings
+import android.provider.Settings.SettingNotFoundException
 import android.view.View
 import android.view.Window
 import android.widget.Button
@@ -16,7 +18,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.nas.alreem.R
 import com.nas.alreem.activity.canteen.model.canteen_cart.CanteenCartResModel
-import com.nas.alreem.activity.canteen.model.canteen_cart.ItemsModel
 import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -28,6 +29,7 @@ class ConstantFunctions {
 
         lateinit var cart_list: ArrayList<CanteenCartResModel>
         lateinit var idList:ArrayList<Int>
+        var runMethod: String = "Client"
 
 
         fun isEmailValid(email: String): Boolean {
@@ -301,6 +303,41 @@ class ConstantFunctions {
 //				dialog.dismiss();
 //			}
 //		});
+        dialog.show()
+    }
+    fun isDeveloperModeEnabled(context: Context): Boolean {
+        try {
+            val devMode = Settings.Global.getInt(
+                context.contentResolver,
+                Settings.Global.DEVELOPMENT_SETTINGS_ENABLED
+            )
+            return devMode == 1 // 1 indicates Developer Mode is ON
+        } catch (e: SettingNotFoundException) {
+            e.printStackTrace()
+            return false // Developer Mode setting not found, assume it's off
+        }
+    }
+  public  fun showDeviceIsDeveloperPopUp(activity: Activity) {
+        val dialog = Dialog(activity)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.dialog_common_error_alert)
+        val icon = dialog.findViewById<ImageView>(R.id.iconImageView)
+        icon.setBackgroundResource(R.drawable.round)
+        icon.setImageResource(R.drawable.alert)
+        val text = dialog.findViewById<TextView>(R.id.messageTxt)
+        val textHead = dialog.findViewById<TextView>(R.id.alertHead)
+        text.text =
+            "You have enabled Developer options/USB debugging on your phone. Please disable both to use the app for security reasons."
+        textHead.text = "Disable Developer Option"
+
+        val dialogButton = dialog.findViewById<Button>(R.id.btn_Ok)
+        dialogButton.setOnClickListener {
+            dialog.dismiss()
+            activity.finish()
+        }
+
         dialog.show()
     }
 }

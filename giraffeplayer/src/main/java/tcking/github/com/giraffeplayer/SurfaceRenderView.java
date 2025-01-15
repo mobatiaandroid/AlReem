@@ -104,7 +104,7 @@ public class SurfaceRenderView extends SurfaceView implements IRenderView {
 
     @Override
     public void setVideoRotation(int degree) {
-        Log.e("", "SurfaceView doesn't support rotation (" + degree + ")!\n");
+       // Log.e("", "SurfaceView doesn't support rotation (" + degree + ")!\n");
     }
 
     @Override

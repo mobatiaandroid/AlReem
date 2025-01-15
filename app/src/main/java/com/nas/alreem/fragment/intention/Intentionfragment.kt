@@ -165,7 +165,6 @@ class Intentionfragment : Fragment(){
                     startActivity(intent)
                 }
                 else{
-Log.e("position", position.toString())
                     getIntentionStatusAPI(primaryArrayList[position].intensionId,position)
 
                    /* val dialog = Dialog(mContext)
@@ -577,7 +576,7 @@ Log.e("position", position.toString())
         val body = IntentionApiModel("0", "100")
         val token = PreferenceManager.getaccesstoken(mContext)
         val call: Call<IntentionListAPIResponseModel> =
-            ApiClient.getClient.intension(body, "Bearer " + token)
+            ApiClient(mContext).getClient.intension(body, "Bearer " + token)
         call.enqueue(object : Callback<IntentionListAPIResponseModel> {
             override fun onFailure(call: Call<IntentionListAPIResponseModel>, t: Throwable) {
                 progress.visibility = View.GONE
@@ -596,7 +595,6 @@ Log.e("position", position.toString())
                         if (response.body()!!.status == 100) {
                             primaryArrayList = response.body()!!.responseArray.intensions
                             parentName=response.body()!!.responseArray.parent_name
-                            Log.e("primaryArrayList", primaryArrayList.toString())
                             if (primaryArrayList.size>0)
                             {
 
@@ -640,12 +638,11 @@ Log.e("position", position.toString())
         position: Int
     )
     {
-        Log.e("Position1", position.toString())
         intentionstatusArray = ArrayList()
         progress.visibility = View.VISIBLE
         val body = IntentionStatusApiModel(intensionId,"0","150")
         val token = PreferenceManager.getaccesstoken(mContext)
-        val call: Call<IntentionStatusResponseModel> = ApiClient.getClient.intensionstatus(body,"Bearer "+token)
+        val call: Call<IntentionStatusResponseModel> = ApiClient(mContext).getClient.intensionstatus(body,"Bearer "+token)
         call.enqueue(object : Callback<IntentionStatusResponseModel> {
             override fun onFailure(call: Call<IntentionStatusResponseModel>, t: Throwable) {
                 // Log.e("Error", t.localizedMessage)
@@ -685,7 +682,7 @@ Log.e("position", position.toString())
     {
         progress.visibility = View.VISIBLE
         val token = PreferenceManager.getaccesstoken(mContext)
-        val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+token)
+        val call: Call<StudentListModel> = ApiClient(mContext).getClient.studentList("Bearer "+token)
         call.enqueue(object : Callback<StudentListModel> {
             override fun onFailure(call: Call<StudentListModel>, t: Throwable) {
                 // Log.e("Error", t.localizedMessage)

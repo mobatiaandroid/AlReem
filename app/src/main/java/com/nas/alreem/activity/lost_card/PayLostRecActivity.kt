@@ -1,14 +1,18 @@
 package com.nas.alreem.activity.lost_card
 
+import android.app.Activity
 import android.content.Context
 import android.webkit.WebView
 import androidx.appcompat.app.AppCompatActivity
+import com.nas.alreem.constants.ConstantFunctions
 import java.io.BufferedReader
 import java.io.IOException
 
 class PayLostRecActivity :AppCompatActivity() {
-    var context: Context? = null
+    lateinit var context: Context
     var student_name: String? = null
+    lateinit var activity: Activity
+
     fun main() {}
     fun loadWebViewWithDataPrint(
         paymentWeb: WebView, br: BufferedReader,
@@ -20,6 +24,7 @@ class PayLostRecActivity :AppCompatActivity() {
     ) {
         var student_name = student_name
         context = context
+        activity=this
         student_name = student_name
         var sb = StringBuffer()
         var eachLine: String? = ""
@@ -53,6 +58,14 @@ class PayLostRecActivity :AppCompatActivity() {
                 "utf-8",
                 "about:blank"
             )
+        }
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(context)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
         }
     }
 }

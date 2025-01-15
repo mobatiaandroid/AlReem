@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.cca
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -72,12 +73,14 @@ class CCASelectionActivity : AppCompatActivity() {
     var mCCAsActivityAdapter: CCAsActivityAdapter? = null
     var backButtonTrigger = false
 
+    lateinit var activity: Activity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_ccaselection)
         mContext = this
+        activity=this
         initialiseUI()
 
     }
@@ -341,11 +344,9 @@ class CCASelectionActivity : AppCompatActivity() {
 
 
         for (i in 0 until AppController.weekList!!.size) {
-            Log.e("arraysize", CCADetailModelArrayList!!.size.toString())
 
             for (j in CCADetailModelArrayList!!.indices) {
-                Log.e("weekarray", AppController.weekList!!.get(i).weekDay!!)
-                Log.e("ccadetailsarray", CCADetailModelArrayList!!.get(j).day!!)
+
 
                 if (AppController.weekList!!.get(i).weekDay.equals(
                         CCADetailModelArrayList!!.get(j).day)
@@ -621,7 +622,6 @@ class CCASelectionActivity : AppCompatActivity() {
                     for (m in weekPosition until AppController.weekList!!.size) {
                         if (AppController.weekListWithData!!.contains(m)) {
                             weekPosition = m
-                            println("weekposition:m:$weekPosition")
                             break
                         }
                     }
@@ -795,7 +795,7 @@ class CCASelectionActivity : AppCompatActivity() {
         )
         val token = PreferenceManager.getaccesstoken(mContext)
         val call: Call<CCASubmitResponseModel> =
-            ApiClient.getClient.ccareservecancel( model,"Bearer $token")
+            ApiClient(mContext).getClient.ccareservecancel( model,"Bearer $token")
         progress.visibility = View.VISIBLE
         call.enqueue(object : Callback<CCASubmitResponseModel> {
             override fun onResponse(
@@ -849,7 +849,7 @@ class CCASelectionActivity : AppCompatActivity() {
         )
         val token = PreferenceManager.getaccesstoken(mContext)
         val call: Call<CCASubmitResponseModel> =
-            ApiClient.getClient.ccareservecancel( model,"Bearer $token")
+            ApiClient(mContext).getClient.ccareservecancel( model,"Bearer $token")
         progress.visibility = View.VISIBLE
         call.enqueue(object : Callback<CCASubmitResponseModel> {
             override fun onResponse(
@@ -897,12 +897,10 @@ class CCASelectionActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.e("destroy", "destroy")
     }
 
     override fun onPause() {
         super.onPause()
-        Log.e("onPause", "onPause")
         if(ccaedit==0)
             {
                 if (!backButtonTrigger) {
@@ -976,6 +974,13 @@ class CCASelectionActivity : AppCompatActivity() {
 
 
     }
-
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
+    }
 
 }

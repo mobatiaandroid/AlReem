@@ -229,7 +229,7 @@ class BusServiceFragment : Fragment(){
         val token = PreferenceManager.getaccesstoken(mContext)
         val pickupSuccessBody = ListAbsenceApiModel(PreferenceManager.getStudentID(mContext).toString(),0,20)
         val call: Call<BusserviceResponseModel> =
-            ApiClient.getClient.listbusservice(pickupSuccessBody, "Bearer " + token)
+            ApiClient(mContext).getClient.listbusservice(pickupSuccessBody, "Bearer " + token)
         call.enqueue(object : Callback<BusserviceResponseModel> {
             override fun onFailure(call: Call<BusserviceResponseModel>, t: Throwable) {
 
@@ -283,7 +283,7 @@ class BusServiceFragment : Fragment(){
     {
         progressDialogAdd.visibility=View.VISIBLE
         studentListArrayList= ArrayList()
-        val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+PreferenceManager.getaccesstoken(mContext))
+        val call: Call<StudentListModel> = ApiClient(mContext).getClient.studentList("Bearer "+PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<StudentListModel> {
             override fun onFailure(call: Call<StudentListModel>, t: Throwable) {
                 progressDialogAdd.visibility=View.GONE

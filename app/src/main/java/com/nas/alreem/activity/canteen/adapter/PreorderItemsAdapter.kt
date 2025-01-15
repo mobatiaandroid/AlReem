@@ -213,7 +213,7 @@ Log.e("studentallergy", itemlist[position].student_allergy.toString())
         //progressDialogP.show()
         val token = PreferenceManager.getaccesstoken(mcontext)
         var canteenCart= CanteenCartApiModel(PreferenceManager.getStudentID(mcontext).toString())
-        val call: Call<CanteenCartModel> = ApiClient.getClient.get_canteen_cart(canteenCart,"Bearer "+token)
+        val call: Call<CanteenCartModel> = ApiClient(mcontext).getClient.get_canteen_cart(canteenCart,"Bearer "+token)
         call.enqueue(object : Callback<CanteenCartModel> {
             override fun onFailure(call: Call<CanteenCartModel>, t: Throwable) {
                 progressDialogP.hide()
@@ -261,7 +261,7 @@ private fun addToCart(id:String,price:String,position: Int){
     val token = PreferenceManager.getaccesstoken(mcontext)
     var canteenadd= AddToCartCanteenApiModel(
         PreferenceManager.getStudentID(mcontext).toString(),id,date,"1",price)
-    val call: Call<AddToCartCanteenModel> = ApiClient.getClient.add_to_canteen_cart(canteenadd,"Bearer "+token)
+    val call: Call<AddToCartCanteenModel> = ApiClient(mcontext).getClient.add_to_canteen_cart(canteenadd,"Bearer "+token)
     call.enqueue(object : Callback<AddToCartCanteenModel> {
         override fun onFailure(call: Call<AddToCartCanteenModel>, t: Throwable) {
             progressDialogP.hide()
@@ -296,7 +296,7 @@ private fun addToCart(id:String,price:String,position: Int){
         var canteenadd= CanteenCartUpdateApiModel(
             PreferenceManager.getStudentID(mcontext).toString(),date,quant,
             itemlist[position].id,canteen_cart_id)
-        val call: Call<CanteenCartUpdateModel> = ApiClient.getClient.update_canteen_cart(canteenadd,"Bearer "+token)
+        val call: Call<CanteenCartUpdateModel> = ApiClient(mcontext).getClient.update_canteen_cart(canteenadd,"Bearer "+token)
         call.enqueue(object : Callback<CanteenCartUpdateModel> {
             override fun onFailure(call: Call<CanteenCartUpdateModel>, t: Throwable) {
                 progressDialogP.hide()
@@ -336,7 +336,7 @@ private fun addToCart(id:String,price:String,position: Int){
         val token = PreferenceManager.getaccesstoken(mcontext)
         var canteenadd= CanteenCartRemoveApiModel(
             PreferenceManager.getStudentID(mcontext).toString(),canteen_cart_id)
-        val call: Call<CanteenCartRemoveModel> = ApiClient.getClient.remove_canteen_cart(canteenadd,"Bearer "+token)
+        val call: Call<CanteenCartRemoveModel> = ApiClient(mcontext).getClient.remove_canteen_cart(canteenadd,"Bearer "+token)
         call.enqueue(object : Callback<CanteenCartRemoveModel> {
             override fun onFailure(call: Call<CanteenCartRemoveModel>, t: Throwable) {
                 progressDialogP.hide()

@@ -228,7 +228,7 @@ class PreorderItemsAdapterShop_new(
         //progressDialogP.show()
         val token = PreferenceManager.getaccesstoken(mcontext)
         var canteenCart= CanteenCartApiModel(PreferenceManager.getStudentID(mcontext)!!)
-        val call: Call<GetShopCartResponseModel> = ApiClient.getClient.get_shop_cart(canteenCart,"Bearer "+token)
+        val call: Call<GetShopCartResponseModel> = ApiClient(mcontext).getClient.get_shop_cart(canteenCart,"Bearer "+token)
         call.enqueue(object : Callback<GetShopCartResponseModel> {
             override fun onFailure(call: Call<GetShopCartResponseModel>, t: Throwable) {
                 progressDialogP.hide()
@@ -278,7 +278,7 @@ class PreorderItemsAdapterShop_new(
         val token = PreferenceManager.getaccesstoken(mcontext)
         var canteenadd= AddToCartShopApiModel(
             PreferenceManager.getStudentID(mcontext)!!,id,"1",price)
-        val call: Call<AddToCartCanteenModel> = ApiClient.getClient.add_to_shop_cart(canteenadd,"Bearer "+token)
+        val call: Call<AddToCartCanteenModel> = ApiClient(mcontext).getClient.add_to_shop_cart(canteenadd,"Bearer "+token)
         call.enqueue(object : Callback<AddToCartCanteenModel> {
             override fun onFailure(call: Call<AddToCartCanteenModel>, t: Throwable) {
                 progressDialogP.hide()
@@ -320,7 +320,7 @@ class PreorderItemsAdapterShop_new(
         var canteenadd= ShopCartUpdateApiModel(
             PreferenceManager.getStudentID(mcontext)!!,quant,
             itemlist[position].id,canteen_cart_id)
-        val call: Call<CanteenCartUpdateModel> = ApiClient.getClient.update_shop_cart(canteenadd,"Bearer "+token)
+        val call: Call<CanteenCartUpdateModel> = ApiClient(mcontext).getClient.update_shop_cart(canteenadd,"Bearer "+token)
         call.enqueue(object : Callback<CanteenCartUpdateModel> {
             override fun onFailure(call: Call<CanteenCartUpdateModel>, t: Throwable) {
                 progressDialogP.hide()
@@ -365,7 +365,7 @@ class PreorderItemsAdapterShop_new(
         val token = PreferenceManager.getaccesstoken(mcontext)
         var canteenadd= ShopCartRemoveApiModel(
             PreferenceManager.getStudentID(mcontext)!!,canteen_cart_id)
-        val call: Call<CanteenCartRemoveModel> = ApiClient.getClient.remove_shop_cart(canteenadd,"Bearer "+token)
+        val call: Call<CanteenCartRemoveModel> = ApiClient(mcontext).getClient.remove_shop_cart(canteenadd,"Bearer "+token)
         call.enqueue(object : Callback<CanteenCartRemoveModel> {
             override fun onFailure(call: Call<CanteenCartRemoveModel>, t: Throwable) {
                 progressDialogP.hide()

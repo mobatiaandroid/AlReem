@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.shop_new
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -73,12 +74,15 @@ class InvoiceListingActivity : AppCompatActivity() {
     var paymentHistoryList: ArrayList<ShopModel> =
         ArrayList<ShopModel>()
     lateinit var mNewsLetterListView: RecyclerView
-   // var progressBarDialog: ProgressBarDialog? = null
+    lateinit var activity: Activity
+
+    // var progressBarDialog: ProgressBarDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_invoice_listing)
         mContext = this
+        activity=this
         initialiseUI()
         if (ConstantFunctions.internetCheck(mContext)) {
 
@@ -176,7 +180,7 @@ class InvoiceListingActivity : AppCompatActivity() {
         progressDialogAdd.visibility=View.VISIBLE
         studentsModelArrayList!!.clear()
        // studentList.clear()
-        val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+ PreferenceManager.getaccesstoken(mContext))
+        val call: Call<StudentListModel> = ApiClient(mContext).getClient.studentList("Bearer "+ PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<StudentListModel> {
             override fun onResponse(
                 call: Call<StudentListModel?>,
@@ -270,7 +274,7 @@ class InvoiceListingActivity : AppCompatActivity() {
 
         val studentbody= ShopHistoryModel(studentIdStr!!,"0","25")
 
-        val call: Call<ShopHistoryResponseModel> = ApiClient.getClient.get_shop_orders_history(studentbody,"Bearer "+ PreferenceManager.getaccesstoken(mContext))
+        val call: Call<ShopHistoryResponseModel> = ApiClient(mContext).getClient.get_shop_orders_history(studentbody,"Bearer "+ PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<ShopHistoryResponseModel> {
             override fun onResponse(
                 call: Call<ShopHistoryResponseModel?>,
@@ -538,5 +542,12 @@ class InvoiceListingActivity : AppCompatActivity() {
         )
         dialog.show()
     }
-
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
+    }
 }

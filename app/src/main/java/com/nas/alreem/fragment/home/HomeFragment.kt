@@ -210,7 +210,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
     }
 
     fun getbannerimages() {
-        val call: Call<BannerResponseModel> = ApiClient.getClient.bannerImages()
+        val call: Call<BannerResponseModel> = ApiClient(mContext).getClient.bannerImages()
         call.enqueue(object : Callback<BannerResponseModel> {
             override fun onFailure(call: Call<BannerResponseModel>, t: Throwable) {
             }
@@ -300,7 +300,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
     fun getBadge() {
         val token = PreferenceManager.getaccesstoken(mContext)
-        val call: Call<BadgeResponseModel> = ApiClient.getClient.badge_counts("Bearer " + token)
+        val call: Call<BadgeResponseModel> = ApiClient(mContext).getClient.badge_counts("Bearer " + token)
         call.enqueue(object : Callback<BadgeResponseModel> {
             override fun onFailure(call: Call<BadgeResponseModel>, t: Throwable) {
             }
@@ -385,7 +385,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
     }
 
     private fun getReEnrollmentStatus() {
-        val call: Call<ReEnrollmentStatusResponseModel> = ApiClient.getClient.getenrollstatus(
+        val call: Call<ReEnrollmentStatusResponseModel> = ApiClient(mContext).getClient.getenrollstatus(
             "Bearer " + PreferenceManager.getaccesstoken(mContext)
         )
 
@@ -465,7 +465,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
     }
 
     private fun showReEnrollmentPopUp() {
-        val service: ApiInterface = ApiClient.getClient
+        val service: ApiInterface = ApiClient(mContext).getClient
 
         val call: Call<ReEnrollmentFormResponseModel> =
             service.getenrollform("Bearer " + PreferenceManager.getaccesstoken(mContext))
@@ -1005,7 +1005,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
         val paramObject = JsonObject()
         paramObject.addProperty("title", subject.trim().toString())
         paramObject.addProperty("message", content.trim().toString())
-        val call: Call<EnrollmentHelpResponseModel> = ApiClient.getClient.getenrollhelp(
+        val call: Call<EnrollmentHelpResponseModel> = ApiClient(mContext).getClient.getenrollhelp(
             "Bearer " + PreferenceManager.getaccesstoken(mContext),
             paramObject
         )
@@ -1347,7 +1347,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
         dialog: Dialog,
         d: Dialog
     ) {
-        val service: ApiInterface = ApiClient.getClient
+        val service: ApiInterface = ApiClient(mContext).getClient
 
         val save_reenroll = ReEnrollSubmitAPIModel(reEnrollsubmit)
         val call: Call<EnrollmentSaveResponseModel> = service.getenrollsave(
@@ -1627,12 +1627,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                         mContext
                     ).equals("0")
                 ) {
-                    println("relImgDot 1")
-                    System.out.println(
-                        "relImgDot 1 badge " + PreferenceManager.getPaymentitem_badge(
-                            mContext
-                        )
-                    )
+
                     relImgOneDot.visibility = View.VISIBLE
                     relImgOneDot.text = PreferenceManager.getPaymentitem_badge(mContext)
                     relImgOneDot.setBackgroundResource(R.drawable.shape_circle_red)
@@ -6113,7 +6108,7 @@ fun callSurveyApi() {
     var model = SurveyApiModel("16")
 
     val call: Call<SurveyResponseModel> =
-        ApiClient.getClient.survey(model, "Bearer " + PreferenceManager.getaccesstoken(mContext))
+        ApiClient(mContext).getClient.survey(model, "Bearer " + PreferenceManager.getaccesstoken(mContext))
     call.enqueue(object : Callback<SurveyResponseModel> {
         override fun onFailure(call: Call<SurveyResponseModel>, t: Throwable) {
 
@@ -6626,7 +6621,7 @@ fun callSurveySubmitApi(
     var model = SurveySubmitApiModel(survey_ID.toString(), status.toString(), mAnswerList)
 
 
-    val call: Call<SurveySubmitResponseModel> = ApiClient.getClient.surveysubmit(
+    val call: Call<SurveySubmitResponseModel> = ApiClient(mContext).getClient.surveysubmit(
         model, "Bearer " + PreferenceManager.getaccesstoken(mContext)
     )
     call.enqueue(object : Callback<SurveySubmitResponseModel> {
@@ -6780,7 +6775,7 @@ private fun showSendEmailDialog() {
 fun sendEmail(title: String, message: String, staffEmail: String, dialog: Dialog) {
     // progressDialog.visibility = View.VISIBLE
     val sendMailBody = SendEmailApiModel(staffEmail, title, message)
-    val call: Call<SignUpResponseModel> = ApiClient.getClient.sendEmailStaff(
+    val call: Call<SignUpResponseModel> = ApiClient(mContext).getClient.sendEmailStaff(
         sendMailBody, "Bearer " + PreferenceManager.getaccesstoken(mContext)
     )
     call.enqueue(object : Callback<SignUpResponseModel> {

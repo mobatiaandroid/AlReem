@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.calendar
 
+import android.app.Activity
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,6 +9,7 @@ import android.widget.LinearLayout
 import androidx.viewpager.widget.ViewPager
 import com.nas.alreem.R
 import com.nas.alreem.activity.calendar.adapter.TutorialViewPagerAdapter
+import com.nas.alreem.constants.ConstantFunctions
 
 class CalendarTutorialActivity : AppCompatActivity() {
     lateinit var mContext: Context
@@ -18,10 +20,13 @@ class CalendarTutorialActivity : AppCompatActivity() {
     //   lateinit var  mImgCircle[]: ImageView
     var bannerarray = ArrayList<Int>()
     var dataType: Int = 0
+    lateinit var activity: Activity
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_calendar_tutorial)
         mContext = this
+        activity=this
         bannerarray.add(R.drawable.tut_cal_1)
         bannerarray.add(R.drawable.tut_cal_2)
         bannerarray.add(R.drawable.tut_cal_3)
@@ -88,6 +93,14 @@ class CalendarTutorialActivity : AppCompatActivity() {
                 mImgCircle.get(i)!!.setBackgroundResource(R.drawable.blackround)
             }
             mLinearLayout.addView(mImgCircle.get(i))
+        }
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.nas.alreem.activity.communication.information
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -48,6 +49,8 @@ class CommunicationInformationActivity : AppCompatActivity() {
     lateinit var logoClickImgView: ImageView
     lateinit var backRelative: RelativeLayout
     lateinit var progressDialogAdd: ProgressBar
+    lateinit var activity: Activity
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,6 +71,7 @@ class CommunicationInformationActivity : AppCompatActivity() {
 
     private fun initfn() {
         mContext = this
+        activity=this
         informationlist = ArrayList()
         recyclerview = findViewById(R.id.canteen_info_list)
         var linearLayoutManager = LinearLayoutManager(mContext)
@@ -117,7 +121,7 @@ class CommunicationInformationActivity : AppCompatActivity() {
     private fun  getList() {
         val token = PreferenceManager.getaccesstoken(mContext)
         val call: Call<InformationResponseModel> =
-            ApiClient.getClient.communication_info("Bearer " + token)
+            ApiClient(mContext).getClient.communication_info("Bearer " + token)
         call.enqueue(object : Callback<InformationResponseModel> {
             override fun onFailure(call: Call<InformationResponseModel>, t: Throwable) {
 
@@ -176,5 +180,13 @@ class CommunicationInformationActivity : AppCompatActivity() {
         mSecondaryModel.submenu=(Object.getString("submenu"))
         mSecondaryModel.filename=(Object.getString("filename"))
         return mSecondaryModel
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 }

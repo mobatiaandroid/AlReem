@@ -1,6 +1,7 @@
 package com.nas.alreem.activity.sixth_form
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -32,12 +33,15 @@ class SixthFormComingUpActivity : AppCompatActivity(){
     lateinit var heading: TextView
     lateinit var logoClickImgView: ImageView
     lateinit var progressDialogAdd: ProgressBar
+    lateinit var activity: Activity
+
     lateinit var comingUpArrayList: ArrayList<com.nas.alreem.activity.communication.commingup.model.ComingUpResponseModel.ComingUpItem>
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_coming_up)
         mContext=this
+        activity=this
         initUI()
         if (ConstantFunctions.internetCheck(mContext))
         {
@@ -113,7 +117,7 @@ class SixthFormComingUpActivity : AppCompatActivity(){
     {
         progressDialogAdd.visibility= View.VISIBLE
         comingUpArrayList= ArrayList()
-        val call: Call<ComingUpResponseModel> = ApiClient.getClient.earlyComingUp()
+        val call: Call<ComingUpResponseModel> = ApiClient(mContext).getClient.earlyComingUp()
         call.enqueue(object : Callback<ComingUpResponseModel> {
             override fun onFailure(call: Call<ComingUpResponseModel>, t: Throwable) {
                 progressDialogAdd.visibility= View.GONE
@@ -153,5 +157,13 @@ class SixthFormComingUpActivity : AppCompatActivity(){
             }
 
         })
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 }

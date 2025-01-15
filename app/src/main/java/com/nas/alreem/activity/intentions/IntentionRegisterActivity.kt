@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.intentions
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -113,6 +114,8 @@ class IntentionRegisterActivity : AppCompatActivity(){
     lateinit var email : TextView
     lateinit var desc : TextView
     lateinit var progress: ProgressBar
+    lateinit var activity: Activity
+
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -120,6 +123,7 @@ class IntentionRegisterActivity : AppCompatActivity(){
         setContentView(R.layout.intention_popup_submit)
 
         mContext=this
+        activity=this
         initfn()
 
         if (ConstantFunctions.internetCheck(mContext)) {
@@ -162,8 +166,7 @@ class IntentionRegisterActivity : AppCompatActivity(){
             }
 
         }
-        Log.e("option",optionArray.toString())
-        Log.e("subquestion",subQuestion.toString())
+
         intention_id = intent.getIntExtra("intent_id", 0)
 //       optionArray= PreferenceManager.getoptions(mContext)!!
         position = intent.getIntExtra("position", 0)
@@ -212,7 +215,6 @@ class IntentionRegisterActivity : AppCompatActivity(){
         val reEnrollSubmit = IntentionSubmitModel("", "")
 
         optionsArray.addAll(optionArray)
-        Log.e("arraysizeoption", optionsArray.size.toString())
 
 //        answerTxt2.isFocusable = false
 //        answerTxt2.isFocusableInTouchMode = false
@@ -397,12 +399,11 @@ class IntentionRegisterActivity : AppCompatActivity(){
 
         val body = IntentionApiSubmit(PreferenceManager.getStudentID(mContext)!!,intensionId.toString(),"2",devicename,version,selectedItem,answerTV.text.trim().toString())
         val token = PreferenceManager.getaccesstoken(mContext)
-        val call: Call<StudentInfoModel> = ApiClient.getClient.intensionstatusupdate(body,"Bearer "+token)
+        val call: Call<StudentInfoModel> = ApiClient(mContext).getClient.intensionstatusupdate(body,"Bearer "+token)
         call.enqueue(object : Callback<StudentInfoModel> {
             override fun onFailure(call: Call<StudentInfoModel>, t: Throwable) {
                 progress.visibility=View.GONE
 
-                Log.e("Error", t.localizedMessage)
               //  progress.visibility = View.GONE
             }
             override fun onResponse(call: Call<StudentInfoModel>, response: Response<StudentInfoModel>) {
@@ -411,7 +412,6 @@ class IntentionRegisterActivity : AppCompatActivity(){
                 progress.visibility=View.GONE
 
                 val responsedata = response.body()
-                Log.e("size","size")
                 if (responsedata != null) {
                     try {
 
@@ -557,5 +557,13 @@ class IntentionRegisterActivity : AppCompatActivity(){
         }
         dialog.show()
 
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 }

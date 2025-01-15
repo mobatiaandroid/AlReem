@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.shop_new
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -78,6 +79,8 @@ class MusicInvoicePrintNew :AppCompatActivity(){
     var itam_name :String?=""
     var quantity: String?=""
     var itemsList: ArrayList<ShopModel>? = ArrayList<ShopModel>()
+    lateinit var activity: Activity
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.preview_activity)
@@ -93,6 +96,7 @@ class MusicInvoicePrintNew :AppCompatActivity(){
     }
     private fun initfn(){
         nContext = this
+        activity=this
         extras = intent.extras
         tab_type = extras!!.getString("tab_type")
         orderId = extras!!.getString("orderreference")
@@ -363,6 +367,14 @@ class MusicInvoicePrintNew :AppCompatActivity(){
                 "Print is not supported below Android KITKAT Version",
                 Toast.LENGTH_SHORT
             ).show()
+        }
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(nContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
         }
     }
 }
