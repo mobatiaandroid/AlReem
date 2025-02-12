@@ -21,7 +21,7 @@ class AppController : Application() {
         var weekList: ArrayList<WeekListModel> = ArrayList()
         var weekListWithData: java.util.ArrayList<Int>? = ArrayList()
         var CCADetailModelArrayList: ArrayList<CCADetailModel> = ArrayList()
-
+        var reciver:String="0"
         var filledFlag = 0
         fun applicationContext(): AppController {
             return instance as AppController
