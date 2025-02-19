@@ -15,12 +15,14 @@ import android.view.Window
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.nas.alreem.R
 import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.activity.login.LoginActivity
 import com.nas.alreem.activity.settings.TutorialActivity
 import com.nas.alreem.constants.ConstantFunctions
+import com.nas.alreem.constants.DebuggingChecker
 import com.nas.alreem.constants.PreferenceManager
 import com.scottyab.rootbeer.RootBeer
 
@@ -35,11 +37,17 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
         mContext = this
         activity= this
+        val isDebuggingEnabled: Boolean = DebuggingChecker().isUsbDebuggingEnabled(mContext)
         val rootBeer = RootBeer(mContext)
-        if (rootBeer.isRooted()) {
+        if (ConstantFunctions().isDeviceRootedOrEmulator(mContext)) {
             showDeviceIsRootedPopUp(mContext)
-        } else if (isDebuggerConnected()) {
-            showDeviceIsRootedPopUp(mContext)
+        } else if (rootBeer.isRooted()) {
+            Toast.makeText(this, "Root detected! App will close.", Toast.LENGTH_LONG).show()
+            finish()
+        }
+        else if (isDebuggingEnabled) {
+
+            Toast.makeText(mContext, "This app does not support debugging", Toast.LENGTH_SHORT).show();
         } else if (!ConstantFunctions.runMethod.equals("Dev")) {
             if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
                 ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
