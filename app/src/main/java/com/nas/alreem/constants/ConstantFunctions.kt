@@ -35,7 +35,7 @@ class ConstantFunctions {
 
         lateinit var cart_list: ArrayList<CanteenCartResModel>
         lateinit var idList:ArrayList<Int>
-        var runMethod: String = "Dev"
+        var runMethod: String = "client"
 
 
         fun isEmailValid(email: String): Boolean {
@@ -331,7 +331,7 @@ class ConstantFunctions {
         dialog.setContentView(R.layout.dialog_common_error_alert)
         val icon = dialog.findViewById<ImageView>(R.id.iconImageView)
         icon.setBackgroundResource(R.drawable.round)
-        icon.setImageResource(R.drawable.alert)
+        icon.setImageResource(R.drawable.exclamationicon)
         val text = dialog.findViewById<TextView>(R.id.messageTxt)
         val textHead = dialog.findViewById<TextView>(R.id.alertHead)
         text.text =

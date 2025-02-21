@@ -131,7 +131,7 @@ class LostCardMainActivity : AppCompatActivity() {
     }
 
     override fun onResume() {
-        progressDialogAdd.visibility=View.GONE
+       // progressDialogAdd.visibility=View.GONE
         if (!ConstantFunctions.runMethod.equals("Dev")) {
             if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
                 ConstantFunctions().showDeviceIsDeveloperPopUp(activity)

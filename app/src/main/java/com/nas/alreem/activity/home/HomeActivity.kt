@@ -152,6 +152,8 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
         Intent.FLAG_ACTIVITY_CLEAR_TASK
         calendarPermissionStatus =
             getSharedPreferences("calendarPermissionStatus", Context.MODE_PRIVATE)
+        context = this
+        mActivity = this
         if (!ConstantFunctions.runMethod.equals("Dev")) {
             if (ConstantFunctions().isDeveloperModeEnabled(context)) {
                 showDeviceIsDeveloperPopUp(context)
@@ -178,8 +180,6 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
     @SuppressLint("Recycle", "WrongViewCast")
     @RequiresApi(Build.VERSION_CODES.M)
     private fun initializeUI() {
-        context = this
-        mActivity = this
         homelist = findViewById(R.id.homelistview)
         drawer_layout = findViewById(R.id.drawer_layout)
         linear_layout = findViewById(R.id.linear_layout)
@@ -925,7 +925,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
     override fun onResume() {
         super.onResume()
         if (!ConstantFunctions.runMethod.equals("Dev")) {
-            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+            if (ConstantFunctions().isDeveloperModeEnabled(context)) {
                 ConstantFunctions().showDeviceIsDeveloperPopUp(mActivity)
             }
         }
@@ -1621,7 +1621,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
         dialog.setContentView(R.layout.dialog_common_error_alert)
         val icon = dialog.findViewById<ImageView>(R.id.iconImageView)
         icon.setBackgroundResource(R.drawable.round)
-        icon.setImageResource(R.drawable.alert)
+        icon.setImageResource(R.drawable.exclamationicon)
         val text = dialog.findViewById<TextView>(R.id.messageTxt)
         val textHead = dialog.findViewById<TextView>(R.id.alertHead)
         text.text =

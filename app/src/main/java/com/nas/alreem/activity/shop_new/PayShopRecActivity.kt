@@ -28,7 +28,7 @@ class PayShopRecActivity: AppCompatActivity() {
     ) {
         var student_name = student_name
 
-        context = context
+        context = this
         activity=this
        // itemsList = PreferenceManager.getOrderArrayList(context!!)
 

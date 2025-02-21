@@ -18,8 +18,8 @@ import javax.net.ssl.X509TrustManager
 
 class ApiClient (private val context: Context){
 
-var BASE_URL = "https://delta.mobatia.in:8083/nas-abudhabiv2/public/api/v1/"
- // var BASE_URL = "https://cms.nasabudhabi.ae/api/v1/"
+//var BASE_URL = "https://delta.mobatia.in:8083/nas-abudhabiv2/public/api/v1/"
+  var BASE_URL = "https://cms.nasabudhabi.ae/api/v1/"
 
     val getClient: ApiInterface
         get() {
@@ -31,6 +31,7 @@ var BASE_URL = "https://delta.mobatia.in:8083/nas-abudhabiv2/public/api/v1/"
             val certificatePinner = CertificatePinner.Builder()
 //                .add("nas2025.mobatia.in", "")
                 .add("delta.mobatia.in", "sha256/ohmltvh1K5StBefzEp0tYM2hSfbnru5lSGaCRVTHjmU=")
+                .add("cms.nasabudhabi.ae", "sha256/6pm37LJ/fwfXrzobo2Ajdjxv+hIbGHwOr+RN39qcEPM=")
                 .build()
 
 

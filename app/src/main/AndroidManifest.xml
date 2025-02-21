@@ -146,10 +146,10 @@
             android:name=".activity.notifications.VideoMessageActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
+    <!--    <activity
             android:name=".activity.notifications.AudioPlayerDetail"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" />-->
         <activity
             android:name=".activity.notifications.AudioPlayerDetailNew"
             android:screenOrientation="portrait"
@@ -230,10 +230,10 @@
             android:name=".activity.canteen.PayCanteenRecActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
+      <!--  <activity
             android:name=".activity.canteen.PaymentActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" />-->
         <activity
             android:name=".activity.canteen.PaymentHistory_Activity"
             android:screenOrientation="portrait"

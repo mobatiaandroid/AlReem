@@ -25,8 +25,7 @@ import com.nas.alreem.constants.PreferenceManager
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import tcking.github.com.giraffeplayer.GiraffePlayer
-import tv.danmaku.ijk.media.player.IMediaPlayer
+
 private var mediaplayer: MediaPlayer? = null
 private var handler2 = Handler()
 private var seebbar: SeekBar? = null

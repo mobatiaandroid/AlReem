@@ -33,8 +33,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 
-import tcking.github.com.giraffeplayer.GiraffePlayer;
-import tv.danmaku.ijk.media.player.IMediaPlayer;
+
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -47,7 +46,7 @@ public class VideosPlayerViewActivity extends Activity {
     String url;
     String video_type;
     Context mContext;
-    GiraffePlayer player;
+   // GiraffePlayer player;
     //String headName;
     Activity activity;
     ImageView downloadimageView;
@@ -238,40 +237,40 @@ public class VideosPlayerViewActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (player != null) {
+       /* if (player != null) {
             player.onPause();
-        }
+        }*/
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (player != null) {
+        /*if (player != null) {
             player.onResume();
-        }
+        }*/
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (player != null) {
-            player.onDestroy();
-        }
+        /*if (player != null) {
+           // player.onDestroy();
+        }*/
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        if (player != null) {
+       /* if (player != null) {
             player.onConfigurationChanged(newConfig);
-        }
+        }*/
     }
 
     @Override
     public void onBackPressed() {
-        if (player != null && player.onBackPressed()) {
+       /* if (player != null && player.onBackPressed()) {
             return;
-        }
+        }*/
         super.onBackPressed();
     }
 

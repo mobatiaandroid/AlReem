@@ -109,13 +109,13 @@ class TutorialActivity : AppCompatActivity() {
             mLinearLayout.addView(mImgCircle.get(i))
         }
     }
-    override fun onResume() {
+    /*override fun onResume() {
         super.onResume()
         if (!ConstantFunctions.runMethod.equals("Dev")) {
             if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
                 ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
             }
         }
-    }
+    }*/
 }
 

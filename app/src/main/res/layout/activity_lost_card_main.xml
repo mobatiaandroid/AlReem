@@ -134,7 +134,7 @@
                     android:layout_gravity="center"
                     android:layout_marginLeft="5dp"
                     android:padding="10dp"
-                    android:text="@string/aed"
+                    tools:text="@string/aed"
                     android:textColor="@color/black"
 
                     />

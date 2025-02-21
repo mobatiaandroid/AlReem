@@ -9,7 +9,6 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Debug
 import android.os.Handler
-import android.util.Log
 import android.view.View
 import android.view.Window
 import android.widget.Button
@@ -28,7 +27,7 @@ import com.scottyab.rootbeer.RootBeer
 
 class SplashActivity : AppCompatActivity() {
     lateinit var mContext: Context
-    private val SPLASH_TIME_OUT:Long = 3000
+    private val SPLASH_TIME_OUT: Long = 3000
     lateinit var activity: Activity
 
 
@@ -36,7 +35,7 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
         mContext = this
-        activity= this
+        activity = this
         val isDebuggingEnabled: Boolean = DebuggingChecker().isUsbDebuggingEnabled(mContext)
         val rootBeer = RootBeer(mContext)
         if (ConstantFunctions().isDeviceRootedOrEmulator(mContext)) {
@@ -51,38 +50,36 @@ class SplashActivity : AppCompatActivity() {
         } else if (!ConstantFunctions.runMethod.equals("Dev")) {
             if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
                 ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            } else {
+                Handler().postDelayed({
+
+                    if (PreferenceManager.getFirstTime(mContext).equals("")) {
+                        val intent = Intent(mContext, TutorialActivity::class.java)
+                        PreferenceManager.setFirtTime(mContext, "First")
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        if (PreferenceManager.getaccesstoken(mContext).equals("")) {
+                            PreferenceManager.setNoticeFirtTime(mContext, "")
+                            PreferenceManager.setIsSurveyHomeVisible(mContext, false)
+                            PreferenceManager.setIsEnrollmentHomeVisible(mContext, false)
+                            startActivity(Intent(this, LoginActivity::class.java))
+                            finish()
+
+                        } else {
+                            PreferenceManager.setNoticeFirtTime(mContext, "")
+                            PreferenceManager.setIsSurveyHomeVisible(mContext, false)
+                            PreferenceManager.setIsEnrollmentHomeVisible(mContext, false)
+                            startActivity(Intent(this, HomeActivity::class.java))
+                            finish()
+
+                        }
+                    }
+
+
+                }, SPLASH_TIME_OUT)
             }
-         else {
-            Handler().postDelayed({
-
-                if (PreferenceManager.getFirstTime(mContext).equals("")) {
-                    val intent = Intent(mContext, TutorialActivity::class.java)
-                    PreferenceManager.setFirtTime(mContext, "First")
-                    startActivity(intent)
-                    finish()
-                } else {
-                    if (PreferenceManager.getaccesstoken(mContext).equals("")) {
-                        PreferenceManager.setNoticeFirtTime(mContext, "")
-                        PreferenceManager.setIsSurveyHomeVisible(mContext, false)
-                        PreferenceManager.setIsEnrollmentHomeVisible(mContext, false)
-                        startActivity(Intent(this, LoginActivity::class.java))
-                        finish()
-
-                    } else {
-                        PreferenceManager.setNoticeFirtTime(mContext, "")
-                        PreferenceManager.setIsSurveyHomeVisible(mContext, false)
-                        PreferenceManager.setIsEnrollmentHomeVisible(mContext, false)
-                        startActivity(Intent(this, HomeActivity::class.java))
-                        finish()
-
-                    }
-                }
-
-
-            }, SPLASH_TIME_OUT)
-        }
-    }
-        else{
+        } else {
             Handler().postDelayed({
 
                 if (PreferenceManager.getFirstTime(mContext).equals("")) {
@@ -113,6 +110,7 @@ class SplashActivity : AppCompatActivity() {
         }
 
     }
+
     private fun showDeviceIsRootedPopUp(mContext: Context) {
         val dialog = Dialog(mContext)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -121,7 +119,7 @@ class SplashActivity : AppCompatActivity() {
         dialog.setContentView(R.layout.dialog_common_error_alert)
         val icon = dialog.findViewById<View>(R.id.iconImageView) as ImageView
         icon.setBackgroundResource(R.drawable.round)
-        icon.setImageResource(R.drawable.alert)
+        icon.setImageResource(R.drawable.exclamationicon)
         val text = dialog.findViewById<View>(R.id.text_dialog) as TextView
         val textHead = dialog.findViewById<View>(R.id.alertHead) as TextView
         text.text = "This app does not support rooted devices for security reasons."
@@ -138,6 +136,7 @@ class SplashActivity : AppCompatActivity() {
 //		});
         dialog.show()
     }
+
     fun isDebuggerConnected(): Boolean {
         return Debug.isDebuggerConnected()
     }

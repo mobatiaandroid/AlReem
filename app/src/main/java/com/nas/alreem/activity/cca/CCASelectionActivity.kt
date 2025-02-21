@@ -25,7 +25,6 @@ import com.nas.alreem.activity.cca.model.CCADetailModel
 import com.nas.alreem.activity.cca.model.CCASubmitResponseModel
 import com.nas.alreem.activity.cca.model.WeekListModel
 import com.nas.alreem.activity.home.HomeActivity
-import com.nas.alreem.activity.notifications.player
 import com.nas.alreem.appcontroller.AppController
 import com.nas.alreem.constants.*
 import com.nas.alreem.recyclermanager.ItemOffsetDecoration

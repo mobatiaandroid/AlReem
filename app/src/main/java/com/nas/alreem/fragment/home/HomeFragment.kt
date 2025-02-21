@@ -7098,7 +7098,6 @@ fun showforceupdate(mContext: Context) {
     val btnUpdate = dialog.findViewById<View>(R.id.btnUpdate) as Button
 
     btnUpdate.setOnClickListener {
-        dialog.dismiss()
         val appPackageName = mContext.packageName
         try {
             mContext.startActivity(
