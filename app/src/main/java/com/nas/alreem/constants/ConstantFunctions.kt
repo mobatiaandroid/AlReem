@@ -311,6 +311,38 @@ class ConstantFunctions {
 //		});
         dialog.show()
     }
+
+    fun showDialogNoData(
+        activity: Context?,
+        msgHead: String?,
+        msg: String?,
+        ico: Int,
+        bgIcon: Int
+    ) {
+        val dialog = Dialog(activity!!)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.dialog_common_error_alert)
+        val icon = dialog.findViewById<View>(R.id.iconImageView) as ImageView
+        icon.setBackgroundResource(bgIcon)
+        icon.setImageResource(ico)
+        val text = dialog.findViewById<View>(R.id.messageTxt) as TextView
+        val textHead = dialog.findViewById<View>(R.id.alertHead) as TextView
+        text.text = msg
+        textHead.text = msgHead
+        val dialogButton = dialog.findViewById<View>(R.id.btn_Ok) as Button
+        dialogButton.setOnClickListener { dialog.dismiss() }
+        //		Button dialogButtonCancel = (Button) dialog.findViewById(R.id.btn_Cancel);
+//		dialogButtonCancel.setVisibility(View.GONE);
+//		dialogButtonCancel.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				dialog.dismiss();
+//			}
+//		});
+        dialog.show()
+    }
     fun isDeveloperModeEnabled(context: Context): Boolean {
         try {
             val devMode = Settings.Global.getInt(

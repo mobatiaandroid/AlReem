@@ -376,6 +376,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
 
                     } catch (e: Exception) {
+
                         e.printStackTrace()
                     }
                 }

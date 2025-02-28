@@ -10,7 +10,10 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.Window
-import android.widget.*
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,20 +25,28 @@ import com.nas.alreem.activity.canteen.adapter.PreorderItemsAdapter
 import com.nas.alreem.activity.canteen.model.AllergyContentModel
 import com.nas.alreem.activity.canteen.model.CatItemsListModel_new
 import com.nas.alreem.activity.canteen.model.DateModel
-import com.nas.alreem.activity.canteen.model.add_orders.*
+import com.nas.alreem.activity.canteen.model.add_orders.CanteenItemsApiModel
+import com.nas.alreem.activity.canteen.model.add_orders.CatListModel
+import com.nas.alreem.activity.canteen.model.add_orders.CategoryListModel
+import com.nas.alreem.activity.canteen.model.add_orders.ItemsListModel
 import com.nas.alreem.activity.canteen.model.canteen_cart.CanteenCartApiModel
 import com.nas.alreem.activity.canteen.model.canteen_cart.CanteenCartModel
 import com.nas.alreem.activity.canteen.model.canteen_cart.CanteenCartResModel
 import com.nas.alreem.activity.canteen.model.canteen_cart.CartItemsListModel
 import com.nas.alreem.activity.home.HomeActivity
-import com.nas.alreem.constants.*
-
+import com.nas.alreem.constants.ApiClient
+import com.nas.alreem.constants.ConstantFunctions
+import com.nas.alreem.constants.DialogFunctions
+import com.nas.alreem.constants.OnItemClickListener
+import com.nas.alreem.constants.PreferenceManager
+import com.nas.alreem.constants.addOnItemClickListener
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 class Addorder_Activity : AppCompatActivity() {
     lateinit var nContext: Context
@@ -51,14 +62,15 @@ class Addorder_Activity : AppCompatActivity() {
     lateinit var recyclerview_item: RecyclerView
 
     //lateinit var selected:ImageView
-   // lateinit var progress: RelativeLayout
+    // lateinit var progress: RelativeLayout
     lateinit var title: TextView
     lateinit var cart_empty: ImageView
-   // lateinit var progressDialog: ProgressBar
+
+    // lateinit var progressDialog: ProgressBar
     lateinit var progressDialogP: ProgressBarDialog
     lateinit var category_list: ArrayList<CategoryListModel>
-    lateinit var item_list:ArrayList<CatItemsListModel_new>
-    lateinit var allergycontentlist:ArrayList<AllergyContentModel>
+    lateinit var item_list: ArrayList<CatItemsListModel_new>
+    lateinit var allergycontentlist: ArrayList<AllergyContentModel>
 
     lateinit var bottomview: LinearLayout
     lateinit var basketbtn: LinearLayout
@@ -68,8 +80,8 @@ class Addorder_Activity : AppCompatActivity() {
     var def_cat_id: String = ""
     var date_string: String = ""
     var apiCall: Int = 0
-    var cartTotalAmount:Int=0
-    var cartTotalItem:Int=0
+    var cartTotalAmount: Int = 0
+    var cartTotalItem: Int = 0
 
     lateinit var total_items: TextView
     lateinit var total_price: TextView
@@ -98,19 +110,19 @@ class Addorder_Activity : AppCompatActivity() {
         nContext = this
         activity = this
         back = findViewById(R.id.back)
-        logoClickImg=findViewById(R.id.logoclick)
+        logoClickImg = findViewById(R.id.logoclick)
         title = findViewById(R.id.titleTextView)
         id = PreferenceManager.getStudentID(nContext).toString()
         date_title = findViewById(R.id.date_title)
-       // progress=findViewById(R.id.progressDialog)
+        // progress=findViewById(R.id.progressDialog)
         title.text = "Pre-Order"
         cart_empty = findViewById(R.id.item_empty)
-       // progressDialog = findViewById(R.id.progressDialogM)
-        progressDialogP= ProgressBarDialog(nContext)
+        // progressDialog = findViewById(R.id.progressDialogM)
+        progressDialogP = ProgressBarDialog(nContext)
 
         //   val aniRotate: Animation =
-          //  AnimationUtils.loadAnimation(nContext, R.anim.linear_interpolator)
-       // progress.startAnimation(aniRotate)
+        //  AnimationUtils.loadAnimation(nContext, R.anim.linear_interpolator)
+        // progress.startAnimation(aniRotate)
         category_list = ArrayList()
         cart_list = ArrayList()
         cart_items_list = ArrayList()
@@ -127,7 +139,7 @@ class Addorder_Activity : AppCompatActivity() {
         }
         format = SimpleDateFormat("MM", Locale.ENGLISH)
         strCurrentDate = format.format(newDate)
-        var month=strCurrentDate
+        var month = strCurrentDate
         //var month = CommonMethods.dateParsingTommm(date_list[0].month)
         var date = date_list[0].numberDate
         date_string = date_list[0].numberDate
@@ -140,11 +152,11 @@ class Addorder_Activity : AppCompatActivity() {
         recyclerview_category = findViewById(R.id.categoryRecyclerView)
         recyclerview_date = findViewById(R.id.dateRecyclerView)
         recyclerview_item = findViewById(R.id.itemRecyclerView)
-    logoClickImg.setOnClickListener {
-    val intent = Intent(nContext, HomeActivity::class.java)
-    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-    startActivity(intent)
-}
+        logoClickImg.setOnClickListener {
+            val intent = Intent(nContext, HomeActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent)
+        }
 
 
         back.setOnClickListener {
@@ -166,14 +178,15 @@ class Addorder_Activity : AppCompatActivity() {
         })
 
     }
-    private fun setdate(){
-        var one_date=date_list[0].day+","+date_list[0].date+" "+date_list[0].month+" "+date_list[0].year
-        if (date_list.size==1){
+
+    private fun setdate() {
+        var one_date =
+            date_list[0].day + "," + date_list[0].date + " " + date_list[0].month + " " + date_list[0].year
+        if (date_list.size == 1) {
             date_title.visibility = View.VISIBLE
             date_title.text = one_date
-        }
-        else {
-            var first_date=date_list[0].numberDate
+        } else {
+            var first_date = date_list[0].numberDate
             date_title.visibility = View.GONE
             for (i in date_list.indices) {
                 date_list.get(i).isDateSelected = date_list.get(i).numberDate.equals(first_date)
@@ -186,17 +199,17 @@ class Addorder_Activity : AppCompatActivity() {
 
             recyclerview_date.addOnItemClickListener(object : OnItemClickListener {
                 override fun onItemClicked(position: Int, view: View) {
-                    date_list.get(0).isDateSelected=false
-                    date_selected=date_list[position].numberDate
+                    date_list.get(0).isDateSelected = false
+                    date_selected = date_list[position].numberDate
                     var foundPosition = -1
                     var isFound: Boolean = false
 
 
-                    for (i in 0..date_list.size-1) {
+                    for (i in 0..date_list.size - 1) {
                         if (date_list.get(i).isDateSelected) {
                             foundPosition = i
                             isFound = true
-                            date_selected=date_list.get(position).numberDate
+                            date_selected = date_list.get(position).numberDate
                             items_onclick()
                         }
                     }
@@ -207,13 +220,13 @@ class Addorder_Activity : AppCompatActivity() {
                         } else {
                             date_list.get(foundPosition).isDateSelected = false
                             date_list.get(position).isDateSelected = true
-                            date_selected=date_list.get(position).numberDate
+                            date_selected = date_list.get(position).numberDate
                             items_onclick()
                             recyclerview_date.adapter = DateAdapter(date_list, nContext)
                         }
                     } else {
                         date_list.get(position).isDateSelected = true
-                        date_selected=date_list.get(position).numberDate
+                        date_selected = date_list.get(position).numberDate
                         items_onclick()
                         recyclerview_date.adapter = DateAdapter(date_list, nContext)
                     }
@@ -224,41 +237,46 @@ class Addorder_Activity : AppCompatActivity() {
     }
 
 
-    private fun item_categories(){
-        category_list= ArrayList()
+    private fun item_categories() {
+        category_list = ArrayList()
         progressDialogP.show()
 
         val token = PreferenceManager.getaccesstoken(nContext)
-        val call: Call<CatListModel> = ApiClient(nContext).getClient.get_canteen_categories("Bearer "+token)
+        val call: Call<CatListModel> =
+            ApiClient(nContext).getClient.get_canteen_categories("Bearer " + token)
         call.enqueue(object : Callback<CatListModel> {
             override fun onFailure(call: Call<CatListModel>, t: Throwable) {
             }
+
             override fun onResponse(call: Call<CatListModel>, response: Response<CatListModel>) {
                 val responsedata = response.body()
                 progressDialogP.hide()
-                if (responsedata!!.status==100) {
-                    category_list= ArrayList()
+                if (responsedata!!.status == 100) {
+                    category_list = ArrayList()
 
 
                     category_list.addAll(response.body()!!.responseArray.data)
-                    def_cat_id=category_list[0].id
-                    cat_selected=def_cat_id
+                    def_cat_id = category_list[0].id
+                    cat_selected = def_cat_id
                     for (i in category_list.indices) {
-                        category_list.get(i).isItemSelected = category_list.get(i).id.equals(def_cat_id)
+                        category_list.get(i).isItemSelected =
+                            category_list.get(i).id.equals(def_cat_id)
                     }
                     var llm = (LinearLayoutManager(nContext))
                     llm.orientation = LinearLayoutManager.HORIZONTAL
                     recyclerview_category.layoutManager = llm
                     recyclerview_category.adapter = ItemCategoriesAdapter(category_list, nContext)
-                   // progressDialogP.visibility=View.VISIBLE
+                    // progressDialogP.visibility=View.VISIBLE
                     items()
 
 
-                }
-                else
-                {
+                } else {
 
-                    DialogFunctions.commonErrorAlertDialog(nContext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), nContext)
+                    DialogFunctions.commonErrorAlertDialog(
+                        nContext.resources.getString(R.string.alert),
+                        ConstantFunctions.commonErrorString(response.body()!!.status),
+                        nContext
+                    )
                 }
             }
 
@@ -280,7 +298,7 @@ class Addorder_Activity : AppCompatActivity() {
                     if (category_list.get(i).isItemSelected) {
                         foundPosition = i
                         isFound = true
-                        cat_selected= category_list.get(position).id
+                        cat_selected = category_list.get(position).id
                         items_onclick()
                     }
                 }
@@ -292,7 +310,7 @@ class Addorder_Activity : AppCompatActivity() {
                     } else {
                         category_list.get(foundPosition).isItemSelected = false
                         category_list.get(position).isItemSelected = true
-                        cat_selected= category_list.get(position).id
+                        cat_selected = category_list.get(position).id
 
                         recyclerview_category.adapter =
                             ItemCategoriesAdapter(category_list, nContext)
@@ -300,256 +318,294 @@ class Addorder_Activity : AppCompatActivity() {
                     }
                 } else {
                     category_list.get(position).isItemSelected = true
-                    cat_selected= category_list.get(position).id
+                    cat_selected = category_list.get(position).id
 
                     recyclerview_category.adapter = ItemCategoriesAdapter(category_list, nContext)
                     items_onclick()
                 }
-               // items_onclick()
+                // items_onclick()
                 recyclerview_category.scrollToPosition(position)
             }
         })
 
     }
-    private fun items(){
-        item_list= ArrayList()
+
+    private fun items() {
+        item_list = ArrayList()
         progressDialogP.show()
 
         val token = PreferenceManager.getaccesstoken(nContext)
-        var canteenItems= CanteenItemsApiModel(PreferenceManager.getStudentID(nContext).toString(),def_cat_id,
-            date_selected,"0","50")
-        val call: Call<ItemsListModel> = ApiClient(nContext).getClient.get_canteen_items(canteenItems,"Bearer "+token)
+        var canteenItems = CanteenItemsApiModel(
+            PreferenceManager.getStudentID(nContext).toString(), def_cat_id,
+            date_selected, "0", "50"
+        )
+        val call: Call<ItemsListModel> =
+            ApiClient(nContext).getClient.get_canteen_items(canteenItems, "Bearer " + token)
         call.enqueue(object : Callback<ItemsListModel> {
             override fun onFailure(call: Call<ItemsListModel>, t: Throwable) {
                 progressDialogP.hide()
             }
-            override fun onResponse(call: Call<ItemsListModel>, response: Response<ItemsListModel>) {
+
+            override fun onResponse(
+                call: Call<ItemsListModel>,
+                response: Response<ItemsListModel>
+            ) {
                 val responsedata = response.body()
                 progressDialogP.hide()
-                if (responsedata!!.status==100) {
+                if (responsedata!!.status == 100) {
 
                     //bottomview.visibility=View.VISIBLE
-                    cart_empty.visibility=View.GONE
-                    item_list= ArrayList()
+                    cart_empty.visibility = View.GONE
+                    item_list = ArrayList()
                     item_list.addAll(response.body()!!.responseArray.data)
 
-
-                    for (i in item_list.indices){
-                        var jId=item_list[i].id
-
-
-                    var isFound:Boolean=false
-                    var cartDatePos = 0
-                    var cartItemPos = 0
-                    if (cart_list.size > 0) {
-                        for (n in cart_list.indices) {
-                            if (cart_list.get(n).delivery_date.equals(date_selected))
-                            {
-
-                            for (m in 0 until cart_list.get(n).items.size) {
+                    for (i in item_list.indices) {
+                        var jId = item_list[i].id
 
 
+                        var isFound: Boolean = false
+                        var cartDatePos = 0
+                        var cartItemPos = 0
+                        /*if (cart_list.size > 0) {
+                            for (n in cart_list.indices) {
+                                if (cart_list.get(n).delivery_date.equals(date_selected)) {
 
-                                if (jId.equals(cart_list.get(n).items.get(m).item_id.toString())) {
-                                    isFound = true
-                                    cartDatePos = n
-                                    cartItemPos = m
+                                    for (m in 0 until cart_list.get(n).items.size) {
+
+
+                                        if (jId.equals(cart_list.get(n).items.get(m).item_id.toString())) {
+                                            isFound = true
+                                            cartDatePos = n
+                                            cartItemPos = m
+                                        }
+                                    }
                                 }
                             }
-                        }
-                        }
-                    }else{
-                    }
-                    if (isFound) {
-
-                        item_list[i].quantityCart=cart_list.get(cartDatePos).items.get(cartItemPos).quantity
-                        item_list[i].cartId = cart_list.get(cartDatePos).items.get(cartItemPos).id.toString()
-                        item_list[i].isItemCart=true
-
-                    } else
-                    {
-
-                        item_list[i].quantityCart=0
-                        item_list[i].cartId =""
-                        item_list[i].isItemCart=false
-
-
-                    }
-                        Log.e("student_allergy", item_list.get(i).student_allergy.toString())
-
-                        if(item_list.get(i).student_allergy==1)
-                        {
-                            item_list.get(i).isAllergic=true
                         } else {
-                            item_list.get(i).isAllergic=false
                         }
-                        allergycontentlist= ArrayList()
+                        if (isFound) {
+
+                            item_list[i].quantityCart =
+                                cart_list.get(cartDatePos).items.get(cartItemPos).quantity
+                            item_list[i].cartId =
+                                cart_list.get(cartDatePos).items.get(cartItemPos).id.toString()
+                            item_list[i].isItemCart = true
+
+                        } else {
+
+                            item_list[i].quantityCart = 0
+                            item_list[i].cartId = ""
+                            item_list[i].isItemCart = false
+
+
+                        }*/
+                        allergycontentlist = java.util.ArrayList()
+
                         allergycontentlist.addAll(item_list.get(i).allergy_contents)
-                        Log.e("allergycontentlist", allergycontentlist.toString())
+
+                        if (allergycontentlist.size > 0) {
+                            item_list.get(i).isAllergic = true
+                        } else {
+                            item_list.get(i).isAllergic = false
+                        }
 
                     }
-                    recyclerview_item.visibility=View.VISIBLE
-                    recyclerview_item.layoutManager=LinearLayoutManager(nContext)
-                    var itemAdapter= PreorderItemsAdapter(item_list,nContext,date_selected,cart_list,cartTotalAmount,
-                        total_items,total_price,bottomview,cart_empty,progressDialogP,allergycontentlist)
-                    recyclerview_item.adapter=itemAdapter
-                }
-                else if (response.body()!!.status==132)
-                {
-                    recyclerview_item.visibility=View.GONE
-                    cart_empty.visibility=View.VISIBLE
-                }
-                else
-                {
-                    recyclerview_item.visibility=View.GONE
-                    DialogFunctions.commonErrorAlertDialog(nContext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), nContext)
+
+
+                    recyclerview_item.visibility = View.VISIBLE
+                    recyclerview_item.layoutManager = LinearLayoutManager(nContext)
+                    var itemAdapter = PreorderItemsAdapter(
+                        item_list,
+                        nContext,
+                        date_selected,
+                        cart_list,
+                        cartTotalAmount,
+                        total_items,
+                        total_price,
+                        bottomview,
+                        cart_empty,
+                        progressDialogP,
+                        allergycontentlist
+                    )
+                    recyclerview_item.adapter = itemAdapter
+                } else if (response.body()!!.status == 132) {
+                    recyclerview_item.visibility = View.GONE
+                    cart_empty.visibility = View.VISIBLE
+                } else {
+                    recyclerview_item.visibility = View.GONE
+                    DialogFunctions.commonErrorAlertDialog(
+                        nContext.resources.getString(R.string.alert),
+                        ConstantFunctions.commonErrorString(response.body()!!.status),
+                        nContext
+                    )
                 }
             }
 
         })
 
     }
-    private fun items_onclick(){
-        item_list= ArrayList()
+
+    private fun items_onclick() {
+        item_list = ArrayList()
         progressDialogP.show()
-        val token =PreferenceManager.getaccesstoken(nContext)
-        var canteenItems= CanteenItemsApiModel(PreferenceManager.getStudentID(nContext).toString(),cat_selected,
-            date_selected,"0","200")
-        val call: Call<ItemsListModel> = ApiClient(nContext).getClient.get_canteen_items(canteenItems,"Bearer "+token)
+        val token = PreferenceManager.getaccesstoken(nContext)
+        var canteenItems = CanteenItemsApiModel(
+            PreferenceManager.getStudentID(nContext).toString(), cat_selected,
+            date_selected, "0", "200"
+        )
+        val call: Call<ItemsListModel> =
+            ApiClient(nContext).getClient.get_canteen_items(canteenItems, "Bearer " + token)
         call.enqueue(object : Callback<ItemsListModel> {
             override fun onFailure(call: Call<ItemsListModel>, t: Throwable) {
                 progressDialogP.hide()
 
             }
-            override fun onResponse(call: Call<ItemsListModel>, response: Response<ItemsListModel>) {
+
+            override fun onResponse(
+                call: Call<ItemsListModel>,
+                response: Response<ItemsListModel>
+            ) {
                 progressDialogP.hide()
-                cart_empty.visibility=View.GONE
-                recyclerview_item.visibility=View.VISIBLE
+                cart_empty.visibility = View.GONE
+                recyclerview_item.visibility = View.VISIBLE
                 val responsedata = response.body()
-                if (responsedata!!.status==100) {
-                  //  bottomview.visibility=View.VISIBLE
-                    cart_empty.visibility=View.GONE
+                if (responsedata!!.status == 100) {
+                    //  bottomview.visibility=View.VISIBLE
+                    cart_empty.visibility = View.GONE
 
-                    item_list= ArrayList()
+                    item_list = ArrayList()
                     item_list.addAll(response.body()!!.responseArray.data)
-                    for (i in item_list.indices){
-                        var jId=item_list[i].id
+                    for (i in item_list.indices) {
+                        var jId = item_list[i].id
 
 
-                        var isFound:Boolean=false
+                        var isFound: Boolean = false
                         var cartDatePos = 0
                         var cartItemPos = 0
                         if (cart_list.size > 0) {
                             for (n in cart_list.indices) {
 
-                                if (cart_list.get(n).delivery_date.equals(date_selected))
-                                {
-                                for (m in 0 until cart_list.get(n).items.size) {
+                                if (cart_list.get(n).delivery_date.equals(date_selected)) {
+                                    for (m in 0 until cart_list.get(n).items.size) {
 
 
-
-                                    if (jId.equals(cart_list.get(n).items.get(m).item_id.toString())) {
-                                        isFound = true
-                                        cartDatePos = n
-                                        cartItemPos = m
+                                        if (jId.equals(cart_list.get(n).items.get(m).item_id.toString())) {
+                                            isFound = true
+                                            cartDatePos = n
+                                            cartItemPos = m
+                                        }
                                     }
                                 }
                             }
-                            }
-                        }else{
+                        } else {
                         }
                         if (isFound) {
 
-                            item_list[i].quantityCart=cart_list.get(cartDatePos).items.get(cartItemPos).quantity
-                            item_list[i].cartId = cart_list.get(cartDatePos).items.get(cartItemPos).id.toString()
-                            item_list[i].isItemCart=true
+                            item_list[i].quantityCart =
+                                cart_list.get(cartDatePos).items.get(cartItemPos).quantity
+                            item_list[i].cartId =
+                                cart_list.get(cartDatePos).items.get(cartItemPos).id.toString()
+                            item_list[i].isItemCart = true
 
                         } else {
-                            item_list[i].quantityCart=0
-                            item_list[i].cartId =""
-                            item_list[i].isItemCart=false
+                            item_list[i].quantityCart = 0
+                            item_list[i].cartId = ""
+                            item_list[i].isItemCart = false
 
 
                         }
 
-                        Log.e("student_allergy", item_list.get(i).student_allergy.toString())
-                        if(item_list.get(i).student_allergy==1)
-                        {
-                            item_list.get(i).isAllergic=true
-                        } else {
-                            item_list.get(i).isAllergic=false
-                        }
-                        allergycontentlist= ArrayList()
+                        allergycontentlist = java.util.ArrayList()
                         allergycontentlist.addAll(item_list.get(i).allergy_contents)
-                        Log.e("allergycontentlist", allergycontentlist.toString())
+                        if (allergycontentlist.size > 0) {
+                            item_list.get(i).isAllergic = true
+                        } else {
+                            item_list.get(i).isAllergic = false
+                        }
+                       // Log.e("itemlist", item_list.get(i).allergy_contents.size.toString())
                     }
-                    Log.e("size", item_list.size.toString())
-
-                    recyclerview_item.visibility=View.VISIBLE
-                    recyclerview_item.layoutManager=LinearLayoutManager(nContext)
-                    var itemAdapter=PreorderItemsAdapter(item_list,nContext,date_selected,cart_list,cartTotalAmount,
-                        total_items,total_price,bottomview,cart_empty,progressDialogP,allergycontentlist)
-                    recyclerview_item.adapter=itemAdapter
 
 
-                }
-                else if(response.body()!!.status==132)
-                {
-                    recyclerview_item.visibility=View.GONE
-                    cart_empty.visibility=View.VISIBLE
-                }
-                else
-                {
-                    recyclerview_item.visibility=View.GONE
-                    DialogFunctions.commonErrorAlertDialog(nContext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), nContext)
+                    recyclerview_item.visibility = View.VISIBLE
+                    recyclerview_item.layoutManager = LinearLayoutManager(nContext)
+                    var itemAdapter = PreorderItemsAdapter(
+                        item_list,
+                        nContext,
+                        date_selected,
+                        cart_list,
+                        cartTotalAmount,
+                        total_items,
+                        total_price,
+                        bottomview,
+                        cart_empty,
+                        progressDialogP,
+                        allergycontentlist
+                    )
+                    recyclerview_item.adapter = itemAdapter
+
+
+                } else if (response.body()!!.status == 132) {
+                    recyclerview_item.visibility = View.GONE
+                    cart_empty.visibility = View.VISIBLE
+                } else {
+                    recyclerview_item.visibility = View.GONE
+                    DialogFunctions.commonErrorAlertDialog(
+                        nContext.resources.getString(R.string.alert),
+                        ConstantFunctions.commonErrorString(response.body()!!.status),
+                        nContext
+                    )
                 }
             }
 
         })
     }
-    private fun getcanteen_cart(){
-        cart_list= ArrayList()
-        cartTotalAmount=0
-        cartTotalItem=0
+
+    private fun getcanteen_cart() {
+        cart_list = ArrayList()
+        cartTotalAmount = 0
+        cartTotalItem = 0
         progressDialogP.show()
         val token = PreferenceManager.getaccesstoken(nContext)
-        var canteenCart= CanteenCartApiModel(PreferenceManager.getStudentID(nContext).toString())
-        val call: Call<CanteenCartModel> = ApiClient(nContext).getClient.get_canteen_cart(canteenCart,"Bearer "+token)
+        var canteenCart = CanteenCartApiModel(PreferenceManager.getStudentID(nContext).toString())
+        val call: Call<CanteenCartModel> =
+            ApiClient(nContext).getClient.get_canteen_cart(canteenCart, "Bearer " + token)
         call.enqueue(object : Callback<CanteenCartModel> {
             override fun onFailure(call: Call<CanteenCartModel>, t: Throwable) {
                 progressDialogP.hide()
             }
-            override fun onResponse(call: Call<CanteenCartModel>, response: Response<CanteenCartModel>) {
+
+            override fun onResponse(
+                call: Call<CanteenCartModel>,
+                response: Response<CanteenCartModel>
+            ) {
                 val responsedata = response.body()
                 progressDialogP.hide()
-                if (responsedata!!.status==100) {
-                    bottomview.visibility=View.VISIBLE
+                if (responsedata!!.status == 100) {
+                    bottomview.visibility = View.VISIBLE
 
-                    cart_list=response!!.body()!!.responseArray.data
-                    cartTotalAmount=0
-                    for (i in cart_list.indices){
+                    cart_list = response!!.body()!!.responseArray.data
+                    cartTotalAmount = 0
+                    for (i in cart_list.indices) {
 
-                        cartTotalAmount=cartTotalAmount + cart_list[i].total_amount
+                        cartTotalAmount = cartTotalAmount + cart_list[i].total_amount
                     }
-                    if (cartTotalAmount==0){
-                        bottomview.visibility=View.GONE
-                    }else{
-                        bottomview.visibility=View.VISIBLE
-                        cartTotalItem=0
-                        for (i in cart_list.indices){
+                    if (cartTotalAmount == 0) {
+                        bottomview.visibility = View.GONE
+                    } else {
+                        bottomview.visibility = View.VISIBLE
+                        cartTotalItem = 0
+                        for (i in cart_list.indices) {
 
-                            for (j in cart_list[i].items.indices){
-                                cartTotalItem=cartTotalItem + cart_list[i].items[j].quantity
+                            for (j in cart_list[i].items.indices) {
+                                cartTotalItem = cartTotalItem + cart_list[i].items[j].quantity
                             }
                         }
                         total_items.setText(cartTotalItem.toString() + "Items")
                         total_price.setText(cartTotalAmount.toString() + "AED")
                     }
 
-                }
-                else
-                {
-                    bottomview.visibility=View.GONE
+                } else {
+                    bottomview.visibility = View.GONE
                 }
 //                else
 //                {
@@ -560,6 +616,7 @@ class Addorder_Activity : AppCompatActivity() {
 
         })
     }
+
     fun showSuccessAlertnew(context: Context, message: String, msgHead: String) {
         val dialog = Dialog(context)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -597,4 +654,4 @@ class Addorder_Activity : AppCompatActivity() {
         super.onResume()
     }
 
-    }
+}
