@@ -82,6 +82,7 @@ class Addorder_Activity : AppCompatActivity() {
     var apiCall: Int = 0
     var cartTotalAmount: Int = 0
     var cartTotalItem: Int = 0
+    var studentAllergy=0
 
     lateinit var total_items: TextView
     lateinit var total_price: TextView
@@ -265,6 +266,8 @@ class Addorder_Activity : AppCompatActivity() {
                     var llm = (LinearLayoutManager(nContext))
                     llm.orientation = LinearLayoutManager.HORIZONTAL
                     recyclerview_category.layoutManager = llm
+                    recyclerview_category.setItemViewCacheSize(category_list.size);
+
                     recyclerview_category.adapter = ItemCategoriesAdapter(category_list, nContext)
                     // progressDialogP.visibility=View.VISIBLE
                     items()
@@ -305,12 +308,15 @@ class Addorder_Activity : AppCompatActivity() {
                 if (isFound) {
                     if (position == foundPosition) {
                         category_list.get(foundPosition).isItemSelected = true
+                        recyclerview_category.setItemViewCacheSize(category_list.size);
+
                         recyclerview_category.adapter =
                             ItemCategoriesAdapter(category_list, nContext)
                     } else {
                         category_list.get(foundPosition).isItemSelected = false
                         category_list.get(position).isItemSelected = true
                         cat_selected = category_list.get(position).id
+                        recyclerview_category.setItemViewCacheSize(category_list.size);
 
                         recyclerview_category.adapter =
                             ItemCategoriesAdapter(category_list, nContext)
@@ -319,6 +325,7 @@ class Addorder_Activity : AppCompatActivity() {
                 } else {
                     category_list.get(position).isItemSelected = true
                     cat_selected = category_list.get(position).id
+                    recyclerview_category.setItemViewCacheSize(category_list.size);
 
                     recyclerview_category.adapter = ItemCategoriesAdapter(category_list, nContext)
                     items_onclick()
@@ -402,6 +409,8 @@ class Addorder_Activity : AppCompatActivity() {
                         allergycontentlist = java.util.ArrayList()
 
                         allergycontentlist.addAll(item_list.get(i).allergy_contents)
+                        studentAllergy=item_list.get(i).student_allergy
+                       // Log.e("studentAllergy", studentAllergy.toString())
 
                         if (allergycontentlist.size > 0) {
                             item_list.get(i).isAllergic = true
@@ -517,6 +526,8 @@ class Addorder_Activity : AppCompatActivity() {
 
                         allergycontentlist = java.util.ArrayList()
                         allergycontentlist.addAll(item_list.get(i).allergy_contents)
+                        studentAllergy=item_list.get(i).student_allergy
+
                         if (allergycontentlist.size > 0) {
                             item_list.get(i).isAllergic = true
                         } else {

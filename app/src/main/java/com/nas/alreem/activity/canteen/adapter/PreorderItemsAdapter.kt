@@ -66,7 +66,6 @@ class PreorderItemsAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         //onBottomReachedListener.onBottomReached(position)
         //bottomView.visibility=View.GONE
-//Log.e("studentallergy", itemlist[position].student_allergy.toString())
         if (itemlist.get(position).isAllergic === true){
 
             holder.multiLinear.visibility = View.GONE
@@ -127,7 +126,7 @@ class PreorderItemsAdapter(
 
         }
         holder.addLinear.setOnClickListener {
-            if (itemlist.get(position).isAllergic === true) {
+            if (itemlist.get(position).student_allergy == 1) {
                 ConstantFunctions().showDialogNoData(mcontext,"Alert","This item contains ingredients your child is allergic to and cannot be ordered." , R.drawable.exclamationicon, R.drawable.round)
                // Toast.makeText(mcontext, "This item contains ingredients your child is allergic to and cannot be ordered.", Toast.LENGTH_SHORT).show()
                 //allergypresentpopup( itemlist[position].id,itemlist[position].price,position, "1")

@@ -2,6 +2,7 @@ package com.nas.alreem.activity.canteen.adapter
 
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,9 +16,12 @@ import com.nas.alreem.R
 import com.nas.alreem.activity.canteen.model.add_orders.CategoryListModel
 
 
-class ItemCategoriesAdapter (val category_list: ArrayList<CategoryListModel>, var mcontext: Context) :
+class ItemCategoriesAdapter(
+    val category_list: ArrayList<CategoryListModel>,
+    var mcontext: Context
+) :
     RecyclerView.Adapter<ItemCategoriesAdapter.ViewHolder>() {
-    var isCatSelected:Boolean=false
+    var isCatSelected: Boolean = false
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val view: View = LayoutInflater.from(viewGroup.context)
             .inflate(R.layout.itemcategory_adapter, viewGroup, false)
@@ -30,15 +34,13 @@ class ItemCategoriesAdapter (val category_list: ArrayList<CategoryListModel>, va
         viewHolder.category_name.text = category_list[position].category_name
         viewHolder.selected.setBackgroundResource(R.drawable.date_selected)
 
-var url:String?=""
-        url=category_list[position].category_image
+        var url: String? = ""
+        url = category_list[position].category_image
 
         if (url.equals("")) {
             viewHolder.image.setBackgroundResource(R.drawable.default_cat)
 
-        }
-        else
-        {
+        } else {
 
             mcontext.let {
                 Glide.with(it)
@@ -46,22 +48,18 @@ var url:String?=""
                     .into(viewHolder.image)
             }
         }
-        if (category_list.get(position).isItemSelected)
-        {
+        if (category_list.get(position).isItemSelected) {
             viewHolder.bglinear.setBackgroundResource(R.drawable.date_selected)
             viewHolder.linear.setBackgroundResource(R.color.white)
 
-        }
-        else
-        {
+        } else {
             viewHolder.linear.setBackgroundResource(R.drawable.date)
             viewHolder.linear.setBackgroundResource(R.color.white)
 
         }
         for (i in 0..0) {
             category_list.get(0).isItemSelected
-            if (category_list.get(position).isItemSelected)
-            {
+            if (category_list.get(position).isItemSelected) {
                 viewHolder.bglinear.setBackgroundResource(R.drawable.date_selected)
                 viewHolder.linear.setBackgroundResource(R.color.white)
 
@@ -81,12 +79,13 @@ var url:String?=""
         var linear: LinearLayout
         var bglinear: LinearLayout
         var selected: ImageView
+
         init {
             category_name = itemView.findViewById(R.id.categoryTitle)
-            image=itemView.findViewById(R.id.categoryImg)
-            linear=itemView.findViewById(R.id.mainLinear)
-            bglinear=itemView.findViewById(R.id.bgLinear)
-            selected=itemView.findViewById(R.id.itemSelectedImg)
+            image = itemView.findViewById(R.id.categoryImg)
+            linear = itemView.findViewById(R.id.mainLinear)
+            bglinear = itemView.findViewById(R.id.bgLinear)
+            selected = itemView.findViewById(R.id.itemSelectedImg)
 
         }
     }
