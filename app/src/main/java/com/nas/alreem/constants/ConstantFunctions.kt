@@ -35,7 +35,7 @@ class ConstantFunctions {
 
         lateinit var cart_list: ArrayList<CanteenCartResModel>
         lateinit var idList:ArrayList<Int>
-        var runMethod: String = "Client"
+        var runMethod: String = "Dev"
 
 
         fun isEmailValid(email: String): Boolean {

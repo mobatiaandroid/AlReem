@@ -204,6 +204,12 @@ class LoginActivity : AppCompatActivity(),View.OnTouchListener{
 
 //						startCountdown(60000L);
                         }
+                        else if (response.body()!!.status==111) {
+                            DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), mContext)
+
+
+//						startCountdown(60000L);
+                        }
                         else
                         {
 

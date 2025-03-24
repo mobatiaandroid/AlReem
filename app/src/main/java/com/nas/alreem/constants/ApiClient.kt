@@ -18,8 +18,8 @@ import javax.net.ssl.X509TrustManager
 
 class ApiClient (private val context: Context){
 
-//var BASE_URL = "https://delta.mobatia.in:8083/nas-abudhabiv2/public/api/v1/"
-  var BASE_URL = "https://cms.nasabudhabi.ae/api/v1/"
+var BASE_URL = "https://delta.mobatia.in:8083/nas-abudhabiv2/public/api/v1/"
+  //var BASE_URL = "https://cms.nasabudhabi.ae/api/v1/"
 
     val getClient: ApiInterface
         get() {
