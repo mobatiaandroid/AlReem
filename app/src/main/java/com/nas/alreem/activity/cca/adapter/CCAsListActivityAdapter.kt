@@ -55,6 +55,7 @@ class CCAsListActivityAdapter(var mContext: Context, mCCAmodelArrayList: ArrayLi
             mCCAmodelArrayList[position].to_date
         )
 
+
         if (mCCAmodelArrayList[position].isAttendee.equals("0")) {
             if (mCCAmodelArrayList[position].isSubmissionDateOver.equals("1")) {
                 //closed
@@ -66,6 +67,9 @@ class CCAsListActivityAdapter(var mContext: Context, mCCAmodelArrayList: ArrayLi
             //approved
             holder.statusImageView.setImageResource(R.drawable.approve_new)
         } else if (mCCAmodelArrayList[position].isAttendee.equals("2")) {
+            //pending
+            holder.statusImageView.setImageResource(R.drawable.approve_new)
+        } else if (mCCAmodelArrayList[position].isAttendee.equals("3")) {
             //pending
             holder.statusImageView.setImageResource(R.drawable.approve_new)
         }

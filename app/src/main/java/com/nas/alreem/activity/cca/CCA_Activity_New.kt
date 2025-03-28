@@ -635,7 +635,21 @@ class CCA_Activity_New:AppCompatActivity() {
                         startActivity(intent)
                     }
 
-                } else {
+                }
+                else if(mCCAmodelArrayList!![position].isAttendee.equals("3")){
+                    val intent =
+                        Intent(mContext, CCAsReviewAfterSubmissionNoDeleteActivity::class.java)
+                    intent.putExtra("tab_type", tab_type)
+                    // PreferenceManager.setStudentID(mContext, stud_id)
+                    PreferenceManager.setStudIdForCCA(mContext, stud_id)
+                    PreferenceManager.setStudNameForCCA(mContext, stud_name)
+                    PreferenceManager.setStudClassForCCA(mContext, stud_class)
+                    PreferenceManager.setCCATitle(mContext, mCCAmodelArrayList!![position].title)
+                    PreferenceManager.setCCAItemId(mContext, mCCAmodelArrayList!![position].cca_days_id)
+                    startActivity(intent)
+
+                }
+                else {
                     val intent =
                         Intent(mContext, CCAsReviewAfterSubmissionActivity::class.java)
                     intent.putExtra("tab_type", tab_type)
