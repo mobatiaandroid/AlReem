@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.shop_new
 
+import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.os.Handler
@@ -11,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
 import com.nas.alreem.R
+import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.fragment.home.PageView
 import com.nas.alreem.fragment.home.bannerarray
 import com.nas.alreem.fragment.home.currentPage
@@ -28,10 +30,13 @@ class ImageViewActivity : AppCompatActivity() {
     private var scaleFactor = 1.0f
     private lateinit var imageView: ImageView
     lateinit var back:ImageView
+    lateinit var activity: Activity
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.shop_item_view_image)
         mContext = this
+        activity=this
         initfn()
     }
 
@@ -64,5 +69,13 @@ class ImageViewActivity : AppCompatActivity() {
             return true
         }
 
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 }

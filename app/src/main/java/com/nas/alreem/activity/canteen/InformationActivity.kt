@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.canteen
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -34,6 +35,8 @@ class InformationActivity : AppCompatActivity() {
     lateinit var back: RelativeLayout
     lateinit var progress: ProgressBar
     lateinit var informationlist: ArrayList<InfoListModel>
+    lateinit var activity: Activity
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.canteen_information)
@@ -50,6 +53,7 @@ class InformationActivity : AppCompatActivity() {
 
     private fun initfn() {
         mContext = this
+        activity = this
         logoClickImg=findViewById(R.id.logoClickImgView)
         informationlist = ArrayList()
         recyclerview = findViewById(R.id.canteen_info_list)
@@ -72,7 +76,7 @@ class InformationActivity : AppCompatActivity() {
     private fun callCanteenInformation(){
         progress.visibility = View.VISIBLE
         val token = PreferenceManager.getaccesstoken(mContext)
-        val call: Call<InfoCanteenModel> = ApiClient.getClient.getCanteenInformation("Bearer "+token)
+        val call: Call<InfoCanteenModel> = ApiClient(mContext).getClient.getCanteenInformation("Bearer "+token)
         call.enqueue(object : Callback<InfoCanteenModel> {
             override fun onFailure(call: Call<InfoCanteenModel>, t: Throwable) {
                 progress.visibility = View.GONE
@@ -102,5 +106,13 @@ class InformationActivity : AppCompatActivity() {
         })
 
 
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 }

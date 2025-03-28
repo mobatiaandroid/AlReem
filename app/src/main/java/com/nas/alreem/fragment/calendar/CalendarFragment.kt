@@ -296,7 +296,6 @@ class CalendarFragment : Fragment() {
         mAddAllEvents.setOnClickListener(View.OnClickListener {
             var mEventAdded: Boolean = false
 
-            println("temparrayList size9==" + tempArrayList.size)
 
             if (calendarDetailArrayListUse.size > 0) {
                 if (isSelectedSpinner) {
@@ -1255,7 +1254,7 @@ class CalendarFragment : Fragment() {
         calendarDetailArrayListUse = ArrayList()
         val submitBody = CalendarAPIModel(PreferenceManager.getUserCode(mContext).toString())
         progressDialogAdd.visibility = View.VISIBLE
-        val call: Call<CalendarResponseModel> = ApiClient.getClient.calendar(
+        val call: Call<CalendarResponseModel> = ApiClient(mContext).getClient.calendar(
             "Bearer " + PreferenceManager.getaccesstoken(mContext)
         )
         call.enqueue(object : Callback<CalendarResponseModel> {

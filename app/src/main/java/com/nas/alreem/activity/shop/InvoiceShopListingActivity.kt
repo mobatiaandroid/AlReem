@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.shop
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -21,6 +22,7 @@ import com.nas.alreem.R
 import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.activity.payments.adapter.StudentListAdapter
 import com.nas.alreem.activity.payments.model.StudentList
+import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.recyclermanager.DividerItemDecoration
 import com.nas.alreem.recyclermanager.RecyclerItemListener
@@ -50,10 +52,13 @@ class InvoiceShopListingActivity :AppCompatActivity() {
     // ProgressBarDialog progressBarDialog;
 
     // ProgressBarDialog progressBarDialog;
+    lateinit var activity: Activity
+
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_invoice_listing)
         mContext = this
+        activity = this
         initialiseUI()
     }
 
@@ -599,5 +604,13 @@ class InvoiceShopListingActivity :AppCompatActivity() {
                 })
         )
         dialog.show()
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 }

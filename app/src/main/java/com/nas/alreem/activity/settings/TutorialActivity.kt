@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.settings
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -12,6 +13,7 @@ import com.nas.alreem.activity.settings.adpter.TutorialViewPagerAdapter
 
 import com.nas.alreem.R
 import com.nas.alreem.activity.login.LoginActivity
+import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.PreferenceManager
 
 class TutorialActivity : AppCompatActivity() {
@@ -22,10 +24,13 @@ class TutorialActivity : AppCompatActivity() {
     lateinit var mImgCircle: Array<ImageView?>
     var bannerarray = ArrayList<Int>()
     var dataType: Int = 0
+    lateinit var activity: Activity
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tutorial)
         mContext = this
+        activity=this
 
         bannerarray.add(R.drawable.tut_1)
         bannerarray.add(R.drawable.tut_2)
@@ -104,5 +109,13 @@ class TutorialActivity : AppCompatActivity() {
             mLinearLayout.addView(mImgCircle.get(i))
         }
     }
+    /*override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
+    }*/
 }
 

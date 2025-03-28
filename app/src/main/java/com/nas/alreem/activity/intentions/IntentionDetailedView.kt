@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.intentions
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -15,6 +16,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.nas.alreem.R
 import com.nas.alreem.activity.home.HomeActivity
+import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.ConstantWords
 import com.nas.alreem.constants.PreferenceManager
 import com.nas.alreem.fragment.intention.model.IntentionListAPIResponseModel
@@ -48,11 +50,14 @@ class IntentionDetailedView : AppCompatActivity() {
     lateinit var title: TextView
     lateinit var desc: TextView
     lateinit var sub_btn: Button
+    lateinit var activity: Activity
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_intention_detail_view)
 
         mContext = this
+        activity=this
         initfn()
 
     }
@@ -79,8 +84,7 @@ class IntentionDetailedView : AppCompatActivity() {
         parent_name = intent.getStringExtra("parent_name").toString()
         selectedoptionanswer = intent.getStringExtra("selectedchoice").toString()
         receivedOptions = intent.getParcelableArrayListExtra("optionsarray")!!
-        Log.e("optionQuestion", receivedOptions.toString())
-        Log.e("reason_pickup", reason_pickup)
+
         sub_btn.setOnClickListener {
             finish()
         }
@@ -88,7 +92,6 @@ class IntentionDetailedView : AppCompatActivity() {
 
         for (i in receivedOptions.indices) {
 
-            Log.e("optionQuestion1", receivedOptions.get(i).optionQuestion!!)
             if (reason_pickup.equals(receivedOptions.get(i).option)) {
 
                 flag = 2
@@ -117,7 +120,6 @@ class IntentionDetailedView : AppCompatActivity() {
 
          if (flag==2)
         {
-            Log.e("2","2")
 
 if (selectedoptionanswer.equals(""))
 {
@@ -136,7 +138,6 @@ if (selectedoptionanswer.equals(""))
         else
          {
 
-             Log.e("3","3")
              linear_Option_question.visibility = View.GONE
              linear_answer.visibility = View.GONE
          }
@@ -161,5 +162,13 @@ if (selectedoptionanswer.equals(""))
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)
         })
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(com.nas.alreem.fragment.home.mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 }

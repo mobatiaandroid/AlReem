@@ -413,7 +413,7 @@ class BusServiceEapRegister : AppCompatActivity() {
         // days = ArrayList()
 
         var studentdetailsmodel = StudentDetailsModel(PreferenceManager.getStudentID(mContext)!!)
-        val call: Call<DetailsResponseModel> = ApiClient.getClient.eap_bus_details(
+        val call: Call<DetailsResponseModel> = ApiClient(mContext).getClient.eap_bus_details(
             "Bearer " + PreferenceManager.getaccesstoken(mContext),
             studentdetailsmodel
         )
@@ -434,7 +434,6 @@ class BusServiceEapRegister : AppCompatActivity() {
 
                     val apiResponse: DetailsResponseModel? = response.body()
 
-                    Log.e("responseArray", response.body()!!.responseArray.toString())
 
                     student_name_text.setText(responsedata!!.responseArray.student_detail.name)
                     student_year_text.setText(responsedata!!.responseArray.student_detail.section)
@@ -509,11 +508,7 @@ class BusServiceEapRegister : AppCompatActivity() {
 
                                     for (j in dateListArrayTemp.indices) {
                                         select_qualification.add(dateListArrayTemp[j])
-                                        Log.e(
-                                            "select_qualification",
-                                            select_qualification.size.toString()
-                                        )
-                                        Log.e("days", days.size.toString())
+
                                     }
 
                                     /*  for (n in 0 until days.size) {
@@ -563,7 +558,6 @@ class BusServiceEapRegister : AppCompatActivity() {
         val versionName: String = BuildConfig.VERSION_NAME
 
 // Use the jsonArrayString
-        println(jsonArrayString)
         var attachment1: MultipartBody.Part? = null
         val pickuptext =
             RequestBody.create("text/plain".toMediaTypeOrNull(), pickuppoint.text.toString())
@@ -589,8 +583,6 @@ class BusServiceEapRegister : AppCompatActivity() {
                     "," +area.text.toString()+","+city.text.toString())
         val cca_id = RequestBody.create("text/plain".toMediaTypeOrNull(), selectedItemid)
         val cca_dates = RequestBody.create("application/json".toMediaTypeOrNull(), jsonArrayString)
-        println("ccadates" + cca_dates)
-        Log.e("array", cca_dates.toString())
         val tyeppp = RequestBody.create("text/plain".toMediaTypeOrNull(), "2")
         val device_type = RequestBody.create("text/plain".toMediaTypeOrNull(), "2")
         val device_name = RequestBody.create("text/plain".toMediaTypeOrNull(), device)
@@ -612,7 +604,7 @@ class BusServiceEapRegister : AppCompatActivity() {
         val frontImagePart: MultipartBody.Part? = attachment1
 
 
-        val call: Call<EarlyPickupModel> = ApiClient.getClient.request_for_bus_service_eap(
+        val call: Call<EarlyPickupModel> = ApiClient(mContext).getClient.request_for_bus_service_eap(
             "Bearer " + PreferenceManager.getaccesstoken(mContext),
             student_id,
             pickuptext,
@@ -714,9 +706,7 @@ class BusServiceEapRegister : AppCompatActivity() {
                         longitude = location.longitude
                         //   getAddressFromLocation(latitude, longitude)
 
-                        Log.e("Location", "Latitude: $latitude, Longitude: $longitude")
                     } else {
-                        Log.e("Location", "Location is null")
                     }
                 }
         }
@@ -732,12 +722,10 @@ class BusServiceEapRegister : AppCompatActivity() {
         val geocoder = Geocoder(this, Locale.getDefault())
         try {
             val addresses = geocoder.getFromLocation(latitude, longitude, 1)
-            Log.e("addresses", addresses.toString())
             if (addresses != null && addresses.isNotEmpty()) {
                 val address = addresses[0]
                 // Do something with the address
                 val fullAddress = address.getAddressLine(0) // Get the full address
-                Log.e("Address", fullAddress)
 
                 val city = addresses[0].locality
                 val state = addresses[0].adminArea
@@ -748,7 +736,6 @@ class BusServiceEapRegister : AppCompatActivity() {
                 citye.setText(state)
                 street.setText(city)
 
-                println("Address: $fullAddress")
 
 
             }

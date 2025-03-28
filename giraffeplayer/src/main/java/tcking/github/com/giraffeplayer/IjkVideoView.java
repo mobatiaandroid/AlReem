@@ -216,7 +216,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
                 break;
             }
             default:
-                Log.e(TAG, String.format(Locale.getDefault(), "invalid render %d\n", render));
+                //Log.e(TAG, String.format(Locale.getDefault(), "invalid render %d\n", render));
                 break;
         }
     }
@@ -616,7 +616,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         @Override
         public void onSurfaceChanged(@NonNull IRenderView.ISurfaceHolder holder, int format, int w, int h) {
             if (holder.getRenderView() != mRenderView) {
-                Log.e(TAG, "onSurfaceChanged: unmatched render callback\n");
+              //  Log.e(TAG, "onSurfaceChanged: unmatched render callback\n");
                 return;
             }
 
@@ -635,7 +635,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         @Override
         public void onSurfaceCreated(@NonNull IRenderView.ISurfaceHolder holder, int width, int height) {
             if (holder.getRenderView() != mRenderView) {
-                Log.e(TAG, "onSurfaceCreated: unmatched render callback\n");
+              //  Log.e(TAG, "onSurfaceCreated: unmatched render callback\n");
                 return;
             }
 
@@ -649,7 +649,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         @Override
         public void onSurfaceDestroyed(@NonNull IRenderView.ISurfaceHolder holder) {
             if (holder.getRenderView() != mRenderView) {
-                Log.e(TAG, "onSurfaceDestroyed: unmatched render callback\n");
+              //  Log.e(TAG, "onSurfaceDestroyed: unmatched render callback\n");
                 return;
             }
 

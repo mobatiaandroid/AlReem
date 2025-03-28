@@ -245,7 +245,7 @@ class DialogFunctions {
         fun signUp(email:String,progressDialogAdd:ProgressBar,context: Context,dialog:Dialog)
         {
             progressDialogAdd.visibility=View.VISIBLE
-            val call: Call<SignUpResponseModel> = ApiClient.getClient.signup(email)
+            val call: Call<SignUpResponseModel> = ApiClient(context).getClient.signup(email)
             call.enqueue(object : Callback<SignUpResponseModel> {
                 override fun onFailure(call: Call<SignUpResponseModel>, t: Throwable) {
                     progressDialogAdd.visibility=View.GONE
@@ -280,7 +280,7 @@ class DialogFunctions {
         fun forgetPassword(email:String,progressDialogAdd:ProgressBar,context: Context,dialog:Dialog)
         {
             progressDialogAdd.visibility=View.VISIBLE
-            val call: Call<ForgetPasswordResponseModel> = ApiClient.getClient.forgetPassword(email)
+            val call: Call<ForgetPasswordResponseModel> = ApiClient(context).getClient.forgetPassword(email)
             call.enqueue(object : Callback<ForgetPasswordResponseModel> {
                 override fun onFailure(call: Call<ForgetPasswordResponseModel>, t: Throwable) {
                     progressDialogAdd.visibility=View.GONE
@@ -418,7 +418,6 @@ class DialogFunctions {
                                    .matches(PASSWORD_PATTERN4.toRegex())
                            )
                            {
-                               Log.e("SUCCESS","SUCCESS")
                                if (ConstantFunctions.internetCheck(context))
                                {
                                    progressDialogAdd.visibility= View.VISIBLE
@@ -431,7 +430,7 @@ class DialogFunctions {
                                }
 
                            } else {
-                               Log.e("Failed","Failed")
+
                                if (!text_currentnewpassword.getText().toString().onlyLetters()&&
                                    !text_confirmpassword.getText()
                                        .toString().onlyLetters())
@@ -465,33 +464,7 @@ class DialogFunctions {
 
                                }
                            }
-                          /* if (text_currentnewpassword.text.toString().trim().equals(text_confirmpassword.text.toString().trim()))
-                           {
-                               // callChangePasswordApi()
-                               if (text_currentnewpassword.getText().toString().trim ()
-                                       .matches(PASSWORD_PATTERN.toRegex()) && text_confirmpassword.getText()
-                                       .toString().trim { it <= ' ' }
-                                       .matches(PASSWORD_PATTERN.toRegex())
-                               ) {
-                                   if (ConstantFunctions.internetCheck(context))
-                                   {
-                                       progressDialogAdd.visibility= View.VISIBLE
-                                       changePassword(text_currentpassword.text.toString().trim(),text_currentnewpassword.text.toString().trim(),text_confirmpassword.text.toString().trim(),progressDialogAdd,context,dialog)
 
-                                   }
-                                   else
-                                   {
-                                       showInternetAlertDialog(context)
-                                   }
-                               }
-
-                           }
-                           else
-                           {
-                               // New Password and Confirm Password Doesn't match
-                               commonErrorAlertDialog(context.resources.getString(R.string.alert),context.resources.getString(R.string.password_not_match),context)
-
-                           }*/
                        }
                    }
                }
@@ -542,7 +515,7 @@ class DialogFunctions {
         {
             progressDialogAdd.visibility=View.VISIBLE
             var model=ChangePasswordApiModel(current,newpass,confirmpass)
-            val call: Call<ForgetPasswordResponseModel> = ApiClient.getClient.changePassword(model,"Bearer "+PreferenceManager.getaccesstoken(context))
+            val call: Call<ForgetPasswordResponseModel> = ApiClient(context).getClient.changePassword(model,"Bearer "+PreferenceManager.getaccesstoken(context))
             call.enqueue(object : Callback<ForgetPasswordResponseModel> {
                 override fun onFailure(call: Call<ForgetPasswordResponseModel>, t: Throwable) {
                     progressDialogAdd.visibility=View.GONE
@@ -579,7 +552,7 @@ class DialogFunctions {
         {
             progressDialogAdd.visibility=View.VISIBLE
 
-            val call: Call<ForgetPasswordResponseModel> = ApiClient.getClient.deleteAccount("Bearer "+PreferenceManager.getaccesstoken(context))
+            val call: Call<ForgetPasswordResponseModel> = ApiClient(context).getClient.deleteAccount("Bearer "+PreferenceManager.getaccesstoken(context))
             call.enqueue(object : Callback<ForgetPasswordResponseModel> {
                 override fun onFailure(call: Call<ForgetPasswordResponseModel>, t: Throwable) {
                     progressDialogAdd.visibility=View.GONE

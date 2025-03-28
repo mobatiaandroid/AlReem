@@ -194,7 +194,6 @@ class FullscreenWebViewActivityNoHeader : AppCompatActivity() {
             false
         }
         if (mLoadUrl != null && !mErrorFlag) {
-            println("NAS load url $mLoadUrl")
             mWebView!!.loadUrl(mLoadUrl!!)
         } else {
            // mProgressRelLayout!!.clearAnimation()

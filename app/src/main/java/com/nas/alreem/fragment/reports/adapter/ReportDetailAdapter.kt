@@ -104,7 +104,7 @@ class ReportDetailAdapter(private var mContext:Context, private var repoetDetail
         val paramObject = JsonObject()
         paramObject.addProperty("id", ccaDaysId)
         paramObject.addProperty("type", "report")
-        val call: Call<StudentShopCardResponseModel> = ApiClient.getClient.status_changeAPI(token,paramObject)
+        val call: Call<StudentShopCardResponseModel> = ApiClient(mContext).getClient.status_changeAPI(token,paramObject)
         call.enqueue(object : Callback<StudentShopCardResponseModel> {
             override fun onFailure(call: Call<StudentShopCardResponseModel>, t: Throwable) {
 

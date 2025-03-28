@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.payments
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -44,6 +45,8 @@ class PaymentCategoryActivity : AppCompatActivity() {
     lateinit var heading: TextView
     lateinit var logoClickImgView: ImageView
     lateinit var backRelative: RelativeLayout
+    lateinit var activity: Activity
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +57,7 @@ class PaymentCategoryActivity : AppCompatActivity() {
 
     private fun init(){
         mContext=this
+        activity=this
         progressDialogAdd = findViewById(R.id.progressDialogAdd)
         catListRec=findViewById(R.id.mListView)
         studentSpinner = findViewById<LinearLayout>(R.id.studentSpinner)
@@ -92,7 +96,7 @@ class PaymentCategoryActivity : AppCompatActivity() {
     {
         progressDialogAdd.visibility=View.VISIBLE
         studentListArrayList= ArrayList()
-        val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+PreferenceManager.getaccesstoken(mContext))
+        val call: Call<StudentListModel> = ApiClient(mContext).getClient.studentList("Bearer "+PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<StudentListModel> {
             override fun onFailure(call: Call<StudentListModel>, t: Throwable) {
                 progressDialogAdd.visibility=View.GONE
@@ -270,7 +274,7 @@ class PaymentCategoryActivity : AppCompatActivity() {
     {
         progressDialogAdd.visibility = View.VISIBLE
         val paymentCategoriesBody = PaymentCategoriesApiModel( PreferenceManager.getStudentID(mContext).toString())
-        val call: Call<PayCategoryModel> = ApiClient.getClient.payment_categories(paymentCategoriesBody, "Bearer " +
+        val call: Call<PayCategoryModel> = ApiClient(mContext).getClient.payment_categories(paymentCategoriesBody, "Bearer " +
                 PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<PayCategoryModel> {
             override fun onFailure(call: Call<PayCategoryModel>, t: Throwable) {
@@ -330,5 +334,11 @@ class PaymentCategoryActivity : AppCompatActivity() {
             //callCategoryList()
             //callStudentListApi()
         }
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
+
 }

@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.shop
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -28,6 +29,7 @@ import com.github.barteksc.pdfviewer.PDFView
 import com.nas.alreem.R
 import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.activity.trips.PdfPrint
+import com.nas.alreem.constants.ConstantFunctions
 import java.io.BufferedReader
 import java.io.File
 import java.io.IOException
@@ -74,10 +76,12 @@ class MusicShopInvoicePrint : AppCompatActivity() {
     var actualAmount: String? = null
     var vatAmount: String? = null
     var totalAmount: String? = null
-    private var mContext: Context? = null
+    private lateinit var mContext: Context
     private var mWebView: WebView? = null
     private var paymentWebDummy: WebView? = null
     lateinit var mProgressRelLayout: RelativeLayout
+    lateinit var activity: Activity
+
 
     /*PermissionListener permissionListenerStorage = new PermissionListener() {
         @Override
@@ -100,6 +104,7 @@ class MusicShopInvoicePrint : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.preview_activity)
         mContext = this
+        activity = this
         extras = intent.extras
         if (extras != null) {
             tab_type = extras!!.getString("tab_type")
@@ -179,14 +184,12 @@ class MusicShopInvoicePrint : AppCompatActivity() {
         })
         shareLinear.setOnClickListener(View.OnClickListener {
             if (Build.VERSION.SDK_INT >= 23) {
-                println("share function sharePdfFilePrint permission")
                 /* TedPermission.with(mContext)
                             .setPermissionListener(permissionListenerStorage)
                             .setDeniedMessage("If you reject permission,you cannot use this service\n\nPlease turn on permissions at [Setting] > [Permission]")
                             .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
                             .check();*/
             } else {
-                println("share function sharePdfFilePrint")
                 sharePdfFilePrint()
             }
         })
@@ -685,12 +688,10 @@ class MusicShopInvoicePrint : AppCompatActivity() {
                 Environment.getExternalStorageDirectory()
                     .absolutePath + "/" + "NAS_DUBAI_MUSIC_ACADEMY/Payments" + "_" + "NASDUBAI" + "/"
             )
-            println("Path file 5$pathFile")
             pathFile!!.mkdirs()
             //            if(!pathFile.exists())
 //                pathFile.mkdirs();
             pdfUri = if (Build.VERSION.SDK_INT >= 23) {
-                println("web view data$fullHtml")
                 FileProvider.getUriForFile(
                     mContext!!, "$packageName.provider", createWebPrintJobShare(
                         paymentWebDummy,
@@ -698,7 +699,6 @@ class MusicShopInvoicePrint : AppCompatActivity() {
                     )!!
                 )
             } else {
-                println("Path file 6$pathFile")
                 Uri.fromFile(createWebPrintJobShare(paymentWebDummy, pathFile!!))
             }
             /*val intent = Intent(
@@ -771,6 +771,14 @@ class MusicShopInvoicePrint : AppCompatActivity() {
             super.onPageStarted(view, url, favicon)
 
             //   Log.d("WebView", "print webpage loading.." + url);
+        }
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
         }
     }
 }

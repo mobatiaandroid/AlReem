@@ -243,7 +243,7 @@ for (i in summerylistaary[position].invoice.indices )
     {
         progressDialogAdd.visibility=View.VISIBLE
         studentListArrayList= ArrayList()
-        val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+ PreferenceManager.getaccesstoken(mContext))
+        val call: Call<StudentListModel> = ApiClient(mContext).getClient.studentList("Bearer "+ PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<StudentListModel> {
             override fun onFailure(call: Call<StudentListModel>, t: Throwable) {
                 progressDialogAdd.visibility=View.GONE
@@ -330,7 +330,7 @@ for (i in summerylistaary[position].invoice.indices )
         progressDialogAdd.visibility=View.VISIBLE
 
         var studentdetailsmodel = StudentDetailsModel(PreferenceManager.getStudentID(mContext)!!)
-        val call: Call<SummeryBusResponseModel> = ApiClient.getClient.bus_payment_summary("Bearer " + PreferenceManager.getaccesstoken(mContext),
+        val call: Call<SummeryBusResponseModel> = ApiClient(mContext).getClient.bus_payment_summary("Bearer " + PreferenceManager.getaccesstoken(mContext),
             studentdetailsmodel)
         call.enqueue(object : Callback<SummeryBusResponseModel> {
             override fun onFailure(call: Call<SummeryBusResponseModel>, t: Throwable) {

@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import com.nas.alreem.R
 import com.nas.alreem.activity.calendar.adapter.TutorialViewPagerAdapter
+import com.nas.alreem.constants.ConstantFunctions
 import java.util.Arrays
 
 
@@ -18,7 +19,7 @@ class PTAinfoActivity : AppCompatActivity(){
     private lateinit var mImgCircle: Array<ImageView?>
     private var mLinearLayout: LinearLayout? = null
     var mTutorialViewPager: ViewPager? = null
-    var mContext: Context? = null
+    lateinit var mContext: Context
     var mTutorialViewPagerAdapter: TutorialViewPagerAdapter? = null
     var mPhotoList = ArrayList<Int>(
         Arrays.asList<Int>(
@@ -38,10 +39,13 @@ class PTAinfoActivity : AppCompatActivity(){
     var mStaffName: String? = null
     var mClass: String? = null
     var selectedDate: String? = null
+    lateinit var activity: Activity
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tutorial)
         mContext = this
+        activity=this
         val bundle = intent.extras
         if (bundle != null) {
             dataType = bundle.getInt("type", 0)
@@ -116,6 +120,14 @@ class PTAinfoActivity : AppCompatActivity(){
                 mImgCircle[i]!!.setBackgroundResource(R.drawable.blackround)
             }
             mLinearLayout!!.addView(mImgCircle[i])
+        }
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
         }
     }
 }

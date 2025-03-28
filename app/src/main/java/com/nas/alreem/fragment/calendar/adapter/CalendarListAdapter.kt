@@ -65,10 +65,12 @@ class CalendarListAdapter(
         val calendarAdapter = CalendarDetailListAdapter(
             mContext, parentsEssentialArrayList.get(
                 position
-            ).details, colorValue, position, isRead
+            ).details, colorValue, position, isRead, parentsEssentialArrayList.get(
+                position
+            ).date
         )
         holder.eventsListView.adapter = calendarAdapter
-        holder.eventsListView.addOnItemClickListener(object : OnItemClickListener {
+       /* holder.eventsListView.addOnItemClickListener(object : OnItemClickListener {
             override fun onItemClicked(position: Int, view: View) {
                 if (parentsEssentialArrayList.get(mPosition).details.get(position).status.equals("0") || parentsEssentialArrayList.get(
                         mPosition
@@ -112,6 +114,7 @@ class CalendarListAdapter(
                             parentsEssentialArrayList.get(mPosition).details.get(position).endtime
                     }
                 }
+                Log.e("title", parentsEssentialArrayList.get(position).details.get(position).title)
                 showCalendarDetail(
                     parentsEssentialArrayList.get(mPosition).details.get(position).title,
                     parentsEssentialArrayList.get(
@@ -125,7 +128,7 @@ class CalendarListAdapter(
 
             }
 
-        })
+        })*/
 
     }
 
@@ -251,7 +254,6 @@ class CalendarListAdapter(
                     break
                 }
             }
-            println("addToCalendar---$addToCalendar")
             if (addToCalendar) {
 
                 if (year != -1 && month != -1 && day != -1 && hour != -1 && min != -1) {

@@ -159,7 +159,7 @@ var email : String=""
     {
         progressDialog.visibility = View.VISIBLE
         val token = PreferenceManager.getaccesstoken(mContext)
-        val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+token)
+        val call: Call<StudentListModel> = ApiClient(mContext).getClient.studentList("Bearer "+token)
         call.enqueue(object : Callback<StudentListModel>{
             override fun onFailure(call: Call<StudentListModel>, t: Throwable) {
                // Log.e("Error", t.localizedMessage)
@@ -259,7 +259,7 @@ var email : String=""
         var studentInfoArrayList = ArrayList<StudentInfoDetail>()
         val token = PreferenceManager.getaccesstoken(mContext)
         val studentbody= StudentInfoApiModel(PreferenceManager.getStudentID(mContext)!!)
-        val call: Call<StudentInfoModel> = ApiClient.getClient.studentInfo(studentbody,"Bearer "+token)
+        val call: Call<StudentInfoModel> = ApiClient(mContext).getClient.studentInfo(studentbody,"Bearer "+token)
         call.enqueue(object : Callback<StudentInfoModel>{
             override fun onFailure(call: Call<StudentInfoModel>, t: Throwable) {
                 progressDialog.visibility = View.GONE
@@ -393,7 +393,7 @@ var email : String=""
         title: String, message: String, dialog: Dialog)
     {
         val sendMailBody = SendEmailApiModel(PreferenceManager.getEmail(mContext)!!, title, message)
-        val call: Call<SignUpResponseModel> = ApiClient.getClient.sendEmailStaff(sendMailBody, "Bearer " + PreferenceManager.getaccesstoken(mContext!!))
+        val call: Call<SignUpResponseModel> = ApiClient(mContext).getClient.sendEmailStaff(sendMailBody, "Bearer " + PreferenceManager.getaccesstoken(mContext!!))
         call.enqueue(object : Callback<SignUpResponseModel> {
             override fun onFailure(call: Call<SignUpResponseModel>, t: Throwable) {
                 //progressDialog.visibility = View.GONE

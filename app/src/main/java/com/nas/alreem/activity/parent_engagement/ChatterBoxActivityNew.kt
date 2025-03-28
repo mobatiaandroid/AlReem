@@ -78,12 +78,15 @@ class ChatterBoxActivityNew : AppCompatActivity() {
     private val EMAIL_PATTERN =
         "^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$"
     private val pattern = "^([a-zA-Z ]*)$"
+    lateinit var activity: Activity
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chatterbox_list_new)
         //		Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this,
 //				LoginActivity.class));
         mContext = this
+        activity=this
         initialiseUI()
     }
 
@@ -273,7 +276,7 @@ class ChatterBoxActivityNew : AppCompatActivity() {
     private fun chatterBoxList()
        {
 
-           val call: Call<ChatterBoxResponseModel> = ApiClient.getClient.chatter_box("Bearer " + PreferenceManager.getaccesstoken(mContext))
+           val call: Call<ChatterBoxResponseModel> = ApiClient(mContext).getClient.chatter_box("Bearer " + PreferenceManager.getaccesstoken(mContext))
            call.enqueue(object : Callback<ChatterBoxResponseModel> {
                override fun onFailure(call: Call<ChatterBoxResponseModel>, t: Throwable) {
                   // progressDialogAdd.visibility=View.GONE
@@ -282,16 +285,12 @@ class ChatterBoxActivityNew : AppCompatActivity() {
                    val responsedata = response.body()
                  //  progressDialogAdd.visibility=View.GONE
                    if (response.isSuccessful()) {
-                       Log.e("res", response.toString())
                        val apiResponse: ChatterBoxResponseModel? = response.body()
-                       Log.e("response", java.lang.String.valueOf(apiResponse))
-                       println("response$apiResponse")
                        val response_code: Int = (apiResponse!!.getResponseCode())
                        if (response_code == 100) {
                            val statuscode: String = java.lang.String.valueOf(
                                response.body()!!.getResponse().getStatusCode()
                            )
-                           Log.e("statuscode", statuscode)
                                val bannerImage: String =
                                    response.body()!!.getResponse().getBannerImage()
                                fbLink = response.body()!!.getResponse().getFacebookUrl()
@@ -345,7 +344,6 @@ class ChatterBoxActivityNew : AppCompatActivity() {
                                            response.body()!!.getResponse().getEventDataList().get(i)
                                        val gson = Gson()
                                        val eventJson = gson.toJson(item)
-                                       Log.e("item", eventJson)
                                        try {
                                            val jsonObject = JSONObject(eventJson)
                                            mTermsCalendarListArray!!.add(getSearchValues(jsonObject))
@@ -551,7 +549,7 @@ class ChatterBoxActivityNew : AppCompatActivity() {
 
     private fun sendEmailToStaff(dialog: Dialog) {
         val sendMailBody = SendEmailApiModel(contactEmail!!, text_dialog!!.text.toString(), text_content!!.text.toString())
-        val call: Call<SignUpResponseModel> = ApiClient.getClient.sendEmailStaff(sendMailBody, "Bearer " + PreferenceManager.getaccesstoken(mContext!!))
+        val call: Call<SignUpResponseModel> = ApiClient(mContext).getClient.sendEmailStaff(sendMailBody, "Bearer " + PreferenceManager.getaccesstoken(mContext!!))
         call.enqueue(object : Callback<SignUpResponseModel> {
             override fun onFailure(call: Call<SignUpResponseModel>, t: Throwable) {
                 //progressDialog.visibility = View.GONE
@@ -656,6 +654,14 @@ class ChatterBoxActivityNew : AppCompatActivity() {
             mdialog.dismiss()
         }
         dialog.show()
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
     companion object {
         private val progressDialog: ProgressBar? = null

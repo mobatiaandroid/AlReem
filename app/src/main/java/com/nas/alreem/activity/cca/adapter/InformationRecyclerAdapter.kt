@@ -58,7 +58,7 @@ class InformationRecyclerAdapter(
     }
 
     override fun getItemCount(): Int {
-        Log.e("lostcardsize", mnNewsLetterModelArrayList.size.toString())
+
         return mnNewsLetterModelArrayList.size
     }
 

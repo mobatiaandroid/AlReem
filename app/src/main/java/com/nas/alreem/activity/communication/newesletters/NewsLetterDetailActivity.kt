@@ -1,6 +1,7 @@
 package com.nas.alreem.activity.communication.newesletters
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -19,6 +20,7 @@ import com.nas.alreem.R
 import com.nas.alreem.activity.communication.newesletters.adapter.NewsLetterAdapter
 import com.nas.alreem.activity.communication.newesletters.adapter.NewsLetterDetailAdapter
 import com.nas.alreem.activity.home.HomeActivity
+import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.ConstantWords
 import com.nas.alreem.constants.OnItemClickListener
 import com.nas.alreem.constants.addOnItemClickListener
@@ -31,11 +33,14 @@ class NewsLetterDetailActivity : AppCompatActivity(){
     lateinit var backRelative: RelativeLayout
     lateinit var logoClickImgView: ImageView
     lateinit var newsLetterArrayList:ArrayList<String>
+    lateinit var activity: Activity
+
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_newsletter_list)
         mContext=this
+        activity=this
         initUI()
 
     }
@@ -73,6 +78,14 @@ class NewsLetterDetailActivity : AppCompatActivity(){
 
         })
 
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 
 }

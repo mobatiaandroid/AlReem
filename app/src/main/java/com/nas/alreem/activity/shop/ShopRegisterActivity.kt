@@ -80,12 +80,15 @@ class ShopRegisterActivity : AppCompatActivity() {
     lateinit var payButton: ConstraintLayout
     var totalAmount: TextView? = null
     var totalValue = 0.0
-   // var progressBarDialog: ProgressBarDialog? = null
+    lateinit var activity: Activity
+
+    // var progressBarDialog: ProgressBarDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register_shop)
         context = this
+        activity = this
         initialiseUI()
        // if (AppUtils.isNetworkConnected(context)) {
             getStudentsList()
@@ -554,7 +557,7 @@ class ShopRegisterActivity : AppCompatActivity() {
     private fun getStudentsList() {
        // progress.visibility = View.VISIBLE
         val token = PreferenceManager.getaccesstoken(context)
-        val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+token)
+        val call: Call<StudentListModel> = ApiClient(context).getClient.studentList("Bearer "+token)
         call.enqueue(object : Callback<StudentListModel> {
             override fun onFailure(call: Call<StudentListModel>, t: Throwable) {
                 // Log.e("Error", t.localizedMessage)
@@ -899,5 +902,13 @@ class ShopRegisterActivity : AppCompatActivity() {
        // studentModel.setmPhoto(dataObject.optString("photo"))
      //   return studentModel
    // }
+   override fun onResume() {
+       super.onResume()
+       if (!ConstantFunctions.runMethod.equals("Dev")) {
+           if (ConstantFunctions().isDeveloperModeEnabled(context)) {
+               ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+           }
+       }
+   }
 
 }

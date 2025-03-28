@@ -79,7 +79,6 @@ class SocialMediaAdapter(var mContext: Context, mSocialMediaModels: ArrayList<So
     }
 
     override fun getItemCount(): Int {
-        println("Adapter---size" + mSocialMediaModels.size)
         return mSocialMediaModels.size
     }
 }

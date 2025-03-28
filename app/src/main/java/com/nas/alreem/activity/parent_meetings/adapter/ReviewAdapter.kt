@@ -228,7 +228,6 @@ progressDialogAdd.visibility=View.GONE
                         .toString() + " " + review_list[position].end_time
                 )
                 endTime = dateEnd.time
-                println("Start time$startTime:::::::::: endTime$endTime")
                 vpmlURL = if (review_list[position].vpml.equals("")) {
                     ""
                 } else {
@@ -262,7 +261,7 @@ progressDialogAdd.visibility=View.GONE
         progressDialogAdd.visibility = View.VISIBLE
         val token = PreferenceManager.getaccesstoken(mContext)
 
-        val call: Call<PtaReviewListResponseModel> = ApiClient.getClient.ptaReviewList("Bearer "+token)
+        val call: Call<PtaReviewListResponseModel> = ApiClient(mContext).getClient.ptaReviewList("Bearer "+token)
         call.enqueue(object : Callback<PtaReviewListResponseModel> {
             override fun onFailure(call: Call<PtaReviewListResponseModel>, t: Throwable) {
                 progressDialogAdd.visibility = View.GONE
@@ -314,7 +313,7 @@ progressDialogAdd.visibility=View.GONE
         val token = PreferenceManager.getaccesstoken(mContext)
         var idString:String=idList.toString()
         val ptaInsertSuccessBody = PtaInsertApiModel(stud_id,idList,staff_id)
-        val call: Call<PtaInsertModel> = ApiClient.getClient.pta_insert(ptaInsertSuccessBody,"Bearer "+token)
+        val call: Call<PtaInsertModel> = ApiClient(mContext).getClient.pta_insert(ptaInsertSuccessBody,"Bearer "+token)
         call.enqueue(object : Callback<PtaInsertModel> {
             override fun onFailure(call: Call<PtaInsertModel>, t: Throwable) {
                 progressDialogAdd.visibility = View.GONE
@@ -496,7 +495,7 @@ progressDialogAdd.visibility=View.GONE
         var idString:String=idList.toString()
         val ptaconfirmSuccessBody = PtaConfirmApiModel(idString)
         Log.e("idstring",idString)
-        val call: Call<PtaConfirmModel> = ApiClient.getClient.pta_confirm(ptaconfirmSuccessBody,"Bearer "+token)
+        val call: Call<PtaConfirmModel> = ApiClient(mContext).getClient.pta_confirm(ptaconfirmSuccessBody,"Bearer "+token)
         call.enqueue(object : Callback<PtaConfirmModel> {
             override fun onFailure(call: Call<PtaConfirmModel>, t: Throwable) {
                 progressDialogAdd.visibility = View.GONE

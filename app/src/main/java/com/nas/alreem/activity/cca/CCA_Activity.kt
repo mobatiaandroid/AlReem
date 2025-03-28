@@ -170,7 +170,7 @@ class CCA_Activity : AppCompatActivity() {
     private fun getStudentList() {
         progress.visibility = View.VISIBLE
         val token = PreferenceManager.getaccesstoken(mContext)
-        val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+token)
+        val call: Call<StudentListModel> = ApiClient(mContext).getClient.studentList("Bearer "+token)
         call.enqueue(object : Callback<StudentListModel> {
             override fun onFailure(call: Call<StudentListModel>, t: Throwable) {
                // Log.e("Error", t.localizedMessage)
@@ -262,7 +262,7 @@ class CCA_Activity : AppCompatActivity() {
         val body = CCAListRequestModel(studId)
         val token = PreferenceManager.getaccesstoken(mContext)
         val call: Call<CCAListResponseModel> =
-            ApiClient.getClient.getCCAList( body,"Bearer $token")
+            ApiClient(mContext).getClient.getCCAList( body,"Bearer $token")
         progress.visibility = View.VISIBLE
         call.enqueue(object : Callback<CCAListResponseModel> {
             override fun onResponse(
@@ -651,7 +651,7 @@ class CCA_Activity : AppCompatActivity() {
 
         val token = PreferenceManager.getaccesstoken(mContext)
         val call: Call<CCASubmitResponseModel> =
-            ApiClient.getClient.readstatusupdate( model,"Bearer $token")
+            ApiClient(mContext).getClient.readstatusupdate( model,"Bearer $token")
        // progressBar.visibility = View.VISIBLE
         call.enqueue(object : Callback<CCASubmitResponseModel> {
             override fun onResponse(

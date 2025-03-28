@@ -1,6 +1,7 @@
 package com.nas.alreem.activity.communication.commingup
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -37,10 +38,13 @@ class ComingUpWholeSchool : AppCompatActivity() {
     lateinit var logoClickImgView: ImageView
     lateinit var  adapterComing:ComingUpAdapter
     lateinit var comingUpArrayList: ArrayList<ComingUpResponseModel.ComingUpItem>
+    lateinit var activity: Activity
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_coming_up)
         mContext = this
+        activity=this
         initUI()
         if (ConstantFunctions.internetCheck(mContext)) {
             callComingUpApi()
@@ -126,7 +130,7 @@ class ComingUpWholeSchool : AppCompatActivity() {
     fun callComingUpApi() {
         progressDialogAdd.visibility = View.VISIBLE
         comingUpArrayList = ArrayList()
-        val call: Call<ComingUpResponseModel> = ApiClient.getClient.whole_school_coming_up(
+        val call: Call<ComingUpResponseModel> = ApiClient(mContext).getClient.whole_school_coming_up(
             "Bearer " + PreferenceManager.getaccesstoken(mContext)
         )
         call.enqueue(object : Callback<ComingUpResponseModel> {
@@ -184,7 +188,7 @@ class ComingUpWholeSchool : AppCompatActivity() {
         val paramObject = JsonObject()
         paramObject.addProperty("id", ccaDaysId)
         paramObject.addProperty("type", "whole_school_coming_ups")
-        val call: Call<StudentShopCardResponseModel> = ApiClient.getClient.status_changeAPI(token,paramObject)
+        val call: Call<StudentShopCardResponseModel> = ApiClient(mContext).getClient.status_changeAPI(token,paramObject)
         call.enqueue(object : Callback<StudentShopCardResponseModel> {
             override fun onFailure(call: Call<StudentShopCardResponseModel>, t: Throwable) {
                 progressDialogAdd.visibility=View.GONE
@@ -213,5 +217,13 @@ class ComingUpWholeSchool : AppCompatActivity() {
             }
 
         })
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 }

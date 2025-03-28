@@ -186,7 +186,7 @@ internal class StaffDetailAdapter  (var mContext: Context, var staff_cat_list: A
     {
 
         val sendMailBody = SendEmailApiModel( staffEmail, title, message)
-        val call: Call<SignUpResponseModel> = ApiClient.getClient.sendEmailStaff(sendMailBody, "Bearer " + PreferenceManager.getaccesstoken(mContext))
+        val call: Call<SignUpResponseModel> = ApiClient(mContext).getClient.sendEmailStaff(sendMailBody, "Bearer " + PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<SignUpResponseModel> {
             override fun onFailure(call: Call<SignUpResponseModel>, t: Throwable) {
                 //progressDialog.visibility = View.GONE

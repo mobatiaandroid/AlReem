@@ -1,10 +1,9 @@
 package com.nas.alreem.constants
 
+import android.app.Activity
 import android.app.DownloadManager
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
@@ -13,8 +12,6 @@ import android.os.Environment
 import android.os.StrictMode
 import android.util.Log
 import android.view.View
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -23,12 +20,13 @@ import com.downloader.PRDownloader
 import com.github.barteksc.pdfviewer.PDFView
 import com.nas.alreem.R
 import com.nas.alreem.activity.home.HomeActivity
+import com.nas.alreem.appcontroller.AppController
 import java.io.File
-
+lateinit var progressBar: ProgressBar
 class PDFViewerActivity : AppCompatActivity() {
     lateinit var pdfviewer: PDFView
     lateinit var urltoshow: String
-    lateinit var progressBar: ProgressBar
+
     lateinit var btn_left: ImageView
     lateinit var sharepdf: ImageView
     lateinit var downloadpdf: ImageView
@@ -75,6 +73,7 @@ class PDFViewerActivity : AppCompatActivity() {
             fileName
         )
         downloadpdf.setOnClickListener {
+            progressBar.visibility = View.VISIBLE
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
                     requestPermissions(
@@ -132,18 +131,38 @@ class PDFViewerActivity : AppCompatActivity() {
     }
 
     fun onDownloadComplete() {
-        val onComplete = object : BroadcastReceiver() {
-            override fun onReceive(context: Context?, intent: Intent?) {
-                progressBar.visibility = View.GONE
-                Toast.makeText(context, "File downloaded", Toast.LENGTH_SHORT).show()
+        val onComplete = object : MyBroadcastReceiver() {
 
+            override fun onReceive(context: Context?, intent: Intent?) {
+                // Ensure that the UI update happens on the main thread
+                context?.let {
+                    (it as Activity).runOnUiThread {
+
+                        Toast.makeText(it, "File downloaded", Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
+        }
+
+
+        //registerReceiver(onComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
+    }
+    fun receiveroption()
+    {
+
+        if (AppController.reciver.equals("1"))
+        {
+            progressBar.visibility=View.GONE
+        }
+        else
+        {
+            progressBar.visibility=View.VISIBLE
 
         }
-        registerReceiver(onComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
     }
 
     private fun startdownloading() {
+        progressBar.visibility = View.VISIBLE
         val request = DownloadManager.Request(Uri.parse(urltoshow))   //URL = URL to download
         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
         request.setTitle("Download")
@@ -151,7 +170,6 @@ class PDFViewerActivity : AppCompatActivity() {
         request.allowScanningByMediaScanner()
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "$title.pdf")
-        progressBar.visibility = View.VISIBLE
         val manager = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         manager.enqueue(request)
     }

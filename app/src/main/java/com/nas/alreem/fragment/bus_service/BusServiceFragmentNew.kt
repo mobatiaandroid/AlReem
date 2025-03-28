@@ -211,7 +211,7 @@ class BusServiceFragmentNew : Fragment() {
         title: String, message: String, staffEmail: String, dialog: Dialog)
     {
         val sendMailBody = SendEmailApiModel( staffEmail, title, message)
-        val call: Call<SignUpResponseModel> = ApiClient.getClient.sendEmailStaff(sendMailBody, "Bearer " + PreferenceManager.getaccesstoken(mContext!!))
+        val call: Call<SignUpResponseModel> = ApiClient(mContext).getClient.sendEmailStaff(sendMailBody, "Bearer " + PreferenceManager.getaccesstoken(mContext!!))
         call.enqueue(object : Callback<SignUpResponseModel> {
             override fun onFailure(call: Call<SignUpResponseModel>, t: Throwable) {
                 //progressDialog.visibility = View.GONE
@@ -271,7 +271,7 @@ class BusServiceFragmentNew : Fragment() {
         progress.visibility = View.VISIBLE
         val token = PreferenceManager.getaccesstoken(mContext!!)
         val call: Call<BannerModel> =
-            ApiClient.getClient.getBusServiceBanner( "Bearer $token")
+            ApiClient(mContext).getClient.getBusServiceBanner( "Bearer $token")
         call.enqueue(object : Callback<BannerModel> {
             override fun onResponse(
                 call: Call<BannerModel>,
@@ -299,7 +299,6 @@ class BusServiceFragmentNew : Fragment() {
                                 bannerImagePager!!.setBackgroundResource(R.drawable.default_banner)
 //											bannerImagePager.setBackgroundResource(R.drawable.ccas_banner);
                             }
-                            println("contact mail$contactEmail")
                             if (description.equals("", ignoreCase = true) && contactEmail.equals(
                                     "",
                                     ignoreCase = true
@@ -321,10 +320,8 @@ class BusServiceFragmentNew : Fragment() {
                                 // mtitleRel.setVisibility(View.VISIBLE);
                             }
                             if (contactEmail.equals("", ignoreCase = true)) {
-                                println("contact mail1")
                                 mailImageView!!.visibility = View.GONE
                             } else {
-                                println("contact mail2")
                                 mtitleRel!!.visibility = View.VISIBLE
                                 mailImageView!!.visibility = View.VISIBLE
                             }

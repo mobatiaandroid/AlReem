@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.shop_new
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -73,11 +74,14 @@ class ProductDetailsPage : AppCompatActivity() {
     lateinit var sacleImg: ImageView
     lateinit var scaletextt: TextView
     lateinit var basket: ImageView
+    lateinit var activity: Activity
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.shop_item_details)
         mContext = this
+        activity=this
         items()
         initfn()
 
@@ -262,7 +266,7 @@ if (size_chart.equals(""))
             id, canteen_cart_id
         )
         val call: Call<CanteenCartUpdateModel> =
-            ApiClient.getClient.update_shop_cart(canteenadd, "Bearer " + token)
+            ApiClient(mContext).getClient.update_shop_cart(canteenadd, "Bearer " + token)
         call.enqueue(object : Callback<CanteenCartUpdateModel> {
             override fun onFailure(call: Call<CanteenCartUpdateModel>, t: Throwable) {
                 //   progressDialogP.hide()
@@ -305,7 +309,7 @@ if (size_chart.equals(""))
         val token = PreferenceManager.getaccesstoken(mContext)
         var canteenCart = CanteenCartApiModel(PreferenceManager.getStudentID(mContext)!!)
         val call: Call<GetShopCartResponseModel> =
-            ApiClient.getClient.get_shop_cart(canteenCart, "Bearer " + token)
+            ApiClient(mContext).getClient.get_shop_cart(canteenCart, "Bearer " + token)
         call.enqueue(object : Callback<GetShopCartResponseModel> {
             override fun onFailure(call: Call<GetShopCartResponseModel>, t: Throwable) {
                 //  progressDialogP.hide()
@@ -348,7 +352,7 @@ if (size_chart.equals(""))
             PreferenceManager.getStudentID(mContext)!!, canteen_cart_id
         )
         val call: Call<CanteenCartRemoveModel> =
-            ApiClient.getClient.remove_shop_cart(canteenadd, "Bearer " + token)
+            ApiClient(mContext).getClient.remove_shop_cart(canteenadd, "Bearer " + token)
         call.enqueue(object : Callback<CanteenCartRemoveModel> {
             override fun onFailure(call: Call<CanteenCartRemoveModel>, t: Throwable) {
                 //   progressDialogP.hide()
@@ -398,7 +402,7 @@ if (size_chart.equals(""))
             PreferenceManager.getStudentID(mContext)!!, id, "1", price
         )
         val call: Call<AddToCartCanteenModel> =
-            ApiClient.getClient.add_to_shop_cart(canteenadd, "Bearer " + token)
+            ApiClient(mContext).getClient.add_to_shop_cart(canteenadd, "Bearer " + token)
         call.enqueue(object : Callback<AddToCartCanteenModel> {
             override fun onFailure(call: Call<AddToCartCanteenModel>, t: Throwable) {
                 //  progressDialogP.hide()
@@ -445,7 +449,7 @@ if (size_chart.equals(""))
             PreferenceManager.getStudentID(mContext)!!, PreferenceManager.getcategoriid(mContext)!!
         )
         val call: Call<ItemsListModel_new> =
-            ApiClient.getClient.get_shop_items(canteenItems, "Bearer " + token)
+            ApiClient(mContext).getClient.get_shop_items(canteenItems, "Bearer " + token)
         call.enqueue(object : Callback<ItemsListModel_new> {
             override fun onFailure(call: Call<ItemsListModel_new>, t: Throwable) {
                 // progressDialogP.hide()
@@ -509,5 +513,13 @@ if (size_chart.equals(""))
         })
 
 
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 }

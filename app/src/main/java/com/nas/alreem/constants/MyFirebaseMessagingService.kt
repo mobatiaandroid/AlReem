@@ -49,7 +49,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
             if (remoteMessage.notification != null) {
                 sendNotification(remoteMessage.notification!!.body)
-                println("Message Notification Body:"+ remoteMessage.notification!!.body)
 
 
             }

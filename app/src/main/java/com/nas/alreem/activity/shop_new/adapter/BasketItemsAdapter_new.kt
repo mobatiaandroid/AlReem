@@ -239,7 +239,7 @@ class BasketItemsAdapter_new (
         progress.visibility= View.VISIBLE
         val token = PreferenceManager.getaccesstoken(mcontext)
         var canteenCart= CanteenCartApiModel(PreferenceManager.getStudentID(mcontext).toString())
-        val call: Call<GetShopCartResponseModel> = ApiClient.getClient.get_shop_cart(canteenCart,"Bearer "+token)
+        val call: Call<GetShopCartResponseModel> = ApiClient(mcontext).getClient.get_shop_cart(canteenCart,"Bearer "+token)
         call.enqueue(object : Callback<GetShopCartResponseModel> {
             override fun onFailure(call: Call<GetShopCartResponseModel>, t: Throwable) {
 
@@ -310,7 +310,7 @@ class BasketItemsAdapter_new (
         var canteenadd= ShopCartUpdateApiModel(
             PreferenceManager.getStudentID(mcontext).toString(),quant,
             items_list[position].item_id.toString(),items_list[position].id.toString())
-        val call: Call<CanteenCartUpdateModel> = ApiClient.getClient.update_shop_cart(canteenadd,"Bearer "+token)
+        val call: Call<CanteenCartUpdateModel> = ApiClient(mcontext).getClient.update_shop_cart(canteenadd,"Bearer "+token)
         call.enqueue(object : Callback<CanteenCartUpdateModel> {
             override fun onFailure(call: Call<CanteenCartUpdateModel>, t: Throwable) {
 
@@ -357,7 +357,7 @@ class BasketItemsAdapter_new (
         val token = PreferenceManager.getaccesstoken(mcontext)
         var canteenadd= ShopCartRemoveApiModel(
             PreferenceManager.getStudentID(mcontext).toString(),items_list[position].id.toString())
-        val call: Call<CanteenCartRemoveModel> = ApiClient.getClient.remove_shop_cart(canteenadd,"Bearer "+token)
+        val call: Call<CanteenCartRemoveModel> = ApiClient(mcontext).getClient.remove_shop_cart(canteenadd,"Bearer "+token)
         call.enqueue(object : Callback<CanteenCartRemoveModel> {
             override fun onFailure(call: Call<CanteenCartRemoveModel>, t: Throwable) {
 

@@ -289,7 +289,6 @@ public class GiraffePlayer {
             IjkMediaPlayer.native_profileBegin("libijkplayer.so");
             playerSupport=true;
         } catch (Throwable e) {
-            Log.e("GiraffePlayer", "loadLibraries error", e);
         }
         this.activity=activity;
         screenWidthPixels = activity.getResources().getDisplayMetrics().widthPixels;

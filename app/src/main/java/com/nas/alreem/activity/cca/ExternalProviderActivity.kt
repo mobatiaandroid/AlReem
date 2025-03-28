@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.cca
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -48,12 +49,15 @@ class ExternalProviderActivity : AppCompatActivity() {
     var stud_img = ""
     var section = ""
     private val mListViewArray: ArrayList<ExternalProvidersResponseModel.Data.Lists>? = ArrayList()
+    lateinit var activity: Activity
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_external_provider)
         mContext = this
+        activity=this
         initilaiseUI()
         logoclick.setOnClickListener {
             val mIntent = Intent(mContext, HomeActivity::class.java)
@@ -81,7 +85,7 @@ class ExternalProviderActivity : AppCompatActivity() {
         val token = PreferenceManager.getaccesstoken(mContext)
         val body = ExternalProvidersRequestModel("0","10")
         val call: Call<ExternalProvidersResponseModel> =
-            ApiClient.getClient.getExternalProviders( body,"Bearer $token")
+            ApiClient(mContext).getClient.getExternalProviders( body,"Bearer $token")
         progressBar.visibility = View.VISIBLE
         call.enqueue(object : Callback<ExternalProvidersResponseModel> {
             override fun onResponse(
@@ -186,5 +190,13 @@ class ExternalProviderActivity : AppCompatActivity() {
 
         })
 
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 }

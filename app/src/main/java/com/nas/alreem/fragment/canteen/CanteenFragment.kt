@@ -129,7 +129,7 @@ class CanteenFragment  : Fragment() {
         progress.visibility = View.VISIBLE
 
         val token = PreferenceManager.getaccesstoken(mContext)
-        val call: Call<CanteenBannerResponseModel> = ApiClient.getClient.get_canteen_banner("Bearer "+token)
+        val call: Call<CanteenBannerResponseModel> = ApiClient(mContext).getClient.get_canteen_banner("Bearer "+token)
         call.enqueue(object : Callback<CanteenBannerResponseModel>
         {
             override fun onFailure(call: Call<CanteenBannerResponseModel>, t: Throwable) {
@@ -270,7 +270,7 @@ class CanteenFragment  : Fragment() {
     {
 
         val sendMailBody = SendEmailApiModel( staffEmail, title, message)
-        val call: Call<SignUpResponseModel> = ApiClient.getClient.sendEmailStaff(sendMailBody, "Bearer " + PreferenceManager.getaccesstoken(mContext))
+        val call: Call<SignUpResponseModel> = ApiClient(mContext).getClient.sendEmailStaff(sendMailBody, "Bearer " + PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<SignUpResponseModel> {
             override fun onFailure(call: Call<SignUpResponseModel>, t: Throwable) {
                 //progressDialog.visibility = View.GONE

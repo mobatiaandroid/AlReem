@@ -1,6 +1,7 @@
 package com.nas.alreem.activity.sixth_form
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.nas.alreem.R
 import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.activity.primary.adapter.PrimaryDataAdapter
+import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.OnItemClickListener
 import com.nas.alreem.constants.PDFViewerActivity
 import com.nas.alreem.constants.WebLinkActivity
@@ -31,11 +33,14 @@ class SixthFormActivity : AppCompatActivity(){
     lateinit var backRelative: RelativeLayout
     lateinit var primaryList:ArrayList<PrimaryFileModel>
     var title:String=""
+    lateinit var activity: Activity
+
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_priamry)
         mContext=this
+        activity=this
         initUI()
 
     }
@@ -94,6 +99,14 @@ class SixthFormActivity : AppCompatActivity(){
 
 
         })
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 
 }

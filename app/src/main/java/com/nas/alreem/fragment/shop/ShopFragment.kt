@@ -176,7 +176,7 @@ class ShopFragment : Fragment() {
     {
         progressDialog.visibility = View.VISIBLE
         val token = PreferenceManager.getaccesstoken(mContext)
-        val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+token)
+        val call: Call<StudentListModel> = ApiClient(mContext).getClient.studentList("Bearer "+token)
         call.enqueue(object : Callback<StudentListModel> {
             override fun onFailure(call: Call<StudentListModel>, t: Throwable) {
                 progressDialog.visibility = View.GONE
@@ -250,7 +250,7 @@ class ShopFragment : Fragment() {
         progressDialog.visibility = View.VISIBLE
 
         val token = PreferenceManager.getaccesstoken(mContext)
-        val call: Call<CanteenBannerResponseModel> = ApiClient.getClient.shop_banner("Bearer "+token)
+        val call: Call<CanteenBannerResponseModel> = ApiClient(mContext).getClient.shop_banner("Bearer "+token)
         call.enqueue(object : Callback<CanteenBannerResponseModel>
         {
             override fun onFailure(call: Call<CanteenBannerResponseModel>, t: Throwable) {
@@ -426,7 +426,7 @@ class ShopFragment : Fragment() {
     {
 
         val sendMailBody = SendEmailApiModel( staffEmail, title, message)
-        val call: Call<SignUpResponseModel> = ApiClient.getClient.sendEmailStaff(sendMailBody, "Bearer " + PreferenceManager.getaccesstoken(mContext))
+        val call: Call<SignUpResponseModel> = ApiClient(mContext).getClient.sendEmailStaff(sendMailBody, "Bearer " + PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<SignUpResponseModel> {
             override fun onFailure(call: Call<SignUpResponseModel>, t: Throwable) {
                 //progressDialog.visibility = View.GONE

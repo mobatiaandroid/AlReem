@@ -150,11 +150,23 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
         )
         setContentView(R.layout.activtiy_home)
         Intent.FLAG_ACTIVITY_CLEAR_TASK
-        initializeUI()
         calendarPermissionStatus =
             getSharedPreferences("calendarPermissionStatus", Context.MODE_PRIVATE)
+        context = this
+        mActivity = this
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(context)) {
+                showDeviceIsDeveloperPopUp(context)
+            } else {
+                initializeUI()
+                showfragmenthome()
+            }
+        }
+        else{
+            initializeUI()
+            showfragmenthome()
+        }
 
-        showfragmenthome()
 
     }
 
@@ -168,8 +180,6 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
     @SuppressLint("Recycle", "WrongViewCast")
     @RequiresApi(Build.VERSION_CODES.M)
     private fun initializeUI() {
-        context = this
-        mActivity = this
         homelist = findViewById(R.id.homelistview)
         drawer_layout = findViewById(R.id.drawer_layout)
         linear_layout = findViewById(R.id.linear_layout)
@@ -468,7 +478,6 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                                 ) {
                                     //Previously Permission Request was cancelled with 'Dont Ask Again',
                                     // Redirect to Settings after showing information about why you need the permission
-                                    println("Permission0")
                                     val builder = AlertDialog.Builder(mActivity)
                                     builder.setTitle("Need Calendar Permission")
                                     builder.setMessage("This module needs Calendar permissions.")
@@ -510,7 +519,6 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                                 ) {
                                     //Previously Permission Request was cancelled with 'Dont Ask Again',
                                     // Redirect to Settings after showing information about why you need the permission
-                                    println("Permission1")
                                     val builder = AlertDialog.Builder(mActivity)
                                     builder.setTitle("Need Calendar Permission")
                                     builder.setMessage("This module needs Calendar permissions.")
@@ -546,7 +554,6 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                                     }
                                     builder.show()
                                 } else {
-                                    println("Permission3")
 
                                     //just request the permission
 //                        ActivityCompat.requestPermissions(mActivity, permissionsRequired, PERMISSION_CALLBACK_CONSTANT_CALENDAR);
@@ -917,6 +924,11 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
 
     override fun onResume() {
         super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(context)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(mActivity)
+            }
+        }
         Intent.FLAG_ACTIVITY_CLEAR_TASK
 
     }
@@ -941,7 +953,6 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
     }
 
     private fun reEnroll(mContext: Context) {
-        Log.e("re", "en")
         val page_count = 0
         //int total_count=studDetailList.size-1;
         val check = 0
@@ -1010,15 +1021,11 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
             RecyclerItemListener(mContext, reEnrollRecycler,
                 object : RecyclerItemListener.RecyclerTouchListener {
                     override fun onClickItem(v: View?, position: Int) {
-                        Log.e("Click","Click")
                         if (studentList.get(position).status.equals("")) {
-                            Log.e("Click1","Click1")
                             if (studentList.get(position).enrollment_status.equals("1")
                             ) {
-                                Log.e("Click2","Click2")
 
                                 callReEnrollAPI(studentList, position)
-                                Log.e("pos1", position.toString())
                             } else {
                                 ConstantFunctions(). showDialogAlertDismiss(
                                     mActivity, "Alert",
@@ -1055,7 +1062,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
         val paramObject = JsonObject()
         paramObject.addProperty("title", subject.trim().toString())
         paramObject.addProperty("message", content.trim().toString())
-        val call: Call<EnrollmentHelpResponseModel> = ApiClient.getClient.getenrollhelp(
+        val call: Call<EnrollmentHelpResponseModel> = ApiClient(mContext).getClient.getenrollhelp(
             "Bearer " + PreferenceManager.getaccesstoken(mContext),
             paramObject
         )
@@ -1099,7 +1106,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
         //  progressDialogP.show()
         studentList = ArrayList()
         val call: Call<ReEnrollmentStatusResponseModel> =
-            ApiClient.getClient.getenrollstatus(
+            ApiClient(context).getClient.getenrollstatus(
                 "Bearer " + PreferenceManager.getaccesstoken(
                     mContext
                 )
@@ -1156,7 +1163,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
     }
     private fun callReEnrollAPI(studentEnrollList: java.util.ArrayList<StudentEnrollList>, position: Int) {
         // progressDialogP.show()
-        val service: ApiInterface = ApiClient.getClient
+        val service: ApiInterface = ApiClient(mContext).getClient
 
         val call: Call<ReEnrollmentFormResponseModel> =
             service.getenrollform("Bearer " + PreferenceManager.getaccesstoken(mContext))
@@ -1264,7 +1271,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
         dialog: Dialog,
         position: Int
     ) {
-        val service: ApiInterface = ApiClient.getClient
+        val service: ApiInterface = ApiClient(mContext).getClient
 //        progressBarDialog.show();
         val temp = ReEnrollSubmitModel(studentList[position].id, selectedItem)
         val tempArray: java.util.ArrayList<ReEnrollSubmitModel> =
@@ -1513,8 +1520,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
                 for (i in finalDropDownList.indices - 1) {
                     if (selectedItem === finalDropDownList[i].toString()) {
                         reEnrollSubmit[0].status = finalDropDownList[i].toString()
-                        Log.e("status", reEnrollSubmit[0].status)
-                        Log.e("student", studentID)
+
                         reEnrollSubmit[0].student_id = studentID
                         check[0] = 1
                     } else if (selectedItem === finalDropDownList[0]) {
@@ -1607,4 +1613,28 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
         btn_Cancel.setOnClickListener { dialog1.dismiss() }
         dialog1.show()
     }
+    fun showDeviceIsDeveloperPopUp(activity: Context) {
+        val dialog = Dialog(activity)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.dialog_common_error_alert)
+        val icon = dialog.findViewById<ImageView>(R.id.iconImageView)
+        icon.setBackgroundResource(R.drawable.round)
+        icon.setImageResource(R.drawable.exclamationicon)
+        val text = dialog.findViewById<TextView>(R.id.messageTxt)
+        val textHead = dialog.findViewById<TextView>(R.id.alertHead)
+        text.text =
+            "You have enabled Developer options/USB debugging on your phone. Please disable both to use the app for security reasons."
+        textHead.text = "Disable Developer Option"
+
+        val dialogButton = dialog.findViewById<Button>(R.id.btn_Ok)
+        dialogButton.setOnClickListener {
+            dialog.dismiss()
+            finish()
+        }
+
+        dialog.show()
+    }
+
     }

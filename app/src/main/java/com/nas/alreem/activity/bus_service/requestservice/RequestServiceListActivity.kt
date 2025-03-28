@@ -228,7 +228,7 @@ class RequestServiceListActivity : AppCompatActivity() {
         val token = PreferenceManager.getaccesstoken(mContext)
         val pickupSuccessBody = ListAbsenceApiModel(PreferenceManager.getStudentID(mContext).toString(),0,20)
         val call: Call<RequestBusServiceListModel> =
-            ApiClient.getClient.requestBusServiceList(pickupSuccessBody, "Bearer " + token)
+            ApiClient(mContext).getClient.requestBusServiceList(pickupSuccessBody, "Bearer " + token)
         call.enqueue(object : Callback<RequestBusServiceListModel> {
             override fun onFailure(call: Call<RequestBusServiceListModel>, t: Throwable) {
 
@@ -283,7 +283,7 @@ class RequestServiceListActivity : AppCompatActivity() {
     {
         progressDialogAdd.visibility= View.VISIBLE
         studentListArrayList= ArrayList()
-        val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+ PreferenceManager.getaccesstoken(mContext))
+        val call: Call<StudentListModel> = ApiClient(mContext).getClient.studentList("Bearer "+ PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<StudentListModel> {
             override fun onFailure(call: Call<StudentListModel>, t: Throwable) {
                 progressDialogAdd.visibility= View.GONE

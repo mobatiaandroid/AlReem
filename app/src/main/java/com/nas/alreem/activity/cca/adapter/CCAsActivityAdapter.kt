@@ -277,7 +277,7 @@ class CCAsActivityAdapter : RecyclerView.Adapter<CCAsActivityAdapter.MyViewHolde
                                                     )
                                                     val token = PreferenceManager.getaccesstoken(mContext)
                                                     val call: Call<CCASubmitResponseModel> =
-                                                        ApiClient.getClient.ccareserve( model,"Bearer $token")
+                                                        ApiClient(mContext).getClient.ccareserve( model,"Bearer $token")
                                                     progressDialogP.show()
                                                     call.enqueue(object :
                                                         Callback<CCASubmitResponseModel> {
@@ -466,7 +466,6 @@ class CCAsActivityAdapter : RecyclerView.Adapter<CCAsActivityAdapter.MyViewHolde
                         }
 
                         override fun onLongClickItem(v: View?, position: Int) {
-                            println("On Long Click Item interface")
                         }
                     })
             )

@@ -137,7 +137,7 @@ class BusServiceRegisterupdate : AppCompatActivity() {
        // progress.visibility = View.VISIBLE
         val token = PreferenceManager.getaccesstoken(mContext!!)
         val call: Call<BannerModel> =
-            ApiClient.getClient.bus_service_form_banner( "Bearer $token")
+            ApiClient(mContext).getClient.bus_service_form_banner( "Bearer $token")
         call.enqueue(object : Callback<BannerModel> {
             override fun onResponse(
                 call: Call<BannerModel>,
@@ -165,7 +165,6 @@ class BusServiceRegisterupdate : AppCompatActivity() {
                                 bannerImagePager!!.setBackgroundResource(R.drawable.default_banner)
 //											bannerImagePager.setBackgroundResource(R.drawable.ccas_banner);
                             }
-                            println("contact mail$contactEmail")
                             if (description.equals("", ignoreCase = true) && contactEmail.equals(
                                     "",
                                     ignoreCase = true
@@ -185,10 +184,8 @@ class BusServiceRegisterupdate : AppCompatActivity() {
                                 mtitleRel!!.visibility = View.VISIBLE
                             }
                             if (contactEmail.equals("", ignoreCase = true)) {
-                                println("contact mail1")
                                 mailImageView!!.visibility = View.GONE
                             } else {
-                                println("contact mail2")
                                 mtitleRel!!.visibility = View.VISIBLE
                                 mailImageView!!.visibility = View.VISIBLE
                             }
@@ -290,7 +287,7 @@ class BusServiceRegisterupdate : AppCompatActivity() {
     {
         progressDialogAdd.visibility=View.VISIBLE
         studentListArrayList= ArrayList()
-        val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+ PreferenceManager.getaccesstoken(mContext))
+        val call: Call<StudentListModel> = ApiClient(mContext).getClient.studentList("Bearer "+ PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<StudentListModel> {
             override fun onFailure(call: Call<StudentListModel>, t: Throwable) {
                 progressDialogAdd.visibility=View.GONE

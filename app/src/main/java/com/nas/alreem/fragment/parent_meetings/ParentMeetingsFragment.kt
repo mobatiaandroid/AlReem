@@ -160,7 +160,7 @@ class ParentMeetingsFragment:Fragment() {
     private fun callStudentListApi(){
         progressDialogAdd.visibility = View.VISIBLE
         val token = PreferenceManager.getaccesstoken(mContext)
-        val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+token)
+        val call: Call<StudentListModel> = ApiClient(mContext).getClient.studentList("Bearer "+token)
         call.enqueue(object : Callback<StudentListModel> {
             override fun onFailure(call: Call<StudentListModel>, t: Throwable) {
                 progressDialogAdd.visibility = View.GONE
@@ -265,7 +265,7 @@ class ParentMeetingsFragment:Fragment() {
         progressDialogAdd.visibility = View.VISIBLE
         val token = PreferenceManager.getaccesstoken(mContext)
         val stafflist5SuccessBody = ListStaffPtaApiModel(studentId.toString())
-        val call: Call<ListStaffPtaModel> = ApiClient.getClient.staff_list_pta(stafflist5SuccessBody,"Bearer "+token)
+        val call: Call<ListStaffPtaModel> = ApiClient(mContext).getClient.staff_list_pta(stafflist5SuccessBody,"Bearer "+token)
         call.enqueue(object : Callback<ListStaffPtaModel> {
             override fun onFailure(call: Call<ListStaffPtaModel>, t: Throwable) {
                 progressDialogAdd.visibility = View.GONE

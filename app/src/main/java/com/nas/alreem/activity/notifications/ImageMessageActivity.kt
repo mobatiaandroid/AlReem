@@ -48,11 +48,14 @@ class ImageMessageActivity : AppCompatActivity(){
     private lateinit var heading: TextView
     private lateinit var webView: WebView
     private lateinit var progressDialog: ProgressBar
+    lateinit var activity: Activity
+
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_text_message_detail)
         mContext=this
+        activity=this
         id=intent.getStringExtra("id").toString()
         title=intent.getStringExtra("title").toString()
         initUI()
@@ -95,7 +98,7 @@ class ImageMessageActivity : AppCompatActivity(){
 
         val token = PreferenceManager.getaccesstoken(mContext)
         val studentbody= MessageDetailApiModel(id)
-        val call: Call<MessageDetailModel> = ApiClient.getClient.notifictaionDetail(studentbody,"Bearer "+token)
+        val call: Call<MessageDetailModel> = ApiClient(mContext).getClient.notifictaionDetail(studentbody,"Bearer "+token)
         call.enqueue(object : Callback<MessageDetailModel> {
             override fun onFailure(call: Call<MessageDetailModel>, t: Throwable) {
                 progressDialog.visibility = View.GONE
@@ -195,13 +198,19 @@ class ImageMessageActivity : AppCompatActivity(){
         webView.webChromeClient = object : WebChromeClient() {
             override fun onProgressChanged(view: WebView, newProgress: Int) {
                 progressDialog.visibility = View.VISIBLE
-                println("testing2")
                 if (newProgress == 100)
                 {
-                    println("testing1")
                     progressDialog.visibility = View.GONE
 
                 }
+            }
+        }
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
             }
         }
     }

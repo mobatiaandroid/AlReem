@@ -1,6 +1,7 @@
 package com.nas.alreem.activity.communication.newesletters
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -39,11 +40,14 @@ class NewsLetterActivity : AppCompatActivity(){
     lateinit var backRelative: RelativeLayout
     lateinit var logoClickImgView: ImageView
     lateinit var newsLetterArrayList:ArrayList<NewsLetterModel>
+    lateinit var activity: Activity
+
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_newsletter)
         mContext=this
+        activity=this
         initUI()
         if (ConstantFunctions.internetCheck(mContext))
         {
@@ -94,7 +98,7 @@ class NewsLetterActivity : AppCompatActivity(){
     }
     private fun  getList(){
         val token = PreferenceManager.getaccesstoken(mContext)
-        val call: Call<NewsletterResponseModel> = ApiClient.getClient.newsletter_categories("Bearer "+token)
+        val call: Call<NewsletterResponseModel> = ApiClient(mContext).getClient.newsletter_categories("Bearer "+token)
         call.enqueue(object : Callback<NewsletterResponseModel> {
             override fun onFailure(call: Call<NewsletterResponseModel>, t: Throwable) {
 
@@ -135,5 +139,13 @@ class NewsLetterActivity : AppCompatActivity(){
         })
 
 
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 }

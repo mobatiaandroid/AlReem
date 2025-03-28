@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.parent_meetings
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -50,12 +51,15 @@ class ReviewAppointmentsRecyclerViewActivity:AppCompatActivity() {
     lateinit var home_icon: ImageView
     lateinit var confirm_tv: TextView
     var confimVisibility:Boolean=false
+    lateinit var activity: Activity
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_parent_meeting_review)
 
         mContext=this
+        activity=this
         initfn()
 
     }
@@ -103,7 +107,7 @@ class ReviewAppointmentsRecyclerViewActivity:AppCompatActivity() {
         progressDialogAdd.visibility = View.VISIBLE
         val token = PreferenceManager.getaccesstoken(mContext)
 
-        val call: Call<PtaReviewListResponseModel> = ApiClient.getClient.ptaReviewList("Bearer "+token)
+        val call: Call<PtaReviewListResponseModel> = ApiClient(mContext).getClient.ptaReviewList("Bearer "+token)
         call.enqueue(object : Callback<PtaReviewListResponseModel> {
             override fun onFailure(call: Call<PtaReviewListResponseModel>, t: Throwable) {
                 progressDialogAdd.visibility = View.GONE
@@ -187,7 +191,7 @@ class ReviewAppointmentsRecyclerViewActivity:AppCompatActivity() {
         var idString:String=ConstantFunctions.idList.toString()
         val ptaconfirmSuccessBody = PtaConfirmApiModel(idString)
         Log.e("idstring",idString)
-        val call: Call<PtaConfirmModel> = ApiClient.getClient.pta_confirm(ptaconfirmSuccessBody,"Bearer "+token)
+        val call: Call<PtaConfirmModel> = ApiClient(mContext).getClient.pta_confirm(ptaconfirmSuccessBody,"Bearer "+token)
         call.enqueue(object : Callback<PtaConfirmModel> {
             override fun onFailure(call: Call<PtaConfirmModel>, t: Throwable) {
                 progressDialogAdd.visibility = View.GONE
@@ -220,5 +224,13 @@ class ReviewAppointmentsRecyclerViewActivity:AppCompatActivity() {
 
         })
 
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 }

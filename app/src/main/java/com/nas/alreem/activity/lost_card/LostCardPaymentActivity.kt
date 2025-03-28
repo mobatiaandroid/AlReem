@@ -133,7 +133,7 @@ class LostCardPaymentActivity : AppCompatActivity() {
         val token = PreferenceManager.getaccesstoken(mContext)
         val paymentTokenBody = PaymentTokenApiModel( PreferenceManager.getStudentID(mContext).toString(),"lost_card")
         val call: Call<PaymentTokenModel> =
-            ApiClient.getClient.payment_token(paymentTokenBody, "Bearer " + token)
+            ApiClient(mContext).getClient.payment_token(paymentTokenBody, "Bearer " + token)
         call.enqueue(object : Callback<PaymentTokenModel> {
             override fun onFailure(call: Call<PaymentTokenModel>, t: Throwable) {
                 progressDialogAdd.visibility = View.GONE
@@ -194,7 +194,7 @@ class LostCardPaymentActivity : AppCompatActivity() {
             mechantorderRef, stud_name!!,"","NAS","","Abu Dhabi",
             paymentToken,"lost_card")
         val call: Call<PaymentGatewayModel> =
-            ApiClient.getClient.payment_gateway(paymentGatewayBody, "Bearer " + token)
+            ApiClient(mContext).getClient.payment_gateway(paymentGatewayBody, "Bearer " + token)
         call.enqueue(object : Callback<PaymentGatewayModel> {
             override fun onFailure(call: Call<PaymentGatewayModel>, t: Throwable) {
                 progressDialogAdd.visibility = View.GONE
@@ -291,7 +291,7 @@ class LostCardPaymentActivity : AppCompatActivity() {
         paramObject.addProperty("device_name", devicename)
         paramObject.addProperty("app_version", version)
         val call: Call<StudentLostCardResponseModel> =
-            ApiClient.getClient.student_lost_card("Bearer " + PreferenceManager.getaccesstoken(mContext),paramObject)
+            ApiClient(mContext).getClient.student_lost_card("Bearer " + PreferenceManager.getaccesstoken(mContext),paramObject)
         call.enqueue(object : Callback<StudentLostCardResponseModel> {
             override fun onFailure(call: Call<StudentLostCardResponseModel>, t: Throwable) {
                 progressDialogAdd.visibility = View.GONE
@@ -437,5 +437,13 @@ if(responsedata.responsecode.equals("200"))
         }
 
         dialog.show()
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 }

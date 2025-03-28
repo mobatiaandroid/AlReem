@@ -75,10 +75,13 @@ class CCAsReviewActivity_New : AppCompatActivity() {
     var text_content: TextView? = null
     var text_dialog: TextView? = null
     private val surveyEmail = ""
+    lateinit var activity: Activity
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ccas_review)
         mContext = this
+        activity=this
         titleTextView = findViewById(R.id.heading)
         back = findViewById(R.id.btn_left)
         backRelative = findViewById(R.id.backRelative)
@@ -224,7 +227,7 @@ class CCAsReviewActivity_New : AppCompatActivity() {
         )
         val token = PreferenceManager.getaccesstoken(mContext)
         val call: Call<CCAReviewReservedResponseModel> =
-            ApiClient.getClient.ccareservelist( body,"Bearer $token")
+            ApiClient(mContext).getClient.ccareservelist( body,"Bearer $token")
         progressBar.visibility = View.VISIBLE
         call.enqueue(object : Callback<CCAReviewReservedResponseModel> {
             override fun onResponse(
@@ -244,7 +247,6 @@ class CCAsReviewActivity_New : AppCompatActivity() {
                                                     .toString(), ignoreCase = true
                                             )
                                         ) {
-                                            Log.e("size",response.body()!!.data!!.size.toString())
                                             addCCAReviewlist(
                                                 response.body()!!.data!![i]
                                             )
@@ -408,7 +410,7 @@ class CCAsReviewActivity_New : AppCompatActivity() {
             PreferenceManager.getCCAItemId(mContext).toString(),jsonString)
         val token = PreferenceManager.getaccesstoken(mContext)
         val call: Call<CCASubmitResponseModel> =
-            ApiClient.getClient.ccaedit( model,"Bearer $token")
+            ApiClient(mContext).getClient.ccaedit( model,"Bearer $token")
         progressBar.visibility = View.VISIBLE
         call.enqueue(object : Callback<CCASubmitResponseModel> {
             override fun onResponse(
@@ -478,7 +480,7 @@ class CCAsReviewActivity_New : AppCompatActivity() {
         )
         val token = PreferenceManager.getaccesstoken(mContext)
         val call: Call<CCASubmitResponseModel> =
-            ApiClient.getClient.ccaSubmit( model,"Bearer $token")
+            ApiClient(mContext).getClient.ccaSubmit( model,"Bearer $token")
         progressBar.visibility = View.VISIBLE
         call.enqueue(object : Callback<CCASubmitResponseModel> {
             override fun onResponse(
@@ -611,7 +613,7 @@ class CCAsReviewActivity_New : AppCompatActivity() {
         )
         val token = PreferenceManager.getaccesstoken(mContext)
         val call: Call<CCASubmitResponseModel> =
-            ApiClient.getClient.ccareservecancel( model,"Bearer $token")
+            ApiClient(mContext).getClient.ccareservecancel( model,"Bearer $token")
         progressBar.visibility = View.VISIBLE
         call.enqueue(object : Callback<CCASubmitResponseModel> {
             override fun onResponse(
@@ -796,7 +798,7 @@ class CCAsReviewActivity_New : AppCompatActivity() {
         )
         val token = PreferenceManager.getaccesstoken(mContext)
         val call: Call<CCASubmitResponseModel> =
-            ApiClient.getClient.ccareservecancel( model,"Bearer $token")
+            ApiClient(mContext).getClient.ccareservecancel( model,"Bearer $token")
         progressBar.visibility = View.VISIBLE
         call.enqueue(object : Callback<CCASubmitResponseModel> {
             override fun onResponse(
@@ -840,5 +842,13 @@ class CCAsReviewActivity_New : AppCompatActivity() {
             }
 
         })
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 }

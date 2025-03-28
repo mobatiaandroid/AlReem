@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.notifications
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -48,11 +49,14 @@ class VideoMessageActivity : AppCompatActivity() {
     var message: String = ""
     var url: String = ""
     var date: String = ""
+    lateinit var activity: Activity
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video_message)
         mContext = this
+        activity=this
 
         id = intent.getStringExtra("id").toString()
         title = intent.getStringExtra("title").toString()
@@ -98,7 +102,7 @@ class VideoMessageActivity : AppCompatActivity() {
         val token = PreferenceManager.getaccesstoken(mContext)
         val studentbody = MessageDetailApiModel(id)
         val call: Call<MessageDetailModel> =
-            ApiClient.getClient.notifictaionDetail(studentbody, "Bearer " + token)
+            ApiClient(mContext).getClient.notifictaionDetail(studentbody, "Bearer " + token)
         call.enqueue(object : Callback<MessageDetailModel> {
             override fun onFailure(call: Call<MessageDetailModel>, t: Throwable) {
 //                progressDialog.visibility = View.GONE
@@ -174,9 +178,7 @@ class VideoMessageActivity : AppCompatActivity() {
                     webView.webChromeClient = object : WebChromeClient() {
                         override fun onProgressChanged(view: WebView, newProgress: Int) {
                             proWebView.visibility = View.VISIBLE
-                            println("testing2")
                             if (newProgress == 100) {
-                                println("testing1")
                                 proWebView.visibility = View.GONE
 
                             }
@@ -225,9 +227,7 @@ class VideoMessageActivity : AppCompatActivity() {
         webView.webChromeClient = object : WebChromeClient() {
             override fun onProgressChanged(view: WebView, newProgress: Int) {
                 proWebView.visibility = View.VISIBLE
-                println("testing2")
                 if (newProgress == 100) {
-                    println("testing1")
                     proWebView.visibility = View.GONE
 
                 }
@@ -248,6 +248,14 @@ class VideoMessageActivity : AppCompatActivity() {
             super.onPageFinished(view, url)
             proWebView.visibility = View.GONE
             textcontent.visibility = View.VISIBLE
+        }
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
         }
     }
 }

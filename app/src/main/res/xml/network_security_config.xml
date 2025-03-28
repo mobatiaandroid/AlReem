@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
-    <domain-config cleartextTrafficPermitted="true">
-        <domain includeSubdomains="true">gama.mobatia.in:8080</domain>
-        <domain includeSubdomains="true">gama.mobatia.in</domain>
+    <base-config cleartextTrafficPermitted="false" /><!--For allowing HTTP-->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">delta.mobatia.in</domain>
         <domain includeSubdomains="true">cms.nasabudhabi.ae</domain>
+
     </domain-config>
 </network-security-config>

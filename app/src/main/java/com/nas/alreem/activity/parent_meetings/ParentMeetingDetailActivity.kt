@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.parent_meetings
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -60,12 +61,15 @@ class ParentMeetingDetailActivity:AppCompatActivity() {
     var alreadyslotBookedByUser:Boolean=false
     var confirmedslotBookedByUser:Boolean=false
     var confirmed_link:String=""
+    lateinit var activity: Activity
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_parent_meeting_detail)
 
         mContext=this
+        activity=this
         initfn()
 
     }
@@ -184,7 +188,7 @@ class ParentMeetingDetailActivity:AppCompatActivity() {
         val token = PreferenceManager.getaccesstoken(mContext)
         val ptaInsertSuccessBody = PtaInsertApiModel(studId,timeSlotListPost[0].slot_id,
             PreferenceManager.getstaffId(mContext).toString())
-        val call: Call<PtaInsertModel> = ApiClient.getClient.pta_insert(ptaInsertSuccessBody,"Bearer "+token)
+        val call: Call<PtaInsertModel> = ApiClient(mContext).getClient.pta_insert(ptaInsertSuccessBody,"Bearer "+token)
         call.enqueue(object : Callback<PtaInsertModel> {
             override fun onFailure(call: Call<PtaInsertModel>, t: Throwable) {
                 progressDialogAdd.visibility = View.GONE
@@ -278,7 +282,7 @@ class ParentMeetingDetailActivity:AppCompatActivity() {
         val outputDateStr: String = outputFormat.format(date)
         val timeslotBody = PtaListApiModel(studId, staff_id, outputDateStr)
         val call: Call<PtaListModel> =
-            ApiClient.getClient.pta_list(timeslotBody, "Bearer " + token)
+            ApiClient(mContext).getClient.pta_list(timeslotBody, "Bearer " + token)
         call.enqueue(object : Callback<PtaListModel> {
             override fun onFailure(call: Call<PtaListModel>, t: Throwable) {
                 progressDialogAdd.visibility = View.GONE
@@ -478,6 +482,7 @@ class ParentMeetingDetailActivity:AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         //other stuff
+
         if (firstVisit) {
             //do stuff for first visit only
             firstVisit = false
@@ -492,5 +497,11 @@ class ParentMeetingDetailActivity:AppCompatActivity() {
             }
 
         }
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
+
 }

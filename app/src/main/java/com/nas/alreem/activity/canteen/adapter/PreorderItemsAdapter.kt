@@ -20,7 +20,6 @@ import com.nas.alreem.R
 import com.nas.alreem.activity.ProgressBarDialog
 import com.nas.alreem.activity.canteen.model.AllergyContentModel
 import com.nas.alreem.activity.canteen.model.CatItemsListModel_new
-import com.nas.alreem.activity.canteen.model.add_orders.CatItemsListModel
 import com.nas.alreem.activity.canteen.model.add_to_cart.*
 import com.nas.alreem.activity.canteen.model.canteen_cart.CanteenCartApiModel
 import com.nas.alreem.activity.canteen.model.canteen_cart.CanteenCartModel
@@ -28,14 +27,12 @@ import com.nas.alreem.activity.canteen.model.canteen_cart.CanteenCartResModel
 import com.nas.alreem.constants.ApiClient
 import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.constants.DialogFunctions
-import com.nas.alreem.constants.OnItemClickListener
 import com.nas.alreem.constants.PreferenceManager
-import com.nas.alreem.constants.addOnItemClickListener
 
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.*
+import kotlin.collections.ArrayList
 
 class PreorderItemsAdapter(
     val itemlist: ArrayList<CatItemsListModel_new>,
@@ -69,27 +66,26 @@ class PreorderItemsAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         //onBottomReachedListener.onBottomReached(position)
         //bottomView.visibility=View.GONE
-Log.e("studentallergy", itemlist[position].student_allergy.toString())
-        if (allergycontentlist.size>0){
+        if (itemlist.get(position).isAllergic === true){
 
             holder.multiLinear.visibility = View.GONE
-            holder.addLinear.visibility = View.GONE
+            holder.addLinear.visibility = View.VISIBLE
             holder.allergy_info.visibility=View.VISIBLE
             holder.allergy_rec.visibility=View.VISIBLE
             var llm = (LinearLayoutManager(mcontext))
             llm.orientation = LinearLayoutManager.HORIZONTAL
             holder.allergy_rec.layoutManager = llm
-            var allergy_adapter=AllergyContentsAdapter(allergycontentlist,mcontext)
+            var allergy_adapter=AllergyContentsAdapter(itemlist[position].allergy_contents,mcontext)
             holder.allergy_rec.adapter=allergy_adapter
 
-            holder.allergy_rec.addOnItemClickListener(object : OnItemClickListener {
+           /* holder.allergy_rec.addOnItemClickListener(object : OnItemClickListener {
                 override fun onItemClicked(position: Int, view: View) {
                     Toast.makeText(mcontext, allergycontentlist[position].name, Toast.LENGTH_SHORT).show()
 
                     //  allergy_contents_popup(mcontext)
 
                 }
-            })
+            })*/
         }
         else{
             holder.allergy_rec.visibility=View.GONE
@@ -98,7 +94,7 @@ Log.e("studentallergy", itemlist[position].student_allergy.toString())
             holder.addLinear.visibility = View.VISIBLE
         }
         holder.allergy_info.setOnClickListener {
-            allergy_contents_popup(mcontext,itemlist[position].item_name)
+            allergy_contents_popup(mcontext,itemlist[position].item_name,itemlist[position].allergy_contents)
         }
         holder.itemNameTxt.text=itemlist[position].item_name
         holder.itemDescription.text = itemlist[position].description
@@ -120,7 +116,7 @@ Log.e("studentallergy", itemlist[position].student_allergy.toString())
         } else {
             if (allergycontentlist.size>0){
                 holder.multiLinear.visibility = View.GONE
-                holder.addLinear.visibility = View.GONE
+                holder.addLinear.visibility = View.VISIBLE
             }
             else
             {
@@ -130,7 +126,13 @@ Log.e("studentallergy", itemlist[position].student_allergy.toString())
 
         }
         holder.addLinear.setOnClickListener {
-            addToCart(itemlist[position].id,itemlist[position].price,position)
+            if (itemlist.get(position).student_allergy == 1) {
+                ConstantFunctions().showDialogNoData(mcontext,"Alert","This item contains ingredients your child is allergic to and cannot be ordered." , R.drawable.exclamationicon, R.drawable.round)
+               // Toast.makeText(mcontext, "This item contains ingredients your child is allergic to and cannot be ordered.", Toast.LENGTH_SHORT).show()
+                //allergypresentpopup( itemlist[position].id,itemlist[position].price,position, "1")
+            } else {
+                addToCart(itemlist[position].id,itemlist[position].price,position)
+            }
         }
 
 
@@ -168,6 +170,9 @@ Log.e("studentallergy", itemlist[position].student_allergy.toString())
     }
 
     override fun getItemCount(): Int {
+       // Log.e("itemlist",itemlist.size.toString())
+       // Log.e("allergycontentlist",allergycontentlist.size.toString())
+
         return itemlist.size
     }
 
@@ -213,7 +218,7 @@ Log.e("studentallergy", itemlist[position].student_allergy.toString())
         //progressDialogP.show()
         val token = PreferenceManager.getaccesstoken(mcontext)
         var canteenCart= CanteenCartApiModel(PreferenceManager.getStudentID(mcontext).toString())
-        val call: Call<CanteenCartModel> = ApiClient.getClient.get_canteen_cart(canteenCart,"Bearer "+token)
+        val call: Call<CanteenCartModel> = ApiClient(mcontext).getClient.get_canteen_cart(canteenCart,"Bearer "+token)
         call.enqueue(object : Callback<CanteenCartModel> {
             override fun onFailure(call: Call<CanteenCartModel>, t: Throwable) {
                 progressDialogP.hide()
@@ -261,7 +266,7 @@ private fun addToCart(id:String,price:String,position: Int){
     val token = PreferenceManager.getaccesstoken(mcontext)
     var canteenadd= AddToCartCanteenApiModel(
         PreferenceManager.getStudentID(mcontext).toString(),id,date,"1",price)
-    val call: Call<AddToCartCanteenModel> = ApiClient.getClient.add_to_canteen_cart(canteenadd,"Bearer "+token)
+    val call: Call<AddToCartCanteenModel> = ApiClient(mcontext).getClient.add_to_canteen_cart(canteenadd,"Bearer "+token)
     call.enqueue(object : Callback<AddToCartCanteenModel> {
         override fun onFailure(call: Call<AddToCartCanteenModel>, t: Throwable) {
             progressDialogP.hide()
@@ -288,6 +293,7 @@ private fun addToCart(id:String,price:String,position: Int){
         }
 
     })
+
 }
     private fun updateCart(id:String,position: Int,quant:String){
         progressDialogP.show()
@@ -296,7 +302,7 @@ private fun addToCart(id:String,price:String,position: Int){
         var canteenadd= CanteenCartUpdateApiModel(
             PreferenceManager.getStudentID(mcontext).toString(),date,quant,
             itemlist[position].id,canteen_cart_id)
-        val call: Call<CanteenCartUpdateModel> = ApiClient.getClient.update_canteen_cart(canteenadd,"Bearer "+token)
+        val call: Call<CanteenCartUpdateModel> = ApiClient(mcontext).getClient.update_canteen_cart(canteenadd,"Bearer "+token)
         call.enqueue(object : Callback<CanteenCartUpdateModel> {
             override fun onFailure(call: Call<CanteenCartUpdateModel>, t: Throwable) {
                 progressDialogP.hide()
@@ -336,7 +342,7 @@ private fun addToCart(id:String,price:String,position: Int){
         val token = PreferenceManager.getaccesstoken(mcontext)
         var canteenadd= CanteenCartRemoveApiModel(
             PreferenceManager.getStudentID(mcontext).toString(),canteen_cart_id)
-        val call: Call<CanteenCartRemoveModel> = ApiClient.getClient.remove_canteen_cart(canteenadd,"Bearer "+token)
+        val call: Call<CanteenCartRemoveModel> = ApiClient(mcontext).getClient.remove_canteen_cart(canteenadd,"Bearer "+token)
         call.enqueue(object : Callback<CanteenCartRemoveModel> {
             override fun onFailure(call: Call<CanteenCartRemoveModel>, t: Throwable) {
                 progressDialogP.hide()
@@ -370,7 +376,11 @@ private fun addToCart(id:String,price:String,position: Int){
         })
     }
 
-    fun allergy_contents_popup(context: Context,item:String){
+    fun allergy_contents_popup(
+        context: Context,
+        item: String,
+        allergyContents: ArrayList<AllergyContentModel>
+    ){
         val dialog = Dialog(context)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.alert_allergy_contents)
@@ -384,7 +394,7 @@ private fun addToCart(id:String,price:String,position: Int){
 
         var allergy_popup_rec=dialog.findViewById<RecyclerView>(R.id.allergy_popup_rec)
         allergy_popup_rec.layoutManager=LinearLayoutManager(context)
-        var allergypopupAdapter=AllergyPopupAdapter(allergycontentlist,context)
+        var allergypopupAdapter=AllergyPopupAdapter(allergyContents,context)
         allergy_popup_rec.adapter=allergypopupAdapter
         dialog.show()
     }

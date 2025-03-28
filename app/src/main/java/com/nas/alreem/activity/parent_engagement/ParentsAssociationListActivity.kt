@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.parent_engagement
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -54,6 +55,8 @@ class ParentsAssociationListActivity : AppCompatActivity() {
     lateinit var infoImg:android.widget.ImageView
     lateinit var home:android.widget.ImageView
    // var progressBarDialog: ProgressBarDialog? = null
+   lateinit var activity: Activity
+
 
     interface GetPtaItemList {
         val ptaItemData: Unit
@@ -63,6 +66,7 @@ class ParentsAssociationListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.parentsactivityrecyclerview)
         mContext = this
+        activity=this
 
         myFormatCalender = "yyyy-MM-dd"
         sdfcalender = SimpleDateFormat(myFormatCalender)
@@ -140,7 +144,7 @@ class ParentsAssociationListActivity : AppCompatActivity() {
     private fun callParentAssociationEventList() {
         val paramObject = JsonObject()
         paramObject.addProperty("student_id", PreferenceManager.getStudentID(mContext))
-        val call: Call<ParentAssociationEventResponseModel> = ApiClient.getClient.parent_assoc_events("Bearer " + PreferenceManager.getaccesstoken(mContext),paramObject)
+        val call: Call<ParentAssociationEventResponseModel> = ApiClient(mContext).getClient.parent_assoc_events("Bearer " + PreferenceManager.getaccesstoken(mContext),paramObject)
         call.enqueue(object : Callback<ParentAssociationEventResponseModel> {
             override fun onFailure(call: Call<ParentAssociationEventResponseModel>, t: Throwable) {
                 // progressDialogAdd.visibility=View.GONE
@@ -543,7 +547,7 @@ class ParentsAssociationListActivity : AppCompatActivity() {
         mParentAssociationEventsModelsArrayList = parentAssociationEventsModelsArrayList
         val paramObject = JsonObject()
         paramObject.addProperty("student_id", PreferenceManager.getStudentID(context))
-        val call: Call<ParentAssociationEventResponseModel> = ApiClient.getClient.parent_assoc_events(
+        val call: Call<ParentAssociationEventResponseModel> = ApiClient(context).getClient.parent_assoc_events(
             "Bearer " + PreferenceManager.getaccesstoken(context),
             paramObject
         )
@@ -770,5 +774,13 @@ class ParentsAssociationListActivity : AppCompatActivity() {
             DialogFunctions.showInternetAlertDialog(mContext)
         }
 
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 }

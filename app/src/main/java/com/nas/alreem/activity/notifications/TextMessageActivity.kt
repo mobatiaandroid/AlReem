@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.notifications
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -44,10 +45,13 @@ class TextMessageActivity : AppCompatActivity() {
     private lateinit var webView: WebView
     var myFormatCalende: String = "yyyy-MM-dd HH:mm:ss"
     private lateinit var progressDialog: ProgressBar
+    lateinit var activity: Activity
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_text_message_detail)
         mContext = this
+        activity=this
         id = intent.getStringExtra("id").toString()
         title = intent.getStringExtra("title").toString()
         initUI()
@@ -86,7 +90,7 @@ class TextMessageActivity : AppCompatActivity() {
         val token = PreferenceManager.getaccesstoken(mContext)
         val studentbody = MessageDetailApiModel(id)
         val call: Call<MessageDetailModel> =
-            ApiClient.getClient.notifictaionDetail(studentbody, "Bearer " + token)
+            ApiClient(mContext).getClient.notifictaionDetail(studentbody, "Bearer " + token)
         call.enqueue(object : Callback<MessageDetailModel> {
             override fun onFailure(call: Call<MessageDetailModel>, t: Throwable) {
                 progressDialog.visibility = View.GONE
@@ -196,12 +200,18 @@ class TextMessageActivity : AppCompatActivity() {
         webView.webChromeClient = object : WebChromeClient() {
             override fun onProgressChanged(view: WebView, newProgress: Int) {
                 progressDialog.visibility = View.VISIBLE
-                println("testing2")
                 if (newProgress == 100) {
-                    println("testing1")
                     progressDialog.visibility = View.GONE
 
                 }
+            }
+        }
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
             }
         }
     }

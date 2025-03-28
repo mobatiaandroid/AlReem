@@ -54,10 +54,13 @@ class CCAsReviewAfterSubmissionNoDeleteActivity : Activity(){
     lateinit var logoclick: ImageView
     lateinit var back: ImageView
     lateinit var backRelative: RelativeLayout
+    lateinit var activity: Activity
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cca_no_edit_delete)
         mContext = this
+        activity=this
         extras = intent.extras
         if (extras != null) {
             tab_type = extras!!.getString("tab_type")
@@ -163,7 +166,7 @@ class CCAsReviewAfterSubmissionNoDeleteActivity : Activity(){
         )
         val token = PreferenceManager.getaccesstoken(mContext)
         val call: Call<CCAReviewResponseModel> =
-            ApiClient.getClient.ccaReview(body, "Bearer $token")
+            ApiClient(mContext).getClient.ccaReview(body, "Bearer $token")
         progressBar.visibility = View.VISIBLE
         call.enqueue(object : Callback<CCAReviewResponseModel> {
             override fun onResponse(
@@ -422,6 +425,14 @@ class CCAsReviewAfterSubmissionNoDeleteActivity : Activity(){
 
         mCCADetailModelArrayList!!.add(mCCAModel)
 
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 
 }

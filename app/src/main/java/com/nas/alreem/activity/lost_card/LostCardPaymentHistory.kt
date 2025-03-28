@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.lost_card
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -69,11 +70,14 @@ class LostCardPaymentHistory : AppCompatActivity(){
     var studentsModelArrayList : ArrayList<StudentList> = ArrayList<StudentList>()
     lateinit var mNewsLetterListView: RecyclerView
     lateinit var progress: ProgressBar
+    lateinit var activity: Activity
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_payment_history)
         mContext = this
+        activity=this
         initUI()
         if (ConstantFunctions.internetCheck(mContext))
         {
@@ -189,7 +193,6 @@ class LostCardPaymentHistory : AppCompatActivity(){
                     }
 
                     override fun onLongClickItem(v: View?, position: Int) {
-                        println("On Long Click Item interface")
                     }
                 })
         )
@@ -197,7 +200,7 @@ class LostCardPaymentHistory : AppCompatActivity(){
     private fun getStudentsListAPI() {
         progress.visibility = View.VISIBLE
         studentsModelArrayList .clear()
-        val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+ PreferenceManager.getaccesstoken(mContext))
+        val call: Call<StudentListModel> = ApiClient(mContext).getClient.studentList("Bearer "+ PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<StudentListModel> {
             override fun onResponse(
                 call: Call<StudentListModel?>,
@@ -304,7 +307,6 @@ class LostCardPaymentHistory : AppCompatActivity(){
                     }
 
                     override fun onLongClickItem(v: View?, position: Int) {
-                        println("On Long Click Item interface")
                     }
                 })
         )
@@ -316,7 +318,7 @@ class LostCardPaymentHistory : AppCompatActivity(){
         progress.visibility = View.VISIBLE
         val studentbody= StudentInfoApiModel(stud_id)
 
-        val call: Call<LostCardHistoryResponseModel> = ApiClient.getClient.student_lost_card_history(studentbody,"Bearer "+ PreferenceManager.getaccesstoken(mContext))
+        val call: Call<LostCardHistoryResponseModel> = ApiClient(mContext).getClient.student_lost_card_history(studentbody,"Bearer "+ PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<LostCardHistoryResponseModel> {
             override fun onResponse(
                 call: Call<LostCardHistoryResponseModel?>,
@@ -423,9 +425,16 @@ class LostCardPaymentHistory : AppCompatActivity(){
                 model.setPayment_type("")
             }
         } catch (ex: Exception) {
-            println("Exception is$ex")
         }
         return model
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 }
 

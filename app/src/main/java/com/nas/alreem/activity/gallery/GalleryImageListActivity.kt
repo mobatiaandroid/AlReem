@@ -1,6 +1,7 @@
 package com.nas.alreem.activity.gallery
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -39,12 +40,14 @@ class GalleryImageListActivity : AppCompatActivity(){
     lateinit var logoClickImgView: ImageView
     lateinit var imageArrayList:ArrayList<AlbumImageModel>
     lateinit var progress: ProgressBar
+    lateinit var activity: Activity
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gallery_images)
         mContext=this
+        activity=this
         initUI()
         if (ConstantFunctions.internetCheck(mContext))
         {
@@ -96,7 +99,7 @@ class GalleryImageListActivity : AppCompatActivity(){
         progress.visibility = View.VISIBLE
         imageArrayList= ArrayList()
         var model=AlbumApiModel("0","new")
-        val call: Call<AlbumResponseModel> = ApiClient.getClient.albums(model,"Bearer "+PreferenceManager.getaccesstoken(mContext))
+        val call: Call<AlbumResponseModel> = ApiClient(mContext).getClient.albums(model,"Bearer "+PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<AlbumResponseModel> {
             override fun onFailure(call: Call<AlbumResponseModel>, t: Throwable) {
                 progress.visibility = View.GONE
@@ -140,5 +143,13 @@ class GalleryImageListActivity : AppCompatActivity(){
             }
 
         })
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 }

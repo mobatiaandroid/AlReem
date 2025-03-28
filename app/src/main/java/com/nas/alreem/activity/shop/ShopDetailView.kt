@@ -27,6 +27,7 @@ import com.nas.alreem.activity.shop.model.Instrument
 import com.nas.alreem.activity.shop.model.Lesson
 import com.nas.alreem.activity.shop.model.Term
 import com.nas.alreem.activity.shop.model.TermsSubmitModel
+import com.nas.alreem.constants.ConstantFunctions
 import com.nas.alreem.recyclermanager.ItemOffsetDecoration
 import org.json.JSONArray
 import org.json.JSONException
@@ -65,11 +66,14 @@ class ShopDetailView : AppCompatActivity() {
     var emailHelpImg: ImageView? = null
     lateinit var submitButton: Button
     lateinit var context: Context
-  //  var progressBarDialog: ProgressBarDialog? = null
+    lateinit var activity: Activity
+
+    //  var progressBarDialog: ProgressBarDialog? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shop_items_detail_view)
         context = this
+        activity = this
         extras = intent.extras
         if (extras != null) {
             instrumentSelectedObject = (extras!!["instrument"] as Instrument?)!!
@@ -512,6 +516,14 @@ class ShopDetailView : AppCompatActivity() {
                 activity.finish()
             }
             dialog.show()
+        }
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(context)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
         }
     }
 }

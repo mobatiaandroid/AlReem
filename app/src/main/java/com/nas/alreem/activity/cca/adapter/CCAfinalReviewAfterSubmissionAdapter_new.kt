@@ -299,9 +299,7 @@ class CCAfinalReviewAfterSubmissionAdapter_new(
             holder.attendanceListIcon.visibility = View.VISIBLE
         }
         holder.deleteChoice1.setOnClickListener {
-            Log.e("click1","click1")
-            Log.e("attending_status", mCCADetailModelArrayList[position].attending_status!!)
-            Log.e("cca_details_id", mCCADetailModelArrayList[position].cca_details_id!!)
+
 
             if (mCCADetailModelArrayList[position].attending_status.equals("1")) {
                 showDialogAlertDelete(
@@ -319,7 +317,6 @@ class CCAfinalReviewAfterSubmissionAdapter_new(
             }
         }
         holder.deleteChoice2.setOnClickListener {
-            Log.e("click2","click2")
 
             if (mCCADetailModelArrayList[position].attending_status2.equals("1")) {
                 showDialogAlertDelete(
@@ -576,7 +573,7 @@ class CCAfinalReviewAfterSubmissionAdapter_new(
 //
 //            }
 //        } = ApiClient.INSTANCE.getGetClient().ccaCancel(body,"Bearer &token");
-            val call: Call<CCACancelResponseModel> = ApiClient.getClient.ccaCancel(
+            val call: Call<CCACancelResponseModel> = ApiClient(activity).getClient.ccaCancel(
                 body,
                 "Bearer $token"
             )

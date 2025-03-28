@@ -212,7 +212,7 @@ class CommunicationFragment : Fragment() {
     ) {
         progressDialogAdd.show()
         val sendMailBody = SendEmailApiModel(staffEmail, title, message)
-        val call: Call<SignUpResponseModel> = ApiClient.getClient.sendEmailStaff(
+        val call: Call<SignUpResponseModel> = ApiClient(mContext).getClient.sendEmailStaff(
             sendMailBody,
             "Bearer " + PreferenceManager.getaccesstoken(mContext)
         )
@@ -279,7 +279,7 @@ class CommunicationFragment : Fragment() {
 
     private fun getCommunicationBanner() {
         progressDialogAdd.show()
-        val service: ApiInterface = ApiClient.getClient
+        val service: ApiInterface = ApiClient(mContext).getClient
         val call: Call<CommunicationBannerResponseModel> = service.communication_banner_images(
             "Bearer " + PreferenceManager.getaccesstoken(mContext)
         )

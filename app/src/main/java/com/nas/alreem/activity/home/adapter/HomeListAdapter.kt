@@ -106,11 +106,7 @@ class HomeListAdapter(
                badge.setVisibility(View.GONE)
             }
         }   else if (position == 14) {
-            System.out.println(
-                "report badge" + PreferenceManager.getReportsBadge(context) + "report edited badge" + PreferenceManager.getReportsEditedBadge(
-                    context
-                )
-            )
+
             if (!PreferenceManager.getReportsBadge(context)
                     .equals("0") && !PreferenceManager.getReportsEditedBadge(context)
                     .equals("0")

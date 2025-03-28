@@ -35,12 +35,15 @@ class LoginActivity : AppCompatActivity(),View.OnTouchListener{
     lateinit var passwordEditText:EditText
     lateinit var progressDialogAdd:ProgressBar
     var tokenM:String=""
+    lateinit var activity: Activity
+
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         mContext=this
+        activity=this
         initUI()
 
     }
@@ -176,7 +179,7 @@ class LoginActivity : AppCompatActivity(),View.OnTouchListener{
         progressDialogAdd.visibility=View.VISIBLE
         var androidID = Settings.Secure.getString(this.contentResolver,
             Settings.Secure.ANDROID_ID)
-        val call: Call<LoginResponseModel> = ApiClient.getClient.login(emailId,password,"2",tokenM,androidID)
+        val call: Call<LoginResponseModel> = ApiClient(mContext).getClient.login(emailId,password,"2",tokenM,androidID)
         call.enqueue(object : Callback<LoginResponseModel> {
             override fun onFailure(call: Call<LoginResponseModel>, t: Throwable) {
                 progressDialogAdd.visibility=View.GONE
@@ -196,6 +199,12 @@ class LoginActivity : AppCompatActivity(),View.OnTouchListener{
                                 resources.getString(R.string.success), ConstantWords.status_100_login, mContext)
 
                         } else if (response.body()!!.status==510) {
+                            DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), mContext)
+
+
+//						startCountdown(60000L);
+                        }
+                        else if (response.body()!!.status==111) {
                             DialogFunctions.commonErrorAlertDialog(mContext.resources.getString(R.string.alert), ConstantFunctions.commonErrorString(response.body()!!.status), mContext)
 
 
@@ -242,5 +251,13 @@ class LoginActivity : AppCompatActivity(),View.OnTouchListener{
         }
         dialog.show()
 
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 }

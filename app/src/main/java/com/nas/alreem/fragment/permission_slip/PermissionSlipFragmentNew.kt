@@ -254,17 +254,15 @@ class PermissionSlipFragmentNew :Fragment(){
         val token = PreferenceManager.getaccesstoken(mContext)
         val list_permissionSlip= PermissionSlipListApiModel("0","20",
             PreferenceManager.getStudentID(mContext).toString())
-        val call: Call<PermissionSlipModel> = ApiClient.getClient.permissnslipList(list_permissionSlip,"Bearer "+token)
+        val call: Call<PermissionSlipModel> = ApiClient(mContext).getClient.permissnslipList(list_permissionSlip,"Bearer "+token)
         call.enqueue(object : Callback<PermissionSlipModel> {
             override fun onFailure(call: Call<PermissionSlipModel>, t: Throwable) {
-                Log.e("FAiled","Failed")
                 progressDialog.visibility = View.GONE
             }
             override fun onResponse(call: Call<PermissionSlipModel>, response: Response<PermissionSlipModel>) {
                 progressDialog.visibility = View.GONE
                 if (response.body()!!.status==100)
                 {
-                    Log.e("Success","Success")
                     general_rec.visibility= View.GONE
                     forms_recycler.visibility= View.VISIBLE
                     formslist=ArrayList()
@@ -317,7 +315,7 @@ class PermissionSlipFragmentNew :Fragment(){
         val token = PreferenceManager.getaccesstoken(mContext)
         val list_permissionSlip= PermissionSlipListApiModel("0","20",
             PreferenceManager.getStudentID(mContext).toString())
-        val call: Call<GeneralFormModel> = ApiClient.getClient.generalforms(list_permissionSlip,"Bearer "+token)
+        val call: Call<GeneralFormModel> = ApiClient(mContext).getClient.generalforms(list_permissionSlip,"Bearer "+token)
         call.enqueue(object : Callback<GeneralFormModel> {
             override fun onFailure(call: Call<GeneralFormModel>, t: Throwable) {
                 progressDialog.visibility = View.GONE
@@ -375,7 +373,7 @@ class PermissionSlipFragmentNew :Fragment(){
     {
         progressDialog.visibility = View.VISIBLE
         val token = PreferenceManager.getaccesstoken(mContext)
-        val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+token)
+        val call: Call<StudentListModel> = ApiClient(mContext).getClient.studentList("Bearer "+token)
         call.enqueue(object : Callback<StudentListModel> {
             override fun onFailure(call: Call<StudentListModel>, t: Throwable) {
                 progressDialog.visibility = View.GONE

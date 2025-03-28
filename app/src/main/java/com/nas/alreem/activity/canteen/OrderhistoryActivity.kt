@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.canteen
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -38,6 +39,8 @@ class OrderhistoryActivity : AppCompatActivity() {
     lateinit var preorderhis_list: ArrayList<OrderHistoryDataModel>
     lateinit var preorderhis_itemlist: ArrayList<String>
     var studentID:String=""
+    lateinit var activity: Activity
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.canteen_orderhistory)
@@ -55,6 +58,7 @@ class OrderhistoryActivity : AppCompatActivity() {
 
     private fun initfn() {
         nContext = this
+        activity = this
         studentID=intent.getStringExtra("StudentId").toString()
         logoClickImg=findViewById(R.id.logoclick)
         back = findViewById(R.id.back)
@@ -88,7 +92,7 @@ class OrderhistoryActivity : AppCompatActivity() {
         progress.visibility=View.VISIBLE
         val token = PreferenceManager.getaccesstoken(nContext)
         var model= OrderHistoryApiModel(studentID,"0","100")
-        val call: Call<OrderHistoryResponseModel> = ApiClient.getClient.canteen_order_history(model,"Bearer "+token)
+        val call: Call<OrderHistoryResponseModel> = ApiClient(nContext).getClient.canteen_order_history(model,"Bearer "+token)
         call.enqueue(object : Callback<OrderHistoryResponseModel> {
             override fun onFailure(call: Call<OrderHistoryResponseModel>, t: Throwable) {
                 progress.visibility=View.GONE
@@ -116,5 +120,13 @@ class OrderhistoryActivity : AppCompatActivity() {
 
 
 
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(nContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 }

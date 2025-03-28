@@ -231,7 +231,6 @@ public class HeaderManagerNoColorSpace implements Serializable {
 	 */
 	private void initializeUI(int type) {
 		inflator = LayoutInflater.from(getContext());
-		System.out.println("htype" + type);
 		headerView = inflator.inflate(R.layout.common_header_single_withviewline, null);
 
 		RelativeLayout logoHeader = ((RelativeLayout) headerView

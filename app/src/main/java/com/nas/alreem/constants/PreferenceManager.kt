@@ -1,6 +1,9 @@
 package com.nas.alreem.constants
 
 import android.content.Context
+import android.content.SharedPreferences
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKeys
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.nas.alreem.R
@@ -8,29 +11,42 @@ import com.nas.alreem.activity.cca.model.CCADetailModel
 import com.nas.alreem.activity.payments.model.StudentList
 import com.nas.alreem.activity.shop_new.model.ShopModel
 import com.nas.alreem.fragment.about_us.model.AboutusList
+import java.io.IOException
 import java.lang.reflect.Type
+import java.security.GeneralSecurityException
 
 class PreferenceManager {
 
     companion object{
 
-        private val PREFSNAME = "ALREEM"
+        private val PREFSNAME = "encrypted_nasad_prefs"
 
+        private fun getEncryptedSharedPreferences(context: Context): SharedPreferences? {
+            try {
+                val masterKeyAlias: String = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
 
+                return EncryptedSharedPreferences.create(
+                    PreferenceManager.PREFSNAME,
+                    masterKeyAlias,
+                    context,
+                    EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                    EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+                )
+            } catch (e: GeneralSecurityException) {
+                throw RuntimeException("Failed to create encrypted shared preferences", e)
+            } catch (e: IOException) {
+                throw RuntimeException("Failed to create encrypted shared preferences", e)
+            }
+        }
         fun setaccesstoken(context: Context, id: String?) {
-            val prefs = context.getSharedPreferences(
-                PREFSNAME, Context.MODE_PRIVATE
-            )
+            val prefs: SharedPreferences = PreferenceManager.getEncryptedSharedPreferences(context)!!
             val editor = prefs.edit()
             editor.putString("access_token", id)
             editor.apply()
         }
 
         fun getaccesstoken(context: Context): String? {
-            val prefs = context.getSharedPreferences(
-                PREFSNAME,
-                Context.MODE_PRIVATE
-            )
+            val prefs: SharedPreferences = PreferenceManager.getEncryptedSharedPreferences(context)!!
             return prefs.getString("access_token", "")
         }
         fun setFirtTime(context: Context, id: String?) {

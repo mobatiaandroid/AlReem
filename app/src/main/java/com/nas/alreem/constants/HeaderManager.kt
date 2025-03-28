@@ -234,7 +234,6 @@ class HeaderManager : Serializable {
      */
     private fun initializeUI(type: Int) {
         inflator = LayoutInflater.from(context)
-        println("htype$type")
         headerView = inflator.inflate(R.layout.common_header_single, null)
         val logoHeader = headerView
             .findViewById<View>(R.id.relative_logo_header) as RelativeLayout

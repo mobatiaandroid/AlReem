@@ -1,6 +1,7 @@
 package com.nas.alreem.activity.parentsessential
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -52,6 +53,8 @@ class ParentsEssentialDetail : AppCompatActivity() {
     private val EMAIL_PATTERN =
         "^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$"
     private val pattern = "^([a-zA-Z ]*)$"
+    lateinit var activity: Activity
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_parents_essential_detail)
@@ -60,6 +63,7 @@ class ParentsEssentialDetail : AppCompatActivity() {
 
     private fun init(){
         mContext=this
+        activity=this
         contact_email=intent.getStringExtra("contact_email").toString()
         banner_image=intent.getStringExtra("banner_image").toString()
         description=intent.getStringExtra("description").toString()
@@ -265,7 +269,7 @@ class ParentsEssentialDetail : AppCompatActivity() {
     {
 
         val sendMailBody = SendEmailApiModel( staffEmail, title, message)
-        val call: Call<SignUpResponseModel> = ApiClient.getClient.sendEmailStaff(sendMailBody, "Bearer " + PreferenceManager.getaccesstoken(mContext))
+        val call: Call<SignUpResponseModel> = ApiClient(mContext).getClient.sendEmailStaff(sendMailBody, "Bearer " + PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<SignUpResponseModel> {
             override fun onFailure(call: Call<SignUpResponseModel>, t: Throwable) {
                 //progressDialog.visibility = View.GONE
@@ -323,6 +327,14 @@ class ParentsEssentialDetail : AppCompatActivity() {
             mdialog.dismiss()
         }
         dialog.show()
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 
 }

@@ -1,6 +1,7 @@
 package com.nas.alreem.activity.shop_new
 
 import android.Manifest
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -87,6 +88,8 @@ class MusicInvoicePrint : AppCompatActivity() {
     lateinit var paymentWebDummy: WebView
     lateinit var mProgressRelLayout: RelativeLayout
     lateinit private var mwebSettings: WebSettings
+    lateinit var activity: Activity
+
 
     // lateinit var mProgressRelLayout: RelativeLayout
    /* var permissionListenerStorage: PermissionListener = object : PermissionListener() {
@@ -105,6 +108,7 @@ class MusicInvoicePrint : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.preview_activity)
         mContext = this
+        activity=this
 
 
         initialiseUI()
@@ -687,12 +691,10 @@ class MusicInvoicePrint : AppCompatActivity() {
                 Environment.getExternalStorageDirectory()
                     .absolutePath + "/" + "NAS_DUBAI_MUSIC_ACADEMY/Payments" + "_" + "NASDUBAI" + "/"
             )
-            println("Path file 5$pathFile")
             pathFile!!.mkdirs()
             //            if(!pathFile.exists())
 //                pathFile.mkdirs();
             pdfUri = if (Build.VERSION.SDK_INT >= 23) {
-                println("web view data$fullHtml")
                 FileProvider.getUriForFile(
                     mContext!!, "$packageName.provider", createWebPrintJobShare(
                         paymentWebDummy,
@@ -700,7 +702,6 @@ class MusicInvoicePrint : AppCompatActivity() {
                     )!!
                 )
             } else {
-                println("Path file 6$pathFile")
                 Uri.fromFile(createWebPrintJobShare(paymentWebDummy, pathFile!!))
             }
            /* val intent = Intent(
@@ -775,5 +776,12 @@ class MusicInvoicePrint : AppCompatActivity() {
             //   Log.d("WebView", "print webpage loading.." + url);
         }
     }
-
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
+    }
 }

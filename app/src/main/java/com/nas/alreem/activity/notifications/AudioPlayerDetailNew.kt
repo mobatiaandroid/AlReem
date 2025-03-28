@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.notifications
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
@@ -24,8 +25,7 @@ import com.nas.alreem.constants.PreferenceManager
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import tcking.github.com.giraffeplayer.GiraffePlayer
-import tv.danmaku.ijk.media.player.IMediaPlayer
+
 private var mediaplayer: MediaPlayer? = null
 private var handler2 = Handler()
 private var seebbar: SeekBar? = null
@@ -54,7 +54,9 @@ class AudioPlayerDetailNew:AppCompatActivity() {
     var duration:String=""
     var url: String = ""
     var flag:Boolean = true
-  //  private lateinit var progressDialog: ProgressBar
+    lateinit var activity: Activity
+
+    //  private lateinit var progressDialog: ProgressBar
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_audio_player_details_new)
@@ -64,6 +66,7 @@ class AudioPlayerDetailNew:AppCompatActivity() {
         audio_updated = extras.getString("audio_updated")!!
 
         mContext = this
+        activity=this
         heading = findViewById(R.id.heading)
         btn_left = findViewById(R.id.btn_left)
         logoClickImgView = findViewById(R.id.logoClickImgView)
@@ -126,7 +129,7 @@ class AudioPlayerDetailNew:AppCompatActivity() {
         val token = PreferenceManager.getaccesstoken(mContext)
         val studentbody= MessageDetailApiModel(audio_id)
        // progressDialog.visibility = View.VISIBLE
-        val call: Call<MessageDetailModel> = ApiClient.getClient.notifictaionDetail(studentbody,"Bearer "+token)
+        val call: Call<MessageDetailModel> = ApiClient(mContext).getClient.notifictaionDetail(studentbody,"Bearer "+token)
         call.enqueue(object : Callback<MessageDetailModel> {
             override fun onFailure(call: Call<MessageDetailModel>, t: Throwable) {
                 //  progressDialog.visibility = View.GONE
@@ -160,7 +163,6 @@ class AudioPlayerDetailNew:AppCompatActivity() {
                     }
                     setUpMediaPlayer(url)
 
-                   // println("MSGRESPONSEAUDIO:" + response.body()!!.responseArray.notificationArray.url)
                 }   else
                 {
 
@@ -192,7 +194,6 @@ class AudioPlayerDetailNew:AppCompatActivity() {
             }*/
         } catch (exception: Exception) {
             //Toast.makeText(this, "failed to load audio" + exception.getMessage(), Toast.LENGTH_SHORT).show();
-            println("failed for load" + exception.message)
         }
 
 
@@ -260,6 +261,14 @@ class AudioPlayerDetailNew:AppCompatActivity() {
 
         finish()
 
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 
 

@@ -205,7 +205,7 @@ class AbsenceFragment  : Fragment() {
     {
         progressDialogAdd.visibility=View.VISIBLE
         studentListArrayList= ArrayList()
-        val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+PreferenceManager.getaccesstoken(mContext))
+        val call: Call<StudentListModel> = ApiClient(mContext).getClient.studentList("Bearer "+PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<StudentListModel> {
             override fun onFailure(call: Call<StudentListModel>, t: Throwable) {
                 progressDialogAdd.visibility=View.GONE
@@ -464,7 +464,7 @@ class AbsenceFragment  : Fragment() {
         val token = PreferenceManager.getaccesstoken(mContext)
         val studentbody= ListAbsenceApiModel(PreferenceManager.getStudentID(mContext).toString(),0,20)
 
-        val call: Call<AbsenceListModel> = ApiClient.getClient.plannedList(studentbody,"Bearer "+token)
+        val call: Call<AbsenceListModel> = ApiClient(mContext).getClient.plannedList(studentbody,"Bearer "+token)
         call.enqueue(object : Callback<AbsenceListModel>{
             override fun onFailure(call: Call<AbsenceListModel>, t: Throwable) {
                 progressDialogAdd.visibility=View.GONE
@@ -526,7 +526,7 @@ class AbsenceFragment  : Fragment() {
         val token = PreferenceManager.getaccesstoken(mContext)
         val pickupSuccessBody = ListAbsenceApiModel(PreferenceManager.getStudentID(mContext).toString(),0,20)
         val call: Call<AbsenceListModel> =
-            ApiClient.getClient.absencelist(pickupSuccessBody, "Bearer " + token)
+            ApiClient(mContext).getClient.absencelist(pickupSuccessBody, "Bearer " + token)
         call.enqueue(object : Callback<AbsenceListModel> {
             override fun onFailure(call: Call<AbsenceListModel>, t: Throwable) {
 
@@ -591,7 +591,7 @@ class AbsenceFragment  : Fragment() {
         val token = PreferenceManager.getaccesstoken(mContext)
         val pickupSuccessBody = ListPickupApiModel(PreferenceManager.getStudentID(mContext).toString(),"0","20")
         val call: Call<PickupListModel> =
-            ApiClient.getClient.pickUplist(pickupSuccessBody, "Bearer " + token)
+            ApiClient(mContext).getClient.pickUplist(pickupSuccessBody, "Bearer " + token)
         call.enqueue(object : Callback<PickupListModel> {
             override fun onFailure(call: Call<PickupListModel>, t: Throwable) {
 

@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.parent_meetings
 
+import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.view.View
@@ -9,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import com.nas.alreem.R
 import com.nas.alreem.activity.settings.adpter.TutorialViewPagerAdapter
+import com.nas.alreem.constants.ConstantFunctions
 import java.util.*
 
 class ParentsEveninginfoActivity:AppCompatActivity() {
@@ -23,11 +25,14 @@ class ParentsEveninginfoActivity:AppCompatActivity() {
             R.drawable.tut_pe_8,R.drawable.tut_pe_9))
     var dataType = 0
     lateinit var imageSkip: ImageView
+    lateinit var activity: Activity
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tutorial)
 mContext=this
+        activity=this
         initfn()
 
     }
@@ -131,6 +136,14 @@ mContext=this
                 mImgCircle[i]!!.setBackgroundResource(R.drawable.blackround)
             }
             mLinearLayout.addView(mImgCircle[i])
+        }
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
         }
     }
 }

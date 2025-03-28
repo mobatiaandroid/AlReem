@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.payments
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -36,6 +37,8 @@ class PaymentInformationActivity : AppCompatActivity() {
     lateinit var logoClickImgView: ImageView
     lateinit var backRelative: RelativeLayout
     lateinit var progressDialogAdd: ProgressBar
+    lateinit var activity: Activity
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.canteen_information)
@@ -55,6 +58,7 @@ class PaymentInformationActivity : AppCompatActivity() {
 
     private fun initfn() {
         mContext = this
+        activity=this
 
         informationlist = ArrayList()
         recyclerview = findViewById(R.id.canteen_info_list)
@@ -79,7 +83,7 @@ class PaymentInformationActivity : AppCompatActivity() {
 
         val token = PreferenceManager.getaccesstoken(mContext)
 
-        val call: Call<InfoCanteenModel> = ApiClient.getClient.getPaymentInformation("Bearer "+token)
+        val call: Call<InfoCanteenModel> = ApiClient(mContext).getClient.getPaymentInformation("Bearer "+token)
         call.enqueue(object : Callback<InfoCanteenModel> {
             override fun onFailure(call: Call<InfoCanteenModel>, t: Throwable) {
                 progressDialogAdd.visibility=View.GONE
@@ -108,5 +112,13 @@ class PaymentInformationActivity : AppCompatActivity() {
         })
 
 
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 }

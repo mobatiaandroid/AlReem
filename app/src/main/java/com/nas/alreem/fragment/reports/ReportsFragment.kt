@@ -89,7 +89,7 @@ class ReportsFragment : Fragment() {
         progressBar.visibility = View.VISIBLE
 
         studentListArrayList= ArrayList()
-        val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+PreferenceManager.getaccesstoken(mContext))
+        val call: Call<StudentListModel> = ApiClient(mContext).getClient.studentList("Bearer "+PreferenceManager.getaccesstoken(mContext))
         call.enqueue(object : Callback<StudentListModel> {
             override fun onFailure(call: Call<StudentListModel>, t: Throwable) {
                // progressDialogAdd.visibility=View.GONE
@@ -292,7 +292,7 @@ class ReportsFragment : Fragment() {
         val token = PreferenceManager.getaccesstoken(mContext)
         val studentid = ReportApiModel(PreferenceManager.getStudentID(mContext)!!)
         val call: Call<ReportListModel> =
-            ApiClient.getClient.reportList(studentid, "Bearer " + token)
+            ApiClient(mContext).getClient.reportList(studentid, "Bearer " + token)
         call.enqueue(object : Callback<ReportListModel> {
             override fun onFailure(call: Call<ReportListModel>, t: Throwable) {
                 progressBar.visibility = View.GONE

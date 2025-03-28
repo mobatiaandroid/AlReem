@@ -124,7 +124,6 @@ class RegisteredShopSummaryActivity : AppCompatActivity() {
      //   back = headermanager.getLeftButton()
        // buttonInvoice = headermanager.getHistoryButton()
         buttonInvoice!!.setOnClickListener {
-            println("history click")
             val `in` = Intent(
                 context,
                 InvoiceShopListingActivity::class.java
@@ -222,7 +221,7 @@ class RegisteredShopSummaryActivity : AppCompatActivity() {
 
     private fun getStudentsList() {
         val token = PreferenceManager.getaccesstoken(context)
-        val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+token)
+        val call: Call<StudentListModel> = ApiClient(context).getClient.studentList("Bearer "+token)
         call.enqueue(object : Callback<StudentListModel> {
             override fun onFailure(call: Call<StudentListModel>, t: Throwable) {
                 // Log.e("Error", t.localizedMessage)
@@ -426,5 +425,12 @@ class RegisteredShopSummaryActivity : AppCompatActivity() {
     }
 
 
-
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(context)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
+    }
 }

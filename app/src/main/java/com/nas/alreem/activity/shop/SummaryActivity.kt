@@ -19,6 +19,7 @@ import com.nas.alreem.R
 import com.nas.alreem.activity.home.HomeActivity
 import com.nas.alreem.activity.shop.Adapter.CartDataAdapter
 import com.nas.alreem.activity.shop.model.CartInstrumentDataModel
+import com.nas.alreem.constants.ConstantFunctions
 import okhttp3.ResponseBody
 import org.json.JSONException
 import org.json.JSONObject
@@ -56,7 +57,7 @@ class SummaryActivity : AppCompatActivity() {
         ArrayList<CartInstrumentDataModel>()
     var cartIDs = ArrayList<Int>()
     var totalCost = 0.0
-    private var context: Context? = null
+    private lateinit var context: Context
    // var progressBarDialog: ProgressBarDialog? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -120,11 +121,7 @@ class SummaryActivity : AppCompatActivity() {
         super.onRestart()
     }
 
-    override fun onResume() {
-       // progressBarDialog.hide()
-       // progressBarDialog.dismiss()
-        super.onResume()
-    }
+
 
     private val paymentTokenAPICall: Unit
         private get() {
@@ -688,5 +685,13 @@ class SummaryActivity : AppCompatActivity() {
 
             fun responseFailure(failureResponse: String?) {}
         })*/
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(context)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 }

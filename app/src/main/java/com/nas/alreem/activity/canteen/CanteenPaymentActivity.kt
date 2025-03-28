@@ -180,10 +180,8 @@ class CanteenPaymentActivity:AppCompatActivity() {
                             }
                             val newArray = Arrays.copyOfRange(array, firstNonZeroAt, arrayLength)
                             val resultString = String(newArray)
-                            println("amount removed zero$resultString")
                             val unixTime = System.currentTimeMillis() / 1000L
                             orderId = "NASAD" + studentId + "C" + unixTime
-                            println("Unix Time:::" + unixTime + "Order ID" + orderId)
                             amount.getText().clear()
                             //                        startActivity(intent);
                             order_id = ""
@@ -222,7 +220,7 @@ class CanteenPaymentActivity:AppCompatActivity() {
     {
        // progressDialog.visibility = View.VISIBLE
         val token = PreferenceManager.getaccesstoken(nContext)
-        val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+token)
+        val call: Call<StudentListModel> = ApiClient(nContext).getClient.studentList("Bearer "+token)
         call.enqueue(object : Callback<StudentListModel> {
             override fun onFailure(call: Call<StudentListModel>, t: Throwable) {
                 //progressDialog.visibility = View.GONE
@@ -385,7 +383,7 @@ class CanteenPaymentActivity:AppCompatActivity() {
 mProgressRelLayout.visibility=View.VISIBLE
         val token = PreferenceManager.getaccesstoken(nContext)
         var canteenCart= WalletBalanceApiModel(PreferenceManager.getStudentID(nContext).toString())
-        val call: Call<WalletBalanceModel> = ApiClient.getClient.get_wallet_balance(canteenCart,"Bearer "+token)
+        val call: Call<WalletBalanceModel> = ApiClient(nContext).getClient.get_wallet_balance(canteenCart,"Bearer "+token)
         call.enqueue(object : Callback<WalletBalanceModel> {
             override fun onFailure(call: Call<WalletBalanceModel>, t: Throwable) {
                 mProgressRelLayout.visibility=View.GONE
@@ -413,7 +411,7 @@ mProgressRelLayout.visibility=View.VISIBLE
         val token = PreferenceManager.getaccesstoken(nContext)
         val paymentTokenBody = PaymentTokenApiModel( PreferenceManager.getStudentID(nContext).toString(),"wallet_topup")
         val call: Call<PaymentTokenModel> =
-            ApiClient.getClient.payment_token(paymentTokenBody, "Bearer " + token)
+            ApiClient(nContext).getClient.payment_token(paymentTokenBody, "Bearer " + token)
         call.enqueue(object : Callback<PaymentTokenModel> {
             override fun onFailure(call: Call<PaymentTokenModel>, t: Throwable) {
                 mProgressRelLayout.visibility = View.GONE
@@ -471,7 +469,7 @@ mProgressRelLayout.visibility=View.VISIBLE
             mechantorderRef,studentName,"","NAS","","Abu Dhabi",
             payment_token,"wallet_topup")
         val call: Call<PaymentGatewayModel> =
-            ApiClient.getClient.payment_gateway(paymentGatewayBody, "Bearer " + token)
+            ApiClient(nContext).getClient.payment_gateway(paymentGatewayBody, "Bearer " + token)
         call.enqueue(object : Callback<PaymentGatewayModel> {
             override fun onFailure(call: Call<PaymentGatewayModel>, t: Throwable) {
                 mProgressRelLayout.visibility = View.GONE
@@ -615,7 +613,7 @@ mProgressRelLayout.visibility=View.VISIBLE
         val paymentSuccessBody = WalletAmountApiModel(PreferenceManager.getStudentID(nContext).toString(),orderRef,
         payAmount,"2",devicename,"1.0")
         val call: Call<WalletAmountModel> =
-            ApiClient.getClient.wallet_topup(paymentSuccessBody, "Bearer " + token)
+            ApiClient(nContext).getClient.wallet_topup(paymentSuccessBody, "Bearer " + token)
         call.enqueue(object : Callback<WalletAmountModel> {
             override fun onFailure(call: Call<WalletAmountModel>, t: Throwable) {
 
@@ -671,5 +669,13 @@ mProgressRelLayout.visibility=View.VISIBLE
             dialog.dismiss()
         }
         dialog.show()
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(nContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 }

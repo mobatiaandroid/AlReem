@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.early_years
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -33,11 +34,14 @@ class ComingUpDetailActivity : AppCompatActivity(){
     lateinit var logoClickImgView: ImageView
     lateinit var title:String
     lateinit var web_ink:String
+    lateinit var activity: Activity
+
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_coming_up_detail)
         mContext=this
+        activity=this
         initUI()
 
         getSettings()
@@ -87,10 +91,8 @@ class ComingUpDetailActivity : AppCompatActivity(){
         webView.webChromeClient = object : WebChromeClient() {
             override fun onProgressChanged(view: WebView, newProgress: Int) {
                 //progressDialogAdd.visibility = View.VISIBLE
-                println("testing2")
                 if (newProgress == 100)
                 {
-                    println("testing1")
                     progressDialogAdd.visibility = View.GONE
 
                 }
@@ -98,6 +100,13 @@ class ComingUpDetailActivity : AppCompatActivity(){
         }
     }
 
-
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
+    }
 
 }

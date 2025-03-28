@@ -130,7 +130,7 @@ class NotificationFragment : Fragment() {
         val paramObject = JsonObject()
         paramObject.addProperty("id", ccaDaysId)
         paramObject.addProperty("type", "notification")
-        val call: Call<StudentShopCardResponseModel> = ApiClient.getClient.status_changeAPI(token,paramObject)
+        val call: Call<StudentShopCardResponseModel> = ApiClient(mContext).getClient.status_changeAPI(token,paramObject)
         call.enqueue(object : Callback<StudentShopCardResponseModel> {
             override fun onFailure(call: Call<StudentShopCardResponseModel>, t: Throwable) {
                 progressDialogAdd.visibility=View.GONE
@@ -167,7 +167,7 @@ class NotificationFragment : Fragment() {
         notificationList= ArrayList()
         var token="Bearer "+PreferenceManager.getaccesstoken(mContext)
         var model=NotificationApiModel(0,500)
-        val call: Call<NotificationResponseModel> = ApiClient.getClient.notificationList(model,token)
+        val call: Call<NotificationResponseModel> = ApiClient(mContext).getClient.notificationList(model,token)
         call.enqueue(object : Callback<NotificationResponseModel> {
             override fun onFailure(call: Call<NotificationResponseModel>, t: Throwable) {
                 progressDialogAdd.visibility=View.GONE

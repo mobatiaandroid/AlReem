@@ -83,6 +83,7 @@ class ShopCardPaymentActivity :AppCompatActivity(){
     var merchantOrderReference = ""
     lateinit var progressDialogAdd: ProgressBar
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lost_card_payment)
@@ -136,7 +137,7 @@ class ShopCardPaymentActivity :AppCompatActivity(){
         val token = PreferenceManager.getaccesstoken(mContext)
         val paymentTokenBody = PaymentTokenApiModel( PreferenceManager.getStudentID(mContext).toString(),"Shop")
         val call: Call<PaymentTokenModel> =
-            ApiClient.getClient.payment_token(paymentTokenBody, "Bearer " + token)
+            ApiClient(mContext).getClient.payment_token(paymentTokenBody, "Bearer " + token)
         call.enqueue(object : Callback<PaymentTokenModel> {
             override fun onFailure(call: Call<PaymentTokenModel>, t: Throwable) {
                 progressDialogAdd.visibility = View.GONE
@@ -198,7 +199,7 @@ class ShopCardPaymentActivity :AppCompatActivity(){
             mechantorderRef, stud_name!!,"","NAS","","Abu Dhabi",
             paymentToken,"shop", dataa,PreferenceManager.getStudentID(mContext).toString())
         val call: Call<PaymentGatewayModel> =
-            ApiClient.getClient.payment_gateway_shop(paymentGatewayBody, "Bearer " + token)
+            ApiClient(mContext).getClient.payment_gateway_shop(paymentGatewayBody, "Bearer " + token)
         call.enqueue(object : Callback<PaymentGatewayModel> {
             override fun onFailure(call: Call<PaymentGatewayModel>, t: Throwable) {
                 progressDialogAdd.visibility = View.GONE
@@ -265,7 +266,6 @@ class ShopCardPaymentActivity :AppCompatActivity(){
                         ) + "\"," +
                                 "\"amount\":\"" + payAmount + "\"," +
                                 "\"keycode\":\"" + merchantOrderReference + "\"" + "}]}"
-                    println("JSON DATA URL$JSONData")
                     CallWalletSubmission(JSONData)
                 }
                 else
@@ -333,7 +333,7 @@ class ShopCardPaymentActivity :AppCompatActivity(){
         paramObject.addProperty("order_id", order_id)
 
         val call: Call<StudentShopCardResponseModel> =
-            ApiClient.getClient.shop_order_submit(
+            ApiClient(mContext).getClient.shop_order_submit(
                 "Bearer " + PreferenceManager.getaccesstoken(
                     mContext
                 ), paramObject
@@ -408,5 +408,13 @@ class ShopCardPaymentActivity :AppCompatActivity(){
     override fun onBackPressed() {
         super.onBackPressed()
         finish()
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.nas.alreem.activity.shop_new
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -85,6 +86,8 @@ class PreOrderActivity_new :AppCompatActivity() {
     var datetime: String = ""
     var apiCall:Int=0
     var mDateArrayList = ArrayList<DateModel>()
+    lateinit var activity: Activity
+
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -103,6 +106,7 @@ class PreOrderActivity_new :AppCompatActivity() {
     }
     private fun initfn() {
         nContext = this
+        activity=this
       //  logoClickImg=findViewById(R.id.logoclick)
       //  back = findViewById(R.id.back)
         studImg = findViewById<ImageView>(R.id.imagicon)
@@ -249,7 +253,7 @@ class PreOrderActivity_new :AppCompatActivity() {
     {
 
         val sendMailBody = SendEmailApiModel( staffEmail, title, message)
-        val call: Call<SignUpResponseModel> = ApiClient.getClient.sendEmailStaff(sendMailBody, "Bearer " + PreferenceManager.getaccesstoken(nContext))
+        val call: Call<SignUpResponseModel> = ApiClient(nContext).getClient.sendEmailStaff(sendMailBody, "Bearer " + PreferenceManager.getaccesstoken(nContext))
         call.enqueue(object : Callback<SignUpResponseModel> {
             override fun onFailure(call: Call<SignUpResponseModel>, t: Throwable) {
                 //progressDialog.visibility = View.GONE
@@ -292,7 +296,7 @@ class PreOrderActivity_new :AppCompatActivity() {
         progressDialog.visibility = View.VISIBLE
 
         val token = PreferenceManager.getaccesstoken(nContext)
-        val call: Call<CanteenBannerResponseModel> = ApiClient.getClient.shop_banner("Bearer "+token)
+        val call: Call<CanteenBannerResponseModel> = ApiClient(nContext).getClient.shop_banner("Bearer "+token)
         call.enqueue(object : Callback<CanteenBannerResponseModel>
         {
             override fun onFailure(call: Call<CanteenBannerResponseModel>, t: Throwable) {
@@ -425,7 +429,7 @@ class PreOrderActivity_new :AppCompatActivity() {
     {
         progressDialog.visibility = View.VISIBLE
         val token = PreferenceManager.getaccesstoken(nContext)
-        val call: Call<StudentListModel> = ApiClient.getClient.studentList("Bearer "+token)
+        val call: Call<StudentListModel> = ApiClient(nContext).getClient.studentList("Bearer "+token)
         call.enqueue(object : Callback<StudentListModel> {
             override fun onFailure(call: Call<StudentListModel>, t: Throwable) {
                 progressDialog.visibility = View.GONE
@@ -676,6 +680,14 @@ class PreOrderActivity_new :AppCompatActivity() {
         dialog.show()
 
 
+    }
+    override fun onResume() {
+        super.onResume()
+        if (!ConstantFunctions.runMethod.equals("Dev")) {
+            if (ConstantFunctions().isDeveloperModeEnabled(nContext)) {
+                ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
+            }
+        }
     }
 
 }
