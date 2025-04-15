@@ -38,11 +38,11 @@ class AppController : Application() {
         // Register ActivityLifecycleCallbacks
         registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-                // Apply FLAG_SECURE to prevent screenshots and screen recordings
-                activity.window.setFlags(
-                    WindowManager.LayoutParams.FLAG_SECURE,
-                    WindowManager.LayoutParams.FLAG_SECURE
-                )
+                // Apply FLAG_SECURE to prevent screenshots and screen recordings8
+//                activity.window.setFlags(
+//                    WindowManager.LayoutParams.FLAG_SECURE,
+//                    WindowManager.LayoutParams.FLAG_SECURE
+//                )
             }
 
             override fun onActivityStarted(activity: Activity) {}

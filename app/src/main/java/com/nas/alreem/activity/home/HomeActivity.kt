@@ -201,6 +201,7 @@ class HomeActivity : AppCompatActivity(), AdapterView.OnItemLongClickListener {
             ActivityResultContracts.RequestPermission(),
             ActivityResultCallback<Boolean> { result ->
                 if (result) {
+
                     // PERMISSION GRANTED
                     // Toast.makeText(mContext, String.valueOf(result), Toast.LENGTH_SHORT).show();
                 } else {

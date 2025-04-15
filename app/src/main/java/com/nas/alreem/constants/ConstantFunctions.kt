@@ -35,8 +35,7 @@ class ConstantFunctions {
 
         lateinit var cart_list: ArrayList<CanteenCartResModel>
         lateinit var idList:ArrayList<Int>
-        var runMethod: String = "Dev"
-
+        var runMethod: String = "Live"
 
         fun isEmailValid(email: String): Boolean {
             return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()

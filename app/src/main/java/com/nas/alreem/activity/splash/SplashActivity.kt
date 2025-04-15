@@ -44,10 +44,9 @@ class SplashActivity : AppCompatActivity() {
             Toast.makeText(this, "Root detected! App will close.", Toast.LENGTH_LONG).show()
             finish()
         }
-       /* else if (isDebuggingEnabled) {
-
+        else if (isDebuggingEnabled) {
             Toast.makeText(mContext, "This app does not support debugging", Toast.LENGTH_SHORT).show();
-        }*/ else if (!ConstantFunctions.runMethod.equals("Dev")) {
+        } else if (!ConstantFunctions.runMethod.equals("Dev")) {
             if (ConstantFunctions().isDeveloperModeEnabled(mContext)) {
                 ConstantFunctions().showDeviceIsDeveloperPopUp(activity)
             } else {
@@ -120,7 +119,7 @@ class SplashActivity : AppCompatActivity() {
         val icon = dialog.findViewById<View>(R.id.iconImageView) as ImageView
         icon.setBackgroundResource(R.drawable.round)
         icon.setImageResource(R.drawable.exclamationicon)
-        val text = dialog.findViewById<View>(R.id.text_dialog) as TextView
+        val text = dialog.findViewById<View>(R.id.messageTxt) as TextView
         val textHead = dialog.findViewById<View>(R.id.alertHead) as TextView
         text.text = "This app does not support rooted devices for security reasons."
         textHead.text = "Rooted Device Detected"
